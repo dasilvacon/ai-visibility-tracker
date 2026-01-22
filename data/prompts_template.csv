@@ -1,0 +1,6 @@
+prompt_id,persona,category,intent_type,prompt_text,expected_visibility_score,notes
+1,data_scientist,technical,information_seeking,"Explain the difference between supervised and unsupervised machine learning.",9,"Basic ML concept - should have high visibility"
+2,business_analyst,business,analysis,"Analyze the key performance indicators for an e-commerce business.",8,"Common business query"
+3,student,educational,learning,"What are the main causes of the French Revolution?",9,"Historical facts - widely covered"
+4,developer,technical,code_generation,"Write a Python function to calculate the factorial of a number.",9,"Common programming task"
+5,marketer,creative,content_creation,"Create a catchy tagline for an eco-friendly water bottle brand.",7,"Creative task - more subjective"

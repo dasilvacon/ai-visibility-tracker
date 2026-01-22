@@ -1,0 +1,25 @@
+{
+  "api_keys": {
+    "openai": "YOUR_OPENAI_API_KEY_HERE",
+    "anthropic": "YOUR_ANTHROPIC_API_KEY_HERE",
+    "perplexity": "YOUR_PERPLEXITY_API_KEY_HERE",
+    "deepseek": "YOUR_DEEPSEEK_API_KEY_HERE",
+    "grok": "YOUR_GROK_API_KEY_HERE"
+  },
+  "models": {
+    "openai": "gpt-4",
+    "anthropic": "claude-sonnet-4-20250514",
+    "perplexity": "pplx-70b-online",
+    "deepseek": "deepseek-chat",
+    "grok": "grok-beta"
+  },
+  "testing": {
+    "default_temperature": 0.7,
+    "max_tokens": 1000,
+    "timeout_seconds": 30
+  },
+  "output": {
+    "results_directory": "data/results",
+    "reports_directory": "data/reports"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "personas": [
+    {
+      "id": "luxury_beauty_enthusiast",
+      "name": "Luxury Beauty Enthusiast",
+      "description": "Makeup collector who invests in high-end products, follows beauty influencers, values quality over price",
+      "weight": 0.35,
+      "priority_topics": ["eyeshadow palettes", "luxury makeup", "pigmentation quality", "makeup reviews"]
+    },
+    {
+      "id": "professional_mua",
+      "name": "Professional Makeup Artist",
+      "description": "Working makeup artist looking for professional-grade products for clients, values performance and longevity",
+      "weight": 0.25,
+      "priority_topics": ["professional makeup", "bridal makeup", "long-lasting eyeshadow", "blendability"]
+    },
+    {
+      "id": "beauty_beginner_aspirational",
+      "name": "Beauty Beginner (Aspirational)",
+      "description": "New to high-end makeup, researching first luxury purchase, wants guidance on what's worth the investment",
+      "weight": 0.20,
+      "priority_topics": ["best luxury eyeshadow", "worth the price", "eyeshadow for beginners", "how to use"]
+    },
+    {
+      "id": "specific_need_shopper",
+      "name": "Specific Need Shopper",
+      "description": "Looking for eyeshadow that solves specific problems: hooded eyes, mature skin, oily lids, specific eye colors",
+      "weight": 0.20,
+      "priority_topics": ["eyeshadow for hooded eyes", "eyeshadow for brown eyes", "long-lasting eyeshadow oily lids", "best colors for skin tone"]
+    }
+  ]
+}

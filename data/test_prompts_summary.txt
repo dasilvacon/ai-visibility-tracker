@@ -1,0 +1,65 @@
+================================================================================
+PROMPT GENERATION SUMMARY REPORT
+================================================================================
+Generated: 2026-01-11 12:33:42
+Total Prompts: 10
+
+Generation Time: 13.3 seconds
+
+BREAKDOWN BY PERSONA
+--------------------------------------------------------------------------------
+Health-Conscious Adult: 2 (20.0%)
+Home Improvement DIY Enthusiast: 2 (20.0%)
+New Parent Caregiver: 3 (30.0%)
+Small Business Owner: 2 (20.0%)
+Tech Professional: 1 (10.0%)
+
+BREAKDOWN BY CATEGORY
+--------------------------------------------------------------------------------
+business: 3 (30.0%)
+educational: 2 (20.0%)
+technical: 5 (50.0%)
+
+BREAKDOWN BY INTENT TYPE
+--------------------------------------------------------------------------------
+how_to: 4 (40.0%)
+informational: 2 (20.0%)
+problem_solving: 1 (10.0%)
+recommendation: 2 (20.0%)
+review: 1 (10.0%)
+
+Prompts with Competitor Mentions: 0 (0.0%)
+
+SAMPLE PROMPTS
+--------------------------------------------------------------------------------
+1. [Health-Conscious Adult - informational]
+   beginner workout routine at home no equipment needed
+
+2. [Home Improvement DIY Enthusiast - recommendation]
+   Can you recommend a social media marketing tools? Thanks!
+
+3. [New Parent Caregiver - how_to]
+   What's the best way to how to sleep train baby? Thanks!
+
+4. [New Parent Caregiver - informational]
+   how often should I be feeding my 2 week old baby
+
+5. [Small Business Owner - recommendation]
+   Quick question: Can you recommend a best baby monitor 2024? Thanks!
+
+6. [Tech Professional - problem_solving]
+   I was wondering, How can I solve debugging javascript errors?
+
+7. [Home Improvement DIY Enthusiast - how_to]
+   how to prep my backyard soil for planting a vegetable garden this spring
+
+8. [Small Business Owner - review]
+   best sleep tracking apps for entrepreneurs - which ones actually work and don't drain my phone battery
+
+9. [New Parent Caregiver - how_to]
+   how to meal prep healthy meals when you have no time with a newborn and need to lose baby weight
+
+10. [Health-Conscious Adult - how_to]
+   How do I how to reduce stress naturally? Appreciate any help!
+
+================================================================================

@@ -1,0 +1,40 @@
+# Virtual Environment
+venv/
+env/
+*.pyc
+__pycache__/
+
+# Configuration files with sensitive data
+config/config.json
+config_auth.yaml
+.env
+*.key
+*.pem
+
+# Results and data (exclude from public repo)
+data/results/
+data/reports/
+*.csv
+!data/prompts_template.csv
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+*.egg-info/
+dist/
+build/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Claude
+.claude/

@@ -1,0 +1,14 @@
+{
+  "brand": {
+    "name": "Natasha Denona",
+    "aliases": ["ND", "Natasha Denona Beauty"],
+    "description": "Luxury makeup brand specializing in high-end eyeshadow palettes"
+  },
+  "competitors": [
+    "Pat McGrath Labs",
+    "Charlotte Tilbury",
+    "Tom Ford Beauty",
+    "Huda Beauty",
+    "Anastasia Beverly Hills"
+  ]
+}

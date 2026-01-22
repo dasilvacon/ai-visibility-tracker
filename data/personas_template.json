@@ -1,0 +1,84 @@
+{
+  "personas": [
+    {
+      "id": "new_parent",
+      "name": "New Parent Caregiver",
+      "description": "First-time parents caring for newborns and infants, seeking practical advice on sleep, feeding, development, and baby care products",
+      "weight": 0.30,
+      "priority_topics": [
+        "sleep training",
+        "feeding schedules",
+        "baby development milestones",
+        "diaper rash remedies",
+        "infant sleep safety",
+        "breastfeeding tips",
+        "bottle feeding",
+        "baby monitor recommendations"
+      ]
+    },
+    {
+      "id": "health_conscious_adult",
+      "name": "Health-Conscious Adult",
+      "description": "Adults aged 25-45 focused on wellness, fitness, nutrition, and preventive health care",
+      "weight": 0.25,
+      "priority_topics": [
+        "meal planning for weight loss",
+        "workout routines",
+        "supplement recommendations",
+        "stress management",
+        "sleep quality improvement",
+        "hydration tracking",
+        "protein intake",
+        "mental health resources"
+      ]
+    },
+    {
+      "id": "small_business_owner",
+      "name": "Small Business Owner",
+      "description": "Entrepreneurs and small business owners looking for growth strategies, marketing tools, and operational efficiency",
+      "weight": 0.20,
+      "priority_topics": [
+        "social media marketing",
+        "customer retention strategies",
+        "accounting software",
+        "hiring best practices",
+        "email marketing campaigns",
+        "business analytics tools",
+        "e-commerce platforms",
+        "SEO for local business"
+      ]
+    },
+    {
+      "id": "tech_professional",
+      "name": "Tech Professional",
+      "description": "Software developers, IT specialists, and tech enthusiasts seeking technical solutions and productivity tools",
+      "weight": 0.15,
+      "priority_topics": [
+        "programming tutorials",
+        "code debugging techniques",
+        "cloud infrastructure",
+        "API integration",
+        "development frameworks",
+        "version control best practices",
+        "cybersecurity measures",
+        "productivity software"
+      ]
+    },
+    {
+      "id": "home_improvement_diy",
+      "name": "Home Improvement DIY Enthusiast",
+      "description": "Homeowners interested in DIY projects, home repairs, renovations, and interior design",
+      "weight": 0.10,
+      "priority_topics": [
+        "painting techniques",
+        "flooring installation",
+        "kitchen renovation ideas",
+        "power tool recommendations",
+        "home organization solutions",
+        "energy efficiency upgrades",
+        "garden landscaping",
+        "furniture restoration"
+      ]
+    }
+  ]
+}

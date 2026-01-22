@@ -1,0 +1,25 @@
+{
+  "brand": {
+    "name": "Ontario Caregiver Organization",
+    "aliases": ["OCO", "Ontario Caregiver Org"],
+    "description": "Support organization for caregivers in Ontario"
+  },
+  "competitors": [
+    "Caregiver Support Co",
+    "Family Care Network",
+    "Canadian Caregiver Coalition",
+    "Home Care Ontario",
+    "Provincial Caregiver Services"
+  ],
+  "analysis_settings": {
+    "minimum_prominence_threshold": 4.0,
+    "gap_visibility_threshold": 60.0,
+    "competitor_dominance_threshold": 50.0
+  },
+  "output_preferences": {
+    "generate_html_dashboard": true,
+    "generate_pdf_report": false,
+    "generate_excel_workbook": false,
+    "reports_directory": "data/reports"
+  }
+}

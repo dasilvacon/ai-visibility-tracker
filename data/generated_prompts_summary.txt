@@ -1,0 +1,63 @@
+================================================================================
+PROMPT GENERATION SUMMARY REPORT
+================================================================================
+Generated: 2026-01-11 14:40:04
+Total Prompts: 150
+
+Generation Time: 0.0 seconds
+
+BREAKDOWN BY PERSONA
+--------------------------------------------------------------------------------
+Beauty Beginner (Aspirational): 30 (20.0%)
+Luxury Beauty Enthusiast: 52 (34.7%)
+Professional Makeup Artist: 37 (24.7%)
+Specific Need Shopper: 31 (20.7%)
+
+BREAKDOWN BY CATEGORY
+--------------------------------------------------------------------------------
+business: 18 (12.0%)
+educational: 132 (88.0%)
+
+BREAKDOWN BY INTENT TYPE
+--------------------------------------------------------------------------------
+comparison: 18 (12.0%)
+educational: 17 (11.3%)
+informational: 84 (56.0%)
+seasonal: 3 (2.0%)
+transactional: 28 (18.7%)
+
+Prompts with Competitor Mentions: 44 (29.3%)
+
+SAMPLE PROMPTS
+--------------------------------------------------------------------------------
+1. [Luxury Beauty Enthusiast - comparison]
+   Hey, Can you explain luxury makeup worth the price? Thanks!
+
+2. [Professional Makeup Artist - informational]
+   Quick question: eyeshadow for mature skin vs MAC I'm focused on professional makeup.
+
+3. [Luxury Beauty Enthusiast - informational]
+   Quick question: What should I know about best eyeshadow for hooded eyes? Appreciate any help!
+
+4. [Specific Need Shopper - informational]
+   Hey, I need to understand eyeshadow for mature skin
+
+5. [Specific Need Shopper - informational]
+   Hi, Help me learn about eyeshadow color for hazel eyes
+
+6. [Specific Need Shopper - informational]
+   I was wondering, Help me learn about metallic eyeshadow vs shimmer
+
+7. [Luxury Beauty Enthusiast - transactional]
+   I need to understand professional makeup artist eyeshadow
+
+8. [Beauty Beginner (Aspirational) - educational]
+   Can you explain how to apply eyeshadow for beginners? Appreciate any help!
+
+9. [Beauty Beginner (Aspirational) - informational]
+   Can anyone help? Help me learn about cream eyeshadow vs powder Appreciate any help! (especially worth the price)
+
+10. [Luxury Beauty Enthusiast - educational]
+   Hi, Compare how to apply eyeshadow for beginners to Pat McGrath Labs Thanks!
+
+================================================================================
