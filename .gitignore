@@ -13,10 +13,16 @@ config_auth.yaml
 
 # Results and data (exclude from public repo)
 data/results/
-data/reports/
+*.log
+
+# CSV files (with exceptions)
 *.csv
 !data/prompts_template.csv
-*.log
+!data/reports/*Natasha_Denona*.csv
+
+# Reports (with exceptions for deployment)
+data/reports/*
+!data/reports/*Natasha_Denona*
 
 # IDE
 .vscode/

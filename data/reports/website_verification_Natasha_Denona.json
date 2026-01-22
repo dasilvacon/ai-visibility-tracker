@@ -1,0 +1,5249 @@
+{
+  "brand_analysis": {
+    "base_url": "https://natashadenona.com",
+    "pages_analyzed": 10,
+    "content_inventory": {
+      "educational": [
+        {
+          "url": "https://natashadenona.com",
+          "title": "Natasha Denona Makeup \u2013 Pro\u2011Grade Palettes & Hybrid Skincare Beauty",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046",
+          "title": "HY\u2011Glam Powder Foundation \u2013 Pore\u2011Blurring Medium Coverage | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/macro-tech-eye-crayon",
+          "title": "Macro Tech Crayon \u2013 High\u2011Pigment Cream Eyeliner | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-sculpt-liquid-bronzer?variant=46405264769198",
+          "title": "HY\u2011Sculpt Liquid Bronzer \u2013 Serum\u2011Infused Ultra\u2011Blur Finish | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-foundation?variant=46605064732846",
+          "title": "HY-GLAM Foundation | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-foundation?variant=46605064962222",
+          "title": "HY-GLAM Foundation | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/online-gift-card",
+          "title": "Online Gift Card | The Perfect Beauty Gift | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828943679662",
+          "title": "HY\u2011Glam Powder Foundation \u2013 Pore\u2011Blurring Medium Coverage | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-corrector",
+          "title": "HY\u2011Glam Corrector \u2013 Full\u2011Glam Color & Brightening Serum | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/eye-sculpt-texture-tone-eyeshadow-palette?variant=46748326232238",
+          "title": "Eye Sculpt Texture & Tone Eyeshadow Palette | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        }
+      ],
+      "how_to": [
+        {
+          "url": "https://natashadenona.com",
+          "title": "Natasha Denona Makeup \u2013 Pro\u2011Grade Palettes & Hybrid Skincare Beauty",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046",
+          "title": "HY\u2011Glam Powder Foundation \u2013 Pore\u2011Blurring Medium Coverage | Natasha Denona",
+          "signals": [
+            "keyword_match",
+            "heading_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/macro-tech-eye-crayon",
+          "title": "Macro Tech Crayon \u2013 High\u2011Pigment Cream Eyeliner | Natasha Denona",
+          "signals": [
+            "keyword_match",
+            "heading_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-sculpt-liquid-bronzer?variant=46405264769198",
+          "title": "HY\u2011Sculpt Liquid Bronzer \u2013 Serum\u2011Infused Ultra\u2011Blur Finish | Natasha Denona",
+          "signals": [
+            "keyword_match",
+            "heading_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-foundation?variant=46605064732846",
+          "title": "HY-GLAM Foundation | Natasha Denona",
+          "signals": [
+            "keyword_match",
+            "heading_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-foundation?variant=46605064962222",
+          "title": "HY-GLAM Foundation | Natasha Denona",
+          "signals": [
+            "keyword_match",
+            "heading_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/online-gift-card",
+          "title": "Online Gift Card | The Perfect Beauty Gift | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828943679662",
+          "title": "HY\u2011Glam Powder Foundation \u2013 Pore\u2011Blurring Medium Coverage | Natasha Denona",
+          "signals": [
+            "keyword_match",
+            "heading_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-corrector",
+          "title": "HY\u2011Glam Corrector \u2013 Full\u2011Glam Color & Brightening Serum | Natasha Denona",
+          "signals": [
+            "keyword_match",
+            "heading_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/eye-sculpt-texture-tone-eyeshadow-palette?variant=46748326232238",
+          "title": "Eye Sculpt Texture & Tone Eyeshadow Palette | Natasha Denona",
+          "signals": [
+            "keyword_match",
+            "heading_match"
+          ]
+        }
+      ],
+      "comparison": [],
+      "faq": [],
+      "product_info": [
+        {
+          "url": "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046",
+          "title": "HY\u2011Glam Powder Foundation \u2013 Pore\u2011Blurring Medium Coverage | Natasha Denona",
+          "signals": [
+            "url_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/macro-tech-eye-crayon",
+          "title": "Macro Tech Crayon \u2013 High\u2011Pigment Cream Eyeliner | Natasha Denona",
+          "signals": [
+            "url_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-sculpt-liquid-bronzer?variant=46405264769198",
+          "title": "HY\u2011Sculpt Liquid Bronzer \u2013 Serum\u2011Infused Ultra\u2011Blur Finish | Natasha Denona",
+          "signals": [
+            "url_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-foundation?variant=46605064732846",
+          "title": "HY-GLAM Foundation | Natasha Denona",
+          "signals": [
+            "url_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-foundation?variant=46605064962222",
+          "title": "HY-GLAM Foundation | Natasha Denona",
+          "signals": [
+            "url_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/online-gift-card",
+          "title": "Online Gift Card | The Perfect Beauty Gift | Natasha Denona",
+          "signals": [
+            "url_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828943679662",
+          "title": "HY\u2011Glam Powder Foundation \u2013 Pore\u2011Blurring Medium Coverage | Natasha Denona",
+          "signals": [
+            "url_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-corrector",
+          "title": "HY\u2011Glam Corrector \u2013 Full\u2011Glam Color & Brightening Serum | Natasha Denona",
+          "signals": [
+            "url_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/eye-sculpt-texture-tone-eyeshadow-palette?variant=46748326232238",
+          "title": "Eye Sculpt Texture & Tone Eyeshadow Palette | Natasha Denona",
+          "signals": [
+            "url_match"
+          ]
+        }
+      ],
+      "blog": [],
+      "reviews": [
+        {
+          "url": "https://natashadenona.com/products/hy-sculpt-liquid-bronzer?variant=46405264769198",
+          "title": "HY\u2011Sculpt Liquid Bronzer \u2013 Serum\u2011Infused Ultra\u2011Blur Finish | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-foundation?variant=46605064732846",
+          "title": "HY-GLAM Foundation | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-foundation?variant=46605064962222",
+          "title": "HY-GLAM Foundation | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-corrector",
+          "title": "HY\u2011Glam Corrector \u2013 Full\u2011Glam Color & Brightening Serum | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        }
+      ],
+      "guides": [
+        {
+          "url": "https://natashadenona.com/products/hy-glam-corrector",
+          "title": "HY\u2011Glam Corrector \u2013 Full\u2011Glam Color & Brightening Serum | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/eye-sculpt-texture-tone-eyeshadow-palette?variant=46748326232238",
+          "title": "Eye Sculpt Texture & Tone Eyeshadow Palette | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        }
+      ],
+      "tutorials": [
+        {
+          "url": "https://natashadenona.com",
+          "title": "Natasha Denona Makeup \u2013 Pro\u2011Grade Palettes & Hybrid Skincare Beauty",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046",
+          "title": "HY\u2011Glam Powder Foundation \u2013 Pore\u2011Blurring Medium Coverage | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/macro-tech-eye-crayon",
+          "title": "Macro Tech Crayon \u2013 High\u2011Pigment Cream Eyeliner | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-sculpt-liquid-bronzer?variant=46405264769198",
+          "title": "HY\u2011Sculpt Liquid Bronzer \u2013 Serum\u2011Infused Ultra\u2011Blur Finish | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-foundation?variant=46605064732846",
+          "title": "HY-GLAM Foundation | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-foundation?variant=46605064962222",
+          "title": "HY-GLAM Foundation | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/online-gift-card",
+          "title": "Online Gift Card | The Perfect Beauty Gift | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828943679662",
+          "title": "HY\u2011Glam Powder Foundation \u2013 Pore\u2011Blurring Medium Coverage | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/hy-glam-corrector",
+          "title": "HY\u2011Glam Corrector \u2013 Full\u2011Glam Color & Brightening Serum | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        },
+        {
+          "url": "https://natashadenona.com/products/eye-sculpt-texture-tone-eyeshadow-palette?variant=46748326232238",
+          "title": "Eye Sculpt Texture & Tone Eyeshadow Palette | Natasha Denona",
+          "signals": [
+            "keyword_match"
+          ]
+        }
+      ],
+      "about": []
+    },
+    "summary": {
+      "educational": {
+        "exists": true,
+        "page_count": 10,
+        "example_urls": [
+          "https://natashadenona.com",
+          "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046",
+          "https://natashadenona.com/products/macro-tech-eye-crayon"
+        ]
+      },
+      "how_to": {
+        "exists": true,
+        "page_count": 10,
+        "example_urls": [
+          "https://natashadenona.com",
+          "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046",
+          "https://natashadenona.com/products/macro-tech-eye-crayon"
+        ]
+      },
+      "comparison": {
+        "exists": false,
+        "page_count": 0,
+        "example_urls": []
+      },
+      "faq": {
+        "exists": false,
+        "page_count": 0,
+        "example_urls": []
+      },
+      "product_info": {
+        "exists": true,
+        "page_count": 9,
+        "example_urls": [
+          "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046",
+          "https://natashadenona.com/products/macro-tech-eye-crayon",
+          "https://natashadenona.com/products/hy-sculpt-liquid-bronzer?variant=46405264769198"
+        ]
+      },
+      "blog": {
+        "exists": false,
+        "page_count": 0,
+        "example_urls": []
+      },
+      "reviews": {
+        "exists": true,
+        "page_count": 4,
+        "example_urls": [
+          "https://natashadenona.com/products/hy-sculpt-liquid-bronzer?variant=46405264769198",
+          "https://natashadenona.com/products/hy-glam-foundation?variant=46605064732846",
+          "https://natashadenona.com/products/hy-glam-foundation?variant=46605064962222"
+        ]
+      },
+      "guides": {
+        "exists": true,
+        "page_count": 2,
+        "example_urls": [
+          "https://natashadenona.com/products/hy-glam-corrector",
+          "https://natashadenona.com/products/eye-sculpt-texture-tone-eyeshadow-palette?variant=46748326232238"
+        ]
+      },
+      "tutorials": {
+        "exists": true,
+        "page_count": 10,
+        "example_urls": [
+          "https://natashadenona.com",
+          "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046",
+          "https://natashadenona.com/products/macro-tech-eye-crayon"
+        ]
+      },
+      "about": {
+        "exists": false,
+        "page_count": 0,
+        "example_urls": []
+      }
+    },
+    "detailed_pages": [
+      {
+        "url": "https://natashadenona.com",
+        "title": "Natasha Denona Makeup \u2013 Pro\u2011Grade Palettes & Hybrid Skincare Beauty",
+        "headings": [
+          "",
+          "best sellers",
+          "shop by category",
+          "eyes",
+          "base",
+          "hy-brids",
+          "cheeks",
+          "lips",
+          "hy-glam",
+          "collection",
+          "cloudy cream cheek duo",
+          "about natasha",
+          "globally celebrated as the pro pigment master, natasha personally develops every product in leading italian labs with an elevated, artistic technique that can\u2019t be replicated.",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "shop the look",
+          "- natasha denona",
+          "eyeshadow palettes",
+          "country"
+        ],
+        "content_types": {
+          "educational": [
+            "keyword_match"
+          ],
+          "how_to": [
+            "keyword_match"
+          ],
+          "comparison": [],
+          "faq": [],
+          "product_info": [],
+          "blog": [],
+          "reviews": [],
+          "guides": [],
+          "tutorials": [
+            "keyword_match"
+          ],
+          "about": []
+        },
+        "word_count": 5323
+      },
+      {
+        "url": "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046",
+        "title": "HY\u2011Glam Powder Foundation \u2013 Pore\u2011Blurring Medium Coverage | Natasha Denona",
+        "headings": [
+          "",
+          "hy-glam powder foundation",
+          "how to use",
+          "as foundation",
+          "as setting powder (nd pro tip)",
+          "refill",
+          "shade description",
+          "inspiration",
+          "country"
+        ],
+        "content_types": {
+          "educational": [
+            "keyword_match"
+          ],
+          "how_to": [
+            "keyword_match",
+            "heading_match"
+          ],
+          "comparison": [],
+          "faq": [],
+          "product_info": [
+            "url_match"
+          ],
+          "blog": [],
+          "reviews": [],
+          "guides": [],
+          "tutorials": [
+            "keyword_match"
+          ],
+          "about": []
+        },
+        "word_count": 4622
+      },
+      {
+        "url": "https://natashadenona.com/products/macro-tech-eye-crayon",
+        "title": "Macro Tech Crayon \u2013 High\u2011Pigment Cream Eyeliner | Natasha Denona",
+        "headings": [
+          "",
+          "macro tech eye crayon",
+          "how to use",
+          "first",
+          "next",
+          "then",
+          "last",
+          "shade description",
+          "inspiration",
+          "country"
+        ],
+        "content_types": {
+          "educational": [
+            "keyword_match"
+          ],
+          "how_to": [
+            "keyword_match",
+            "heading_match"
+          ],
+          "comparison": [],
+          "faq": [],
+          "product_info": [
+            "url_match"
+          ],
+          "blog": [],
+          "reviews": [],
+          "guides": [],
+          "tutorials": [
+            "keyword_match"
+          ],
+          "about": []
+        },
+        "word_count": 2746
+      },
+      {
+        "url": "https://natashadenona.com/products/hy-sculpt-liquid-bronzer?variant=46405264769198",
+        "title": "HY\u2011Sculpt Liquid Bronzer \u2013 Serum\u2011Infused Ultra\u2011Blur Finish | Natasha Denona",
+        "headings": [
+          "",
+          "hy-sculpt liquid bronzer",
+          "how to use",
+          "shade description",
+          "inspiration",
+          "country"
+        ],
+        "content_types": {
+          "educational": [
+            "keyword_match"
+          ],
+          "how_to": [
+            "keyword_match",
+            "heading_match"
+          ],
+          "comparison": [],
+          "faq": [],
+          "product_info": [
+            "url_match"
+          ],
+          "blog": [],
+          "reviews": [
+            "keyword_match"
+          ],
+          "guides": [],
+          "tutorials": [
+            "keyword_match"
+          ],
+          "about": []
+        },
+        "word_count": 3714
+      },
+      {
+        "url": "https://natashadenona.com/products/hy-glam-foundation?variant=46605064732846",
+        "title": "HY-GLAM Foundation | Natasha Denona",
+        "headings": [
+          "",
+          "hy-glam foundation",
+          "how to use",
+          "natasha's signature shade system",
+          "natasha's signature shade system",
+          "inspiration",
+          "country"
+        ],
+        "content_types": {
+          "educational": [
+            "keyword_match"
+          ],
+          "how_to": [
+            "keyword_match",
+            "heading_match"
+          ],
+          "comparison": [],
+          "faq": [],
+          "product_info": [
+            "url_match"
+          ],
+          "blog": [],
+          "reviews": [
+            "keyword_match"
+          ],
+          "guides": [],
+          "tutorials": [
+            "keyword_match"
+          ],
+          "about": []
+        },
+        "word_count": 3169
+      },
+      {
+        "url": "https://natashadenona.com/products/hy-glam-foundation?variant=46605064962222",
+        "title": "HY-GLAM Foundation | Natasha Denona",
+        "headings": [
+          "",
+          "hy-glam foundation",
+          "how to use",
+          "natasha's signature shade system",
+          "natasha's signature shade system",
+          "inspiration",
+          "country"
+        ],
+        "content_types": {
+          "educational": [
+            "keyword_match"
+          ],
+          "how_to": [
+            "keyword_match",
+            "heading_match"
+          ],
+          "comparison": [],
+          "faq": [],
+          "product_info": [
+            "url_match"
+          ],
+          "blog": [],
+          "reviews": [
+            "keyword_match"
+          ],
+          "guides": [],
+          "tutorials": [
+            "keyword_match"
+          ],
+          "about": []
+        },
+        "word_count": 3170
+      },
+      {
+        "url": "https://natashadenona.com/products/online-gift-card",
+        "title": "Online Gift Card | The Perfect Beauty Gift | Natasha Denona",
+        "headings": [
+          "",
+          "online gift card",
+          "country"
+        ],
+        "content_types": {
+          "educational": [
+            "keyword_match"
+          ],
+          "how_to": [
+            "keyword_match"
+          ],
+          "comparison": [],
+          "faq": [],
+          "product_info": [
+            "url_match"
+          ],
+          "blog": [],
+          "reviews": [],
+          "guides": [],
+          "tutorials": [
+            "keyword_match"
+          ],
+          "about": []
+        },
+        "word_count": 2073
+      },
+      {
+        "url": "https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828943679662",
+        "title": "HY\u2011Glam Powder Foundation \u2013 Pore\u2011Blurring Medium Coverage | Natasha Denona",
+        "headings": [
+          "",
+          "hy-glam powder foundation",
+          "how to use",
+          "as foundation",
+          "as setting powder (nd pro tip)",
+          "refill",
+          "shade description",
+          "inspiration",
+          "country"
+        ],
+        "content_types": {
+          "educational": [
+            "keyword_match"
+          ],
+          "how_to": [
+            "keyword_match",
+            "heading_match"
+          ],
+          "comparison": [],
+          "faq": [],
+          "product_info": [
+            "url_match"
+          ],
+          "blog": [],
+          "reviews": [],
+          "guides": [],
+          "tutorials": [
+            "keyword_match"
+          ],
+          "about": []
+        },
+        "word_count": 4624
+      },
+      {
+        "url": "https://natashadenona.com/products/hy-glam-corrector",
+        "title": "HY\u2011Glam Corrector \u2013 Full\u2011Glam Color & Brightening Serum | Natasha Denona",
+        "headings": [
+          "",
+          "hy-glam corrector",
+          "how to use",
+          "how to neutralize & correct",
+          "how to neutralize & correct",
+          "minor under-eye circles/spot concealing",
+          "blue or purple under-eye circles",
+          "dark brown under-eye circles",
+          "hyperpigmentation",
+          "inspiration",
+          "country"
+        ],
+        "content_types": {
+          "educational": [
+            "keyword_match"
+          ],
+          "how_to": [
+            "keyword_match",
+            "heading_match"
+          ],
+          "comparison": [],
+          "faq": [],
+          "product_info": [
+            "url_match"
+          ],
+          "blog": [],
+          "reviews": [
+            "keyword_match"
+          ],
+          "guides": [
+            "keyword_match"
+          ],
+          "tutorials": [
+            "keyword_match"
+          ],
+          "about": []
+        },
+        "word_count": 3151
+      },
+      {
+        "url": "https://natashadenona.com/products/eye-sculpt-texture-tone-eyeshadow-palette?variant=46748326232238",
+        "title": "Eye Sculpt Texture & Tone Eyeshadow Palette | Natasha Denona",
+        "headings": [
+          "",
+          "eye sculpt texture and tone eyeshadow\u00a0palette",
+          "",
+          "how to use",
+          "",
+          "",
+          "",
+          "shade description",
+          "inspiration",
+          "country"
+        ],
+        "content_types": {
+          "educational": [
+            "keyword_match"
+          ],
+          "how_to": [
+            "keyword_match",
+            "heading_match"
+          ],
+          "comparison": [],
+          "faq": [],
+          "product_info": [
+            "url_match"
+          ],
+          "blog": [],
+          "reviews": [],
+          "guides": [
+            "keyword_match"
+          ],
+          "tutorials": [
+            "keyword_match"
+          ],
+          "about": []
+        },
+        "word_count": 3746
+      }
+    ]
+  },
+  "competitor_analyses": [
+    {
+      "base_url": "https://patmcgrath.com",
+      "pages_analyzed": 10,
+      "content_inventory": {
+        "educational": [
+          {
+            "url": "https://patmcgrath.com",
+            "title": "PAT McGRATH LABS | Legendary Makeup by Pat McGrath",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/collections/eye-bestsellers",
+            "title": "EYE BESTSELLERS",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/sands-of-time-kit",
+            "title": "Sands of Time Kit",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/collections/eyes",
+            "title": "Colorful Eye Shadow Collection & Eye Palettes | Pat McGrath Labs",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/skin-fetish-sublime-perfection-longwear-blurring-setting-spray",
+            "title": "Skin Fetish: Sublime Perfection Longwear Blurring Setting Spray",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/mattetrance-lipstick",
+            "title": "MatteTrance Lipstick | Pat McGrath Labs",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/blogs/news/pat-mcgrath-labs-launches-skin-fetish-sublime-perfection-setting-spray-new-under-eye-blurring-powder-shades-peach-and-amber",
+            "title": "PAT McGRATH LABS LAUNCHES SKIN FETISH SUBLIME PERFECTION SETTING SPRAY",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/skin-fetish-glass-001-artistry-mask",
+            "title": "Skin Fetish: Glass 001 Artistry Mask",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/collections/pat-s-backstage-kits",
+            "title": "PAT\u2019S BACKSTAGE KITS",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/collections/face-kits",
+            "title": "FACE KITS",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "how_to": [],
+        "comparison": [
+          {
+            "url": "https://patmcgrath.com",
+            "title": "PAT McGRATH LABS | Legendary Makeup by Pat McGrath",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/collections/eye-bestsellers",
+            "title": "EYE BESTSELLERS",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/sands-of-time-kit",
+            "title": "Sands of Time Kit",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/collections/eyes",
+            "title": "Colorful Eye Shadow Collection & Eye Palettes | Pat McGrath Labs",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/skin-fetish-sublime-perfection-longwear-blurring-setting-spray",
+            "title": "Skin Fetish: Sublime Perfection Longwear Blurring Setting Spray",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/mattetrance-lipstick",
+            "title": "MatteTrance Lipstick | Pat McGrath Labs",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/blogs/news/pat-mcgrath-labs-launches-skin-fetish-sublime-perfection-setting-spray-new-under-eye-blurring-powder-shades-peach-and-amber",
+            "title": "PAT McGRATH LABS LAUNCHES SKIN FETISH SUBLIME PERFECTION SETTING SPRAY",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/skin-fetish-glass-001-artistry-mask",
+            "title": "Skin Fetish: Glass 001 Artistry Mask",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/collections/pat-s-backstage-kits",
+            "title": "PAT\u2019S BACKSTAGE KITS",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/collections/face-kits",
+            "title": "FACE KITS",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "faq": [],
+        "product_info": [
+          {
+            "url": "https://patmcgrath.com/products/sands-of-time-kit",
+            "title": "Sands of Time Kit",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/skin-fetish-sublime-perfection-longwear-blurring-setting-spray",
+            "title": "Skin Fetish: Sublime Perfection Longwear Blurring Setting Spray",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/mattetrance-lipstick",
+            "title": "MatteTrance Lipstick | Pat McGrath Labs",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/skin-fetish-glass-001-artistry-mask",
+            "title": "Skin Fetish: Glass 001 Artistry Mask",
+            "signals": [
+              "url_match"
+            ]
+          }
+        ],
+        "blog": [
+          {
+            "url": "https://patmcgrath.com/blogs/news/pat-mcgrath-labs-launches-skin-fetish-sublime-perfection-setting-spray-new-under-eye-blurring-powder-shades-peach-and-amber",
+            "title": "PAT McGRATH LABS LAUNCHES SKIN FETISH SUBLIME PERFECTION SETTING SPRAY",
+            "signals": [
+              "url_match"
+            ]
+          }
+        ],
+        "reviews": [
+          {
+            "url": "https://patmcgrath.com",
+            "title": "PAT McGRATH LABS | Legendary Makeup by Pat McGrath",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/collections/eye-bestsellers",
+            "title": "EYE BESTSELLERS",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/sands-of-time-kit",
+            "title": "Sands of Time Kit",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/collections/eyes",
+            "title": "Colorful Eye Shadow Collection & Eye Palettes | Pat McGrath Labs",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/skin-fetish-sublime-perfection-longwear-blurring-setting-spray",
+            "title": "Skin Fetish: Sublime Perfection Longwear Blurring Setting Spray",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/mattetrance-lipstick",
+            "title": "MatteTrance Lipstick | Pat McGrath Labs",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/blogs/news/pat-mcgrath-labs-launches-skin-fetish-sublime-perfection-setting-spray-new-under-eye-blurring-powder-shades-peach-and-amber",
+            "title": "PAT McGRATH LABS LAUNCHES SKIN FETISH SUBLIME PERFECTION SETTING SPRAY",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/products/skin-fetish-glass-001-artistry-mask",
+            "title": "Skin Fetish: Glass 001 Artistry Mask",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/collections/pat-s-backstage-kits",
+            "title": "PAT\u2019S BACKSTAGE KITS",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://patmcgrath.com/collections/face-kits",
+            "title": "FACE KITS",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "guides": [],
+        "tutorials": [],
+        "about": []
+      },
+      "summary": {
+        "educational": {
+          "exists": true,
+          "page_count": 10,
+          "example_urls": [
+            "https://patmcgrath.com",
+            "https://patmcgrath.com/collections/eye-bestsellers",
+            "https://patmcgrath.com/products/sands-of-time-kit"
+          ]
+        },
+        "how_to": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "comparison": {
+          "exists": true,
+          "page_count": 10,
+          "example_urls": [
+            "https://patmcgrath.com",
+            "https://patmcgrath.com/collections/eye-bestsellers",
+            "https://patmcgrath.com/products/sands-of-time-kit"
+          ]
+        },
+        "faq": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "product_info": {
+          "exists": true,
+          "page_count": 4,
+          "example_urls": [
+            "https://patmcgrath.com/products/sands-of-time-kit",
+            "https://patmcgrath.com/products/skin-fetish-sublime-perfection-longwear-blurring-setting-spray",
+            "https://patmcgrath.com/products/mattetrance-lipstick"
+          ]
+        },
+        "blog": {
+          "exists": true,
+          "page_count": 1,
+          "example_urls": [
+            "https://patmcgrath.com/blogs/news/pat-mcgrath-labs-launches-skin-fetish-sublime-perfection-setting-spray-new-under-eye-blurring-powder-shades-peach-and-amber"
+          ]
+        },
+        "reviews": {
+          "exists": true,
+          "page_count": 10,
+          "example_urls": [
+            "https://patmcgrath.com",
+            "https://patmcgrath.com/collections/eye-bestsellers",
+            "https://patmcgrath.com/products/sands-of-time-kit"
+          ]
+        },
+        "guides": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "tutorials": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "about": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        }
+      },
+      "detailed_pages": [
+        {
+          "url": "https://patmcgrath.com",
+          "title": "PAT McGRATH LABS | Legendary Makeup by Pat McGrath",
+          "headings": [
+            "pat mcgrath labs",
+            "item added to your cart",
+            "3o% off $50+\n35% off $150\n40% off $250",
+            "ask pat anything",
+            "mcgrath news",
+            "holiday 2025",
+            "pat mcgrath labs launches skin fetish sublime perfection setting spray& new under-eye blurring powder shades \u201cpeach\u201d and \u201camber\u201d",
+            "la beaut\u00e9 louis vuitton collection 2025 pat mcgrath collaboration",
+            "get vip access",
+            "now shipping world wide!"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 2165
+        },
+        {
+          "url": "https://patmcgrath.com/collections/eye-bestsellers",
+          "title": "EYE BESTSELLERS",
+          "headings": [
+            "item added to your cart",
+            "collection:\n          \n          \neye bestsellers",
+            "get vip access",
+            "now shipping world wide!"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 2098
+        },
+        {
+          "url": "https://patmcgrath.com/products/sands-of-time-kit",
+          "title": "Sands of Time Kit",
+          "headings": [
+            "item added to your cart",
+            "sands of time kit",
+            "inside this kit",
+            "get vip access",
+            "now shipping world wide!"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 2013
+        },
+        {
+          "url": "https://patmcgrath.com/collections/eyes",
+          "title": "Colorful Eye Shadow Collection & Eye Palettes | Pat McGrath Labs",
+          "headings": [
+            "item added to your cart",
+            "collection:\n          \n          \neyes",
+            "mcgrath news",
+            "holiday 2025",
+            "pat mcgrath labs launches skin fetish sublime perfection setting spray& new under-eye blurring powder shades \u201cpeach\u201d and \u201camber\u201d",
+            "la beaut\u00e9 louis vuitton collection 2025 pat mcgrath collaboration",
+            "get vip access",
+            "now shipping world wide!"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 2820
+        },
+        {
+          "url": "https://patmcgrath.com/products/skin-fetish-sublime-perfection-longwear-blurring-setting-spray",
+          "title": "Skin Fetish: Sublime Perfection Longwear Blurring Setting Spray",
+          "headings": [
+            "item added to your cart",
+            "skin fetish: sublime perfection longwear blurring setting spray",
+            "skin fetish: sublime perfection longwear blurring setting spray",
+            "",
+            "overview",
+            "what pat says",
+            "what else you need to know",
+            "get vip access",
+            "now shipping world wide!"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 1973
+        },
+        {
+          "url": "https://patmcgrath.com/products/mattetrance-lipstick",
+          "title": "MatteTrance Lipstick | Pat McGrath Labs",
+          "headings": [
+            "item added to your cart",
+            "mattetrance\u2122 lipstick",
+            "get vip access",
+            "now shipping world wide!"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 6749
+        },
+        {
+          "url": "https://patmcgrath.com/blogs/news/pat-mcgrath-labs-launches-skin-fetish-sublime-perfection-setting-spray-new-under-eye-blurring-powder-shades-peach-and-amber",
+          "title": "PAT McGRATH LABS LAUNCHES SKIN FETISH SUBLIME PERFECTION SETTING SPRAY",
+          "headings": [
+            "item added to your cart",
+            "pat mcgrath labs launches skin fetish sublime perfection setting spray& new under-eye blurring powder shades \u201cpeach\u201d and \u201camber\u201d",
+            "pat mcgrath\u2019s latest innovation delivers a weightless, soft-focus veil for 16+ hour wear.",
+            "",
+            "\"i\u2019ve always believed a setting spray should do more than just hold \u2014 it should transform. this is my latest backstage breakthrough: weightless, blurring, and built to keep makeup major from first application to final look.\"",
+            "",
+            "",
+            "pat mcgrath labs unveils the new skin fetish: sublime perfection longwear blurring setting spray \u2014 a skincare-powered mist that hydrates, blurs, and boosts radiance in one whisper-thin veil. from the runway to real life, use it as the final step in your makeup routine, misting the face evenly and reapplying as a refreshing boost throughout the day. makeup will maintain its vibrancy for 16+ hours, as the longwear blurring setting spray is engineered to withstand heat, humidity, and smudging, while delivering a multidimensional, soft-focus finish. not to mention, it\u2019s alcohol-free and fragrance-free, as well as free of clay and silica so no powdery residue or whitecast. pat shared with forbes \u201ci never release anything i haven\u2019t tested on real faces in real time\u2014red carpets, runways, flashbulbs, all-night affairs. the spray and powder worked in every condition. seamless wear, luminous blur, no touchups needed. they proved they belong on every stage and in every kit.\u201d",
+            "pair the new skin fetish: sublime perfection longwear blurring setting spray with pat\u2019s iconic under-eye blurring powder \u2014 now available in seven total versatile shades, including new peach and amber shades, specifically created with medium to deeper skin tones in mind. the powder smooths texture, blurs pores, and provides a perfecting, soft-focus effect under the eyes as well as all over the face.",
+            "where to buy",
+            "the new skin fetish: sublime perfection longwear blurring setting spray and new peach and amber shades of the skin fetish: sublime perfection blurring under-eye powder are available now at patmcgrath.com, and will be available at sephora.com starting september 1st, available in-store at sephora starting september 5th, and available at all other retailers - including nordstrom, bergdorf goodman, ulta beauty, revolve and  bluemercury- starting september 25th.",
+            "read all about it:\nhttps://www.forbes.com/sites/rachelburchfield/2025/08/18/pat-mcgrath-labs-new-products-are-secretly-tested-on-runways-and-red-carpets-before-they-launch-they-have-to-solve-an-unmet-need/https://www.essence.com/beauty/pat-mcgrath-new-launches-fashion-week-trend-prediction/https://hypebae.com/2025/8/pat-mcgrath-labs-blurring-skin-fetish-sublime-perfection-longwear-setting-spray-where-to-buy/https://highxtar.com/en/achieve-the-perfect-finish-with-these-two-products-from-pat-mcgrath/https://www.whowhatwear.com/beauty/makeup/pat-mcgrath-blurring-under-eye-powder",
+            "",
+            "get vip access",
+            "now shipping world wide!"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [],
+            "blog": [
+              "url_match"
+            ],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 2115
+        },
+        {
+          "url": "https://patmcgrath.com/products/skin-fetish-glass-001-artistry-mask",
+          "title": "Skin Fetish: Glass 001 Artistry Mask",
+          "headings": [
+            "item added to your cart",
+            "skin fetish: glass 001 artistry mask",
+            "get vip access",
+            "now shipping world wide!"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 2040
+        },
+        {
+          "url": "https://patmcgrath.com/collections/pat-s-backstage-kits",
+          "title": "PAT\u2019S BACKSTAGE KITS",
+          "headings": [
+            "item added to your cart",
+            "collection:\n          \n          \npat\u2019s backstage kits",
+            "get vip access",
+            "now shipping world wide!"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 1876
+        },
+        {
+          "url": "https://patmcgrath.com/collections/face-kits",
+          "title": "FACE KITS",
+          "headings": [
+            "item added to your cart",
+            "collection:\n          \n          \nface kits",
+            "get vip access",
+            "now shipping world wide!"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 2384
+        }
+      ]
+    },
+    {
+      "base_url": "https://charlottetilbury.com",
+      "pages_analyzed": 10,
+      "content_inventory": {
+        "educational": [
+          {
+            "url": "https://charlottetilbury.com",
+            "title": "Shop Luxury Makeup, Skincare & Fragrance  | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason",
+            "title": "Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/wonderglow",
+            "title": "Wonderglow - Face Makeup Primer | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/charlottes-magic-cream-30ml-duo",
+            "title": "Charlotte's Magic Cream 30ml Duo | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/hollywood-contour-wand-medium-dark",
+            "title": "Hollywood Contour Wand - Medium-dark - Liquid Contour | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/skin-care/face/face-oil",
+            "title": "Face Oil: Collagen Facial Oil + Kits | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/products/best-sellers",
+            "title": "Best Makeup Products & Skincare | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/hot-lips-lipstick-kim-k-w",
+            "title": "Kim K.w. - Hot Lips - Light Nude Lipstick | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/makeup/cheek/bronzer/cream-bronzer",
+            "title": "Cream Bronzer | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/makeup/lips/lip-gloss/plumping",
+            "title": "Plumping Lip Glosses & Lip Plumpers | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "how_to": [
+          {
+            "url": "https://charlottetilbury.com",
+            "title": "Shop Luxury Makeup, Skincare & Fragrance  | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason",
+            "title": "Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/wonderglow",
+            "title": "Wonderglow - Face Makeup Primer | Charlotte Tilbury",
+            "signals": [
+              "keyword_match",
+              "heading_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/charlottes-magic-cream-30ml-duo",
+            "title": "Charlotte's Magic Cream 30ml Duo | Charlotte Tilbury",
+            "signals": [
+              "keyword_match",
+              "heading_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/hollywood-contour-wand-medium-dark",
+            "title": "Hollywood Contour Wand - Medium-dark - Liquid Contour | Charlotte Tilbury",
+            "signals": [
+              "keyword_match",
+              "heading_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/skin-care/face/face-oil",
+            "title": "Face Oil: Collagen Facial Oil + Kits | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/products/best-sellers",
+            "title": "Best Makeup Products & Skincare | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/hot-lips-lipstick-kim-k-w",
+            "title": "Kim K.w. - Hot Lips - Light Nude Lipstick | Charlotte Tilbury",
+            "signals": [
+              "keyword_match",
+              "heading_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/makeup/cheek/bronzer/cream-bronzer",
+            "title": "Cream Bronzer | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/makeup/lips/lip-gloss/plumping",
+            "title": "Plumping Lip Glosses & Lip Plumpers | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "comparison": [
+          {
+            "url": "https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason",
+            "title": "Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "faq": [],
+        "product_info": [
+          {
+            "url": "https://charlottetilbury.com/ca/product/wonderglow",
+            "title": "Wonderglow - Face Makeup Primer | Charlotte Tilbury",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/charlottes-magic-cream-30ml-duo",
+            "title": "Charlotte's Magic Cream 30ml Duo | Charlotte Tilbury",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/hollywood-contour-wand-medium-dark",
+            "title": "Hollywood Contour Wand - Medium-dark - Liquid Contour | Charlotte Tilbury",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/skin-care/face/face-oil",
+            "title": "Face Oil: Collagen Facial Oil + Kits | Charlotte Tilbury",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/products/best-sellers",
+            "title": "Best Makeup Products & Skincare | Charlotte Tilbury",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/hot-lips-lipstick-kim-k-w",
+            "title": "Kim K.w. - Hot Lips - Light Nude Lipstick | Charlotte Tilbury",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/makeup/cheek/bronzer/cream-bronzer",
+            "title": "Cream Bronzer | Charlotte Tilbury",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/makeup/lips/lip-gloss/plumping",
+            "title": "Plumping Lip Glosses & Lip Plumpers | Charlotte Tilbury",
+            "signals": [
+              "url_match"
+            ]
+          }
+        ],
+        "blog": [],
+        "reviews": [
+          {
+            "url": "https://charlottetilbury.com",
+            "title": "Shop Luxury Makeup, Skincare & Fragrance  | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason",
+            "title": "Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/hollywood-contour-wand-medium-dark",
+            "title": "Hollywood Contour Wand - Medium-dark - Liquid Contour | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/products/best-sellers",
+            "title": "Best Makeup Products & Skincare | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/makeup/lips/lip-gloss/plumping",
+            "title": "Plumping Lip Glosses & Lip Plumpers | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "guides": [],
+        "tutorials": [
+          {
+            "url": "https://charlottetilbury.com",
+            "title": "Shop Luxury Makeup, Skincare & Fragrance  | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason",
+            "title": "Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/wonderglow",
+            "title": "Wonderglow - Face Makeup Primer | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/charlottes-magic-cream-30ml-duo",
+            "title": "Charlotte's Magic Cream 30ml Duo | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/hollywood-contour-wand-medium-dark",
+            "title": "Hollywood Contour Wand - Medium-dark - Liquid Contour | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/skin-care/face/face-oil",
+            "title": "Face Oil: Collagen Facial Oil + Kits | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/products/best-sellers",
+            "title": "Best Makeup Products & Skincare | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/product/hot-lips-lipstick-kim-k-w",
+            "title": "Kim K.w. - Hot Lips - Light Nude Lipstick | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/makeup/cheek/bronzer/cream-bronzer",
+            "title": "Cream Bronzer | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com/ca/products/makeup/lips/lip-gloss/plumping",
+            "title": "Plumping Lip Glosses & Lip Plumpers | Charlotte Tilbury",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "about": []
+      },
+      "summary": {
+        "educational": {
+          "exists": true,
+          "page_count": 10,
+          "example_urls": [
+            "https://charlottetilbury.com",
+            "https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason",
+            "https://charlottetilbury.com/ca/product/wonderglow"
+          ]
+        },
+        "how_to": {
+          "exists": true,
+          "page_count": 10,
+          "example_urls": [
+            "https://charlottetilbury.com",
+            "https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason",
+            "https://charlottetilbury.com/ca/product/wonderglow"
+          ]
+        },
+        "comparison": {
+          "exists": true,
+          "page_count": 1,
+          "example_urls": [
+            "https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason"
+          ]
+        },
+        "faq": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "product_info": {
+          "exists": true,
+          "page_count": 8,
+          "example_urls": [
+            "https://charlottetilbury.com/ca/product/wonderglow",
+            "https://charlottetilbury.com/ca/product/charlottes-magic-cream-30ml-duo",
+            "https://charlottetilbury.com/ca/product/hollywood-contour-wand-medium-dark"
+          ]
+        },
+        "blog": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "reviews": {
+          "exists": true,
+          "page_count": 5,
+          "example_urls": [
+            "https://charlottetilbury.com",
+            "https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason",
+            "https://charlottetilbury.com/ca/product/hollywood-contour-wand-medium-dark"
+          ]
+        },
+        "guides": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "tutorials": {
+          "exists": true,
+          "page_count": 10,
+          "example_urls": [
+            "https://charlottetilbury.com",
+            "https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason",
+            "https://charlottetilbury.com/ca/product/wonderglow"
+          ]
+        },
+        "about": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        }
+      },
+      "detailed_pages": [
+        {
+          "url": "https://charlottetilbury.com",
+          "title": "Shop Luxury Makeup, Skincare & Fragrance  | Charlotte Tilbury",
+          "headings": [
+            "charlotte tilbury",
+            "new in",
+            "skincare",
+            "all skincare",
+            "best sellers",
+            "all best sellers",
+            "gifts",
+            "shop all gifts",
+            "fragrance",
+            "fragrance",
+            "shop by category",
+            "shop best sellers",
+            "airbrush flawless setting sprayoriginal 100 ml",
+            "charlotte\u2019s magic cream 30ml duoskincare kit",
+            "charlotte's mini viral beauty iconstravel size makeup kit",
+            "flawless, poreless skin secretsmagical savings",
+            "mini pillow talk lip kitpillow talk original",
+            "hollywood flawless filter3 fair",
+            "airbrush flawless finish2 medium",
+            "airbrush flawless  mini setting spray kittravel size face kit",
+            "airbrush flawless finish & set duoface kit",
+            "lip cheatpillow talk",
+            "pillow talk big lip plumpgasmfair to medium",
+            "hollywood flawless complexion duomagical savings",
+            "beautiful skin sun-kissed glow bronzer2 medium",
+            "the hollywood contour duomagical savings",
+            "charlotte\u2019s beautiful, flawless looking skin kitmagical savings",
+            "unisex healthy glowhydrating tint",
+            "airbrush flawless setting spray matte100 ml",
+            "charlotte's magic cream30 ml moisturiser",
+            "beautiful skin foundation3 neutral",
+            "exagger-eyes volume mascaraexagger-black 10ml",
+            "unreal skin sheer glow tint hydrating foundation sticksoft-focus skin tint4 fair",
+            "charlotte's beauty treasure chest12 door beauty advent calendar",
+            "pillow talk lip kitmakeup kit",
+            "airbrush flawless foundation5 neutral",
+            "airbrush flawless finish1 fair",
+            "beauty light wandpinkgasm",
+            "charlotte's magic serum crystal elixir30 ml",
+            "pillow talk push up lashes! mascarasuper black 10 ml",
+            "beauty light wand & hollywood contour kitmust-have cheek kit",
+            "hollywood contour wandfair-medium",
+            "airbrush flawless setting spray34 ml travel",
+            "magic vanishmedium",
+            "charlotte's hollywood skin secrets immediate eye revival patches60 eye patches",
+            "lip cheaticonic nude",
+            "unreal lips healthy glow nectar oiljuicylicious strawberry vanilla",
+            "airbrush flawless setting spray200 ml",
+            "magic night cream50 ml",
+            "wonderglow40ml face primer",
+            "hollywood flawless filter4 medium",
+            "magic eye rescue15 ml",
+            "hollywood contour wandmedium-deep",
+            "beauty light wandpeachgasm",
+            "joyphoriawarm floral100 ml fragrance",
+            "more sexmusk leather100 ml fragrance",
+            "love frequencyfloral woody100 ml fragrance",
+            "beautiful skin island glow easy tanning dropsfair to medium",
+            "charlotte's beautiful skin glow kitmagical savings",
+            "charlotte tilbury exclusives",
+            "trending now",
+            "hollywood contour wandfair-medium",
+            "pillow talk iconic lip and cheek kitlip & cheek cracker",
+            "pillow talk big lip plumpgasmfair to medium",
+            "unreal skin sheer glow tint hydrating foundation sticksoft-focus skin tint4 fair",
+            "airbrush flawless setting spray matte100 ml",
+            "airbrush flawless finish2 medium",
+            "charlotte's mini viral beauty iconstravel size makeup kit",
+            "airbrush flawless  mini setting spray kittravel size face kit",
+            "charlotte's beauty treasure chest12 door beauty advent calendar",
+            "magic eye rescue15 ml",
+            "beautiful skin island glow easy tanning dropsfair to medium",
+            "charlotte's magic cream30 ml moisturiser",
+            "magic night cream50 ml",
+            "charlotte's magic serum crystal elixir30 ml",
+            "airbrush flawless setting sprayoriginal 100 ml",
+            "magic vanishmedium",
+            "unreal lips healthy glow nectar oiljuicylicious strawberry vanilla",
+            "airbrush flawless setting spray200 ml",
+            "beauty light wandpinkgasm",
+            "lip cheaticonic nude",
+            "airbrush flawless finish1 fair",
+            "exagger-eyes volume mascaraexagger-black 10ml",
+            "hollywood flawless filter4 medium",
+            "unisex healthy glowhydrating tint",
+            "charlotte's hollywood skin secrets immediate eye revival patches60 eye patches",
+            "pillow talk lip kitmakeup kit",
+            "flawless, poreless skin secretsmagical savings",
+            "star confidencewarm floral50 ml fragrance",
+            "airbrush flawless setting spray duoface kit",
+            "hollywood superstar glow kittravel size cheek kit",
+            "k.i.s.s.i.n.gpillow talk fair",
+            "k.i.s.s.i.n.gicon baby",
+            "hot lipskim k.w.",
+            "dark spot correcting radiance recovery serum30 ml",
+            "unreal lips healthy glow nectar oiljuicylicious pink watermelon",
+            "lip cheat contour duomedium",
+            "beauty light wandspotlight",
+            "more sexmusk leather10 ml fragrance",
+            "pillow talk push up lashes! mascaradream pop 10 ml",
+            "pillow talk lip kit & makeup bagiconic makeup kit",
+            "fragrance collection of emotions6 x 1.5ml discovery set",
+            "find your perfect makeup + skincare matches",
+            "legendary beauty for a reason",
+            "makeup artist to the stars",
+            "skincare performance expert",
+            "fragrance innovator",
+            "shipping to:",
+            "about",
+            "support",
+            "more from charlotte"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 1258
+        },
+        {
+          "url": "https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason",
+          "title": "Charlotte Tilbury",
+          "headings": [
+            "new in",
+            "skincare",
+            "all skincare",
+            "best sellers",
+            "all best sellers",
+            "gifts",
+            "shop all gifts",
+            "fragrance",
+            "fragrance",
+            "legendary for a reason\u2122\ufe0f.",
+            "airbrush flawless setting sprayoriginal 100 ml",
+            "hollywood contour wandfair",
+            "airbrush flawless finish2 medium",
+            "hollywood flawless filter4 medium",
+            "pillow talk lip kitmakeup kit",
+            "charlotte\u2019s legendary complexion kitmakeup kit",
+            "beauty light wandpinkgasm",
+            "hollywood contour wandmedium",
+            "hollywood flawless filter2.5 fair",
+            "beauty light wandspotlight",
+            "airbrush flawless finish1 fair",
+            "charlotte's mini legendary beauty discovery kitmakeup & skincare kit",
+            "beauty light wandpillow talk original",
+            "charlotte's magic cream50 ml moisturiser",
+            "charlotte\u2019s legendary beauty iconsmakeup & skincare kit",
+            "the original. the one + only. the undupable.",
+            "watch the legendary origin stories",
+            "hollywood flawless filter",
+            "hollywood contour wand",
+            "beauty light wands",
+            "award-winningcharlotte\u2019s magic cream",
+            "what makes it legendary?",
+            "shop my immediate skin revival moisturiser in mini 15ml, 30ml, 50ml + xl 150ml!",
+            "award-winninghollywood flawless filter",
+            "what makes it legendary?",
+            "choose from 12 glowing shades!",
+            "award-winningairbrush flawless finish",
+            "what makes it legendary?",
+            "choose from 4 flawless shades!",
+            "award-winning hollywood contour wands",
+            "new! undupable, super-flattering sculpting shades!",
+            "what makes them legendary?",
+            "now in 7 super-flattering, sculpting shades!",
+            "award-winning beauty light wands",
+            "what makes them legendary?",
+            "choose from 7 glowing shades!",
+            "award-winning pillow talk lip cheat + matte revolution",
+            "what makes them legendary?",
+            "choose from pillow talk fair, pillow talk original, pillow talk medium + pillow talk intense!",
+            "airbrush flawless setting spray",
+            "what makes it legendary?",
+            "available in 100ml, magic mini 34ml + xl 200ml for double the airbrush magic!",
+            "airbrush flawless setting sprayoriginal 100 ml",
+            "hollywood contour wandfair",
+            "airbrush flawless finish2 medium",
+            "hollywood flawless filter4 medium",
+            "pillow talk lip kitmakeup kit",
+            "charlotte\u2019s legendary complexion kitmakeup kit",
+            "beauty light wandpinkgasm",
+            "hollywood contour wandmedium",
+            "hollywood flawless filter2.5 fair",
+            "beauty light wandspotlight",
+            "airbrush flawless finish1 fair",
+            "charlotte's mini legendary beauty discovery kitmakeup & skincare kit",
+            "beauty light wandpillow talk original",
+            "charlotte's magic cream50 ml moisturiser",
+            "charlotte\u2019s legendary beauty iconsmakeup & skincare kit",
+            "shipping to:",
+            "about",
+            "support",
+            "more from charlotte"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 1372
+        },
+        {
+          "url": "https://charlottetilbury.com/ca/product/wonderglow",
+          "title": "Wonderglow - Face Makeup Primer | Charlotte Tilbury",
+          "headings": [
+            "new in",
+            "skincare",
+            "all skincare",
+            "best sellers",
+            "all best sellers",
+            "gifts",
+            "shop all gifts",
+            "fragrance",
+            "fragrance",
+            "wonderglow40ml face primer",
+            "the magic & science",
+            "magic ingredients",
+            "fluorescent light diffuser",
+            "bionymph peptide",
+            "hyaluronic acid",
+            "camellia oil",
+            "rosehip oil",
+            "wild pansy extract",
+            "analyse your skin",
+            "about the product",
+            "ingredients + benefits",
+            "clinically-proven results",
+            "how to apply",
+            "shipping & delivery information",
+            "ground shipping",
+            "express shipping",
+            "new year, new skin!",
+            "magical savings with exclusive kits",
+            "charlotte\u2019s prime, set & glow kitface kit",
+            "charlotte tilbury exclusives",
+            "use it with",
+            "charlotte's magic cream30 ml moisturiser",
+            "beautiful skin foundation5 neutral",
+            "airbrush flawless finish2 medium",
+            "beautiful skin island glow easy tanning dropsfair to medium",
+            "magic away5 medium",
+            "shipping to:",
+            "about",
+            "support",
+            "more from charlotte"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match",
+              "heading_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [],
+            "guides": [],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 1306
+        },
+        {
+          "url": "https://charlottetilbury.com/ca/product/charlottes-magic-cream-30ml-duo",
+          "title": "Charlotte's Magic Cream 30ml Duo | Charlotte Tilbury",
+          "headings": [
+            "new in",
+            "skincare",
+            "all skincare",
+            "best sellers",
+            "all best sellers",
+            "gifts",
+            "shop all gifts",
+            "fragrance",
+            "fragrance",
+            "charlotte\u2019s magic cream 30ml duoskincare kit",
+            "discover the magic!",
+            "magic ingredients",
+            "vitamin c & e",
+            "plump effect peptide",
+            "hyaluronic acid",
+            "cushion mesh technology",
+            "frangipani flower extract",
+            "aloe vera",
+            "camellia oil",
+            "shea butter",
+            "analyse your skin",
+            "product details",
+            "clinically-proven results",
+            "ingredients",
+            "how to apply",
+            "shipping & delivery information",
+            "ground shipping",
+            "express shipping",
+            "new year, new skin!",
+            "magical savings with exclusive kits",
+            "hydration & radiance skin duoskincare kit",
+            "charlotte tilbury exclusives",
+            "use it with",
+            "hollywood superstar glow kittravel size cheek kit",
+            "immediate skin revival on the go setskincare kit",
+            "airbrush flawless finish2 medium",
+            "airbrush flawless setting sprayoriginal 100 ml",
+            "shipping to:",
+            "about",
+            "support",
+            "more from charlotte"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match",
+              "heading_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [],
+            "guides": [],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 1241
+        },
+        {
+          "url": "https://charlottetilbury.com/ca/product/hollywood-contour-wand-medium-dark",
+          "title": "Hollywood Contour Wand - Medium-dark - Liquid Contour | Charlotte Tilbury",
+          "headings": [
+            "new in",
+            "skincare",
+            "all skincare",
+            "best sellers",
+            "all best sellers",
+            "gifts",
+            "shop all gifts",
+            "fragrance",
+            "fragrance",
+            "hollywood contour wandmedium-deep",
+            "medium-deep",
+            "the magic & science",
+            "how to apply charlotte's hollywood contour wand!",
+            "about the product",
+            "ingredients + benefits",
+            "what makes it magic",
+            "how to apply",
+            "discover more",
+            "shipping & delivery information",
+            "ground shipping",
+            "express shipping",
+            "new year, new skin!",
+            "magical savings with exclusive kits",
+            "the hollywood contour duomagical savings",
+            "charlotte tilbury exclusives",
+            "see it on your skintone",
+            "use it with",
+            "charlotte's magic cream30 ml moisturiser",
+            "hollywood flawless filter5 tan",
+            "beauty light wandpinkgasm sunset",
+            "unreal skin sheer glow tint hydrating foundation sticksoft-focus skin tint7 medium",
+            "unreal blush healthy glow stickpinky glow",
+            "shipping to:",
+            "about",
+            "support",
+            "more from charlotte"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match",
+              "heading_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 1368
+        },
+        {
+          "url": "https://charlottetilbury.com/ca/products/skin-care/face/face-oil",
+          "title": "Face Oil: Collagen Facial Oil + Kits | Charlotte Tilbury",
+          "headings": [
+            "new in",
+            "skincare",
+            "all skincare",
+            "best sellers",
+            "all best sellers",
+            "gifts",
+            "shop all gifts",
+            "fragrance",
+            "fragrance",
+            "face oil",
+            "collagen superfusion facial oil30 ml",
+            "collagen superfusion facial oil8 ml",
+            "charlotte\u2019s spa-like radiance skincare setskincare kit",
+            "shipping to:",
+            "about",
+            "support",
+            "more from charlotte"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [],
+            "guides": [],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 735
+        },
+        {
+          "url": "https://charlottetilbury.com/products/best-sellers",
+          "title": "Best Makeup Products & Skincare | Charlotte Tilbury",
+          "headings": [
+            "new in",
+            "skincare",
+            "all skincare",
+            "best sellers",
+            "all best sellers",
+            "gifts",
+            "shop all gifts",
+            "fragrance",
+            "fragrance",
+            "best sellers",
+            "airbrush flawless setting sprayoriginal 100 ml",
+            "charlotte\u2019s magic cream 30ml duoskincare kit",
+            "charlotte's mini viral beauty iconstravel size makeup kit",
+            "flawless, poreless skin secretsmagical savings",
+            "mini pillow talk lip kitpillow talk original",
+            "hollywood flawless filter3 fair",
+            "airbrush flawless finish2 medium",
+            "airbrush flawless  mini setting spray kittravel size face kit",
+            "airbrush flawless finish & set duoface kit",
+            "lip cheatpillow talk",
+            "pillow talk big lip plumpgasmfair to medium",
+            "hollywood flawless complexion duomagical savings",
+            "beautiful skin sun-kissed glow bronzer2 medium",
+            "the hollywood contour duomagical savings",
+            "charlotte\u2019s beautiful, flawless looking skin kitmagical savings",
+            "unisex healthy glowhydrating tint",
+            "airbrush flawless setting spray matte100 ml",
+            "charlotte's magic cream30 ml moisturiser",
+            "beautiful skin foundation3 neutral",
+            "exagger-eyes volume mascaraexagger-black 10ml",
+            "unreal skin sheer glow tint hydrating foundation sticksoft-focus skin tint4 fair",
+            "charlotte's beauty treasure chest12 door beauty advent calendar",
+            "pillow talk lip kitmakeup kit",
+            "airbrush flawless foundation5 neutral",
+            "airbrush flawless finish1 fair",
+            "beauty light wandpinkgasm",
+            "charlotte's magic serum crystal elixir30 ml",
+            "pillow talk push up lashes! mascarasuper black 10 ml",
+            "beauty light wand & hollywood contour kitmust-have cheek kit",
+            "hollywood contour wandfair-medium",
+            "airbrush flawless setting spray34 ml travel",
+            "magic vanishmedium",
+            "charlotte's hollywood skin secrets immediate eye revival patches60 eye patches",
+            "lip cheaticonic nude",
+            "unreal lips healthy glow nectar oiljuicylicious strawberry vanilla",
+            "airbrush flawless setting spray200 ml",
+            "magic night cream50 ml",
+            "wonderglow40ml face primer",
+            "hollywood flawless filter4 medium",
+            "magic eye rescue15 ml",
+            "hollywood contour wandmedium-deep",
+            "beauty light wandpeachgasm",
+            "joyphoriawarm floral100 ml fragrance",
+            "more sexmusk leather100 ml fragrance",
+            "love frequencyfloral woody100 ml fragrance",
+            "beautiful skin island glow easy tanning dropsfair to medium",
+            "charlotte's beautiful skin glow kitmagical savings",
+            "shipping to:",
+            "about",
+            "support",
+            "more from charlotte"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 959
+        },
+        {
+          "url": "https://charlottetilbury.com/ca/product/hot-lips-lipstick-kim-k-w",
+          "title": "Kim K.w. - Hot Lips - Light Nude Lipstick | Charlotte Tilbury",
+          "headings": [
+            "new in",
+            "skincare",
+            "all skincare",
+            "best sellers",
+            "all best sellers",
+            "gifts",
+            "shop all gifts",
+            "fragrance",
+            "fragrance",
+            "hot lipskim k.w.",
+            "kim k.w.",
+            "the magic & science",
+            "magic ingredients",
+            "light-reflecting pigments",
+            "crambe oil",
+            "lipstick tree extract",
+            "about the product",
+            "ingredients + benefits",
+            "how to apply",
+            "shipping & delivery information",
+            "ground shipping",
+            "express shipping",
+            "new year, new skin!",
+            "magical savings with exclusive kits",
+            "hot lips lip kitmakeup kit",
+            "charlotte tilbury exclusives",
+            "see it on your skintone",
+            "use it with",
+            "charlotte's magic lip oil crystal elixiroriginal",
+            "lip lustresweet stiletto",
+            "lip brushrose gold & night crimson",
+            "airbrush flawless finish2 medium",
+            "shipping to:",
+            "about",
+            "support",
+            "more from charlotte"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match",
+              "heading_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [],
+            "guides": [],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 1189
+        },
+        {
+          "url": "https://charlottetilbury.com/ca/products/makeup/cheek/bronzer/cream-bronzer",
+          "title": "Cream Bronzer | Charlotte Tilbury",
+          "headings": [
+            "new in",
+            "skincare",
+            "all skincare",
+            "best sellers",
+            "all best sellers",
+            "gifts",
+            "shop all gifts",
+            "fragrance",
+            "fragrance",
+            "cream bronzer",
+            "beautiful skin sun-kissed glow bronzer2 medium",
+            "beautiful skin sun-kissed glow bronzer kitface kit",
+            "beautiful skin sun-kissed glow bronzer4 deep",
+            "beautiful skin bronzer brushbronzing brush",
+            "super nudes sculpt & shape precision contour kitcheek kit",
+            "beautiful skin sun-kissed glow bronzer1 fair",
+            "beautiful skin sun-kissed glow bronzer3 tan",
+            "shipping to:",
+            "about",
+            "support",
+            "more from charlotte"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [],
+            "guides": [],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 737
+        },
+        {
+          "url": "https://charlottetilbury.com/ca/products/makeup/lips/lip-gloss/plumping",
+          "title": "Plumping Lip Glosses & Lip Plumpers | Charlotte Tilbury",
+          "headings": [
+            "new in",
+            "skincare",
+            "all skincare",
+            "best sellers",
+            "all best sellers",
+            "gifts",
+            "shop all gifts",
+            "fragrance",
+            "fragrance",
+            "plumping lip glosses",
+            "pillow talk big lip plumpgasmfair to medium",
+            "pillow talk big lip plumpgasm lip kitlip kit",
+            "pillow talk big lip plumpgasmmedium to deep",
+            "big lip plumpgasmnudegasm diamonds",
+            "collagen lip bathpillow talk medium",
+            "pillow talk mini glossy lips duopillow talk fair",
+            "pillow talk collagen lip bath kitmagical savings",
+            "lucky lipslip kit",
+            "collagen lip bathpillow talk deep",
+            "collagen lip bathrefresh rose",
+            "collagen lip bathpeachy plump",
+            "pillow talk perfect, plump & pout lip triolip kit",
+            "collagen lip bath kitlip kit",
+            "glossy lip duofresh pink",
+            "hollywood lipslip kit",
+            "collagen lip bathpillow talk fair",
+            "big lip plumpgasmstrawberry chocolate",
+            "collagen lip bathpillow talk",
+            "pillow talk mini glossy lips duopillow talk medium",
+            "collagen lip bathrosy glow",
+            "collagen lip bathwalk of no shame",
+            "plump & lift lip kitlip kit",
+            "shipping to:",
+            "about",
+            "support",
+            "more from charlotte"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 846
+        }
+      ]
+    },
+    {
+      "base_url": "https://tomford.com/beauty",
+      "pages_analyzed": 3,
+      "content_inventory": {
+        "educational": [
+          {
+            "url": "https://tomford.com/beauty",
+            "title": "Fragrance, Makeup and Skincare | TOM FORD BEAUTY",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://tomford.com/privacy",
+            "title": "",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "how_to": [
+          {
+            "url": "https://tomford.com/privacy",
+            "title": "",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "comparison": [
+          {
+            "url": "https://tomford.com/privacy",
+            "title": "",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "faq": [],
+        "product_info": [],
+        "blog": [],
+        "reviews": [
+          {
+            "url": "https://tomford.com/privacy",
+            "title": "",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "url": "https://tomford.com/beauty",
+            "title": "Fragrance, Makeup and Skincare | TOM FORD BEAUTY",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "tutorials": [],
+        "about": []
+      },
+      "summary": {
+        "educational": {
+          "exists": true,
+          "page_count": 2,
+          "example_urls": [
+            "https://tomford.com/beauty",
+            "https://tomford.com/privacy"
+          ]
+        },
+        "how_to": {
+          "exists": true,
+          "page_count": 1,
+          "example_urls": [
+            "https://tomford.com/privacy"
+          ]
+        },
+        "comparison": {
+          "exists": true,
+          "page_count": 1,
+          "example_urls": [
+            "https://tomford.com/privacy"
+          ]
+        },
+        "faq": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "product_info": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "blog": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "reviews": {
+          "exists": true,
+          "page_count": 1,
+          "example_urls": [
+            "https://tomford.com/privacy"
+          ]
+        },
+        "guides": {
+          "exists": true,
+          "page_count": 1,
+          "example_urls": [
+            "https://tomford.com/beauty"
+          ]
+        },
+        "tutorials": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "about": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        }
+      },
+      "detailed_pages": [
+        {
+          "url": "https://tomford.com/beauty",
+          "title": "Fragrance, Makeup and Skincare | TOM FORD BEAUTY",
+          "headings": [
+            "soleil neige",
+            "figue \u00e9rotique",
+            "private blend cherry collection\u200b",
+            "soleil neige eau de parfum",
+            "figue \u00e9rotique eau de parfum",
+            "lost cherry eau de parfum set",
+            "lip color mini deluxe set",
+            "vanilla sex eau de parfum",
+            "electric cherry eau de parfum",
+            "private blend",
+            "makeup",
+            "vanilla sex collection",
+            "signature"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [],
+            "guides": [
+              "keyword_match"
+            ],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 777
+        },
+        {
+          "url": "https://tomford.com/privacy",
+          "title": "",
+          "headings": [
+            "tom ford",
+            "privacy policy",
+            "customer service",
+            "services",
+            "the company"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 11915
+        },
+        {
+          "url": "https://tomford.com/",
+          "title": "TOM FORD Online Store",
+          "headings": [
+            "please select your location"
+          ],
+          "content_types": {
+            "educational": [],
+            "how_to": [],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 89
+        }
+      ]
+    },
+    {
+      "base_url": "https://hudabeauty.com",
+      "pages_analyzed": 10,
+      "content_inventory": {
+        "educational": [
+          {
+            "url": "https://hudabeauty.com/en-us/pages/blogs",
+            "title": "Blogs Landing Page\n \u2013 Huda Beauty",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://hudabeauty.com/en-us/collections/new",
+            "title": "New\n \u2013 Huda Beauty",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "how_to": [
+          {
+            "url": "https://hudabeauty.com/en-us/pages/blogs",
+            "title": "Blogs Landing Page\n \u2013 Huda Beauty",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "comparison": [
+          {
+            "url": "https://hudabeauty.com/en-us/products/icy-nude-eyeshadow-palette-hb01350?variant=50573352468758",
+            "title": "Icy Nude Eyeshadow Palette\n \u2013 Huda Beauty",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "faq": [],
+        "product_info": [
+          {
+            "url": "https://hudabeauty.com/en-us/collections/shop-by-concern-dull-uneven-texture",
+            "title": "Dull & Uneven Texture\n \u2013 Huda Beauty",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://hudabeauty.com/en-us/products/icy-nude-eyeshadow-palette-hb01350?variant=50573352468758",
+            "title": "Icy Nude Eyeshadow Palette\n \u2013 Huda Beauty",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://hudabeauty.com/en-us/collections/shop-by-concern-hyperpigmentation-dark-spots",
+            "title": "Hyperpigmentation/Dark Spots\n \u2013 Huda Beauty",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://hudabeauty.com/en-us/products/bake-press-kit-set_119?variant=50921207267606",
+            "title": "Bake & Press Kit\n \u2013 Huda Beauty",
+            "signals": [
+              "url_match"
+            ]
+          }
+        ],
+        "blog": [
+          {
+            "url": "https://hudabeauty.com/en-us/pages/blogs",
+            "title": "Blogs Landing Page\n \u2013 Huda Beauty",
+            "signals": [
+              "url_match"
+            ]
+          }
+        ],
+        "reviews": [
+          {
+            "url": "https://hudabeauty.com",
+            "title": "Huda Beauty Official Store | Makeup, Skincare, & Fragrance Must-Haves",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://hudabeauty.com/en-us/pages/blogs",
+            "title": "Blogs Landing Page\n \u2013 Huda Beauty",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://hudabeauty.com/en-us/products/icy-nude-eyeshadow-palette-hb01350?variant=50573352468758",
+            "title": "Icy Nude Eyeshadow Palette\n \u2013 Huda Beauty",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://hudabeauty.com/en-us/collections/lips-lip-liner",
+            "title": "Lip Liner\n \u2013 Huda Beauty",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "url": "https://hudabeauty.com/en-us/pages/blogs",
+            "title": "Blogs Landing Page\n \u2013 Huda Beauty",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "tutorials": [],
+        "about": []
+      },
+      "summary": {
+        "educational": {
+          "exists": true,
+          "page_count": 2,
+          "example_urls": [
+            "https://hudabeauty.com/en-us/pages/blogs",
+            "https://hudabeauty.com/en-us/collections/new"
+          ]
+        },
+        "how_to": {
+          "exists": true,
+          "page_count": 1,
+          "example_urls": [
+            "https://hudabeauty.com/en-us/pages/blogs"
+          ]
+        },
+        "comparison": {
+          "exists": true,
+          "page_count": 1,
+          "example_urls": [
+            "https://hudabeauty.com/en-us/products/icy-nude-eyeshadow-palette-hb01350?variant=50573352468758"
+          ]
+        },
+        "faq": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "product_info": {
+          "exists": true,
+          "page_count": 4,
+          "example_urls": [
+            "https://hudabeauty.com/en-us/collections/shop-by-concern-dull-uneven-texture",
+            "https://hudabeauty.com/en-us/products/icy-nude-eyeshadow-palette-hb01350?variant=50573352468758",
+            "https://hudabeauty.com/en-us/collections/shop-by-concern-hyperpigmentation-dark-spots"
+          ]
+        },
+        "blog": {
+          "exists": true,
+          "page_count": 1,
+          "example_urls": [
+            "https://hudabeauty.com/en-us/pages/blogs"
+          ]
+        },
+        "reviews": {
+          "exists": true,
+          "page_count": 4,
+          "example_urls": [
+            "https://hudabeauty.com",
+            "https://hudabeauty.com/en-us/pages/blogs",
+            "https://hudabeauty.com/en-us/products/icy-nude-eyeshadow-palette-hb01350?variant=50573352468758"
+          ]
+        },
+        "guides": {
+          "exists": true,
+          "page_count": 1,
+          "example_urls": [
+            "https://hudabeauty.com/en-us/pages/blogs"
+          ]
+        },
+        "tutorials": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "about": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        }
+      },
+      "detailed_pages": [
+        {
+          "url": "https://hudabeauty.com",
+          "title": "Huda Beauty Official Store | Makeup, Skincare, & Fragrance Must-Haves",
+          "headings": [
+            "country/region",
+            "country/region",
+            "easy bake pressed powder",
+            "airbrush made easy kit",
+            "bake & press kit",
+            "the prime, blur & press kit",
+            "easy bake setting spray with 16-hour wear",
+            "easy bake loose baking & setting powder",
+            "new arrivals",
+            "easy bake pressed powder",
+            "airbrush made easy kit",
+            "easy bake marshmallow puff & sponge",
+            "the prime, blur & press kit",
+            "bake & press kit",
+            "easy bake duo loose powder",
+            "#fauxfilter under eye color corrector",
+            "best sellers",
+            "easy bake loose baking & setting powder",
+            "#fauxfilter under eye color corrector",
+            "easy blur natural airbrush foundation with niacinamide",
+            "#fauxfilter luminous matte concealer",
+            "blush filter liquid blush",
+            "easy bake setting spray with 16-hour wear",
+            "faux filler extra shine lip gloss",
+            "easy blur silicone-free smoothing & pore-minimizing primer",
+            "icy nude eyeshadow palette",
+            "lip stain & oil kit",
+            "change country"
+          ],
+          "content_types": {
+            "educational": [],
+            "how_to": [],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 2299
+        },
+        {
+          "url": "https://hudabeauty.com/en-us/account/register",
+          "title": "Create Account\n \u2013 Huda Beauty",
+          "headings": [
+            "country/region",
+            "country/region",
+            "easy bake pressed powder",
+            "airbrush made easy kit",
+            "bake & press kit",
+            "the prime, blur & press kit",
+            "easy bake setting spray with 16-hour wear",
+            "easy bake loose baking & setting powder",
+            "create account\nactivate your account",
+            "change country"
+          ],
+          "content_types": {
+            "educational": [],
+            "how_to": [],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 1537
+        },
+        {
+          "url": "https://hudabeauty.com/en-us/collections/shop-by-concern-dull-uneven-texture",
+          "title": "Dull & Uneven Texture\n \u2013 Huda Beauty",
+          "headings": [
+            "country/region",
+            "country/region",
+            "easy bake pressed powder",
+            "airbrush made easy kit",
+            "bake & press kit",
+            "the prime, blur & press kit",
+            "easy bake setting spray with 16-hour wear",
+            "easy bake loose baking & setting powder",
+            "shop \ncollection: \ndull & uneven texture",
+            "shop all",
+            "sort by",
+            "eye lift & contour 1% bakuchiol & peptide serum",
+            "get even rose oil",
+            "",
+            "change country"
+          ],
+          "content_types": {
+            "educational": [],
+            "how_to": [],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 1689
+        },
+        {
+          "url": "https://hudabeauty.com/en-us/pages/blogs",
+          "title": "Blogs Landing Page\n \u2013 Huda Beauty",
+          "headings": [
+            "country/region",
+            "country/region",
+            "easy bake pressed powder",
+            "airbrush made easy kit",
+            "bake & press kit",
+            "the prime, blur & press kit",
+            "easy bake setting spray with 16-hour wear",
+            "easy bake loose baking & setting powder",
+            "browse by category",
+            "popular stories",
+            "makeup",
+            "hair",
+            "makeup",
+            "best sellers",
+            "easy bake loose baking & setting powder",
+            "#fauxfilter under eye color corrector",
+            "easy blur natural airbrush foundation with niacinamide",
+            "#fauxfilter luminous matte concealer",
+            "blush filter liquid blush",
+            "easy bake setting spray with 16-hour wear",
+            "faux filler extra shine lip gloss",
+            "easy blur silicone-free smoothing & pore-minimizing primer",
+            "icy nude eyeshadow palette",
+            "lip stain & oil kit",
+            "change country"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [
+              "url_match"
+            ],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [
+              "keyword_match"
+            ],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 2023
+        },
+        {
+          "url": "https://hudabeauty.com/en-us/collections/new",
+          "title": "New\n \u2013 Huda Beauty",
+          "headings": [
+            "country/region",
+            "country/region",
+            "easy bake pressed powder",
+            "airbrush made easy kit",
+            "bake & press kit",
+            "the prime, blur & press kit",
+            "easy bake setting spray with 16-hour wear",
+            "easy bake loose baking & setting powder",
+            "shop \ncollection: \nnew",
+            "shop all",
+            "sort by",
+            "easy bake pressed powder",
+            "airbrush made easy kit",
+            "easy bake marshmallow puff & sponge",
+            "the prime, blur & press kit",
+            "",
+            "bake & press kit",
+            "easy bake duo loose powder",
+            "#fauxfilter under eye color corrector",
+            "the ultimate under eye routine",
+            "the undereye buff brush kit",
+            "blush filter blurring blushlighters palette",
+            "ethereal blush trio & brush kit",
+            "baby pink blush filter kit",
+            "rose berry blush filter kit",
+            "toasty peach blush filter kit",
+            "blush & brush kit",
+            "diffusing cheek brush",
+            "makeout sesh lip duo rosy nudes",
+            "makeout sesh lip duo peachy nudes",
+            "",
+            "change country"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 2392
+        },
+        {
+          "url": "https://hudabeauty.com/en-us/collections/brushes-tools-tools-accessories",
+          "title": "Tools & Accessories\n \u2013 Huda Beauty",
+          "headings": [
+            "country/region",
+            "country/region",
+            "easy bake pressed powder",
+            "airbrush made easy kit",
+            "bake & press kit",
+            "the prime, blur & press kit",
+            "easy bake setting spray with 16-hour wear",
+            "easy bake loose baking & setting powder",
+            "shop \ncollection: \ntools & accessories",
+            "shop all",
+            "sort by",
+            "moisturizing wand brush",
+            "waterproof lash glue",
+            "easy bake marshmallow puff & sponge",
+            "",
+            "change country"
+          ],
+          "content_types": {
+            "educational": [],
+            "how_to": [],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 1704
+        },
+        {
+          "url": "https://hudabeauty.com/en-us/products/icy-nude-eyeshadow-palette-hb01350?variant=50573352468758",
+          "title": "Icy Nude Eyeshadow Palette\n \u2013 Huda Beauty",
+          "headings": [
+            "country/region",
+            "country/region",
+            "easy bake pressed powder",
+            "airbrush made easy kit",
+            "bake & press kit",
+            "the prime, blur & press kit",
+            "easy bake setting spray with 16-hour wear",
+            "easy bake loose baking & setting powder",
+            "icy nude eyeshadow palette",
+            "product info",
+            "ingredients",
+            "change country"
+          ],
+          "content_types": {
+            "educational": [],
+            "how_to": [],
+            "comparison": [
+              "keyword_match"
+            ],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 2707
+        },
+        {
+          "url": "https://hudabeauty.com/en-us/collections/shop-by-concern-hyperpigmentation-dark-spots",
+          "title": "Hyperpigmentation/Dark Spots\n \u2013 Huda Beauty",
+          "headings": [
+            "country/region",
+            "country/region",
+            "easy bake pressed powder",
+            "airbrush made easy kit",
+            "bake & press kit",
+            "the prime, blur & press kit",
+            "easy bake setting spray with 16-hour wear",
+            "easy bake loose baking & setting powder",
+            "shop \ncollection: \nhyperpigmentation/dark spots",
+            "shop all",
+            "sort by",
+            "get even rose oil",
+            "",
+            "change country"
+          ],
+          "content_types": {
+            "educational": [],
+            "how_to": [],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 1638
+        },
+        {
+          "url": "https://hudabeauty.com/en-us/products/bake-press-kit-set_119?variant=50921207267606",
+          "title": "Bake & Press Kit\n \u2013 Huda Beauty",
+          "headings": [
+            "country/region",
+            "country/region",
+            "easy bake pressed powder",
+            "airbrush made easy kit",
+            "bake & press kit",
+            "the prime, blur & press kit",
+            "easy bake setting spray with 16-hour wear",
+            "easy bake loose baking & setting powder",
+            "bake & press kit",
+            "product info",
+            "change country"
+          ],
+          "content_types": {
+            "educational": [],
+            "how_to": [],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 2141
+        },
+        {
+          "url": "https://hudabeauty.com/en-us/collections/lips-lip-liner",
+          "title": "Lip Liner\n \u2013 Huda Beauty",
+          "headings": [
+            "country/region",
+            "country/region",
+            "easy bake pressed powder",
+            "airbrush made easy kit",
+            "bake & press kit",
+            "the prime, blur & press kit",
+            "easy bake setting spray with 16-hour wear",
+            "easy bake loose baking & setting powder",
+            "shop \ncollection: \nlip liner",
+            "shop all",
+            "sort by",
+            "lip contour lip stain for 12-hour wear",
+            "lip contour 2.0 automatic matte lip pencil",
+            "juicy coco lip duo",
+            "juicy bombshell lip duo",
+            "",
+            "lip contour stain kit",
+            "",
+            "change country"
+          ],
+          "content_types": {
+            "educational": [],
+            "how_to": [],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [],
+            "tutorials": [],
+            "about": []
+          },
+          "word_count": 1806
+        }
+      ]
+    },
+    {
+      "base_url": "https://anastasiabeverlyhills.com",
+      "pages_analyzed": 10,
+      "content_inventory": {
+        "educational": [
+          {
+            "url": "https://anastasiabeverlyhills.com",
+            "title": "Anastasia Beverly Hills Cosmetics & Beauty | Official Website",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/brow-quiz",
+            "title": "Brow Quiz | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight",
+            "title": "Your Glow Is Your Spotlight: Dazzling New Year\u2019s Eve Makeup Ideas | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/products/glow-seeker-highlighter",
+            "title": "Glow Seeker Highlighter | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/collections/detail",
+            "title": "Eyebrow Detail: For Realistic Hair-Like Dimension | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/products/matte-satin-lipstick",
+            "title": "Matte & Satin Lipstick | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/shade-finder",
+            "title": "Shade Finder | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/giveaway-terms-conditions",
+            "title": "Giveaway Terms & Conditions\r \u2013 Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/collections/makeup-sets",
+            "title": "Makeup Sets | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/about-us",
+            "title": "About Us | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "how_to": [
+          {
+            "url": "https://anastasiabeverlyhills.com",
+            "title": "Anastasia Beverly Hills Cosmetics & Beauty | Official Website",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/brow-quiz",
+            "title": "Brow Quiz | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight",
+            "title": "Your Glow Is Your Spotlight: Dazzling New Year\u2019s Eve Makeup Ideas | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/products/glow-seeker-highlighter",
+            "title": "Glow Seeker Highlighter | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match",
+              "heading_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/collections/detail",
+            "title": "Eyebrow Detail: For Realistic Hair-Like Dimension | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/products/matte-satin-lipstick",
+            "title": "Matte & Satin Lipstick | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match",
+              "heading_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/shade-finder",
+            "title": "Shade Finder | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/giveaway-terms-conditions",
+            "title": "Giveaway Terms & Conditions\r \u2013 Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/collections/makeup-sets",
+            "title": "Makeup Sets | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/about-us",
+            "title": "About Us | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "comparison": [],
+        "faq": [],
+        "product_info": [
+          {
+            "url": "https://anastasiabeverlyhills.com/products/glow-seeker-highlighter",
+            "title": "Glow Seeker Highlighter | Anastasia Beverly Hills",
+            "signals": [
+              "url_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/products/matte-satin-lipstick",
+            "title": "Matte & Satin Lipstick | Anastasia Beverly Hills",
+            "signals": [
+              "url_match"
+            ]
+          }
+        ],
+        "blog": [
+          {
+            "url": "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight",
+            "title": "Your Glow Is Your Spotlight: Dazzling New Year\u2019s Eve Makeup Ideas | Anastasia Beverly Hills",
+            "signals": [
+              "url_match"
+            ]
+          }
+        ],
+        "reviews": [
+          {
+            "url": "https://anastasiabeverlyhills.com",
+            "title": "Anastasia Beverly Hills Cosmetics & Beauty | Official Website",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight",
+            "title": "Your Glow Is Your Spotlight: Dazzling New Year\u2019s Eve Makeup Ideas | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/products/glow-seeker-highlighter",
+            "title": "Glow Seeker Highlighter | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/products/matte-satin-lipstick",
+            "title": "Matte & Satin Lipstick | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/giveaway-terms-conditions",
+            "title": "Giveaway Terms & Conditions\r \u2013 Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "url": "https://anastasiabeverlyhills.com",
+            "title": "Anastasia Beverly Hills Cosmetics & Beauty | Official Website",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/brow-quiz",
+            "title": "Brow Quiz | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight",
+            "title": "Your Glow Is Your Spotlight: Dazzling New Year\u2019s Eve Makeup Ideas | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/products/glow-seeker-highlighter",
+            "title": "Glow Seeker Highlighter | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/collections/detail",
+            "title": "Eyebrow Detail: For Realistic Hair-Like Dimension | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/products/matte-satin-lipstick",
+            "title": "Matte & Satin Lipstick | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/shade-finder",
+            "title": "Shade Finder | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/giveaway-terms-conditions",
+            "title": "Giveaway Terms & Conditions\r \u2013 Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/collections/makeup-sets",
+            "title": "Makeup Sets | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/about-us",
+            "title": "About Us | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "tutorials": [
+          {
+            "url": "https://anastasiabeverlyhills.com",
+            "title": "Anastasia Beverly Hills Cosmetics & Beauty | Official Website",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/brow-quiz",
+            "title": "Brow Quiz | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight",
+            "title": "Your Glow Is Your Spotlight: Dazzling New Year\u2019s Eve Makeup Ideas | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/products/glow-seeker-highlighter",
+            "title": "Glow Seeker Highlighter | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/collections/detail",
+            "title": "Eyebrow Detail: For Realistic Hair-Like Dimension | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/products/matte-satin-lipstick",
+            "title": "Matte & Satin Lipstick | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/shade-finder",
+            "title": "Shade Finder | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/giveaway-terms-conditions",
+            "title": "Giveaway Terms & Conditions\r \u2013 Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/collections/makeup-sets",
+            "title": "Makeup Sets | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          },
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/about-us",
+            "title": "About Us | Anastasia Beverly Hills",
+            "signals": [
+              "keyword_match"
+            ]
+          }
+        ],
+        "about": [
+          {
+            "url": "https://anastasiabeverlyhills.com/pages/about-us",
+            "title": "About Us | Anastasia Beverly Hills",
+            "signals": [
+              "url_match"
+            ]
+          }
+        ]
+      },
+      "summary": {
+        "educational": {
+          "exists": true,
+          "page_count": 10,
+          "example_urls": [
+            "https://anastasiabeverlyhills.com",
+            "https://anastasiabeverlyhills.com/pages/brow-quiz",
+            "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight"
+          ]
+        },
+        "how_to": {
+          "exists": true,
+          "page_count": 10,
+          "example_urls": [
+            "https://anastasiabeverlyhills.com",
+            "https://anastasiabeverlyhills.com/pages/brow-quiz",
+            "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight"
+          ]
+        },
+        "comparison": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "faq": {
+          "exists": false,
+          "page_count": 0,
+          "example_urls": []
+        },
+        "product_info": {
+          "exists": true,
+          "page_count": 2,
+          "example_urls": [
+            "https://anastasiabeverlyhills.com/products/glow-seeker-highlighter",
+            "https://anastasiabeverlyhills.com/products/matte-satin-lipstick"
+          ]
+        },
+        "blog": {
+          "exists": true,
+          "page_count": 1,
+          "example_urls": [
+            "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight"
+          ]
+        },
+        "reviews": {
+          "exists": true,
+          "page_count": 5,
+          "example_urls": [
+            "https://anastasiabeverlyhills.com",
+            "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight",
+            "https://anastasiabeverlyhills.com/products/glow-seeker-highlighter"
+          ]
+        },
+        "guides": {
+          "exists": true,
+          "page_count": 10,
+          "example_urls": [
+            "https://anastasiabeverlyhills.com",
+            "https://anastasiabeverlyhills.com/pages/brow-quiz",
+            "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight"
+          ]
+        },
+        "tutorials": {
+          "exists": true,
+          "page_count": 10,
+          "example_urls": [
+            "https://anastasiabeverlyhills.com",
+            "https://anastasiabeverlyhills.com/pages/brow-quiz",
+            "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight"
+          ]
+        },
+        "about": {
+          "exists": true,
+          "page_count": 1,
+          "example_urls": [
+            "https://anastasiabeverlyhills.com/pages/about-us"
+          ]
+        }
+      },
+      "detailed_pages": [
+        {
+          "url": "https://anastasiabeverlyhills.com",
+          "title": "Anastasia Beverly Hills Cosmetics & Beauty | Official Website",
+          "headings": [
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "impeccable blurring second-skin matte foundation",
+            "embers mini eyeshadow palette",
+            "magic touch blush trio",
+            "glow seeker highlighter",
+            "subtotal",
+            "sign up now to shop first",
+            "the effortless base set",
+            "impeccable",
+            "blurring second-skin matte foundation",
+            "pair with impeccable",
+            "impeccable 24hr blurring matte setting spray",
+            "hydra prime spf 50",
+            "magic touch blush trio",
+            "smooth blur bronzer",
+            "glow seeker highlighter",
+            "exclusive abh vaults",
+            "cosmic collectors vault",
+            "the icons vault",
+            "shop by category",
+            "brows",
+            "eyes",
+            "face",
+            "lips",
+            "sets",
+            "latest beauty articles",
+            "effortless base set: the natural makeup look for flawless skin",
+            "your glow is your spotlight: dazzling new year\u2019s eve makeup ideas",
+            "get the look: embers\u2019 holiday & natural eyeshadow looks",
+            "discover your zodiac lip mood",
+            "anastasia\u2019s custom full glam: timeless beauty",
+            "abh collector\u2019s set",
+            "abh makeup gift guide 2025 edit",
+            "the 2025 makeup abh gift guide: gifts by price",
+            "2025 abh makeup gift guide: gifts by collection",
+            "anastasia's makeup routine: day to night",
+            "get the look",
+            "get the look: dewy + radiant makeup",
+            "get the look: sculpted & defined",
+            "get the look: blushed & bronzed",
+            "get the look: blurred & radiant",
+            "get the look: signature brows",
+            "exclusive tools & offers",
+            "gift finder quiz",
+            "impeccable shade finder",
+            "brow quiz",
+            "subscribe & save",
+            "nordstrom services",
+            "quick links"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [
+              "keyword_match"
+            ],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 9163
+        },
+        {
+          "url": "https://anastasiabeverlyhills.com/pages/brow-quiz",
+          "title": "Brow Quiz | Anastasia Beverly Hills",
+          "headings": [
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "impeccable blurring second-skin matte foundation",
+            "embers mini eyeshadow palette",
+            "magic touch blush trio",
+            "glow seeker highlighter",
+            "subtotal",
+            "brow quiz"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [],
+            "guides": [
+              "keyword_match"
+            ],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 2095
+        },
+        {
+          "url": "https://anastasiabeverlyhills.com/blogs/the-studio/your-glow-is-your-spotlight",
+          "title": "Your Glow Is Your Spotlight: Dazzling New Year\u2019s Eve Makeup Ideas | Anastasia Beverly Hills",
+          "headings": [
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "impeccable blurring second-skin matte foundation",
+            "embers mini eyeshadow palette",
+            "magic touch blush trio",
+            "glow seeker highlighter",
+            "subtotal",
+            "your glow is your spotlight: dazzling new year\u2019s eve makeup ideas",
+            "embers mini eyeshadow palette",
+            "impeccable blurring second-skin matte foundation",
+            "lip velvet",
+            "comments"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [
+              "url_match"
+            ],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [
+              "keyword_match"
+            ],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 3066
+        },
+        {
+          "url": "https://anastasiabeverlyhills.com/products/glow-seeker-highlighter",
+          "title": "Glow Seeker Highlighter | Anastasia Beverly Hills",
+          "headings": [
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "impeccable blurring second-skin matte foundation",
+            "embers mini eyeshadow palette",
+            "magic touch blush trio",
+            "glow seeker highlighter",
+            "subtotal",
+            "glow seeker highlighter",
+            "you'll also love",
+            "lip velvet",
+            "beauty balm serum boosted skin tint",
+            "blurring serum blush",
+            "liquid liner",
+            "articles",
+            "get the look: full glam",
+            "two new shades to seek out in glow seeker highlighter",
+            "how to get: sunkissed skin",
+            "get the look: natural & clean",
+            "watch",
+            "norvina introduces glow seeker",
+            "get the look: using glow seeker",
+            "get the look: using glow seeker",
+            "get the look: using glow seeker",
+            "get the look: using glow seeker",
+            "get the look: using glow seeker highlighter",
+            "glow seeker sun idol arm swatches",
+            "reviews"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match",
+              "heading_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [
+              "keyword_match"
+            ],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 3887
+        },
+        {
+          "url": "https://anastasiabeverlyhills.com/collections/detail",
+          "title": "Eyebrow Detail: For Realistic Hair-Like Dimension | Anastasia Beverly Hills",
+          "headings": [
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "impeccable blurring second-skin matte foundation",
+            "embers mini eyeshadow palette",
+            "magic touch blush trio",
+            "glow seeker highlighter",
+            "subtotal",
+            "detail",
+            "microstroke brow pen",
+            "ultimate brow essentials kit",
+            "mini brow wiz\u00ae",
+            "perfectly shaped brow duo",
+            "ultimate brow essentials kit",
+            "anastasia's favorites set",
+            "long-wearing brow set",
+            "soft & stunning brow set",
+            "sculpt like a pro set",
+            "brush 12 - dual-ended firm angled brush",
+            "brow pen",
+            "brow definer",
+            "brow wiz\u00ae",
+            "brush 15 - mini angled brush",
+            "brush 14 - duo brow/eye liner angled cut/spooley",
+            "mini brow definer"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [],
+            "guides": [
+              "keyword_match"
+            ],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 2513
+        },
+        {
+          "url": "https://anastasiabeverlyhills.com/products/matte-satin-lipstick",
+          "title": "Matte & Satin Lipstick | Anastasia Beverly Hills",
+          "headings": [
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "impeccable blurring second-skin matte foundation",
+            "embers mini eyeshadow palette",
+            "magic touch blush trio",
+            "glow seeker highlighter",
+            "subtotal",
+            "matte & satin lipstick",
+            "you'll also love",
+            "microstroke brow pen",
+            "lip gloss",
+            "lip liner",
+            "impeccable blurring second-skin matte foundation",
+            "articles",
+            "how to get the sculpted lip look",
+            "how to get fuller-looking lips",
+            "get the look: effortlessly impeccable",
+            "get the look: divine romance",
+            "reviews"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match",
+              "heading_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [
+              "url_match"
+            ],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [
+              "keyword_match"
+            ],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 6557
+        },
+        {
+          "url": "https://anastasiabeverlyhills.com/pages/shade-finder",
+          "title": "Shade Finder | Anastasia Beverly Hills",
+          "headings": [
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "impeccable blurring second-skin matte foundation",
+            "embers mini eyeshadow palette",
+            "magic touch blush trio",
+            "glow seeker highlighter",
+            "subtotal",
+            "impeccable shade finder",
+            "see the impeccable difference",
+            "browse before & after images"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [],
+            "guides": [
+              "keyword_match"
+            ],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 2142
+        },
+        {
+          "url": "https://anastasiabeverlyhills.com/pages/giveaway-terms-conditions",
+          "title": "Giveaway Terms & Conditions\r \u2013 Anastasia Beverly Hills",
+          "headings": [
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "impeccable blurring second-skin matte foundation",
+            "embers mini eyeshadow palette",
+            "magic touch blush trio",
+            "glow seeker highlighter",
+            "subtotal",
+            "giveaway terms & conditions"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [
+              "keyword_match"
+            ],
+            "guides": [
+              "keyword_match"
+            ],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 3625
+        },
+        {
+          "url": "https://anastasiabeverlyhills.com/collections/makeup-sets",
+          "title": "Makeup Sets | Anastasia Beverly Hills",
+          "headings": [
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "impeccable blurring second-skin matte foundation",
+            "embers mini eyeshadow palette",
+            "magic touch blush trio",
+            "glow seeker highlighter",
+            "subtotal",
+            "makeup sets",
+            "the effortless base set",
+            "abh collector\u2019s set",
+            "high shine mini lip gloss duo",
+            "ultimate brow essentials kit",
+            "velvet lips mini lip velvet duo",
+            "cosmic collectors vault",
+            "the icons vault",
+            "discovery set",
+            "gloss icons",
+            "glowing & blushed set",
+            "blurred & matte set",
+            "brush best sellers set",
+            "perfect eye look brush set",
+            "face essentials brush set",
+            "anastasia's favorites set",
+            "sculpt like a pro set",
+            "up to 40% off kits & sets",
+            "embers mini eyeshadow palette",
+            "microstroke brow pen",
+            "gift finder quiz"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [],
+            "guides": [
+              "keyword_match"
+            ],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": []
+          },
+          "word_count": 2675
+        },
+        {
+          "url": "https://anastasiabeverlyhills.com/pages/about-us",
+          "title": "About Us | Anastasia Beverly Hills",
+          "headings": [
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "shop all",
+            "up to 40% off",
+            "new! embers mini eyeshadow palette",
+            "sign up to shop first",
+            "best sellers",
+            "flawless skin, all day impeccable",
+            "matte, redefined",
+            "the icon of precision",
+            "eyebrows",
+            "explore",
+            "new! microstroke brow pen",
+            "the ultimate brow duo",
+            "discover your perfect brows",
+            "eyes",
+            "explore",
+            "new! embers mini eyeshadow palette",
+            "meet the minis",
+            "explore best selling mascara",
+            "face",
+            "skincare",
+            "explore",
+            "prep, prime + protect",
+            "find your impeccable shade",
+            "custom complexion, curated by pros",
+            "lips",
+            "explore",
+            "all-new! lip shades",
+            "best-selling mini duo",
+            "all-new mini duo",
+            "sets",
+            "\u200bthe icons vault",
+            "cosmic collectors vault",
+            "effortless base set",
+            "discover",
+            "tools",
+            "services",
+            "the studio blog",
+            "video library",
+            "checkout our new location",
+            "impeccable blurring second-skin matte foundation",
+            "embers mini eyeshadow palette",
+            "magic touch blush trio",
+            "glow seeker highlighter",
+            "subtotal",
+            "anastasia beverly hills",
+            "she invented brows.",
+            "anastasia soare",
+            "apothecary series: anastasia soare",
+            "our founding",
+            "balance & proportions",
+            "product development",
+            "eyebrow shaping",
+            "everyday essentials",
+            "labor of love",
+            "explore our brow essentials",
+            "the golden ratio method",
+            "brow quiz",
+            "brow kits",
+            "brow genius\u00ae",
+            "makeup brushes"
+          ],
+          "content_types": {
+            "educational": [
+              "keyword_match"
+            ],
+            "how_to": [
+              "keyword_match"
+            ],
+            "comparison": [],
+            "faq": [],
+            "product_info": [],
+            "blog": [],
+            "reviews": [],
+            "guides": [
+              "keyword_match"
+            ],
+            "tutorials": [
+              "keyword_match"
+            ],
+            "about": [
+              "url_match"
+            ]
+          },
+          "word_count": 2488
+        }
+      ]
+    }
+  ],
+  "comparison": {
+    "verified_gaps": [
+      {
+        "content_type": "comparison",
+        "status": "verified_gap",
+        "brand_has": false,
+        "competitors_with": 4,
+        "total_competitors": 5,
+        "competitor_examples": [
+          {
+            "url": "https://patmcgrath.com",
+            "page_count": 10,
+            "examples": [
+              "https://patmcgrath.com",
+              "https://patmcgrath.com/collections/eye-bestsellers",
+              "https://patmcgrath.com/products/sands-of-time-kit"
+            ]
+          },
+          {
+            "url": "https://charlottetilbury.com",
+            "page_count": 1,
+            "examples": [
+              "https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason"
+            ]
+          }
+        ],
+        "recommendation": "Create comparison content",
+        "priority": "high"
+      },
+      {
+        "content_type": "blog",
+        "status": "verified_gap",
+        "brand_has": false,
+        "competitors_with": 3,
+        "total_competitors": 5,
+        "competitor_examples": [
+          {
+            "url": "https://patmcgrath.com",
+            "page_count": 1,
+            "examples": [
+              "https://patmcgrath.com/blogs/news/pat-mcgrath-labs-launches-skin-fetish-sublime-perfection-setting-spray-new-under-eye-blurring-powder-shades-peach-and-amber"
+            ]
+          },
+          {
+            "url": "https://hudabeauty.com",
+            "page_count": 1,
+            "examples": [
+              "https://hudabeauty.com/en-us/pages/blogs"
+            ]
+          }
+        ],
+        "recommendation": "Create blog content",
+        "priority": "high"
+      },
+      {
+        "content_type": "guides",
+        "status": "expansion_opportunity",
+        "brand_has": true,
+        "brand_count": 2,
+        "competitors_with": 3,
+        "total_competitors": 5,
+        "competitor_examples": [
+          {
+            "url": "https://tomford.com/beauty",
+            "page_count": 1,
+            "examples": [
+              "https://tomford.com/beauty"
+            ]
+          },
+          {
+            "url": "https://hudabeauty.com",
+            "page_count": 1,
+            "examples": [
+              "https://hudabeauty.com/en-us/pages/blogs"
+            ]
+          }
+        ],
+        "recommendation": "Expand guides content (you have 2 pages, competitors average more)",
+        "priority": "medium"
+      }
+    ],
+    "false_positives": [
+      {
+        "content_type": "faq",
+        "status": "not_a_gap",
+        "reason": "No competitors have this content either",
+        "recommendation": "Optional: pioneer this content type"
+      }
+    ],
+    "total_content_types_analyzed": 9,
+    "verified_gap_count": 2,
+    "expansion_opportunity_count": 1
+  },
+  "timestamp": "2026-01-11 23:01:11"
+}

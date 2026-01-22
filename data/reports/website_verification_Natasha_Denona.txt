@@ -1,0 +1,69 @@
+================================================================================
+WEBSITE CONTENT VERIFICATION - Natasha Denona
+================================================================================
+Generated: 2026-01-11 23:01:11
+
+YOUR WEBSITE CONTENT INVENTORY
+--------------------------------------------------------------------------------
+Educational: ✓ EXISTS (10 pages)
+  - https://natashadenona.com
+  - https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046
+How To: ✓ EXISTS (10 pages)
+  - https://natashadenona.com
+  - https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046
+Comparison: ✗ MISSING
+Faq: ✗ MISSING
+Product Info: ✓ EXISTS (9 pages)
+  - https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046
+  - https://natashadenona.com/products/macro-tech-eye-crayon
+Blog: ✗ MISSING
+Reviews: ✓ EXISTS (4 pages)
+  - https://natashadenona.com/products/hy-sculpt-liquid-bronzer?variant=46405264769198
+  - https://natashadenona.com/products/hy-glam-foundation?variant=46605064732846
+Guides: ✓ EXISTS (2 pages)
+  - https://natashadenona.com/products/hy-glam-corrector
+  - https://natashadenona.com/products/eye-sculpt-texture-tone-eyeshadow-palette?variant=46748326232238
+Tutorials: ✓ EXISTS (10 pages)
+  - https://natashadenona.com
+  - https://natashadenona.com/products/hy-glam-powder-foundation?variant=44828937552046
+About: ✗ MISSING
+
+VERIFIED CONTENT GAPS
+--------------------------------------------------------------------------------
+
+1. Comparison [HIGH]
+   Status: MISSING from your site
+   Competitors with this: 4/5
+   Recommendation: Create comparison content
+   Competitor examples:
+     - https://patmcgrath.com (10 pages)
+       → https://patmcgrath.com
+       → https://patmcgrath.com/collections/eye-bestsellers
+     - https://charlottetilbury.com (1 pages)
+       → https://charlottetilbury.com/ca/content/discover-legendary-for-a-reason
+
+2. Blog [HIGH]
+   Status: MISSING from your site
+   Competitors with this: 3/5
+   Recommendation: Create blog content
+   Competitor examples:
+     - https://patmcgrath.com (1 pages)
+       → https://patmcgrath.com/blogs/news/pat-mcgrath-labs-launches-skin-fetish-sublime-perfection-setting-spray-new-under-eye-blurring-powder-shades-peach-and-amber
+     - https://hudabeauty.com (1 pages)
+       → https://hudabeauty.com/en-us/pages/blogs
+
+EXPANSION OPPORTUNITIES
+--------------------------------------------------------------------------------
+
+• Guides
+  You have: 2 pages
+  Competitors with more: 3
+  Recommendation: Expand guides content (you have 2 pages, competitors average more)
+
+FALSE POSITIVES (NOT REAL GAPS)
+--------------------------------------------------------------------------------
+
+• Faq
+  Status: Not A Gap
+  Reason: No competitors have this content either
+  Recommendation: Optional: pioneer this content type
