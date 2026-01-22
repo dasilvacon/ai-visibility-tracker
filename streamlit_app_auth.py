@@ -134,6 +134,10 @@ def login_page():
         submit = st.form_submit_button("Login", use_container_width=True)
 
         if submit:
+            # Strip whitespace from inputs
+            username = username.strip()
+            password = password.strip()
+
             # DEBUG - Check what we're comparing
             if hasattr(st, 'secrets') and 'passwords' in st.secrets:
                 stored_password = st.secrets['passwords'].get(username)
