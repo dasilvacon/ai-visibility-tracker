@@ -134,6 +134,14 @@ def login_page():
         submit = st.form_submit_button("Login", use_container_width=True)
 
         if submit:
+            # DEBUG - Check what we're comparing
+            if hasattr(st, 'secrets') and 'passwords' in st.secrets:
+                stored_password = st.secrets['passwords'].get(username)
+                st.write(f"DEBUG - Username entered: '{username}'")
+                st.write(f"DEBUG - Password entered length: {len(password)}")
+                st.write(f"DEBUG - Stored password length: {len(stored_password) if stored_password else 0}")
+                st.write(f"DEBUG - Passwords match: {stored_password == password}")
+
             if check_password(username, password):
                 st.session_state.authenticated = True
                 st.session_state.username = username
