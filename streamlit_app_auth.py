@@ -113,6 +113,21 @@ def login_page():
     st.markdown("<p style='text-align: center; color: #666;'>Client Portal Login</p>", unsafe_allow_html=True)
     st.markdown("---")
 
+    # DEBUG - Remove after testing
+    with st.expander("🔍 Debug Info (Remove after testing)"):
+        if hasattr(st, 'secrets'):
+            st.write("✅ Secrets found:", list(st.secrets.keys()))
+            if 'passwords' in st.secrets:
+                st.write("✅ Usernames available:", list(st.secrets['passwords'].keys()))
+            else:
+                st.write("❌ No 'passwords' section in secrets")
+            if 'brands' in st.secrets:
+                st.write("✅ Brands available:", list(st.secrets['brands'].keys()))
+            else:
+                st.write("❌ No 'brands' section in secrets")
+        else:
+            st.write("❌ No secrets loaded at all")
+
     with st.form("login_form"):
         username = st.text_input("Username", placeholder="Enter your username")
         password = st.text_input("Password", type="password", placeholder="Enter your password")
