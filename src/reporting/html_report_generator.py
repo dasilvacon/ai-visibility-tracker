@@ -703,13 +703,110 @@ class HTMLReportGenerator:
             html += """
                 </tbody>
             </table>
+            """
 
-            <div style="background: #F3EFF2; padding: 20px; border-radius: 8px; margin-top: 32px;">
-                <h4 style="color: #4D2E3A; margin-bottom: 12px;">📊 Full Source List Available</h4>
-                <p style="color: #6B5660; font-size: 14px; line-height: 1.6; margin: 0;">
-                    A complete CSV export with all sources, opportunity scores, and example URLs is available
-                    in your reports folder: <code style="background: #FFFFFF; padding: 2px 6px; border-radius: 3px;">sources_{brand_name.replace(" ", "_")}.csv</code>
+            # Add expandable table with ALL sources
+            all_sources = source_analysis.get('all_sources', [])
+            import json
+
+            # Generate table rows for ALL sources
+            all_sources_rows = ""
+            for source in all_sources:
+                status = '✓ Present' if source.get('mentions_your_brand', 0) > 0 else '❌ Missing'
+                status_color = '#27AE60' if source.get('mentions_your_brand', 0) > 0 else '#E74C3C'
+
+                all_sources_rows += f"""
+                <tr style="border-bottom: 1px solid #E8E4E3;">
+                    <td style="padding: 12px; color: #4D2E3A; font-weight: 500;">{source.get('source', '')}</td>
+                    <td style="padding: 12px; color: #6B5660;">{source.get('domain', '')}</td>
+                    <td style="padding: 12px; text-align: center; color: #6B5660;">{source.get('total_appearances', 0)}</td>
+                    <td style="padding: 12px; text-align: center; color: #6B5660; font-weight: 600;">{source.get('mentions_your_brand', 0)}</td>
+                    <td style="padding: 12px; text-align: center; color: #6B5660;">{source.get('brand_mention_rate', 0)}%</td>
+                    <td style="padding: 12px; color: #6B5660;">{source.get('top_competitor', '—')}</td>
+                    <td style="padding: 12px; color: {status_color}; font-weight: 500;">{status}</td>
+                </tr>
+                """
+
+            # Convert sources to JSON for download button
+            sources_json = json.dumps(all_sources)
+            brand_name_clean = brand_name.replace(" ", "_")
+
+            html += f"""
+            <div style="background: #F3EFF2; padding: 32px; border-radius: 8px; margin-top: 32px;">
+                <h3 style="color: #4D2E3A; margin-top: 0;">📊 Complete Source List</h3>
+                <p style="color: #6B5660; font-size: 15px; line-height: 1.6; margin-bottom: 20px;">
+                    All {len(all_sources)} sources found in AI responses. Click to expand the full table or download as CSV.
                 </p>
+
+                <details style="margin-top: 20px;">
+                    <summary style="cursor: pointer; padding: 16px; background: #FFFFFF; border-radius: 6px; font-weight: 500; color: #4D2E3A; border: 1px solid #E8E4E3;">
+                        ▶ View All {len(all_sources)} Sources (Click to Expand)
+                    </summary>
+
+                    <div style="margin-top: 20px; max-height: 500px; overflow-y: auto; border: 1px solid #E8E4E3; border-radius: 6px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead style="position: sticky; top: 0; background: #F3EFF2; z-index: 10;">
+                                <tr style="border-bottom: 2px solid #D4C5CE;">
+                                    <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Source</th>
+                                    <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Domain</th>
+                                    <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Total</th>
+                                    <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Your Brand</th>
+                                    <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Your %</th>
+                                    <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Top Competitor</th>
+                                    <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {all_sources_rows}
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+
+                <div style="margin-top: 24px; text-align: center;">
+                    <button onclick="downloadSourceCSV()" style="
+                        background: #A78E8B;
+                        color: white;
+                        border: none;
+                        padding: 14px 32px;
+                        border-radius: 6px;
+                        font-size: 15px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                        transition: background 0.2s ease;
+                    " onmouseover="this.style.background='#D4698B'" onmouseout="this.style.background='#A78E8B'">
+                        📥 Download Complete Source List (CSV)
+                    </button>
+                </div>
+
+                <script>
+                function downloadSourceCSV() {{
+                    const sources = {sources_json};
+
+                    let csv = 'Source Name,Domain,Total Appearances,Your Brand Mentions,Your Brand %,Top Competitor,Should Target,Priority\\n';
+
+                    sources.forEach(source => {{
+                        const shouldTarget = (source.mentions_your_brand || 0) === 0 && (source.competitor_count || 0) > 0 ? 'YES' : 'NO';
+                        const priority = shouldTarget === 'YES' && (source.opportunity_score || 0) > 50 ? 'HIGH' : 'MEDIUM';
+
+                        csv += `"${{source.source || ''}}","${{source.domain || ''}}",`
+                            + `${{source.total_appearances || 0}},${{source.mentions_your_brand || 0}},`
+                            + `${{source.brand_mention_rate || 0}}%,"${{source.top_competitor || ''}}",`
+                            + `${{shouldTarget}},${{priority}}\\n`;
+                    }});
+
+                    const blob = new Blob([csv], {{ type: 'text/csv;charset=utf-8;' }});
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'sources_{brand_name_clean}.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }}
+                </script>
             </div>
             """
         else:
