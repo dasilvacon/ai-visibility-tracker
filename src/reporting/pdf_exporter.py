@@ -25,16 +25,22 @@ except ImportError:
 class PDFExporter:
     """Generates executive summary PDF."""
 
-    # DaSilva brand colors
-    DEEP_PLUM = colors.HexColor('#402E3A')
-    DUSTY_ROSE = colors.HexColor('#A78E8B')
-    CHARCOAL = colors.HexColor('#1C1C1C')
-    OFF_WHITE = colors.HexColor('#FBFBEF')
-    ACCENT_PINK = colors.HexColor('#D4698B')
-
     def __init__(self, reports_dir: str):
-        """
-        Initialize PDF exporter.
+        # DaSilva brand colors
+        if REPORTLAB_AVAILABLE:
+            self.DEEP_PLUM = colors.HexColor('#402E3A')
+            self.DUSTY_ROSE = colors.HexColor('#A78E8B')
+            self.CHARCOAL = colors.HexColor('#1C1C1C')
+            self.OFF_WHITE = colors.HexColor('#FBFBEF')
+            self.ACCENT_PINK = colors.HexColor('#D4698B')
+        else:
+            self.DEEP_PLUM = None
+            self.DUSTY_ROSE = None
+            self.CHARCOAL = None
+            self.OFF_WHITE = None
+            self.ACCENT_PINK = None
+
+        """Initialize PDF exporter.
 
         Args:
             reports_dir: Directory to save PDF exports
