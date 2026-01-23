@@ -92,6 +92,21 @@ def login_page():
     st.markdown("<p style='text-align: center; color: #666;'>Client Portal</p>", unsafe_allow_html=True)
     st.markdown("---")
 
+    # DEBUG - Remove after testing
+    with st.expander("🔍 Debug Info"):
+        if hasattr(st, 'secrets'):
+            st.write("✅ Secrets found:", list(st.secrets.keys()))
+            if 'passwords' in st.secrets:
+                st.write("✅ Usernames available:", list(st.secrets['passwords'].keys()))
+            else:
+                st.write("❌ No 'passwords' section in secrets")
+            if 'brands' in st.secrets:
+                st.write("✅ Brands available:", list(st.secrets['brands'].keys()))
+            else:
+                st.write("❌ No 'brands' section in secrets")
+        else:
+            st.write("❌ No secrets loaded")
+
     with st.form("login_form"):
         username = st.text_input("Username", placeholder="Enter your username")
         password = st.text_input("Password", type="password", placeholder="Enter your password")
@@ -101,6 +116,17 @@ def login_page():
             # Strip whitespace
             username = username.strip()
             password = password.strip()
+
+            # DEBUG - Check what we're comparing
+            if hasattr(st, 'secrets') and 'passwords' in st.secrets:
+                stored_password = st.secrets['passwords'].get(username)
+                st.write(f"DEBUG - Username entered: '{username}'")
+                st.write(f"DEBUG - Password entered length: {len(password)}")
+                st.write(f"DEBUG - Stored password length: {len(stored_password) if stored_password else 0}")
+                st.write(f"DEBUG - Passwords match: {stored_password == password}")
+                if stored_password:
+                    st.write(f"DEBUG - Stored password (first 3 chars): '{stored_password[:3]}...'")
+                    st.write(f"DEBUG - Entered password (first 3 chars): '{password[:3]}...'")
 
             if check_password(username, password):
                 st.session_state.authenticated = True
