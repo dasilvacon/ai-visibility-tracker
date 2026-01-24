@@ -2447,7 +2447,7 @@ class HTMLReportGenerator:
 
         # Win 2: Comparison pages based on competitors
         if top_competitors:
-            comp_name = top_competitors[0]['competitor'] if top_competitors else 'top competitor'
+            comp_name = top_competitors[0].get('name', top_competitors[0].get('competitor', 'Charlotte Tilbury'))
             quick_wins.append({
                 'icon': '🥇',
                 'priority': 'HIGH IMPACT',
