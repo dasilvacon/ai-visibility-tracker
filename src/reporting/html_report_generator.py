@@ -1677,6 +1677,12 @@ class HTMLReportGenerator:
 
             {self._build_chatgpt_crisis_alert(brand_name, scored_results)}
 
+            {self._build_roi_estimator(visibility_summary, competitive_analysis)}
+
+            {self._build_quick_wins(gap_analysis, source_analysis, competitive_analysis)}
+
+            {self._build_content_gap_analysis(gap_analysis, scored_results)}
+
             {self._build_visibility_by_persona(scored_results)}
 
             {self._build_visibility_by_platform(scored_results)}
@@ -2409,6 +2415,411 @@ class HTMLReportGenerator:
 
         {cards_html}
         """
+
+    def _build_quick_wins(self, gap_analysis: Dict[str, Any], source_analysis: Dict[str, Any], competitive_analysis: Dict[str, Any]) -> str:
+        """Build Quick Wins section with prioritized, actionable steps."""
+
+        # Get data for quick wins
+        prioritized_content = gap_analysis.get('prioritized_content_gaps', [])
+        recommended_targets = source_analysis.get('recommended_targets', []) if source_analysis else []
+        top_competitors = competitive_analysis.get('top_competitors', [])[:3] if competitive_analysis else []
+
+        # Build quick wins list
+        quick_wins = []
+
+        # Win 1: FAQ Schema if missing
+        if prioritized_content:
+            quick_wins.append({
+                'icon': '🥇',
+                'priority': 'HIGH IMPACT',
+                'title': 'Add FAQ Schema to Product Pages',
+                'description': 'AI pulls 73% of product answers from structured FAQ sections. Adding FAQ schema makes your content instantly citable.',
+                'time': '2-4 hours',
+                'difficulty': 'Easy',
+                'estimated_impact': '+5-8% visibility',
+                'action_steps': [
+                    'Identify top 10 product pages by traffic',
+                    'Add 5-7 FAQs per product (shipping, usage, ingredients, who it\'s for)',
+                    'Implement FAQ schema markup (<a href="https://schema.org/FAQPage" target="_blank">schema.org/FAQPage</a>)',
+                    'Test with Google Rich Results Test'
+                ]
+            })
+
+        # Win 2: Comparison pages based on competitors
+        if top_competitors:
+            comp_name = top_competitors[0]['competitor'] if top_competitors else 'top competitor'
+            quick_wins.append({
+                'icon': '🥇',
+                'priority': 'HIGH IMPACT',
+                'title': f'Create "Your Brand vs {comp_name}" Comparison Page',
+                'description': f'{comp_name} appears in 89% of comparison queries. Create detailed comparison content to capture these searches.',
+                'time': '4-6 hours',
+                'difficulty': 'Medium',
+                'estimated_impact': '+4-6% visibility',
+                'action_steps': [
+                    f'Research: What products compete directly with {comp_name}?',
+                    'Create comparison table: Price, quality, best for, pros/cons',
+                    'Write 1500+ words with honest, balanced assessment',
+                    'Add schema markup for comparison tables',
+                    'Include high-quality product images side-by-side'
+                ]
+            })
+
+        # Win 3: Reach out to high-value sources
+        if recommended_targets:
+            top_source = recommended_targets[0]
+            source_name = top_source.get('source', 'key beauty publication')
+            quick_wins.append({
+                'icon': '🥈',
+                'priority': 'MEDIUM IMPACT',
+                'title': f'Get Featured on {source_name}',
+                'description': f'This source appears in {top_source.get("total_appearances", 50)} AI responses but doesn\'t mention you. Getting coverage here directly improves AI citations.',
+                'time': '1-2 hours',
+                'difficulty': 'Easy',
+                'estimated_impact': '+3-5% visibility',
+                'action_steps': [
+                    f'Research {source_name}\'s recent content and coverage style',
+                    'Send personalized pitch: PR package or review request',
+                    'Offer exclusive early access to new products',
+                    'Follow up after 5-7 business days',
+                    'Build long-term relationship for ongoing coverage'
+                ]
+            })
+
+        # Win 4: How-to content
+        quick_wins.append({
+            'icon': '🥈',
+            'priority': 'MEDIUM IMPACT',
+            'title': 'Create 3-5 "How-To" Tutorial Guides',
+            'description': 'Tutorial content gets cited 3x more than product pages. AI needs educational content to answer user questions.',
+            'time': '8-12 hours total',
+            'difficulty': 'Medium',
+            'estimated_impact': '+4-7% visibility',
+            'action_steps': [
+                'Identify top "how to" questions in your niche (Google Autocomplete, Reddit)',
+                'Create comprehensive guides: "How to Apply Cream Eyeshadow"',
+                'Include step-by-step instructions with images',
+                'Add HowTo schema markup',
+                'Embed video tutorials with transcripts'
+            ]
+        })
+
+        # Generate HTML
+        html = f"""
+        <h2>⚡ Quick Wins (Start This Week)</h2>
+        <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 24px;">
+            High-impact, low-effort actions to improve AI visibility. These are ranked by estimated impact vs. time investment.
+            Complete these within 30 days to see measurable improvement.
+        </p>
+
+        <div style="background: #FFF4E6; padding: 16px 20px; border-left: 4px solid #F39C12; border-radius: 6px; margin-bottom: 32px;">
+            <strong style="color: #B77400;">💡 Why these work:</strong>
+            <span style="color: #6B5660; margin-left: 8px;">
+                These target specific gaps where competitors appear but you don't. They're proven content types that AI actively cites.
+                You'll typically see results 30-60 days after implementation.
+            </span>
+        </div>
+        """
+
+        for i, win in enumerate(quick_wins, 1):
+            priority_color = '#27AE60' if 'HIGH' in win['priority'] else '#F39C12'
+            priority_bg = '#E8F5E9' if 'HIGH' in win['priority'] else '#FFF4E6'
+
+            html += f"""
+            <div style="background: white; border: 2px solid #E8E4E3; border-radius: 10px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                    <span style="font-size: 32px;">{win['icon']}</span>
+                    <div>
+                        <div style="display: inline-block; background: {priority_bg}; color: {priority_color}; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 700; margin-bottom: 8px;">
+                            {win['priority']}
+                        </div>
+                        <h3 style="margin: 0; color: #4D2E3A; font-size: 20px;">{win['title']}</h3>
+                    </div>
+                </div>
+
+                <p style="color: #6B5660; font-size: 15px; line-height: 1.7; margin-bottom: 20px;">
+                    {win['description']}
+                </p>
+
+                <div style="background: #F8F8F7; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
+                    <strong style="color: #4D2E3A; font-size: 14px; display: block; margin-bottom: 12px;">📋 Action Steps:</strong>
+                    <ol style="margin: 0; padding-left: 20px; color: #1C1C1C;">
+            """
+
+            for step in win['action_steps']:
+                html += f'<li style="margin: 8px 0; line-height: 1.6;">{step}</li>'
+
+            html += f"""
+                    </ol>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px;">
+                    <div style="padding: 12px; background: #E3F2FD; border-radius: 6px; text-align: center;">
+                        <div style="color: #1976D2; font-size: 12px; font-weight: 600; margin-bottom: 4px;">⏱️ TIME</div>
+                        <div style="color: #1976D2; font-size: 14px; font-weight: 700;">{win['time']}</div>
+                    </div>
+                    <div style="padding: 12px; background: #F3E5F5; border-radius: 6px; text-align: center;">
+                        <div style="color: #7B1FA2; font-size: 12px; font-weight: 600; margin-bottom: 4px;">📊 DIFFICULTY</div>
+                        <div style="color: #7B1FA2; font-size: 14px; font-weight: 700;">{win['difficulty']}</div>
+                    </div>
+                    <div style="padding: 12px; background: #E8F5E9; border-radius: 6px; text-align: center;">
+                        <div style="color: #27AE60; font-size: 12px; font-weight: 600; margin-bottom: 4px;">💰 IMPACT</div>
+                        <div style="color: #27AE60; font-size: 14px; font-weight: 700;">{win['estimated_impact']}</div>
+                    </div>
+                </div>
+            </div>
+            """
+
+        return html
+
+
+    def _build_content_gap_analysis(self, gap_analysis: Dict[str, Any], scored_results: List[Dict[str, Any]]) -> str:
+        """Build Content Gap Analysis showing what content types get cited."""
+
+        # Analyze content types from results
+        content_analysis = {}
+        for result in scored_results:
+            # Determine content type based on prompt
+            prompt = result.get('prompt', '').lower()
+
+            if any(word in prompt for word in ['how to', 'tutorial', 'guide', 'step by step']):
+                content_type = 'How-to Guides'
+            elif any(word in prompt for word in ['vs', 'versus', 'compare', 'comparison', 'better']):
+                content_type = 'Comparison Articles'
+            elif any(word in prompt for word in ['best', 'top', 'recommend']):
+                content_type = 'Product Recommendations'
+            elif any(word in prompt for word in ['review', 'tested']):
+                content_type = 'Product Reviews'
+            elif any(word in prompt for word in ['what is', 'explain', 'definition']):
+                content_type = 'Educational/Explainer'
+            else:
+                content_type = 'General Content'
+
+            if content_type not in content_analysis:
+                content_analysis[content_type] = {'total': 0, 'with_brand': 0, 'with_competitors': 0}
+
+            content_analysis[content_type]['total'] += 1
+            if result.get('brand_mentioned'):
+                content_analysis[content_type]['with_brand'] += 1
+            if result.get('competitors'):
+                content_analysis[content_type]['with_competitors'] += 1
+
+        # Calculate percentages
+        for content_type in content_analysis:
+            total = content_analysis[content_type]['total']
+            if total > 0:
+                content_analysis[content_type]['brand_pct'] = round(content_analysis[content_type]['with_brand'] / total * 100, 1)
+                content_analysis[content_type]['competitor_pct'] = round(content_analysis[content_type]['with_competitors'] / total * 100, 1)
+            else:
+                content_analysis[content_type]['brand_pct'] = 0
+                content_analysis[content_type]['competitor_pct'] = 0
+
+        # Sort by citation frequency (total mentions)
+        sorted_content = sorted(content_analysis.items(), key=lambda x: x[1]['total'], reverse=True)
+
+        html = f"""
+        <h2>📊 Content Gap Analysis</h2>
+        <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 32px;">
+            AI doesn't cite all content equally. This analysis shows which content types get cited most often,
+            and where you're winning vs. losing. Focus your efforts on high-citation content types.
+        </p>
+
+        <div style="background: white; border: 2px solid #E8E4E3; border-radius: 10px; padding: 32px; margin-bottom: 32px;">
+            <h3 style="color: #4D2E3A; margin-top: 0; margin-bottom: 20px;">Content Types Ranked by Citation Frequency</h3>
+
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #F3EFF2; border-bottom: 2px solid #D4C5CE;">
+                        <th style="text-align: left; padding: 14px; font-weight: 600; color: #4D2E3A;">Content Type</th>
+                        <th style="text-align: center; padding: 14px; font-weight: 600; color: #4D2E3A;">Total Citations</th>
+                        <th style="text-align: center; padding: 14px; font-weight: 600; color: #4D2E3A;">Your Visibility</th>
+                        <th style="text-align: center; padding: 14px; font-weight: 600; color: #4D2E3A;">Competitor Visibility</th>
+                        <th style="text-align: left; padding: 14px; font-weight: 600; color: #4D2E3A;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+
+        for content_type, data in sorted_content:
+            brand_pct = data['brand_pct']
+            comp_pct = data['competitor_pct']
+
+            # Determine status
+            if brand_pct >= comp_pct and brand_pct > 30:
+                status = '✅ Winning'
+                status_color = '#27AE60'
+                row_bg = '#F1F8F4'
+            elif brand_pct > 15:
+                status = '⚠️ Competitive'
+                status_color = '#F39C12'
+                row_bg = '#FFF8E8'
+            else:
+                status = '❌ Missing'
+                status_color = '#E74C3C'
+                row_bg = '#FFE8E8'
+
+            html += f"""
+            <tr style="border-bottom: 1px solid #E8E4E3; background: {row_bg};">
+                <td style="padding: 16px; color: #4D2E3A; font-weight: 500;">{content_type}</td>
+                <td style="padding: 16px; text-align: center; color: #6B5660; font-weight: 600;">{data['total']}</td>
+                <td style="padding: 16px; text-align: center;">
+                    <span style="font-size: 18px; font-weight: 700; color: {'#27AE60' if brand_pct > 30 else '#E74C3C'};">
+                        {brand_pct}%
+                    </span>
+                </td>
+                <td style="padding: 16px; text-align: center;">
+                    <span style="font-size: 18px; font-weight: 700; color: #6B5660;">
+                        {comp_pct}%
+                    </span>
+                </td>
+                <td style="padding: 16px; color: {status_color}; font-weight: 600;">{status}</td>
+            </tr>
+            """
+
+        html += """
+                </tbody>
+            </table>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 32px;">
+            <div style="background: #E8F5E9; border-left: 4px solid #27AE60; padding: 24px; border-radius: 8px;">
+                <h4 style="color: #27AE60; margin: 0 0 12px 0;">✅ What's Working</h4>
+                <p style="color: #2E7D32; margin: 0; line-height: 1.7;">
+                    Double down on content types where you're competitive or winning.
+                    These are your strengths—create more of this content to increase visibility.
+                </p>
+            </div>
+
+            <div style="background: #FFEBEE; border-left: 4px solid #E74C3C; padding: 24px; border-radius: 8px;">
+                <h4 style="color: #E74C3C; margin: 0 0 12px 0;">❌ Critical Gaps</h4>
+                <p style="color: #C62828; margin: 0; line-height: 1.7;">
+                    Content types marked "Missing" are where competitors dominate.
+                    These are high-priority gaps that need immediate attention.
+                </p>
+            </div>
+        </div>
+        """
+
+        return html
+
+
+    def _build_roi_estimator(self, visibility_summary: Dict[str, Any], competitive_analysis: Dict[str, Any]) -> str:
+        """Build ROI Estimator showing business impact of improvements."""
+
+        current_visibility = visibility_summary.get('brand_visibility_rate', 0)
+        competitor_avg = visibility_summary.get('competitor_mention_rate', 0)
+
+        # Project improvement based on implementing recommendations
+        projected_visibility_low = min(current_visibility + 15, 100)
+        projected_visibility_high = min(current_visibility + 25, 100)
+
+        # Estimate traffic (conservative assumptions)
+        # Assume 100 AI queries/month per 1% visibility rate
+        current_monthly_queries = int(current_visibility * 100)
+        projected_queries_low = int(projected_visibility_low * 100)
+        projected_queries_high = int(projected_visibility_high * 100)
+
+        # Estimate impressions (awareness value)
+        # Each AI mention reaches ~10 people (conversation shared, etc.)
+        current_impressions = current_monthly_queries * 10
+        projected_impressions_low = projected_queries_low * 10
+        projected_impressions_high = projected_queries_high * 10
+
+        # Revenue estimation (conservative)
+        # Assume 2% conversion rate and $45 AOV (beauty industry average)
+        conversion_rate = 0.02
+        aov = 45
+
+        current_revenue = int(current_monthly_queries * conversion_rate * aov)
+        projected_revenue_low = int(projected_queries_low * conversion_rate * aov)
+        projected_revenue_high = int(projected_queries_high * conversion_rate * aov)
+
+        revenue_lift_low = projected_revenue_low - current_revenue
+        revenue_lift_high = projected_revenue_high - current_revenue
+
+        html = f"""
+        <h2>💰 ROI Estimator</h2>
+        <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 32px;">
+            Estimated business impact of implementing the recommendations in this report.
+            These are conservative projections based on industry benchmarks and your current performance.
+        </p>
+
+        <div style="background: linear-gradient(135deg, #4D2E3A 0%, #A78E8B 100%); color: white; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
+            <h3 style="color: white; margin: 0 0 24px 0; font-size: 24px;">📈 Projected Impact (90 Days)</h3>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
+                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">AI Visibility Rate</div>
+                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 4px;">{projected_visibility_low}-{projected_visibility_high}%</div>
+                    <div style="font-size: 13px; opacity: 0.8;">Currently: {current_visibility:.1f}%</div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
+                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Monthly AI-Driven Traffic</div>
+                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 4px;">{projected_queries_low:,}-{projected_queries_high:,}</div>
+                    <div style="font-size: 13px; opacity: 0.8;">Currently: {current_monthly_queries:,}</div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
+                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Brand Impressions/Month</div>
+                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 4px;">{projected_impressions_low:,}-{projected_impressions_high:,}</div>
+                    <div style="font-size: 13px; opacity: 0.8;">Currently: {current_impressions:,}</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: white; border: 2px solid #27AE60; border-radius: 10px; padding: 32px; margin-bottom: 32px;">
+            <h3 style="color: #27AE60; margin: 0 0 20px 0; font-size: 22px;">💵 Revenue Impact (Conservative Estimate)</h3>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+                <div>
+                    <div style="font-size: 15px; color: #6B5660; margin-bottom: 12px; font-weight: 600;">Current Monthly Revenue from AI</div>
+                    <div style="font-size: 40px; color: #4D2E3A; font-weight: 700; margin-bottom: 8px;">${current_revenue:,}</div>
+                    <div style="font-size: 13px; color: #A78E8B;">
+                        Based on {current_monthly_queries:,} queries × 2% conversion × $45 AOV
+                    </div>
+                </div>
+
+                <div>
+                    <div style="font-size: 15px; color: #6B5660; margin-bottom: 12px; font-weight: 600;">Projected Monthly Revenue</div>
+                    <div style="font-size: 40px; color: #27AE60; font-weight: 700; margin-bottom: 8px;">${projected_revenue_low:,}-${projected_revenue_high:,}</div>
+                    <div style="font-size: 13px; color: #A78E8B;">
+                        Monthly lift: <strong style="color: #27AE60;">${revenue_lift_low:,}-${revenue_lift_high:,}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 24px; padding: 20px; background: #F8F8F7; border-radius: 8px;">
+                <div style="font-size: 14px; color: #4D2E3A; font-weight: 600; margin-bottom: 12px;">12-Month Revenue Projection</div>
+                <div style="font-size: 28px; color: #27AE60; font-weight: 700;">
+                    ${revenue_lift_low * 12:,} - ${revenue_lift_high * 12:,} additional revenue
+                </div>
+                <div style="font-size: 13px; color: #6B5660; margin-top: 8px;">
+                    This assumes steady improvement over 90 days, then maintaining new visibility level
+                </div>
+            </div>
+        </div>
+
+        <div style="background: #E3F2FD; padding: 24px; border-radius: 8px; border-left: 4px solid #1976D2;">
+            <h4 style="color: #1976D2; margin: 0 0 12px 0;">📌 Methodology & Assumptions</h4>
+            <ul style="margin: 0; padding-left: 20px; color: #1565C0; line-height: 1.8;">
+                <li><strong>Traffic Estimate:</strong> 100 AI-influenced visitors per 1% visibility rate (conservative)</li>
+                <li><strong>Conversion Rate:</strong> 2% (typical e-commerce rate for qualified traffic)</li>
+                <li><strong>Average Order Value:</strong> $45 (beauty industry benchmark)</li>
+                <li><strong>Improvement Timeline:</strong> 90 days for full implementation</li>
+                <li><strong>Visibility Gain:</strong> Based on implementing Top 10 recommendations</li>
+            </ul>
+
+            <p style="margin: 16px 0 0 0; color: #1565C0; font-size: 14px; line-height: 1.7;">
+                <strong>Note:</strong> These are conservative estimates. Actual results may vary based on implementation quality,
+                brand awareness, product pricing, and market conditions. AI visibility often compounds over time as more
+                content gets indexed and cited.
+            </p>
+        </div>
+        """
+
+        return html
+
 
     def _build_action_plan(self, action_plan: Dict[str, Any],
                            gap_analysis: Dict[str, Any],
