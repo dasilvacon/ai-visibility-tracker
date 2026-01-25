@@ -1665,8 +1665,9 @@ class HTMLReportGenerator:
         </div>
 
         <div class="tabs">
-            <button class="tab active" onclick="switchTab(event, 'overview')">Overview</button>
-            <button class="tab" onclick="switchTab(event, 'roi')">💰 ROI Estimator</button>
+            <button class="tab active" onclick="switchTab(event, 'overview')">Executive Summary</button>
+            <button class="tab" onclick="switchTab(event, 'action-plan')">Action Plan & Recommendations</button>
+            <button class="tab" onclick="switchTab(event, 'roi')">ROI Estimator</button>
             <button class="tab" onclick="switchTab(event, 'prompts')">What AI Actually Said</button>
             <button class="tab" onclick="switchTab(event, 'sources')">Sources & Citations</button>
         </div>
@@ -1678,6 +1679,18 @@ class HTMLReportGenerator:
 
             {self._build_chatgpt_crisis_alert(brand_name, scored_results)}
 
+            {self._build_competitive_landscape_visual(brand_name, visibility_summary, competitive_analysis)}
+
+            {self._build_brief_priorities(gap_analysis, action_plan)}
+        </div>
+
+        <div id="action-plan" class="tab-content">
+            <h2>Action Plan & Recommendations</h2>
+            <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 32px;">
+                Detailed analysis and prioritized recommendations to improve your AI visibility.
+                This section contains all the tactical work your team needs to do.
+            </p>
+
             {self._build_quick_wins(gap_analysis, source_analysis, competitive_analysis)}
 
             {self._build_content_gap_analysis(gap_analysis, scored_results)}
@@ -1685,8 +1698,6 @@ class HTMLReportGenerator:
             {self._build_visibility_by_persona(scored_results)}
 
             {self._build_visibility_by_platform(scored_results)}
-
-            {self._build_competitive_landscape_visual(brand_name, visibility_summary, competitive_analysis)}
 
             {self._build_what_winners_are_doing(competitive_analysis)}
 
@@ -2187,6 +2198,64 @@ class HTMLReportGenerator:
             {rows}
         </table>
         """
+
+    def _build_brief_priorities(self, gap_analysis: Dict[str, Any],
+                                action_plan: Dict[str, Any]) -> str:
+        """Build brief top 3 priorities for executive summary."""
+        geo_aeo_wins = action_plan.get('geo_aeo_quick_wins', [])
+
+        if not geo_aeo_wins:
+            return ""
+
+        # Get top 3 priorities
+        top_3 = geo_aeo_wins[:3]
+
+        html = """
+        <h2>Top 3 Priorities</h2>
+        <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 24px;">
+            Start here. These are your highest-impact opportunities based on the analysis.
+        </p>
+
+        <div style="background: white; border: 2px solid #E8E4E3; border-radius: 10px; padding: 32px; margin-bottom: 32px;">
+        """
+
+        for i, win in enumerate(top_3, 1):
+            priority_icon = "🥇" if i == 1 else "🥈" if i == 2 else "🥉"
+
+            html += f"""
+            <div style="margin-bottom: {'32px' if i < 3 else '0'}; padding-bottom: {'32px' if i < 3 else '0'}; border-bottom: {'1px solid #E8E4E3' if i < 3 else 'none'};">
+                <div style="display: flex; align-items: start; gap: 16px;">
+                    <span style="font-size: 32px; flex-shrink: 0;">{priority_icon}</span>
+                    <div style="flex: 1;">
+                        <h3 style="margin: 0 0 8px 0; color: #4D2E3A; font-size: 18px;">{win.get('what', 'Priority ' + str(i))}</h3>
+                        <p style="margin: 0 0 12px 0; color: #6B5660; font-size: 15px; line-height: 1.6;">
+                            {win.get('why', '')}
+                        </p>
+                        <div style="display: flex; gap: 16px; align-items: center;">
+                            <span style="background: #E8F5E9; color: #27AE60; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 600;">
+                                {win.get('estimated_impact', 'High Impact')}
+                            </span>
+                            <span style="color: #A78E8B; font-size: 13px;">
+                                {win.get('timeline', 'This month')}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            """
+
+        html += """
+        </div>
+
+        <div style="text-align: center; margin-top: 24px;">
+            <p style="color: #A78E8B; font-size: 15px;">
+                👉 See the <strong>Action Plan & Recommendations</strong> tab for detailed implementation steps,
+                content gap analysis, and the full 90-day roadmap.
+            </p>
+        </div>
+        """
+
+        return html
 
     def _build_top_opportunities(self, gap_analysis: Dict[str, Any],
                                 action_plan: Dict[str, Any]) -> str:
