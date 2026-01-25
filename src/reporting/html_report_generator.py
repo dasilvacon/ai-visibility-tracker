@@ -1666,6 +1666,7 @@ class HTMLReportGenerator:
 
         <div class="tabs">
             <button class="tab active" onclick="switchTab(event, 'overview')">Overview</button>
+            <button class="tab" onclick="switchTab(event, 'roi')">💰 ROI Estimator</button>
             <button class="tab" onclick="switchTab(event, 'prompts')">What AI Actually Said</button>
             <button class="tab" onclick="switchTab(event, 'sources')">Sources & Citations</button>
         </div>
@@ -1676,8 +1677,6 @@ class HTMLReportGenerator:
             {self._build_executive_summary(brand_name, visibility_summary, competitive_analysis)}
 
             {self._build_chatgpt_crisis_alert(brand_name, scored_results)}
-
-            {self._build_roi_estimator(visibility_summary, competitive_analysis)}
 
             {self._build_quick_wins(gap_analysis, source_analysis, competitive_analysis)}
 
@@ -1696,6 +1695,10 @@ class HTMLReportGenerator:
             {self._build_top_opportunities(gap_analysis, action_plan)}
 
             {self._build_action_plan(action_plan, gap_analysis, visibility_summary, competitive_analysis)}
+        </div>
+
+        <div id="roi" class="tab-content">
+            {self._build_roi_estimator(visibility_summary, competitive_analysis)}
         </div>
 
         <div id="prompts" class="tab-content">
@@ -2710,8 +2713,8 @@ class HTMLReportGenerator:
         competitor_avg = visibility_summary.get('competitor_mention_rate', 0)
 
         # Project improvement based on implementing recommendations
-        projected_visibility_low = min(current_visibility + 15, 100)
-        projected_visibility_high = min(current_visibility + 25, 100)
+        projected_visibility_low = int(min(current_visibility + 15, 100))
+        projected_visibility_high = int(min(current_visibility + 25, 100))
 
         # Estimate traffic (conservative assumptions)
         # Assume 100 AI queries/month per 1% visibility rate
