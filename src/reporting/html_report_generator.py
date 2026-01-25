@@ -2771,36 +2771,61 @@ class HTMLReportGenerator:
             </div>
         </div>
 
+        <div style="background: #FFF4E6; padding: 16px 20px; border-left: 4px solid #F39C12; border-radius: 6px; margin-bottom: 24px;">
+            <strong style="color: #B77400;">⚠️ Important:</strong>
+            <span style="color: #6B5660; margin-left: 8px;">
+                These are <strong>projected estimates</strong>, not actual tracked revenue. To measure real AI-driven revenue,
+                connect Google Analytics to track traffic from AI sources (ChatGPT, Perplexity, Claude, etc.) and their conversion rates.
+            </span>
+        </div>
+
         <div style="background: white; border: 2px solid #27AE60; border-radius: 10px; padding: 32px; margin-bottom: 32px;">
-            <h3 style="color: #27AE60; margin: 0 0 20px 0; font-size: 22px;">💵 Revenue Impact (Conservative Estimate)</h3>
+            <h3 style="color: #27AE60; margin: 0 0 20px 0; font-size: 22px;">💵 Potential Revenue Impact (Conservative Projection)</h3>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
                 <div>
-                    <div style="font-size: 15px; color: #6B5660; margin-bottom: 12px; font-weight: 600;">Current Monthly Revenue from AI</div>
-                    <div style="font-size: 40px; color: #4D2E3A; font-weight: 700; margin-bottom: 8px;">${current_revenue:,}</div>
+                    <div style="font-size: 15px; color: #6B5660; margin-bottom: 12px; font-weight: 600;">Estimated Current Potential</div>
+                    <div style="font-size: 40px; color: #4D2E3A; font-weight: 700; margin-bottom: 8px;">${current_revenue:,}<span style="font-size: 20px; color: #A78E8B;">/mo</span></div>
                     <div style="font-size: 13px; color: #A78E8B;">
-                        Based on {current_monthly_queries:,} queries × 2% conversion × $45 AOV
+                        If {current_monthly_queries:,} monthly AI mentions converted at 2%
                     </div>
                 </div>
 
                 <div>
-                    <div style="font-size: 15px; color: #6B5660; margin-bottom: 12px; font-weight: 600;">Projected Monthly Revenue</div>
-                    <div style="font-size: 40px; color: #27AE60; font-weight: 700; margin-bottom: 8px;">${projected_revenue_low:,}-${projected_revenue_high:,}</div>
+                    <div style="font-size: 15px; color: #6B5660; margin-bottom: 12px; font-weight: 600;">Projected Potential</div>
+                    <div style="font-size: 40px; color: #27AE60; font-weight: 700; margin-bottom: 8px;">${projected_revenue_low:,}-${projected_revenue_high:,}<span style="font-size: 20px; opacity: 0.8;">/mo</span></div>
                     <div style="font-size: 13px; color: #A78E8B;">
-                        Monthly lift: <strong style="color: #27AE60;">${revenue_lift_low:,}-${revenue_lift_high:,}</strong>
+                        Potential monthly lift: <strong style="color: #27AE60;">${revenue_lift_low:,}-${revenue_lift_high:,}</strong>
                     </div>
                 </div>
             </div>
 
             <div style="margin-top: 24px; padding: 20px; background: #F8F8F7; border-radius: 8px;">
-                <div style="font-size: 14px; color: #4D2E3A; font-weight: 600; margin-bottom: 12px;">12-Month Revenue Projection</div>
+                <div style="font-size: 14px; color: #4D2E3A; font-weight: 600; margin-bottom: 12px;">12-Month Potential Impact</div>
                 <div style="font-size: 28px; color: #27AE60; font-weight: 700;">
-                    ${revenue_lift_low * 12:,} - ${revenue_lift_high * 12:,} additional revenue
+                    ${revenue_lift_low * 12:,} - ${revenue_lift_high * 12:,} additional potential revenue
                 </div>
                 <div style="font-size: 13px; color: #6B5660; margin-top: 8px;">
-                    This assumes steady improvement over 90 days, then maintaining new visibility level
+                    Based on steady improvement over 90 days, then maintaining new visibility level
                 </div>
             </div>
+        </div>
+
+        <div style="background: #E8F5E9; padding: 24px; border-radius: 8px; border-left: 4px solid #27AE60; margin-bottom: 32px;">
+            <h4 style="color: #27AE60; margin: 0 0 12px 0;">📊 How to Track Actual AI-Driven Revenue</h4>
+            <p style="margin: 0 0 12px 0; color: #2E7D32; line-height: 1.7;">
+                To measure real performance (not just projections), set up tracking in Google Analytics:
+            </p>
+            <ol style="margin: 0; padding-left: 20px; color: #2E7D32; line-height: 1.8;">
+                <li><strong>Tag AI traffic sources:</strong> Create UTM parameters for AI platforms (ChatGPT, Perplexity, Claude)</li>
+                <li><strong>Set up conversion tracking:</strong> Track purchases/leads from AI referrers</li>
+                <li><strong>Create custom reports:</strong> Filter by AI traffic to see actual conversion rates</li>
+                <li><strong>Monitor over time:</strong> Compare AI traffic before/after implementing recommendations</li>
+            </ol>
+            <p style="margin: 12px 0 0 0; color: #2E7D32; font-size: 14px; line-height: 1.7;">
+                <strong>Note:</strong> AI platforms often show as "direct" traffic or don't pass referrer data,
+                making actual attribution challenging. These projections provide a conservative baseline expectation.
+            </p>
         </div>
 
         <div style="background: #E3F2FD; padding: 24px; border-radius: 8px; border-left: 4px solid #1976D2;">
