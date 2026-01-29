@@ -44,3 +44,6 @@ build/
 
 # Claude
 .claude/
+
+# Streamlit secrets (contains passwords)
+.streamlit/secrets.toml

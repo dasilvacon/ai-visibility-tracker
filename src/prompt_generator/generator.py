@@ -12,6 +12,7 @@ from datetime import datetime
 from .persona_manager import PersonaManager
 from .keyword_processor import KeywordProcessor
 from .prompt_builder import PromptBuilder
+from .deduplicator import PromptDeduplicator
 
 
 class PromptGenerator:
@@ -19,7 +20,9 @@ class PromptGenerator:
 
     def __init__(self, personas_file: str, keywords_file: str,
                  api_client: Optional[Any] = None,
-                 use_ai_generation: bool = True):
+                 use_ai_generation: bool = True,
+                 deduplicator: Optional[PromptDeduplicator] = None,
+                 enable_deduplication: bool = True):
         """
         Initialize the prompt generator.
 
@@ -28,12 +31,24 @@ class PromptGenerator:
             keywords_file: Path to keywords CSV file
             api_client: Optional AI API client for advanced generation
             use_ai_generation: Whether to use AI API for generation
+            deduplicator: Optional custom deduplicator instance
+            enable_deduplication: Whether to enable deduplication during generation
         """
         self.persona_manager = PersonaManager(personas_file)
         self.keyword_processor = KeywordProcessor(keywords_file)
         self.prompt_builder = PromptBuilder(use_natural_language=True)
         self.api_client = api_client
         self.use_ai_generation = use_ai_generation and api_client is not None
+
+        # Initialize deduplicator
+        self.enable_deduplication = enable_deduplication
+        if enable_deduplication:
+            self.deduplicator = deduplicator or PromptDeduplicator(
+                exact_match=True,
+                similarity_threshold=0.90
+            )
+        else:
+            self.deduplicator = None
 
         self.generated_prompts = []
         self.generation_stats = {
@@ -42,6 +57,7 @@ class PromptGenerator:
             'by_category': {},
             'by_intent': {},
             'with_competitors': 0,
+            'duplicates_removed': 0,
             'start_time': None,
             'end_time': None
         }
@@ -93,6 +109,12 @@ class PromptGenerator:
         self.generation_stats['total_generated'] = len(self.generated_prompts)
 
         print(f"\n✓ Total prompts generated: {len(self.generated_prompts)}")
+        if self.enable_deduplication:
+            duplicates = self.generation_stats['duplicates_removed']
+            print(f"✓ Duplicates removed: {duplicates}")
+            if duplicates > 0:
+                dup_rate = (duplicates / (len(self.generated_prompts) + duplicates)) * 100
+                print(f"  Deduplication rate: {dup_rate:.1f}%")
         return self.generated_prompts
 
     def _generate_for_persona(self, persona_id: str, count: int,
@@ -142,21 +164,30 @@ class PromptGenerator:
             )
 
             if prompt_data:
-                prompts.append(prompt_data)
+                # Check for duplicates if deduplication is enabled
+                is_duplicate = False
+                if self.enable_deduplication and self.deduplicator:
+                    dup_result = self.deduplicator.check_duplicate(prompt_data['prompt_text'])
+                    is_duplicate = dup_result['is_duplicate']
+                    if is_duplicate:
+                        self.generation_stats['duplicates_removed'] += 1
 
-                # Update stats
-                category = prompt_data['category']
-                intent = prompt_data['intent_type']
+                if not is_duplicate:
+                    prompts.append(prompt_data)
 
-                self.generation_stats['by_persona'][persona_id] = \
-                    self.generation_stats['by_persona'].get(persona_id, 0) + 1
-                self.generation_stats['by_category'][category] = \
-                    self.generation_stats['by_category'].get(category, 0) + 1
-                self.generation_stats['by_intent'][intent] = \
-                    self.generation_stats['by_intent'].get(intent, 0) + 1
+                    # Update stats
+                    category = prompt_data['category']
+                    intent = prompt_data['intent_type']
 
-                if include_competitor:
-                    self.generation_stats['with_competitors'] += 1
+                    self.generation_stats['by_persona'][persona_id] = \
+                        self.generation_stats['by_persona'].get(persona_id, 0) + 1
+                    self.generation_stats['by_category'][category] = \
+                        self.generation_stats['by_category'].get(category, 0) + 1
+                    self.generation_stats['by_intent'][intent] = \
+                        self.generation_stats['by_intent'].get(intent, 0) + 1
+
+                    if include_competitor:
+                        self.generation_stats['with_competitors'] += 1
 
         return prompts
 

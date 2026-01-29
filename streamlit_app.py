@@ -23,6 +23,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Authentication - Both admin and clients can access main dashboard
+from authentication import require_authentication, show_user_info, get_available_brands
+require_authentication(allow_clients=True)  # Clients allowed
+
 # DaSilva brand colors
 DEEP_PLUM = '#402E3A'
 DUSTY_ROSE = '#A78E8B'
@@ -80,20 +84,26 @@ with st.sidebar:
     if reports_dir.exists():
         # Find available brands
         html_reports = list(reports_dir.glob('visibility_report_*.html'))
-        brands = [f.stem.replace('visibility_report_', '').replace('_', ' ') for f in html_reports]
+        all_brands = [f.stem.replace('visibility_report_', '').replace('_', ' ') for f in html_reports]
 
-        if brands:
+        # Filter brands based on user access
+        available_brands = get_available_brands(all_brands)
+
+        if available_brands:
             selected_brand = st.selectbox(
                 "Select Brand",
-                brands,
-                index=0 if st.session_state.brand_name is None else brands.index(st.session_state.brand_name) if st.session_state.brand_name in brands else 0
+                available_brands,
+                index=0 if st.session_state.brand_name is None else available_brands.index(st.session_state.brand_name) if st.session_state.brand_name in available_brands else 0
             )
             st.session_state.brand_name = selected_brand
         else:
-            st.warning("No reports found. Run analysis first.")
+            st.warning("No reports found for your account. Contact your administrator.")
             st.stop()
 
     st.markdown("---")
+
+    # Show user info and logout button
+    show_user_info()
 
     # Navigation
     st.markdown("### Navigation")
