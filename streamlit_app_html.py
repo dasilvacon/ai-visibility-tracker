@@ -95,10 +95,21 @@ login_css = f"""
     .login-container {{
         max-width: 420px;
         margin: 100px auto;
-        padding: 50px 40px;
-        background: {DARK_PURPLE};
+        padding: 0;
+        background: transparent;
         border-radius: 8px;
+    }}
+    .login-title-card {{
+        background: {DARK_PURPLE};
+        padding: 40px;
+        border-radius: 8px 8px 0 0;
         border: 1px solid rgba(232, 215, 160, 0.2);
+        text-align: center;
+    }}
+    .login-form-card {{
+        background: white;
+        padding: 40px;
+        border-radius: 0 0 8px 8px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }}
     .login-header {{
@@ -113,32 +124,33 @@ login_css = f"""
     .login-subheader {{
         text-align: center;
         color: {CREAM};
-        margin-bottom: 32px;
+        margin-bottom: 0;
         font-size: 0.9em;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         font-weight: 400;
     }}
     .stTextInput input {{
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(232, 215, 160, 0.3) !important;
-        color: white !important;
+        background-color: #f9f9f9 !important;
+        border: 1px solid #ddd !important;
+        color: {DARK_BG} !important;
         border-radius: 4px !important;
         padding: 12px !important;
     }}
     .stTextInput input:focus {{
-        border-color: {CREAM} !important;
-        box-shadow: 0 0 0 1px {CREAM} !important;
+        border-color: {DARK_PURPLE} !important;
+        box-shadow: 0 0 0 1px {DARK_PURPLE} !important;
     }}
     .stTextInput label {{
-        color: {CREAM} !important;
+        color: {DARK_PURPLE} !important;
         font-size: 0.85em !important;
         text-transform: uppercase;
         letter-spacing: 0.05em;
+        font-weight: 600;
     }}
     .stButton button {{
-        background-color: {CREAM};
-        color: {DARK_BG};
+        background-color: {DARK_PURPLE};
+        color: white;
         border-radius: 4px;
         width: 100%;
         padding: 14px;
@@ -150,18 +162,23 @@ login_css = f"""
         transition: all 0.2s ease;
     }}
     .stButton button:hover {{
-        background-color: #f5e4b3;
+        background-color: {DARK_ACCENT};
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(232, 215, 160, 0.3);
+        box-shadow: 0 4px 12px rgba(74, 68, 88, 0.4);
+    }}
+    .stAlert {{
+        background-color: #fee;
+        border-left: 4px solid #c33;
+        color: #c33;
     }}
     .footer-text {{
         text-align: center;
-        color: rgba(232, 215, 160, 0.6);
+        color: #999;
         font-size: 0.85em;
-        margin-top: 40px;
+        margin-top: 24px;
     }}
     .footer-text a {{
-        color: {CREAM};
+        color: {DARK_PURPLE};
         text-decoration: none;
     }}
 </style>
@@ -233,7 +250,7 @@ dashboard_css = f"""
         color: {DARK_BG};
         border-radius: 4px;
         padding: 10px 20px;
-        font-weight: 600;
+        font-weight: 700;
         border: none;
         text-transform: uppercase;
         letter-spacing: 0.1em;
@@ -261,11 +278,16 @@ dashboard_css = f"""
         color: {DARK_BG};
         border-radius: 4px;
         padding: 12px 24px;
-        font-weight: 600;
+        font-weight: 700;
         border: none;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         font-size: 0.85em;
+        transition: all 0.2s ease;
+    }}
+    .stDownloadButton button:hover {{
+        background-color: #f5e4b3;
+        transform: translateY(-1px);
     }}
     .error-container {{
         max-width: 500px;
@@ -404,11 +426,14 @@ def login_page():
     with col2:
         st.markdown("""
         <div class='login-container'>
-            <h1 class='login-header'>AI Visibility Report</h1>
-            <p class='login-subheader'>Client Portal</p>
+            <div class='login-title-card'>
+                <h1 class='login-header'>AI Visibility Report</h1>
+                <p class='login-subheader'>Client Portal</p>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
+        st.markdown("<div class='login-form-card'>", unsafe_allow_html=True)
         with st.form("login_form"):
             username = st.text_input("Username", placeholder="Enter your username")
             password = st.text_input("Password", type="password", placeholder="Enter your password")
@@ -432,10 +457,11 @@ def login_page():
                     st.error("❌ Invalid username or password")
 
         st.markdown(f"""
-        <p class='footer-text'>
-            <strong style='font-family: "Instrument Serif", Georgia, serif; font-size: 1.1em;'>DaSilva</strong> <span style='text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.85em;'>CONSULTING</span><br>
-            <small style='opacity: 0.7;'>Need help? <a href='mailto:{SUPPORT_EMAIL}'>Contact support</a></small>
-        </p>
+            <p class='footer-text'>
+                <strong style='font-family: "Instrument Serif", Georgia, serif; font-size: 1.1em; color: {DARK_PURPLE};'>DaSilva</strong> <span style='text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.85em;'>CONSULTING</span><br>
+                <small style='opacity: 0.7;'>Need help? <a href='mailto:{SUPPORT_EMAIL}'>Contact support</a></small>
+            </p>
+        </div>
         """, unsafe_allow_html=True)
 
 def display_error_state(title: str, message: str):
