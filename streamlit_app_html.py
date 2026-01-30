@@ -36,11 +36,12 @@ SESSION_TIMEOUT_MINUTES = 30
 # Contact info for error states
 SUPPORT_EMAIL = "tiffany@dasilvaconsulting.com"
 
-# DaSilva brand colors
-DEEP_PLUM = '#402E3A'
-DUSTY_ROSE = '#A78E8B'
+# DaSilva brand colors (updated to match new website)
+DARK_BG = '#1c1c1c'
+DARK_PURPLE = '#4A4458'
+CREAM = '#E8D7A0'
+DARK_ACCENT = '#402e3a'
 OFF_WHITE = '#FBFBEF'
-ACCENT_PINK = '#D4698B'
 
 # ============================================
 # SESSION STATE INITIALIZATION
@@ -63,6 +64,8 @@ if 'login_time' not in st.session_state:
 
 login_css = f"""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;600&display=swap');
+
     /* Hide sidebar completely */
     section[data-testid="stSidebar"] {{
         display: none;
@@ -87,52 +90,87 @@ login_css = f"""
     }}
 
     .main {{
-        background-color: {OFF_WHITE};
+        background-color: {DARK_BG};
     }}
     .login-container {{
-        max-width: 400px;
-        margin: 80px auto;
-        padding: 40px;
-        background: white;
-        border-radius: 12px;
-        border: 2px solid {DUSTY_ROSE};
-        box-shadow: 0 4px 20px rgba(64, 46, 58, 0.1);
+        max-width: 420px;
+        margin: 100px auto;
+        padding: 50px 40px;
+        background: {DARK_PURPLE};
+        border-radius: 8px;
+        border: 1px solid rgba(232, 215, 160, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }}
     .login-header {{
-        color: {DEEP_PLUM};
+        color: white;
         text-align: center;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-size: 2.5em;
+        font-weight: 400;
         margin-bottom: 8px;
+        letter-spacing: -0.02em;
     }}
     .login-subheader {{
         text-align: center;
-        color: #666;
-        margin-bottom: 24px;
+        color: {CREAM};
+        margin-bottom: 32px;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 400;
+    }}
+    .stTextInput input {{
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(232, 215, 160, 0.3) !important;
+        color: white !important;
+        border-radius: 4px !important;
+        padding: 12px !important;
+    }}
+    .stTextInput input:focus {{
+        border-color: {CREAM} !important;
+        box-shadow: 0 0 0 1px {CREAM} !important;
+    }}
+    .stTextInput label {{
+        color: {CREAM} !important;
+        font-size: 0.85em !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }}
     .stButton button {{
-        background-color: {DEEP_PLUM};
-        color: white;
-        border-radius: 6px;
+        background-color: {CREAM};
+        color: {DARK_BG};
+        border-radius: 4px;
         width: 100%;
-        padding: 12px;
+        padding: 14px;
         font-weight: 600;
         border: none;
-        transition: background-color 0.2s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.85em;
+        transition: all 0.2s ease;
     }}
     .stButton button:hover {{
-        background-color: {ACCENT_PINK};
+        background-color: #f5e4b3;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(232, 215, 160, 0.3);
     }}
     .footer-text {{
         text-align: center;
-        color: #999;
+        color: rgba(232, 215, 160, 0.6);
         font-size: 0.85em;
         margin-top: 40px;
+    }}
+    .footer-text a {{
+        color: {CREAM};
+        text-decoration: none;
     }}
 </style>
 """
 
 dashboard_css = f"""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;600&display=swap');
+
     /* Hide sidebar completely */
     section[data-testid="stSidebar"] {{
         display: none;
@@ -157,40 +195,86 @@ dashboard_css = f"""
     }}
 
     .main {{
-        background-color: {OFF_WHITE};
+        background-color: {DARK_BG};
     }}
     .welcome-header {{
-        background: linear-gradient(135deg, {DEEP_PLUM} 0%, {ACCENT_PINK} 100%);
+        background: {DARK_PURPLE};
         color: white;
-        padding: 24px 32px;
-        border-radius: 12px;
-        margin-bottom: 24px;
-        box-shadow: 0 4px 12px rgba(64, 46, 58, 0.15);
+        padding: 32px 40px;
+        border-radius: 8px;
+        margin-bottom: 32px;
+        border: 1px solid rgba(232, 215, 160, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }}
     .welcome-title {{
-        font-size: 1.5em;
-        font-weight: 600;
-        margin-bottom: 4px;
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-size: 2.2em;
+        font-weight: 400;
+        margin-bottom: 8px;
+        letter-spacing: -0.02em;
     }}
     .welcome-subtitle {{
-        opacity: 0.9;
-        font-size: 0.95em;
+        opacity: 0.85;
+        font-size: 1em;
+        color: {CREAM};
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.85em;
     }}
     .report-meta {{
         display: flex;
         gap: 24px;
-        margin-top: 12px;
+        margin-top: 16px;
         font-size: 0.85em;
-        opacity: 0.85;
+        color: rgba(232, 215, 160, 0.7);
+    }}
+    .stButton button {{
+        background-color: {CREAM};
+        color: {DARK_BG};
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-weight: 600;
+        border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.75em;
+        transition: all 0.2s ease;
+    }}
+    .stButton button:hover {{
+        background-color: #f5e4b3;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(232, 215, 160, 0.3);
+    }}
+    .stSelectbox label {{
+        color: {CREAM} !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.85em !important;
+    }}
+    .stSelectbox > div > div {{
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(232, 215, 160, 0.3) !important;
+        color: white !important;
+    }}
+    .stDownloadButton button {{
+        background-color: {CREAM};
+        color: {DARK_BG};
+        border-radius: 4px;
+        padding: 12px 24px;
+        font-weight: 600;
+        border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.85em;
     }}
     .error-container {{
         max-width: 500px;
         margin: 60px auto;
         padding: 40px;
-        background: white;
-        border-radius: 12px;
-        border-left: 4px solid {ACCENT_PINK};
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        background: {DARK_PURPLE};
+        border-radius: 8px;
+        border: 1px solid rgba(232, 215, 160, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         text-align: center;
     }}
     .error-icon {{
@@ -198,20 +282,36 @@ dashboard_css = f"""
         margin-bottom: 16px;
     }}
     .error-title {{
-        color: {DEEP_PLUM};
-        font-size: 1.3em;
-        font-weight: 600;
+        color: white;
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-size: 1.5em;
+        font-weight: 400;
         margin-bottom: 12px;
     }}
     .error-message {{
-        color: #666;
+        color: rgba(232, 215, 160, 0.8);
         margin-bottom: 20px;
+        line-height: 1.6;
     }}
     .error-contact {{
-        background: {OFF_WHITE};
+        background: rgba(232, 215, 160, 0.1);
         padding: 16px;
-        border-radius: 8px;
+        border-radius: 4px;
         font-size: 0.9em;
+        color: {CREAM};
+    }}
+    .error-contact a {{
+        color: {CREAM};
+        text-decoration: underline;
+    }}
+    hr {{
+        border-color: rgba(232, 215, 160, 0.2) !important;
+    }}
+    p {{
+        color: rgba(232, 215, 160, 0.8);
+    }}
+    p a {{
+        color: {CREAM};
     }}
 </style>
 """
@@ -304,7 +404,7 @@ def login_page():
     with col2:
         st.markdown("""
         <div class='login-container'>
-            <h1 class='login-header'>🎯 AI Visibility Report</h1>
+            <h1 class='login-header'>AI Visibility Report</h1>
             <p class='login-subheader'>Client Portal</p>
         </div>
         """, unsafe_allow_html=True)
@@ -331,10 +431,10 @@ def login_page():
                 else:
                     st.error("❌ Invalid username or password")
 
-        st.markdown("""
+        st.markdown(f"""
         <p class='footer-text'>
-            DaSilva Consulting • AI Visibility Analysis<br>
-            <small>Need help? Contact support</small>
+            <strong style='font-family: "Instrument Serif", Georgia, serif; font-size: 1.1em;'>DaSilva</strong> <span style='text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.85em;'>CONSULTING</span><br>
+            <small style='opacity: 0.7;'>Need help? <a href='mailto:{SUPPORT_EMAIL}'>Contact support</a></small>
         </p>
         """, unsafe_allow_html=True)
 
@@ -371,7 +471,7 @@ def display_html_report():
             available_brands = [f.stem.replace('visibility_report_', '').replace('_', ' ') for f in html_reports]
 
             if available_brands:
-                st.markdown(f"""
+                st.markdown("""
                 <div class='welcome-header'>
                     <div class='welcome-title'>Welcome, Administrator</div>
                     <div class='welcome-subtitle'>Select a brand to view their report</div>
@@ -465,9 +565,9 @@ def display_html_report():
             )
 
         st.markdown(f"""
-        <p style='text-align: center; color: #999; font-size: 0.85em; margin-top: 16px;'>
-            Report generated by DaSilva Consulting<br>
-            Questions? <a href="mailto:{SUPPORT_EMAIL}">Contact us</a>
+        <p style='text-align: center; color: rgba(232, 215, 160, 0.6); font-size: 0.85em; margin-top: 16px;'>
+            <span style='font-family: "Instrument Serif", Georgia, serif;'>DaSilva</span> <span style='text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8em;'>CONSULTING</span><br>
+            <small style='opacity: 0.8;'>Questions? <a href="mailto:{SUPPORT_EMAIL}" style='color: {CREAM};'>Contact us</a></small>
         </p>
         """, unsafe_allow_html=True)
 
