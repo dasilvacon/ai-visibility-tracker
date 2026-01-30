@@ -91,8 +91,21 @@ st.markdown(f"""
         font-weight: 400;
     }}
 
-    p, label, span {{
+    p, label, span, div, li, ul {{
         color: {CREAM};
+    }}
+
+    /* Markdown content */
+    .main .stMarkdown p, .main .stMarkdown li, .main .stMarkdown span {{
+        color: {CREAM} !important;
+    }}
+
+    .main .stMarkdown strong {{
+        color: white !important;
+    }}
+
+    .main .stMarkdown h1, .main .stMarkdown h2, .main .stMarkdown h3 {{
+        color: white !important;
     }}
 
     .stMetric {{
@@ -197,6 +210,30 @@ st.markdown(f"""
     .stTabs [aria-selected="true"] {{
         background-color: {CREAM};
         color: {DARK_BG};
+    }}
+
+    /* Expanders */
+    .stExpander {{
+        background-color: {DARK_PURPLE};
+        border: 1px solid rgba(232, 215, 160, 0.2);
+    }}
+
+    .stExpander summary {{
+        color: {CREAM} !important;
+    }}
+
+    .stExpander p, .stExpander span {{
+        color: {CREAM} !important;
+    }}
+
+    /* Info/Success/Warning/Error boxes */
+    .stAlert {{
+        color: {DARK_BG} !important;
+    }}
+
+    /* Progress bar */
+    .stProgress > div > div > div > div {{
+        background-color: {CREAM};
     }}
 </style>
 """, unsafe_allow_html=True)
