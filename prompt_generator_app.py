@@ -275,7 +275,7 @@ with st.sidebar:
 
     page = st.radio(
         "",
-        ["Generate", "Review & Approve", "Export", "Settings"],
+        ["Generate", "Review & Approve", "Export", "Client Manager"],
         key="nav_radio",
         label_visibility="collapsed"
     )
@@ -319,6 +319,6 @@ elif st.session_state.page == 'review_&_approve':
 elif st.session_state.page == 'export':
     from prompt_generator_pages import export_page
     export_page.render()
-elif st.session_state.page == 'settings':
+elif st.session_state.page == 'client_manager':
     from prompt_generator_pages import settings
     settings.render()

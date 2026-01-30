@@ -17,6 +17,25 @@ from src.prompt_generator.deduplicator import PromptDeduplicator
 def render():
     """Render the generation page."""
     st.title("✨ Generate Prompts")
+
+    # Show active client banner
+    if 'active_client' in st.session_state and st.session_state.active_client:
+        client_name = st.session_state.generation_config.get('client_name', 'Unknown Client')
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #4A4458 0%, #5a5468 100%);
+                    padding: 16px 24px;
+                    border-radius: 8px;
+                    border-left: 4px solid #E8D7A0;
+                    margin-bottom: 24px;'>
+            <p style='color: white; margin: 0; font-size: 1.1em;'>
+                <strong>🌟 Active Client:</strong> {client_name}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.warning("⚠️ No client selected. Go to **Client Manager** to select a client first.")
+        return
+
     st.markdown("Configure and generate prompts with real-time deduplication.")
 
     # Sidebar configuration
