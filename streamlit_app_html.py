@@ -520,19 +520,20 @@ def login_page():
     # Logo and title (centered using columns)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        # FIX 1: Title card - ONE complete HTML block
+        # FIX 1: Title card - ONE complete HTML block using concatenation to avoid f-string curly brace conflicts
         white_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: white;')
-        st.markdown(f"""
-        <div style='text-align: center; margin-bottom: 0;'>
-            <div style='background: {DARK_PURPLE}; padding: 50px 40px 30px 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>
-                <div style='margin-bottom: 32px;'>
-                    {white_logo}
-                </div>
-                <h1 style='color: white; font-family: "Instrument Serif", Georgia, serif; font-size: 2.5em; font-weight: 400; margin: 0 0 12px 0; letter-spacing: -0.02em;'>AI Visibility Report</h1>
-                <p style='color: {CREAM}; margin: 0 0 20px 0; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;'>Client Portal</p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            "<div style='text-align: center; margin-bottom: 0;'>" +
+            "<div style='background: " + DARK_PURPLE + "; padding: 50px 40px 30px 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>" +
+            "<div style='margin-bottom: 32px;'>" +
+            white_logo +
+            "</div>" +
+            "<h1 style='color: white; font-family: \"Instrument Serif\", Georgia, serif; font-size: 2.5em; font-weight: 400; margin: 0 0 12px 0; letter-spacing: -0.02em;'>AI Visibility Report</h1>" +
+            "<p style='color: " + CREAM + "; margin: 0 0 20px 0; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;'>Client Portal</p>" +
+            "</div>" +
+            "</div>",
+            unsafe_allow_html=True
+        )
 
         # FIX 2: No wrapper div - style the form directly with CSS
         with st.form("login_form"):
@@ -560,18 +561,19 @@ def login_page():
         # Spacer before footer
         st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
 
-        # FIX 3: Footer - ONE complete HTML block
+        # FIX 3: Footer - ONE complete HTML block using concatenation to avoid f-string curly brace conflicts
         footer_logo = LOGO_SVG.replace('width: 180px', 'width: 120px')
-        st.markdown(f"""
-        <div style='text-align: center; margin-top: 20px;'>
-            <div style='opacity: 0.5; margin-bottom: 16px;'>
-                {footer_logo}
-            </div>
-            <p style='color: #999; font-size: 0.75em; font-family: "DM Mono", monospace; letter-spacing: 0.02em; margin-top: 12px;'>
-                Need help? <a href='mailto:{SUPPORT_EMAIL}' style='color: #666; text-decoration: none;'>Contact support</a>
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            "<div style='text-align: center; margin-top: 20px;'>" +
+            "<div style='opacity: 0.5; margin-bottom: 16px;'>" +
+            footer_logo +
+            "</div>" +
+            "<p style='color: #999; font-size: 0.75em; font-family: \"DM Mono\", monospace; letter-spacing: 0.02em; margin-top: 12px;'>" +
+            "Need help? <a href='mailto:" + SUPPORT_EMAIL + "' style='color: #666; text-decoration: none;'>Contact support</a>" +
+            "</p>" +
+            "</div>",
+            unsafe_allow_html=True
+        )
 
 def display_error_state(title: str, message: str):
     """Display a branded error state."""
@@ -699,19 +701,17 @@ def display_html_report():
                 use_container_width=True
             )
 
-        # Logo
-        st.markdown(f"""
-        <div style='text-align: center; margin-top: 24px; color: {CREAM}; opacity: 0.6;'>
-            {LOGO_SVG.replace('width: 180px', 'width: 140px')}
-        </div>
-        """, unsafe_allow_html=True)
-
-        # Footer text
-        st.markdown(f"""
-        <p style='text-align: center; color: rgba(232, 215, 160, 0.6); font-size: 0.85em; margin-top: 12px;'>
-            <small style='opacity: 0.8;'>Questions? <a href="mailto:{SUPPORT_EMAIL}" style='color: {CREAM};'>Contact us</a></small>
-        </p>
-        """, unsafe_allow_html=True)
+        # Dashboard footer - using concatenation to avoid f-string curly brace conflicts
+        dashboard_footer_logo = LOGO_SVG.replace('width: 180px', 'width: 140px')
+        st.markdown(
+            "<div style='text-align: center; margin-top: 24px; color: " + CREAM + "; opacity: 0.6;'>" +
+            dashboard_footer_logo +
+            "</div>" +
+            "<p style='text-align: center; color: rgba(232, 215, 160, 0.6); font-size: 0.85em; margin-top: 12px;'>" +
+            "<small style='opacity: 0.8;'>Questions? <a href='mailto:" + SUPPORT_EMAIL + "' style='color: " + CREAM + ";'>Contact us</a></small>" +
+            "</p>",
+            unsafe_allow_html=True
+        )
 
 # ============================================
 # MAIN APP LOGIC
