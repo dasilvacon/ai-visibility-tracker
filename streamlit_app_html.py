@@ -130,14 +130,9 @@ login_css = f"""
     .main {{
         background-color: {DARK_BG};
     }}
-    .login-container {{
-        max-width: 420px;
-        margin: 100px auto;
-        padding: 0;
-        background: transparent;
-        border-radius: 8px;
-    }}
     .login-title-card {{
+        max-width: 420px;
+        margin: 100px auto 0 auto;
         background: {DARK_PURPLE};
         padding: 40px;
         border-radius: 8px 8px 0 0;
@@ -145,6 +140,8 @@ login_css = f"""
         text-align: center;
     }}
     .login-form-card {{
+        max-width: 420px;
+        margin: 0 auto;
         background: white;
         padding: 40px;
         border-radius: 0 0 8px 8px;
@@ -476,56 +473,54 @@ def login_page():
     """Display login page."""
     st.markdown(login_css, unsafe_allow_html=True)
 
-    # Center the login form
-    col1, col2, col3 = st.columns([1, 2, 1])
-
-    with col2:
-        st.markdown(f"""
-        <div class='login-container'>
-            <div class='login-title-card'>
-                <div style='color: white; margin-bottom: 24px;'>
-                    {LOGO_SVG}
-                </div>
-                <h1 class='login-header'>AI Visibility Report</h1>
-                <p class='login-subheader'>Client Portal</p>
-            </div>
+    # Logo and title card
+    st.markdown(f"""
+    <div class='login-title-card'>
+        <div style='color: white; margin-bottom: 24px;'>
+            {LOGO_SVG}
         </div>
-        """, unsafe_allow_html=True)
+        <h1 class='login-header'>AI Visibility Report</h1>
+        <p class='login-subheader'>Client Portal</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-        st.markdown("<div class='login-form-card'>", unsafe_allow_html=True)
-        with st.form("login_form"):
-            username = st.text_input("Username", placeholder="Enter your username")
-            password = st.text_input("Password", type="password", placeholder="Enter your password")
-            submit = st.form_submit_button("Login", use_container_width=True)
+    # Form container (styled via CSS)
+    st.markdown("<div class='login-form-card'>", unsafe_allow_html=True)
 
-            if submit:
-                username = username.strip()
-                password = password.strip()
+    with st.form("login_form"):
+        username = st.text_input("Username", placeholder="Enter your username")
+        password = st.text_input("Password", type="password", placeholder="Enter your password")
+        submit = st.form_submit_button("Login", use_container_width=True)
 
-                if check_password(username, password):
-                    st.session_state.authenticated = True
-                    st.session_state.username = username
-                    st.session_state.role = get_user_role(username)
-                    brand = get_user_brand(username)
+        if submit:
+            username = username.strip()
+            password = password.strip()
 
-                    # If admin (ALL), set to None so they can select
-                    st.session_state.brand_name = None if brand == "ALL" else brand
-                    st.session_state.login_time = datetime.now()
-                    st.rerun()
-                else:
-                    st.error("❌ Invalid username or password")
+            if check_password(username, password):
+                st.session_state.authenticated = True
+                st.session_state.username = username
+                st.session_state.role = get_user_role(username)
+                brand = get_user_brand(username)
 
-        st.markdown(f"""
-            <div style='text-align: center; margin-top: 32px; color: {DARK_PURPLE};'>
-                <div style='margin-bottom: 12px;'>
-                    {LOGO_SVG.replace('width: 180px', 'width: 140px')}
-                </div>
-                <p class='footer-text'>
-                    <small style='opacity: 0.7;'>Need help? <a href='mailto:{SUPPORT_EMAIL}'>Contact support</a></small>
-                </p>
+                # If admin (ALL), set to None so they can select
+                st.session_state.brand_name = None if brand == "ALL" else brand
+                st.session_state.login_time = datetime.now()
+                st.rerun()
+            else:
+                st.error("❌ Invalid username or password")
+
+    # Footer with logo
+    st.markdown(f"""
+        <div style='text-align: center; margin-top: 32px; color: {DARK_PURPLE};'>
+            <div style='margin-bottom: 12px;'>
+                {LOGO_SVG.replace('width: 180px', 'width: 140px')}
             </div>
+            <p class='footer-text'>
+                <small style='opacity: 0.7;'>Need help? <a href='mailto:{SUPPORT_EMAIL}'>Contact support</a></small>
+            </p>
         </div>
-        """, unsafe_allow_html=True)
+    </div>
+    """, unsafe_allow_html=True)
 
 def display_error_state(title: str, message: str):
     """Display a branded error state."""
