@@ -110,6 +110,29 @@ login_css = f"""
 
 dashboard_css = f"""
 <style>
+    /* Hide sidebar completely */
+    section[data-testid="stSidebar"] {{
+        display: none;
+    }}
+
+    /* Hide top hamburger menu button */
+    button[kind="header"] {{
+        display: none;
+    }}
+
+    /* Hide Streamlit branding and menu */
+    #MainMenu {{
+        display: none;
+    }}
+
+    footer {{
+        display: none;
+    }}
+
+    header {{
+        display: none;
+    }}
+
     .main {{
         background-color: {OFF_WHITE};
     }}
