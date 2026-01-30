@@ -99,6 +99,7 @@ login_css = f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;600&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap');
 
     /* Hide sidebar completely */
     section[data-testid="stSidebar"] {{
@@ -211,12 +212,17 @@ login_css = f"""
     .footer-text {{
         text-align: center;
         color: #999;
-        font-size: 0.85em;
+        font-size: 0.75em;
         margin-top: 24px;
+        font-family: 'DM Mono', monospace;
+        letter-spacing: 0.02em;
     }}
     .footer-text a {{
         color: {DARK_PURPLE};
         text-decoration: none;
+    }}
+    .footer-text small {{
+        font-family: 'DM Mono', monospace;
     }}
 </style>
 """
@@ -225,6 +231,7 @@ dashboard_css = f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;600&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap');
 
     * {{
         font-family: 'Host Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -284,8 +291,10 @@ dashboard_css = f"""
         display: flex;
         gap: 24px;
         margin-top: 16px;
-        font-size: 0.85em;
+        font-size: 0.75em;
         color: rgba(232, 215, 160, 0.7);
+        font-family: 'DM Mono', monospace;
+        letter-spacing: 0.02em;
     }}
     .stButton button {{
         background-color: {CREAM};
@@ -376,6 +385,11 @@ dashboard_css = f"""
     }}
     p a {{
         color: {CREAM};
+    }}
+    small {{
+        font-family: 'DM Mono', monospace;
+        font-size: 0.75em;
+        letter-spacing: 0.02em;
     }}
 </style>
 """
