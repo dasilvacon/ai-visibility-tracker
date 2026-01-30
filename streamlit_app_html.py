@@ -521,7 +521,7 @@ def login_page():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         # FIX 1: Title card - ONE complete HTML block using concatenation to avoid f-string curly brace conflicts
-        white_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: white;')
+        white_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: ' + OFF_WHITE + ';')
         st.markdown(
             "<div style='text-align: center; margin-bottom: 0;'>" +
             "<div style='background: " + DARK_PURPLE + "; padding: 50px 40px 30px 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>" +
@@ -562,7 +562,7 @@ def login_page():
         st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
 
         # FIX 3: Footer - ONE complete HTML block using concatenation to avoid f-string curly brace conflicts
-        footer_logo = LOGO_SVG.replace('width: 180px', 'width: 120px')
+        footer_logo = LOGO_SVG.replace('width: 180px', 'width: 120px').replace('fill: currentColor;', 'fill: ' + OFF_WHITE + ';')
         st.markdown(
             "<div style='text-align: center; margin-top: 20px;'>" +
             "<div style='opacity: 0.5; margin-bottom: 16px;'>" +
@@ -702,7 +702,7 @@ def display_html_report():
             )
 
         # Dashboard footer - using concatenation to avoid f-string curly brace conflicts
-        dashboard_footer_logo = LOGO_SVG.replace('width: 180px', 'width: 140px')
+        dashboard_footer_logo = LOGO_SVG.replace('width: 180px', 'width: 140px').replace('fill: currentColor;', 'fill: ' + OFF_WHITE + ';')
         st.markdown(
             "<div style='text-align: center; margin-top: 24px; color: " + CREAM + "; opacity: 0.6;'>" +
             dashboard_footer_logo +
