@@ -521,11 +521,12 @@ def login_page():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         # FIX 1: Title card - ONE complete HTML block using concatenation to avoid f-string curly brace conflicts
-        white_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: ' + OFF_WHITE + ';')
+        # Make logo smaller (120px instead of 180px) and left-aligned
+        white_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: ' + OFF_WHITE + ';').replace('width: 180px', 'width: 120px')
         st.markdown(
             "<div style='text-align: center; margin-bottom: 0;'>" +
-            "<div style='background: " + DARK_PURPLE + "; padding: 50px 40px 30px 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>" +
-            "<div style='margin-bottom: 32px;'>" +
+            "<div style='background: " + DARK_PURPLE + "; padding: 40px 40px 30px 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>" +
+            "<div style='text-align: left; margin-bottom: 24px;'>" +
             white_logo +
             "</div>" +
             "<h1 style='color: white; font-family: \"Instrument Serif\", Georgia, serif; font-size: 2.5em; font-weight: 400; margin: 0 0 12px 0; letter-spacing: -0.02em;'>AI Visibility Report</h1>" +
