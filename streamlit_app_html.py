@@ -130,6 +130,12 @@ login_css = f"""
     .main {{
         background-color: {DARK_BG};
     }}
+    .stApp {{
+        background-color: {DARK_BG};
+    }}
+    [data-testid="stAppViewContainer"] {{
+        background-color: {DARK_BG};
+    }}
     .login-title-card {{
         max-width: 420px;
         margin: 100px auto 0 auto;
@@ -260,6 +266,12 @@ dashboard_css = f"""
     .main {{
         background-color: {DARK_BG};
     }}
+    .stApp {{
+        background-color: {DARK_BG};
+    }}
+    [data-testid="stAppViewContainer"] {{
+        background-color: {DARK_BG};
+    }}
     .welcome-header {{
         background: {DARK_PURPLE};
         color: white;
@@ -294,8 +306,8 @@ dashboard_css = f"""
         letter-spacing: 0.02em;
     }}
     .stButton button {{
-        background-color: {CREAM};
-        color: {DARK_BG};
+        background-color: {DARK_PURPLE};
+        color: white;
         border-radius: 4px;
         padding: 10px 20px;
         font-weight: 700;
@@ -306,9 +318,9 @@ dashboard_css = f"""
         transition: all 0.2s ease;
     }}
     .stButton button:hover {{
-        background-color: #f5e4b3;
+        background-color: {DARK_ACCENT};
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(232, 215, 160, 0.3);
+        box-shadow: 0 4px 12px rgba(74, 68, 88, 0.4);
     }}
     .stSelectbox label {{
         color: {CREAM} !important;
@@ -317,13 +329,19 @@ dashboard_css = f"""
         font-size: 0.85em !important;
     }}
     .stSelectbox > div > div {{
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(232, 215, 160, 0.3) !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(232, 215, 160, 0.4) !important;
+        color: white !important;
+    }}
+    .stSelectbox [data-baseweb="select"] {{
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }}
+    .stSelectbox [data-baseweb="select"] > div {{
         color: white !important;
     }}
     .stDownloadButton button {{
-        background-color: {CREAM};
-        color: {DARK_BG};
+        background-color: {DARK_PURPLE};
+        color: white;
         border-radius: 4px;
         padding: 12px 24px;
         font-weight: 700;
@@ -334,8 +352,9 @@ dashboard_css = f"""
         transition: all 0.2s ease;
     }}
     .stDownloadButton button:hover {{
-        background-color: #f5e4b3;
+        background-color: {DARK_ACCENT};
         transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(74, 68, 88, 0.4);
     }}
     .error-container {{
         max-width: 500px;
@@ -509,16 +528,18 @@ def login_page():
             else:
                 st.error("❌ Invalid username or password")
 
+    # Close form card and add footer
+    st.markdown("</div>", unsafe_allow_html=True)
+
     # Footer with logo
     st.markdown(f"""
-        <div style='text-align: center; margin-top: 32px; color: {DARK_PURPLE};'>
-            <div style='margin-bottom: 12px;'>
-                {LOGO_SVG.replace('width: 180px', 'width: 140px')}
-            </div>
-            <p class='footer-text'>
-                <small style='opacity: 0.7;'>Need help? <a href='mailto:{SUPPORT_EMAIL}'>Contact support</a></small>
-            </p>
+    <div style='text-align: center; margin: 32px auto; max-width: 420px; color: {DARK_PURPLE};'>
+        <div style='margin-bottom: 12px;'>
+            {LOGO_SVG.replace('width: 180px', 'width: 140px')}
         </div>
+        <p class='footer-text'>
+            <small style='opacity: 0.7;'>Need help? <a href='mailto:{SUPPORT_EMAIL}'>Contact support</a></small>
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -563,7 +584,7 @@ def display_html_report():
                 """, unsafe_allow_html=True)
 
                 selected_brand = st.selectbox("Select Brand", available_brands)
-                if st.button("View Report", type="primary"):
+                if st.button("View Report", use_container_width=True):
                     st.session_state.brand_name = selected_brand
                     st.rerun()
                 return
@@ -648,15 +669,18 @@ def display_html_report():
                 use_container_width=True
             )
 
+        # Logo
         st.markdown(f"""
-        <div style='text-align: center; margin-top: 24px;'>
-            <div style='color: {CREAM}; opacity: 0.6; margin-bottom: 12px;'>
-                {LOGO_SVG.replace('width: 180px', 'width: 140px')}
-            </div>
-            <p style='color: rgba(232, 215, 160, 0.6); font-size: 0.85em;'>
-                <small style='opacity: 0.8;'>Questions? <a href="mailto:{SUPPORT_EMAIL}" style='color: {CREAM};'>Contact us</a></small>
-            </p>
+        <div style='text-align: center; margin-top: 24px; color: {CREAM}; opacity: 0.6;'>
+            {LOGO_SVG.replace('width: 180px', 'width: 140px')}
         </div>
+        """, unsafe_allow_html=True)
+
+        # Footer text
+        st.markdown(f"""
+        <p style='text-align: center; color: rgba(232, 215, 160, 0.6); font-size: 0.85em; margin-top: 12px;'>
+            <small style='opacity: 0.8;'>Questions? <a href="mailto:{SUPPORT_EMAIL}" style='color: {CREAM};'>Contact us</a></small>
+        </p>
         """, unsafe_allow_html=True)
 
 # ============================================
