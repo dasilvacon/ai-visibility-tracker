@@ -50,6 +50,8 @@ if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
 if 'username' not in st.session_state:
     st.session_state.username = None
+if 'role' not in st.session_state:
+    st.session_state.role = None
 if 'brand_name' not in st.session_state:
     st.session_state.brand_name = None
 if 'login_time' not in st.session_state:
@@ -182,6 +184,7 @@ def check_session_timeout() -> bool:
         # Clear session
         st.session_state.authenticated = False
         st.session_state.username = None
+        st.session_state.role = None
         st.session_state.brand_name = None
         st.session_state.login_time = None
         return True
@@ -198,11 +201,24 @@ def check_password(username: str, password: str) -> bool:
         pass
     return False
 
+def get_user_role(username: str) -> str:
+    """Get user role (admin or client)."""
+    try:
+        if hasattr(st, 'secrets') and 'roles' in st.secrets:
+            return st.secrets['roles'].get(username, 'client')
+    except Exception:
+        pass
+    return 'client'
+
 def get_user_brand(username: str) -> str:
     """Get the brand name assigned to a user."""
     try:
-        if hasattr(st, 'secrets') and 'brands' in st.secrets:
-            return st.secrets['brands'].get(username, username.replace('_', ' ').title())
+        if hasattr(st, 'secrets') and 'clients' in st.secrets:
+            brand = st.secrets['clients'].get(username)
+            if brand == "ALL":
+                # Admin - return first available brand or let them choose
+                return "ALL"
+            return brand
     except Exception:
         pass
     return username.replace('_', ' ').title()
@@ -224,6 +240,7 @@ def logout():
     """Clear session and log out user."""
     st.session_state.authenticated = False
     st.session_state.username = None
+    st.session_state.role = None
     st.session_state.brand_name = None
     st.session_state.login_time = None
 
@@ -258,7 +275,11 @@ def login_page():
                 if check_password(username, password):
                     st.session_state.authenticated = True
                     st.session_state.username = username
-                    st.session_state.brand_name = get_user_brand(username)
+                    st.session_state.role = get_user_role(username)
+                    brand = get_user_brand(username)
+
+                    # If admin (ALL), set to None so they can select
+                    st.session_state.brand_name = None if brand == "ALL" else brand
                     st.session_state.login_time = datetime.now()
                     st.rerun()
                 else:
@@ -296,6 +317,30 @@ def display_html_report():
         st.rerun()
         return
 
+    # If admin and no brand selected, show brand selector
+    if st.session_state.get('role') == 'admin' and st.session_state.brand_name is None:
+        reports_dir = Path('data/reports')
+        if reports_dir.exists():
+            html_reports = list(reports_dir.glob('visibility_report_*.html'))
+            available_brands = [f.stem.replace('visibility_report_', '').replace('_', ' ') for f in html_reports]
+
+            if available_brands:
+                st.markdown(f"""
+                <div class='welcome-header'>
+                    <div class='welcome-title'>Welcome, Administrator</div>
+                    <div class='welcome-subtitle'>Select a brand to view their report</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+                selected_brand = st.selectbox("Select Brand", available_brands)
+                if st.button("View Report", type="primary"):
+                    st.session_state.brand_name = selected_brand
+                    st.rerun()
+                return
+            else:
+                display_error_state("No Reports Found", "No brand reports are available yet.")
+                return
+
     brand_slug = st.session_state.brand_name.replace(' ', '_')
     html_report_path = Path(f'data/reports/visibility_report_{brand_slug}.html')
 
@@ -326,6 +371,11 @@ def display_html_report():
 
     with header_col2:
         st.write("")  # Spacing
+        # Show change brand button for admin
+        if st.session_state.get('role') == 'admin':
+            if st.button("🔄 Change Brand", use_container_width=True):
+                st.session_state.brand_name = None
+                st.rerun()
         if st.button("🚪 Logout", use_container_width=True):
             logout()
             st.rerun()
