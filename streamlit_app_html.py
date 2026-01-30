@@ -492,56 +492,65 @@ def login_page():
     """Display login page."""
     st.markdown(login_css, unsafe_allow_html=True)
 
-    # Logo and title card
-    st.markdown(f"""
-    <div class='login-title-card'>
-        <div style='color: white; margin-bottom: 24px;'>
-            {LOGO_SVG}
+    # Spacer
+    st.markdown("<div style='height: 80px;'></div>", unsafe_allow_html=True)
+
+    # Logo and title (centered using columns)
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        # Logo
+        st.markdown(f"""
+        <div style='text-align: center; margin-bottom: 40px;'>
+            <div style='background: {DARK_PURPLE}; padding: 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>
+                <div style='color: white; margin-bottom: 24px;'>
+                    {LOGO_SVG}
+                </div>
+                <h1 style='color: white; font-family: "Instrument Serif", Georgia, serif; font-size: 2.5em; font-weight: 400; margin: 0 0 8px 0; letter-spacing: -0.02em;'>AI Visibility Report</h1>
+                <p style='color: {CREAM}; margin: 0; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;'>Client Portal</p>
+            </div>
         </div>
-        <h1 class='login-header'>AI Visibility Report</h1>
-        <p class='login-subheader'>Client Portal</p>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
-    # Form container (styled via CSS)
-    st.markdown("<div class='login-form-card'>", unsafe_allow_html=True)
+        # Form (styled to connect with title card)
+        st.markdown(f"""
+        <div style='background: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); margin-top: -10px;'>
+        """, unsafe_allow_html=True)
 
-    with st.form("login_form"):
-        username = st.text_input("Username", placeholder="Enter your username")
-        password = st.text_input("Password", type="password", placeholder="Enter your password")
-        submit = st.form_submit_button("Login", use_container_width=True)
+        with st.form("login_form"):
+            username = st.text_input("Username", placeholder="Enter your username")
+            password = st.text_input("Password", type="password", placeholder="Enter your password")
+            submit = st.form_submit_button("Login", use_container_width=True)
 
-        if submit:
-            username = username.strip()
-            password = password.strip()
+            if submit:
+                username = username.strip()
+                password = password.strip()
 
-            if check_password(username, password):
-                st.session_state.authenticated = True
-                st.session_state.username = username
-                st.session_state.role = get_user_role(username)
-                brand = get_user_brand(username)
+                if check_password(username, password):
+                    st.session_state.authenticated = True
+                    st.session_state.username = username
+                    st.session_state.role = get_user_role(username)
+                    brand = get_user_brand(username)
 
-                # If admin (ALL), set to None so they can select
-                st.session_state.brand_name = None if brand == "ALL" else brand
-                st.session_state.login_time = datetime.now()
-                st.rerun()
-            else:
-                st.error("❌ Invalid username or password")
+                    # If admin (ALL), set to None so they can select
+                    st.session_state.brand_name = None if brand == "ALL" else brand
+                    st.session_state.login_time = datetime.now()
+                    st.rerun()
+                else:
+                    st.error("❌ Invalid username or password")
 
-    # Close form card and add footer
-    st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    # Footer with logo
-    st.markdown(f"""
-    <div style='text-align: center; margin: 32px auto; max-width: 420px; color: {DARK_PURPLE};'>
-        <div style='margin-bottom: 12px;'>
-            {LOGO_SVG.replace('width: 180px', 'width: 140px')}
+        # Footer with logo
+        st.markdown(f"""
+        <div style='text-align: center; margin-top: 32px;'>
+            <div style='color: {DARK_PURPLE}; margin-bottom: 12px;'>
+                {LOGO_SVG.replace('width: 180px', 'width: 120px')}
+            </div>
+            <p style='color: #999; font-size: 0.75em; font-family: "DM Mono", monospace; letter-spacing: 0.02em;'>
+                Need help? <a href='mailto:{SUPPORT_EMAIL}' style='color: {DARK_PURPLE}; text-decoration: none;'>Contact support</a>
+            </p>
         </div>
-        <p class='footer-text'>
-            <small style='opacity: 0.7;'>Need help? <a href='mailto:{SUPPORT_EMAIL}'>Contact support</a></small>
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
 def display_error_state(title: str, message: str):
     """Display a branded error state."""
