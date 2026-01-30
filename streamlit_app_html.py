@@ -98,6 +98,7 @@ if 'login_time' not in st.session_state:
 login_css = f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap');
 
     /* Hide sidebar completely */
     section[data-testid="stSidebar"] {{
@@ -122,6 +123,9 @@ login_css = f"""
         display: none;
     }}
 
+    * {{
+        font-family: 'Host Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }}
     .main {{
         background-color: {DARK_BG};
     }}
@@ -220,6 +224,11 @@ login_css = f"""
 dashboard_css = f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap');
+
+    * {{
+        font-family: 'Host Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }}
 
     /* Hide sidebar completely */
     section[data-testid="stSidebar"] {{
