@@ -498,12 +498,18 @@ def login_page():
     # Logo and title (centered using columns)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        # Logo
+        # Open title card container
         st.markdown(f"""
-        <div style='text-align: center; margin-bottom: 40px;'>
-            <div style='background: {DARK_PURPLE}; padding: 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>
+        <div style='text-align: center; margin-bottom: 0;'>
+            <div style='background: {DARK_PURPLE}; padding: 40px 40px 20px 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>
                 <div style='color: white; margin-bottom: 24px;'>
-                    {LOGO_SVG}
+        """, unsafe_allow_html=True)
+
+        # Logo only (separate to avoid quote conflicts)
+        st.markdown(LOGO_SVG, unsafe_allow_html=True)
+
+        # Close logo div and add title/subtitle
+        st.markdown(f"""
                 </div>
                 <h1 style='color: white; font-family: "Instrument Serif", Georgia, serif; font-size: 2.5em; font-weight: 400; margin: 0 0 8px 0; letter-spacing: -0.02em;'>AI Visibility Report</h1>
                 <p style='color: {CREAM}; margin: 0; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;'>Client Portal</p>
@@ -511,8 +517,8 @@ def login_page():
         </div>
         """, unsafe_allow_html=True)
 
-        # Form (styled to connect with title card)
-        st.markdown(f"""
+        # Form container
+        st.markdown("""
         <div style='background: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); margin-top: -10px;'>
         """, unsafe_allow_html=True)
 
@@ -540,14 +546,20 @@ def login_page():
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-        # Footer with logo
-        st.markdown(f"""
+        # Footer - open container
+        st.markdown("""
         <div style='text-align: center; margin-top: 32px;'>
-            <div style='color: {DARK_PURPLE}; margin-bottom: 12px;'>
-                {LOGO_SVG.replace('width: 180px', 'width: 120px')}
+            <div style='color: #4A4458; margin-bottom: 12px;'>
+        """, unsafe_allow_html=True)
+
+        # Footer logo (separate to avoid quote conflicts)
+        st.markdown(LOGO_SVG.replace('width: 180px', 'width: 120px'), unsafe_allow_html=True)
+
+        # Close footer
+        st.markdown(f"""
             </div>
             <p style='color: #999; font-size: 0.75em; font-family: "DM Mono", monospace; letter-spacing: 0.02em;'>
-                Need help? <a href='mailto:{SUPPORT_EMAIL}' style='color: {DARK_PURPLE}; text-decoration: none;'>Contact support</a>
+                Need help? <a href='mailto:{SUPPORT_EMAIL}' style='color: #4A4458; text-decoration: none;'>Contact support</a>
             </p>
         </div>
         """, unsafe_allow_html=True)
