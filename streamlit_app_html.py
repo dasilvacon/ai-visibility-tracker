@@ -175,8 +175,12 @@ login_css = f"""
         background-color: #f9f9f9 !important;
         border: 1px solid #ddd !important;
         color: {DARK_BG} !important;
-        border-radius: 4px !important;
-        padding: 12px !important;
+        border-radius: 6px !important;
+        padding: 14px !important;
+        font-size: 1em !important;
+    }}
+    .stTextInput {{
+        margin-bottom: 20px !important;
     }}
     .stTextInput input:focus {{
         border-color: {DARK_PURPLE} !important;
@@ -184,24 +188,25 @@ login_css = f"""
     }}
     .stTextInput label {{
         color: {DARK_PURPLE} !important;
-        font-size: 0.85em !important;
+        font-size: 0.75em !important;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.08em;
         font-weight: 600;
+        margin-bottom: 8px !important;
     }}
     .stButton button {{
-        background-color: {DARK_PURPLE};
-        color: white;
-        border-radius: 6px;
-        width: 100%;
-        padding: 16px;
-        font-weight: 700;
-        border: none;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        font-size: 0.85em;
-        transition: all 0.2s ease;
-        margin-top: 12px;
+        background-color: {DARK_PURPLE} !important;
+        color: white !important;
+        border-radius: 6px !important;
+        width: 100% !important;
+        padding: 16px !important;
+        font-weight: 700 !important;
+        border: none !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.12em !important;
+        font-size: 0.85em !important;
+        transition: all 0.2s ease !important;
+        margin-top: 24px !important;
     }}
     .stButton button:hover {{
         background-color: {DARK_ACCENT};
@@ -505,15 +510,16 @@ def login_page():
     # Logo and title (centered using columns)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        # Open title card container with white logo
+        # Open title card container
         st.markdown(f"""
         <div style='text-align: center; margin-bottom: 0;'>
             <div style='background: {DARK_PURPLE}; padding: 50px 40px 30px 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>
-                <div style='color: white; margin-bottom: 32px; filter: brightness(0) invert(1);'>
+                <div style='margin-bottom: 32px;'>
         """, unsafe_allow_html=True)
 
-        # Logo only (separate to avoid quote conflicts) - will be white due to filter above
-        st.markdown(LOGO_SVG, unsafe_allow_html=True)
+        # Logo with white fill (replace currentColor with white)
+        white_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: white;')
+        st.markdown(white_logo, unsafe_allow_html=True)
 
         # Close logo div and add title/subtitle
         st.markdown(f"""
