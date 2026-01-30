@@ -192,20 +192,27 @@ login_css = f"""
     .stButton button {{
         background-color: {DARK_PURPLE};
         color: white;
-        border-radius: 4px;
+        border-radius: 6px;
         width: 100%;
-        padding: 14px;
-        font-weight: 600;
+        padding: 16px;
+        font-weight: 700;
         border: none;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.12em;
         font-size: 0.85em;
         transition: all 0.2s ease;
+        margin-top: 12px;
     }}
     .stButton button:hover {{
         background-color: {DARK_ACCENT};
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(74, 68, 88, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(74, 68, 88, 0.4);
+    }}
+    .stTextInput label {{
+        margin-bottom: 8px;
+    }}
+    .stTextInput input {{
+        padding: 14px !important;
     }}
     .stAlert {{
         background-color: #fee;
@@ -493,33 +500,33 @@ def login_page():
     st.markdown(login_css, unsafe_allow_html=True)
 
     # Spacer
-    st.markdown("<div style='height: 80px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 100px;'></div>", unsafe_allow_html=True)
 
     # Logo and title (centered using columns)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        # Open title card container
+        # Open title card container with white logo
         st.markdown(f"""
         <div style='text-align: center; margin-bottom: 0;'>
-            <div style='background: {DARK_PURPLE}; padding: 40px 40px 20px 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>
-                <div style='color: white; margin-bottom: 24px;'>
+            <div style='background: {DARK_PURPLE}; padding: 50px 40px 30px 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>
+                <div style='color: white; margin-bottom: 32px; filter: brightness(0) invert(1);'>
         """, unsafe_allow_html=True)
 
-        # Logo only (separate to avoid quote conflicts)
+        # Logo only (separate to avoid quote conflicts) - will be white due to filter above
         st.markdown(LOGO_SVG, unsafe_allow_html=True)
 
         # Close logo div and add title/subtitle
         st.markdown(f"""
                 </div>
-                <h1 style='color: white; font-family: "Instrument Serif", Georgia, serif; font-size: 2.5em; font-weight: 400; margin: 0 0 8px 0; letter-spacing: -0.02em;'>AI Visibility Report</h1>
-                <p style='color: {CREAM}; margin: 0; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;'>Client Portal</p>
+                <h1 style='color: white; font-family: "Instrument Serif", Georgia, serif; font-size: 2.5em; font-weight: 400; margin: 0 0 12px 0; letter-spacing: -0.02em;'>AI Visibility Report</h1>
+                <p style='color: {CREAM}; margin: 0 0 20px 0; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;'>Client Portal</p>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-        # Form container
+        # Form container with more padding
         st.markdown("""
-        <div style='background: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); margin-top: -10px;'>
+        <div style='background: white; padding: 50px 40px 40px 40px; border-radius: 0 0 8px 8px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); margin-top: -10px;'>
         """, unsafe_allow_html=True)
 
         with st.form("login_form"):
@@ -546,10 +553,13 @@ def login_page():
 
         st.markdown("</div>", unsafe_allow_html=True)
 
+        # Spacer before footer
+        st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
+
         # Footer - open container
         st.markdown("""
-        <div style='text-align: center; margin-top: 32px;'>
-            <div style='color: #4A4458; margin-bottom: 12px;'>
+        <div style='text-align: center; margin-top: 20px;'>
+            <div style='opacity: 0.5; margin-bottom: 16px;'>
         """, unsafe_allow_html=True)
 
         # Footer logo (separate to avoid quote conflicts)
@@ -558,8 +568,8 @@ def login_page():
         # Close footer
         st.markdown(f"""
             </div>
-            <p style='color: #999; font-size: 0.75em; font-family: "DM Mono", monospace; letter-spacing: 0.02em;'>
-                Need help? <a href='mailto:{SUPPORT_EMAIL}' style='color: #4A4458; text-decoration: none;'>Contact support</a>
+            <p style='color: #999; font-size: 0.75em; font-family: "DM Mono", monospace; letter-spacing: 0.02em; margin-top: 12px;'>
+                Need help? <a href='mailto:{SUPPORT_EMAIL}' style='color: #666; text-decoration: none;'>Contact support</a>
             </p>
         </div>
         """, unsafe_allow_html=True)
