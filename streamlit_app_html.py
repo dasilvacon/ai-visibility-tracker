@@ -136,6 +136,16 @@ login_css = f"""
     [data-testid="stAppViewContainer"] {{
         background-color: {DARK_BG};
     }}
+
+    /* FIX 2: Style the form directly instead of wrapper div */
+    [data-testid="stForm"] {{
+        background: white;
+        padding: 50px 40px 40px 40px;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        margin-top: -10px;
+    }}
+
     .login-title-card {{
         max-width: 420px;
         margin: 100px auto 0 auto;
@@ -510,19 +520,13 @@ def login_page():
     # Logo and title (centered using columns)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        # Open title card container
+        # FIX 1: Title card - ONE complete HTML block
+        white_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: white;')
         st.markdown(f"""
         <div style='text-align: center; margin-bottom: 0;'>
             <div style='background: {DARK_PURPLE}; padding: 50px 40px 30px 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>
                 <div style='margin-bottom: 32px;'>
-        """, unsafe_allow_html=True)
-
-        # Logo with white fill (replace currentColor with white)
-        white_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: white;')
-        st.markdown(white_logo, unsafe_allow_html=True)
-
-        # Close logo div and add title/subtitle
-        st.markdown(f"""
+                    {white_logo}
                 </div>
                 <h1 style='color: white; font-family: "Instrument Serif", Georgia, serif; font-size: 2.5em; font-weight: 400; margin: 0 0 12px 0; letter-spacing: -0.02em;'>AI Visibility Report</h1>
                 <p style='color: {CREAM}; margin: 0 0 20px 0; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;'>Client Portal</p>
@@ -530,11 +534,7 @@ def login_page():
         </div>
         """, unsafe_allow_html=True)
 
-        # Form container with more padding
-        st.markdown("""
-        <div style='background: white; padding: 50px 40px 40px 40px; border-radius: 0 0 8px 8px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); margin-top: -10px;'>
-        """, unsafe_allow_html=True)
-
+        # FIX 2: No wrapper div - style the form directly with CSS
         with st.form("login_form"):
             username = st.text_input("Username", placeholder="Enter your username")
             password = st.text_input("Password", type="password", placeholder="Enter your password")
@@ -557,22 +557,15 @@ def login_page():
                 else:
                     st.error("❌ Invalid username or password")
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
         # Spacer before footer
         st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
 
-        # Footer - open container
-        st.markdown("""
+        # FIX 3: Footer - ONE complete HTML block
+        footer_logo = LOGO_SVG.replace('width: 180px', 'width: 120px')
+        st.markdown(f"""
         <div style='text-align: center; margin-top: 20px;'>
             <div style='opacity: 0.5; margin-bottom: 16px;'>
-        """, unsafe_allow_html=True)
-
-        # Footer logo (separate to avoid quote conflicts)
-        st.markdown(LOGO_SVG.replace('width: 180px', 'width: 120px'), unsafe_allow_html=True)
-
-        # Close footer
-        st.markdown(f"""
+                {footer_logo}
             </div>
             <p style='color: #999; font-size: 0.75em; font-family: "DM Mono", monospace; letter-spacing: 0.02em; margin-top: 12px;'>
                 Need help? <a href='mailto:{SUPPORT_EMAIL}' style='color: #666; text-decoration: none;'>Contact support</a>
