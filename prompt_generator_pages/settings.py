@@ -294,81 +294,81 @@ def render():
             col1, col2 = st.columns(2)
 
             with col1:
-            st.markdown(f"<p style='color: {OFF_WHITE}; font-weight: 600; font-size: 0.95em; margin-bottom: 8px;'>Personas JSON</p>", unsafe_allow_html=True)
-            st.markdown(f"<p style='color: {OFF_WHITE}; font-size: 0.85em; margin-bottom: 8px;'>Upload personas file</p>", unsafe_allow_html=True)
-            personas_upload = st.file_uploader(
-                "personas",
-                type=['json'],
-                key="personas_upload",
-                help="JSON file with persona definitions",
-                label_visibility="collapsed"
-            )
+                st.markdown(f"<p style='color: {OFF_WHITE}; font-weight: 600; font-size: 0.95em; margin-bottom: 8px;'>Personas JSON</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='color: {OFF_WHITE}; font-size: 0.85em; margin-bottom: 8px;'>Upload personas file</p>", unsafe_allow_html=True)
+                personas_upload = st.file_uploader(
+                    "personas",
+                    type=['json'],
+                    key="personas_upload",
+                    help="JSON file with persona definitions",
+                    label_visibility="collapsed"
+                )
 
-            if personas_upload:
-                st.success(f"✓ {personas_upload.name}")
+                if personas_upload:
+                    st.success(f"✓ {personas_upload.name}")
 
             with col2:
-            st.markdown(f"<p style='color: {OFF_WHITE}; font-weight: 600; font-size: 0.95em; margin-bottom: 8px;'>Keywords CSV</p>", unsafe_allow_html=True)
-            st.markdown(f"<p style='color: {OFF_WHITE}; font-size: 0.85em; margin-bottom: 8px;'>Upload keywords file</p>", unsafe_allow_html=True)
-            keywords_upload = st.file_uploader(
-                "keywords",
-                type=['csv'],
-                key="keywords_upload",
-                help="CSV file with keywords and intent types",
-                label_visibility="collapsed"
-            )
+                st.markdown(f"<p style='color: {OFF_WHITE}; font-weight: 600; font-size: 0.95em; margin-bottom: 8px;'>Keywords CSV</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='color: {OFF_WHITE}; font-size: 0.85em; margin-bottom: 8px;'>Upload keywords file</p>", unsafe_allow_html=True)
+                keywords_upload = st.file_uploader(
+                    "keywords",
+                    type=['csv'],
+                    key="keywords_upload",
+                    help="CSV file with keywords and intent types",
+                    label_visibility="collapsed"
+                )
 
-            if keywords_upload:
-                st.success(f"✓ {keywords_upload.name}")
+                if keywords_upload:
+                    st.success(f"✓ {keywords_upload.name}")
 
             st.markdown("---")
 
             # Save button
             if st.button("💾 Add Client", type="primary", use_container_width=True):
-            if not new_client_name:
-                st.error("Please enter a client name.")
-            elif not personas_upload or not keywords_upload:
-                st.error("Please upload both personas and keywords files.")
-            else:
-                try:
-                    # Create slug from client name
-                    client_slug = new_client_name.lower().replace(' ', '_')
-                    client_slug = re.sub(r'[^a-z0-9_]', '', client_slug)
+                if not new_client_name:
+                    st.error("Please enter a client name.")
+                elif not personas_upload or not keywords_upload:
+                    st.error("Please upload both personas and keywords files.")
+                else:
+                    try:
+                        # Create slug from client name
+                        client_slug = new_client_name.lower().replace(' ', '_')
+                        client_slug = re.sub(r'[^a-z0-9_]', '', client_slug)
 
-                    # Save files to data directory
-                    data_dir = Path('data')
-                    data_dir.mkdir(exist_ok=True)
+                        # Save files to data directory
+                        data_dir = Path('data')
+                        data_dir.mkdir(exist_ok=True)
 
-                    personas_path = data_dir / f"{client_slug}_personas.json"
-                    keywords_path = data_dir / f"{client_slug}_keywords.csv"
+                        personas_path = data_dir / f"{client_slug}_personas.json"
+                        keywords_path = data_dir / f"{client_slug}_keywords.csv"
 
-                    # Write personas file
-                    with open(personas_path, 'wb') as f:
-                        f.write(personas_upload.getvalue())
+                        # Write personas file
+                        with open(personas_path, 'wb') as f:
+                            f.write(personas_upload.getvalue())
 
-                    # Write keywords file
-                    with open(keywords_path, 'wb') as f:
-                        f.write(keywords_upload.getvalue())
+                        # Write keywords file
+                        with open(keywords_path, 'wb') as f:
+                            f.write(keywords_upload.getvalue())
 
-                    st.success(f"✅ {new_client_name} added successfully!")
-                    st.balloons()
+                        st.success(f"✅ {new_client_name} added successfully!")
+                        st.balloons()
 
-                    # Auto-activate the new client
-                    st.session_state.active_client = client_slug
-                    st.session_state.generation_config.update({
-                        'personas_file': str(personas_path),
-                        'keywords_file': str(keywords_path),
-                        'client_name': new_client_name
-                    })
+                        # Auto-activate the new client
+                        st.session_state.active_client = client_slug
+                        st.session_state.generation_config.update({
+                            'personas_file': str(personas_path),
+                            'keywords_file': str(keywords_path),
+                            'client_name': new_client_name
+                        })
 
-                    st.info("🔄 Refreshing to show new client...")
-                    st.rerun()
+                        st.info("🔄 Refreshing to show new client...")
+                        st.rerun()
 
-                except Exception as e:
-                    st.error(f"Error adding client: {str(e)}")
-                    st.exception(e)
+                    except Exception as e:
+                        st.error(f"Error adding client: {str(e)}")
+                        st.exception(e)
 
-            st.markdown("---")
+    st.markdown("---")
 
     # Help Section
     with st.expander("❓ Help & Quick Start Guide"):
