@@ -165,42 +165,141 @@ def generate_default_personas(client_name, keywords_df):
 
 
 def render_simple_setup():
-    """Render simplified client setup."""
+    """Render simplified client setup with tabbed interface."""
     st.markdown(f"""
     <div style='background-color: {DARK_PURPLE}; padding: 20px; border-radius: 8px; border-left: 4px solid {CREAM}; margin-bottom: 24px;'>
         <h3 style='color: white; margin-top: 0;'>✨ Simple Client Setup</h3>
         <p style='color: {OFF_WHITE}; margin-bottom: 12px;'>
-            Just upload your keyword files - we'll handle the rest!
+            Create a new client with comprehensive information for AI visibility tracking.
         </p>
         <ul style='color: {OFF_WHITE}; margin: 0;'>
-            <li><strong>Ahrefs organic keywords?</strong> Upload as-is ✓</li>
-            <li><strong>Link building keywords?</strong> Upload as-is ✓</li>
-            <li><strong>Any CSV with keywords?</strong> Upload as-is ✓</li>
+            <li><strong>Basic Info:</strong> Name, website, description</li>
+            <li><strong>Business Goals:</strong> Revenue targets, positioning strategy</li>
+            <li><strong>Keywords:</strong> Upload Ahrefs exports or any keyword CSVs</li>
+            <li><strong>Competitors:</strong> Categorize direct, adjacent, and aspirational competitors</li>
         </ul>
         <p style='color: {CREAM}; margin: 12px 0 0 0; font-size: 0.9em;'>
-            No formatting, no JSON files, no technical setup required.
+            Complete the tabs below - you can skip competitors and add them later via Edit Client.
         </p>
     </div>
     """, unsafe_allow_html=True)
 
-    # Client name
-    st.markdown(f"<h3 style='color: white;'>Step 1: Client Name</h3>", unsafe_allow_html=True)
-    new_client_name = st.text_input(
-        "Client/Brand Name",
-        placeholder="e.g., Rare Beauty, Acme Corp",
-        help="Enter the client's brand name",
-        key="simple_client_name"
-    )
+    # Initialize session state for client data
+    if 'new_client_data' not in st.session_state:
+        st.session_state.new_client_data = {
+            'name': '',
+            'website': '',
+            'description': '',
+            'business_goals': {
+                'revenue_targets': '',
+                'market_positioning': '',
+                'target_metrics': '',
+                'freeform_notes': ''
+            },
+            'competitors': []
+        }
 
-    # Keyword uploads
-    st.markdown(f"<h3 style='color: white; margin-top: 24px;'>Step 2: Upload Keywords</h3>", unsafe_allow_html=True)
-    st.markdown(f"""
-    <p style='color: {CREAM}; margin-bottom: 16px;'>
-        Upload one or more keyword files. We'll combine them automatically.
-    </p>
-    """, unsafe_allow_html=True)
+    # Create tabs
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "1️⃣ Basic Info",
+        "2️⃣ Business Goals",
+        "3️⃣ Keywords",
+        "4️⃣ Competitors (Optional)"
+    ])
 
-    col1, col2 = st.columns(2)
+    # TAB 1: BASIC INFO
+    with tab1:
+        st.markdown(f"<h3 style='color: {CREAM};'>Basic Client Information</h3>", unsafe_allow_html=True)
+
+        new_client_name = st.text_input(
+            "Client/Brand Name *",
+            placeholder="e.g., Rare Beauty, Natasha Denona",
+            help="Enter the client's brand name",
+            value=st.session_state.new_client_data['name'],
+            key="setup_client_name"
+        )
+        st.session_state.new_client_data['name'] = new_client_name
+
+        website = st.text_input(
+            "Website URL",
+            placeholder="https://example.com",
+            help="The client's primary website URL",
+            value=st.session_state.new_client_data['website'],
+            key="setup_website"
+        )
+        st.session_state.new_client_data['website'] = website
+
+        description = st.text_area(
+            "Brand Description",
+            placeholder="e.g., Luxury makeup brand specializing in high-end eyeshadow palettes...",
+            help="A brief 2-3 sentence description of the brand",
+            value=st.session_state.new_client_data['description'],
+            height=100,
+            key="setup_description"
+        )
+        st.session_state.new_client_data['description'] = description
+
+        if new_client_name:
+            st.success(f"✓ Basic info for {new_client_name}")
+        else:
+            st.info("👆 Please fill in at least the client name to continue")
+
+    # TAB 2: BUSINESS GOALS
+    with tab2:
+        st.markdown(f"<h3 style='color: {CREAM};'>Business Goals & Strategy</h3>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: {OFF_WHITE}; margin-bottom: 16px;'>Help us understand what this client wants to achieve with AI visibility.</p>", unsafe_allow_html=True)
+
+        revenue_targets = st.text_input(
+            "Revenue/Growth Targets for 2026",
+            placeholder="e.g., Increase online sales by 30%, Reach $5M in AI-influenced revenue",
+            help="What are the client's revenue or growth objectives?",
+            value=st.session_state.new_client_data['business_goals']['revenue_targets'],
+            key="setup_revenue"
+        )
+        st.session_state.new_client_data['business_goals']['revenue_targets'] = revenue_targets
+
+        market_positioning = st.text_input(
+            "How do they want to be positioned in AI responses?",
+            placeholder="e.g., Premium luxury beauty leader, Affordable eco-friendly alternative",
+            help="Their desired market position when AI tools recommend them",
+            value=st.session_state.new_client_data['business_goals']['market_positioning'],
+            key="setup_positioning"
+        )
+        st.session_state.new_client_data['business_goals']['market_positioning'] = market_positioning
+
+        target_metrics = st.text_area(
+            "What metrics matter most to them?",
+            placeholder="e.g.,\n- AI visibility rate >60%\n- Top 3 in luxury eyeshadow category\n- Featured in ChatGPT product recommendations",
+            help="List the key success metrics they're tracking (one per line)",
+            value=st.session_state.new_client_data['business_goals']['target_metrics'],
+            height=100,
+            key="setup_metrics"
+        )
+        st.session_state.new_client_data['business_goals']['target_metrics'] = target_metrics
+
+        freeform_notes = st.text_area(
+            "Additional Strategy Notes (Optional)",
+            placeholder="Any other context about their business strategy, target audience, or competitive positioning...",
+            help="Freeform notes about their strategy",
+            value=st.session_state.new_client_data['business_goals']['freeform_notes'],
+            height=120,
+            key="setup_notes"
+        )
+        st.session_state.new_client_data['business_goals']['freeform_notes'] = freeform_notes
+
+        if any([revenue_targets, market_positioning, target_metrics, freeform_notes]):
+            st.success("✓ Business goals captured")
+
+    # TAB 3: KEYWORDS
+    with tab3:
+        st.markdown(f"<h3 style='color: {CREAM};'>Upload Keywords</h3>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <p style='color: {OFF_WHITE}; margin-bottom: 16px;'>
+            Upload one or more keyword files. We'll combine them automatically.
+        </p>
+        """, unsafe_allow_html=True)
+
+        col1, col2 = st.columns(2)
 
     with col1:
         st.markdown(f"<p style='color: {OFF_WHITE}; font-weight: 600;'>Primary Keywords</p>", unsafe_allow_html=True)
@@ -268,6 +367,118 @@ def render_simple_setup():
 
                     all_keywords.append(parsed_df)
 
+    # TAB 4: COMPETITORS
+    with tab4:
+        st.markdown(f"<h3 style='color: {CREAM};'>Competitor Tracking (Optional)</h3>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <p style='color: {OFF_WHITE}; margin-bottom: 16px;'>
+            Add competitors to track in AI responses. You can categorize them and skip this step to add competitors later via Edit Client.
+        </p>
+        """, unsafe_allow_html=True)
+
+        # Category explanations
+        with st.expander("ℹ️ What do these categories mean?"):
+            st.markdown(f"""
+            - **Direct:** Head-to-head competitors in the same market segment
+            - **Adjacent:** Overlapping products/audience but different positioning
+            - **Aspirational:** Brands you aspire to compete with or learn from
+            """)
+
+        # Add competitor form
+        st.markdown(f"<p style='color: {CREAM}; font-weight: 600;'>Add Competitor</p>", unsafe_allow_html=True)
+
+        col1, col2 = st.columns([2, 1])
+
+        with col1:
+            comp_name = st.text_input(
+                "Competitor Name",
+                placeholder="e.g., Pat McGrath Labs",
+                key="comp_name"
+            )
+
+        with col2:
+            comp_category = st.selectbox(
+                "Category",
+                options=["Direct", "Adjacent", "Aspirational"],
+                key="comp_category"
+            )
+
+        comp_website = st.text_input(
+            "Website (Optional)",
+            placeholder="https://competitor.com",
+            key="comp_website"
+        )
+
+        comp_notes = st.text_area(
+            "Notes (Optional)",
+            placeholder="Why are you tracking this competitor? What makes them relevant?",
+            height=80,
+            key="comp_notes"
+        )
+
+        if st.button("➕ Add Competitor", key="add_comp"):
+            if comp_name:
+                # Check for duplicates
+                if any(c['name'].lower() == comp_name.lower() for c in st.session_state.new_client_data['competitors']):
+                    st.warning(f"⚠️ {comp_name} is already in your competitor list")
+                else:
+                    st.session_state.new_client_data['competitors'].append({
+                        'name': comp_name,
+                        'website': comp_website,
+                        'category': comp_category.lower(),
+                        'notes': comp_notes
+                    })
+                    st.success(f"✅ Added {comp_name} as {comp_category} competitor")
+                    st.rerun()
+            else:
+                st.warning("Please enter a competitor name")
+
+        # Display added competitors
+        if st.session_state.new_client_data['competitors']:
+            st.markdown("---")
+            st.markdown(f"<p style='color: {CREAM}; font-weight: 600;'>Added Competitors ({len(st.session_state.new_client_data['competitors'])})</p>", unsafe_allow_html=True)
+
+            for i, comp in enumerate(st.session_state.new_client_data['competitors']):
+                col1, col2 = st.columns([4, 1])
+
+                with col1:
+                    category_emoji = {"direct": "🎯", "adjacent": "🔄", "aspirational": "⭐"}
+                    emoji = category_emoji.get(comp['category'], "📊")
+
+                    st.markdown(f"""
+                    <div style='background-color: rgba(74, 68, 88, 0.5); padding: 12px; border-radius: 6px; margin-bottom: 8px;'>
+                        <p style='color: white; margin: 0; font-weight: 600;'>{emoji} {comp['name']} <span style='color: {CREAM};'>({comp['category'].title()})</span></p>
+                        {f"<p style='color: {CREAM}; margin: 4px 0 0 0; font-size: 0.85em;'>{comp['notes']}</p>" if comp['notes'] else ""}
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                with col2:
+                    if st.button("Remove", key=f"remove_comp_{i}"):
+                        st.session_state.new_client_data['competitors'].pop(i)
+                        st.rerun()
+        else:
+            st.info("No competitors added yet. You can skip this step and add competitors later via Edit Client.")
+
+    # SAVE SECTION (outside tabs)
+    st.markdown("---")
+    st.markdown(f"<h3 style='color: white;'>Ready to Create Client?</h3>", unsafe_allow_html=True)
+
+    # Preview uploaded files
+    if (primary_keywords or secondary_keywords) and new_client_name:
+        all_keywords = []
+
+        # Parse primary keywords
+        if primary_keywords:
+            parsed_df, kw_col, vol_col = parse_keyword_file(primary_keywords)
+            if parsed_df is not None:
+                all_keywords.append(parsed_df)
+
+        # Parse secondary keywords
+        if secondary_keywords:
+            parsed_df, kw_col, vol_col = parse_keyword_file(secondary_keywords)
+            if parsed_df is not None:
+                all_keywords.append(parsed_df)
+
         # Combine and save
         if all_keywords and new_client_name:
             # Combine all keyword dataframes
@@ -286,6 +497,11 @@ def render_simple_setup():
             # Save button
             if st.button("💾 Create Client", type="primary", use_container_width=True, key="simple_save"):
                 try:
+                    # Import BrandConfigManager
+                    import sys
+                    sys.path.insert(0, 'src')
+                    from src.data.brand_config_manager import BrandConfigManager
+
                     # Create slug
                     client_slug = new_client_name.lower().replace(' ', '_')
                     client_slug = re.sub(r'[^a-z0-9_]', '', client_slug)
@@ -304,8 +520,62 @@ def render_simple_setup():
                     with open(personas_path, 'w') as f:
                         json.dump(personas_data, f, indent=2)
 
+                    # Create brand_config.json with BrandConfigManager
+                    manager = BrandConfigManager()
+
+                    # Parse target metrics from text area (newline-separated)
+                    target_metrics = []
+                    if st.session_state.new_client_data['business_goals']['target_metrics']:
+                        metrics_text = st.session_state.new_client_data['business_goals']['target_metrics']
+                        target_metrics = [m.strip() for m in metrics_text.split('\n') if m.strip()]
+
+                    # Create config
+                    config = manager.create_default_config(
+                        brand_name=new_client_name,
+                        website=st.session_state.new_client_data['website'],
+                        description=st.session_state.new_client_data['description'],
+                        aliases=[]
+                    )
+
+                    # Add business goals
+                    config['brand']['business_goals'] = {
+                        'revenue_targets': st.session_state.new_client_data['business_goals']['revenue_targets'],
+                        'market_positioning': st.session_state.new_client_data['business_goals']['market_positioning'],
+                        'target_metrics': target_metrics,
+                        'freeform_notes': st.session_state.new_client_data['business_goals']['freeform_notes']
+                    }
+
+                    # Add competitors
+                    from datetime import datetime
+                    for comp in st.session_state.new_client_data['competitors']:
+                        config['competitors']['expected'].append({
+                            'name': comp['name'],
+                            'website': comp['website'],
+                            'category': comp['category'],
+                            'added_date': datetime.utcnow().strftime('%Y-%m-%d'),
+                            'notes': comp['notes']
+                        })
+
+                    # Save brand config
+                    brand_config_path = data_dir / f"{client_slug}_brand_config.json"
+                    manager.save_config(str(brand_config_path), config)
+
                     st.success(f"✅ {new_client_name} created successfully!")
                     st.balloons()
+
+                    # Clear session data
+                    st.session_state.new_client_data = {
+                        'name': '',
+                        'website': '',
+                        'description': '',
+                        'business_goals': {
+                            'revenue_targets': '',
+                            'market_positioning': '',
+                            'target_metrics': '',
+                            'freeform_notes': ''
+                        },
+                        'competitors': []
+                    }
 
                     # Auto-activate
                     st.session_state.active_client = client_slug

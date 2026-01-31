@@ -309,6 +309,11 @@ with st.sidebar:
         unsafe_allow_html=True
     )
 
+# Check for navigate_to_edit flag
+if 'navigate_to_edit' in st.session_state and st.session_state.navigate_to_edit:
+    st.session_state.navigate_to_edit = False
+    st.session_state.page = 'edit_client'
+
 # Main content - route to appropriate page
 if st.session_state.page == 'generate':
     from prompt_generator_pages import generate
@@ -325,3 +330,6 @@ elif st.session_state.page == 'prompt_library':
 elif st.session_state.page == 'client_manager':
     from prompt_generator_pages import settings
     settings.render()
+elif st.session_state.page == 'edit_client':
+    from prompt_generator_pages import edit_client
+    edit_client.render()

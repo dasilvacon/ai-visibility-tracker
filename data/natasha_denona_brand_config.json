@@ -1,30 +1,63 @@
 {
   "brand": {
     "name": "Natasha Denona",
-    "aliases": ["ND", "Natasha Denona Beauty"],
+    "aliases": [
+      "ND",
+      "Natasha Denona Beauty"
+    ],
     "description": "Luxury makeup brand specializing in high-end eyeshadow palettes",
-    "website": "https://natashadenona.com"
-  },
-  "competitors": [
-    {
-      "name": "Pat McGrath Labs",
-      "website": "https://patmcgrath.com"
-    },
-    {
-      "name": "Charlotte Tilbury",
-      "website": "https://charlottetilbury.com"
-    },
-    {
-      "name": "Tom Ford Beauty",
-      "website": "https://tomford.com/beauty"
-    },
-    {
-      "name": "Huda Beauty",
-      "website": "https://hudabeauty.com"
-    },
-    {
-      "name": "Anastasia Beverly Hills",
-      "website": "https://anastasiabeverlyhills.com"
+    "website": "https://natashadenona.com",
+    "business_goals": {
+      "revenue_targets": "",
+      "market_positioning": "",
+      "target_metrics": [],
+      "freeform_notes": ""
     }
-  ]
+  },
+  "competitors": {
+    "expected": [
+      {
+        "name": "Pat McGrath Labs",
+        "website": "https://patmcgrath.com",
+        "category": "direct",
+        "added_date": "2026-01-31",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Charlotte Tilbury",
+        "website": "https://charlottetilbury.com",
+        "category": "direct",
+        "added_date": "2026-01-31",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Tom Ford Beauty",
+        "website": "https://tomford.com/beauty",
+        "category": "adjacent",
+        "added_date": "2026-01-31",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Huda Beauty",
+        "website": "https://hudabeauty.com",
+        "category": "adjacent",
+        "added_date": "2026-01-31",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Anastasia Beverly Hills",
+        "website": "https://anastasiabeverlyhills.com",
+        "category": "aspirational",
+        "added_date": "2026-01-31",
+        "notes": "Auto-migrated from v1.0"
+      }
+    ],
+    "discovered": []
+  },
+  "metadata": {
+    "created_at": "2026-01-31T13:56:17.075776Z",
+    "last_modified": "2026-01-31T13:56:17.076050Z",
+    "schema_version": "2.0"
+  },
+  "legacy_settings": {}
 }

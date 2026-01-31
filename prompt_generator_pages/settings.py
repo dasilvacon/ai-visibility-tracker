@@ -147,6 +147,13 @@ def render():
 
         st.markdown("")  # Spacing
 
+        # Edit Client button
+        if st.button("✏️ Edit Client", type="primary", use_container_width=True):
+            st.session_state.navigate_to_edit = True
+            st.rerun()
+
+        st.markdown("")  # Spacing
+
         col1, col2 = st.columns([1, 1])
         with col1:
             if st.button("📂 View Personas", use_container_width=True):

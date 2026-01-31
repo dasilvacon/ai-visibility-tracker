@@ -187,6 +187,79 @@ def show(brand_name: str, data: dict):
 
     st.markdown("---")
 
+    # Discovered Competitors Section
+    st.subheader("🔍 Discovered Competitors (Emerging Threats)")
+
+    st.info("""
+    **What are discovered competitors?** These brands appeared in AI responses but weren't on your
+    expected competitor list. They represent emerging threats or market shifts you should be aware of.
+    """)
+
+    # Load brand_config to get discovered competitors
+    discovered_shown = False
+    if os.path.exists(brand_config_path):
+        try:
+            with open(brand_config_path, 'r') as f:
+                brand_config_data = json.load(f)
+
+            discovered = brand_config_data.get('competitors', {}).get('discovered', [])
+
+            if discovered:
+                # Filter out promoted competitors
+                active_discovered = [d for d in discovered if not d.get('promoted_to_expected', False)]
+
+                if active_discovered:
+                    discovered_shown = True
+
+                    # Create dataframe
+                    disc_data = []
+                    for disc in active_discovered:
+                        status = disc.get('status', 'occasional_mention')
+                        status_emoji = "🔴" if status == "emerging_threat" else "🟡"
+
+                        disc_data.append({
+                            'Status': status_emoji,
+                            'Brand Name': disc['name'],
+                            'Mentions': disc.get('mention_count', 0),
+                            'Mention Rate': f"{disc.get('mention_rate', 0):.1f}%",
+                            'First Seen': disc.get('first_seen', 'Unknown'),
+                            'Threat Level': status.replace('_', ' ').title()
+                        })
+
+                    disc_df = pd.DataFrame(disc_data)
+
+                    # Display as table
+                    st.dataframe(
+                        disc_df,
+                        use_container_width=True,
+                        hide_index=True
+                    )
+
+                    # Highlight emerging threats
+                    emerging_threats = [d for d in active_discovered if d.get('status') == 'emerging_threat']
+                    if emerging_threats:
+                        st.warning(f"""
+                        ⚠️ **{len(emerging_threats)} Emerging Threat(s) Detected!**
+                        These brands were mentioned 5+ times but aren't on your tracking list.
+                        Consider adding them to your expected competitors via the Prompt Generator's Edit Client feature.
+                        """)
+
+                    st.markdown("**💡 What should you do?**")
+                    st.markdown("""
+                    - Go to **Prompt Generator → Client Manager → Edit Client**
+                    - Open the **Discovered Competitors** tab
+                    - **Promote** relevant competitors to your expected list (categorize as Direct, Adjacent, or Aspirational)
+                    - **Dismiss** irrelevant brands that aren't actual competitors
+                    """)
+
+        except Exception as e:
+            st.error(f"Error loading discovered competitors: {str(e)}")
+
+    if not discovered_shown:
+        st.success("✅ No unexpected competitors found. All mentioned brands are on your tracking list or haven't been analyzed yet.")
+
+    st.markdown("---")
+
     # Competitive matrix
     st.subheader("📈 Competitive Performance Matrix")
 

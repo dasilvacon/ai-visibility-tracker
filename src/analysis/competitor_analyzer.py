@@ -307,10 +307,27 @@ class CompetitorAnalyzer:
                 'should_track': count >= 5  # Recommend tracking if mentioned 5+ times
             })
 
+        # Prepare data for brand_config.json (discovered competitors)
+        from datetime import datetime
+        for_brand_config = []
+        for brand_data in unlisted_brands:
+            # Determine status based on mention count
+            status = 'emerging_threat' if brand_data['mentions'] >= 5 else 'occasional_mention'
+
+            for_brand_config.append({
+                'name': brand_data['name'],
+                'mention_count': brand_data['mentions'],
+                'mention_rate': brand_data['mention_rate'],
+                'status': status,
+                'first_seen': datetime.utcnow().strftime('%Y-%m-%d'),
+                'promoted_to_expected': False
+            })
+
         return {
             'unlisted_brands': unlisted_brands[:15],  # Top 15
             'total_unlisted_found': len(unlisted_brands),
             'recommendations': [
                 b for b in unlisted_brands if b['should_track']
-            ][:5]  # Top 5 recommendations
+            ][:5],  # Top 5 recommendations
+            'for_brand_config': for_brand_config[:15]  # NEW: Ready for brand_config.json
         }

@@ -325,6 +325,24 @@ class VisibilityTracker:
         all_brands_analysis = comp_analyzer.find_all_brands_mentioned(scored_results, competitors)
         competitive_analysis['all_brands'] = all_brands_analysis
 
+        # Update brand_config with discovered competitors
+        if brand_config_path and all_brands_analysis.get('for_brand_config'):
+            try:
+                import sys
+                sys.path.insert(0, 'src')
+                from src.data.brand_config_manager import BrandConfigManager
+
+                manager = BrandConfigManager()
+                config = manager.load_config(brand_config_path)
+                config = manager.update_discovered_competitors(
+                    config,
+                    all_brands_analysis['for_brand_config']
+                )
+                manager.save_config(brand_config_path, config)
+                print("✓ Updated brand_config with discovered competitors")
+            except Exception as e:
+                print(f"⚠️  Could not update brand_config with discovered competitors: {str(e)}")
+
         # Identify gaps
         print("3. Identifying visibility gaps...")
         gap_analysis = gap_analyzer.identify_gaps(scored_results)
