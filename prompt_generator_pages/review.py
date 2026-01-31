@@ -30,6 +30,20 @@ def render():
         categories = sorted(set(p['category'] for p in all_prompts))
         intent_types = sorted(set(p['intent_type'] for p in all_prompts))
 
+        # Get unique batches
+        batches = sorted(set(p.get('batch_name', 'Unknown') for p in all_prompts))
+
+        # Batch filter (NEW)
+        if len(batches) > 1:
+            selected_batches = st.multiselect(
+                "Batch",
+                batches,
+                default=batches,
+                help="Filter by prompt batch"
+            )
+        else:
+            selected_batches = batches
+
         # Persona filter
         selected_personas = st.multiselect(
             "Persona",
@@ -94,6 +108,9 @@ def render():
         filtered_prompts = all_prompts
     else:
         filtered_prompts = approval_mgr.get_prompts_by_status(status_filter.lower())
+
+    # Apply batch filter (NEW)
+    filtered_prompts = [p for p in filtered_prompts if p.get('batch_name', 'Unknown') in selected_batches]
 
     # Apply persona filter
     filtered_prompts = [p for p in filtered_prompts if p['persona'] in selected_personas]
@@ -188,6 +205,7 @@ def render():
         for prompt in page_prompts:
             df_data.append({
                 'ID': prompt['prompt_id'],
+                'Batch': prompt.get('batch_name', 'Unknown'),
                 'Persona': prompt['persona'],
                 'Category': prompt['category'],
                 'Intent': prompt['intent_type'],

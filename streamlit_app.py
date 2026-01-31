@@ -166,14 +166,14 @@ else:
 
 # Main content based on selected page
 if page == "📊 Overview":
-    from pages import overview
+    from dashboard_pages import overview
     overview.show(st.session_state.brand_name, data)
 elif page == "🎯 Sources & Citations":
-    from pages import sources
+    from dashboard_pages import sources
     sources.show(st.session_state.brand_name, data)
 elif page == "✅ Action Plan":
-    from pages import action_plan
+    from dashboard_pages import action_plan
     action_plan.show(st.session_state.brand_name, data)
 elif page == "🏆 Competitor Analysis":
-    from pages import competitors
+    from dashboard_pages import competitors
     competitors.show(st.session_state.brand_name, data)

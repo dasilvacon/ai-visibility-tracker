@@ -17,6 +17,28 @@ def render():
     """Render the export page."""
     st.title("📤 Export Prompts")
 
+    # Workflow explanation
+    st.markdown("""
+    <div style='background-color: #4A4458; padding: 20px; border-radius: 8px; border-left: 4px solid #E8D7A0; margin-bottom: 24px;'>
+        <h3 style='color: white; margin-top: 0;'>🔄 Understanding the Export Workflow</h3>
+        <p style='color: #FBFBEF; margin-bottom: 12px;'>
+            <strong>What happens after export:</strong>
+        </p>
+        <ol style='color: #FBFBEF;'>
+            <li><strong>Export saves prompts</strong> to <code>data/generated_prompts.csv</code></li>
+            <li><strong>Main Dashboard imports</strong> from that CSV file</li>
+            <li><strong>Monthly tracking:</strong> You rerun tests on the SAME prompts to measure improvement</li>
+            <li><strong>Only export again</strong> when adding new prompts (new products, campaigns, etc.)</li>
+        </ol>
+        <div style='background-color: rgba(232, 215, 160, 0.15); padding: 12px; border-radius: 6px; margin-top: 16px;'>
+            <p style='color: #E8D7A0; margin: 0; font-size: 0.95em;'>
+                💡 <strong>Key Insight:</strong> Export once → Test monthly with same prompts → Track improvement over time.<br>
+                Each export is timestamped in <code>approved/</code> folder for your records.
+            </p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
     if not st.session_state.generated_prompts:
         st.warning("No prompts generated yet. Go to **Generate** to create prompts first.")
         return
@@ -117,7 +139,7 @@ def render():
                 approved_file = approved_dir / f"approved_{timestamp}.csv"
 
                 with open(approved_file, 'w', newline='') as f:
-                    fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes']
+                    fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
                     writer = csv.DictWriter(f, fieldnames=fieldnames)
                     writer.writeheader()
 
@@ -148,7 +170,7 @@ def render():
 
                         # Append new prompts
                         with open(main_csv, 'a', newline='') as f:
-                            fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes']
+                            fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
                             writer = csv.DictWriter(f, fieldnames=fieldnames)
 
                             for prompt in new_prompts:
@@ -159,7 +181,7 @@ def render():
                     else:
                         # File doesn't exist, create it
                         with open(main_csv, 'w', newline='') as f:
-                            fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes']
+                            fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
                             writer = csv.DictWriter(f, fieldnames=fieldnames)
                             writer.writeheader()
 
@@ -174,7 +196,7 @@ def render():
                         main_csv = Path('data/generated_prompts.csv')
 
                         with open(main_csv, 'w', newline='') as f:
-                            fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes']
+                            fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
                             writer = csv.DictWriter(f, fieldnames=fieldnames)
                             writer.writeheader()
 
@@ -189,7 +211,7 @@ def render():
                 else:  # Custom location
                     # Provide download button
                     csv_data = []
-                    fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes']
+                    fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
 
                     csv_content = ','.join(fieldnames) + '\n'
                     for prompt in approved_prompts:
