@@ -17,8 +17,37 @@ DARK_BG = '#1c1c1c'
 
 def detect_clients():
     """Auto-detect clients from data directory."""
-    data_dir = Path('data')
+    import os
+    import sys
+
+    # Try to get the correct data directory
+    # First, try relative to current file
+    current_file = Path(__file__).parent.parent
+    data_dir = current_file / 'data'
+
+    # If that doesn't work, try relative to cwd
+    if not data_dir.exists():
+        data_dir = Path('data')
+
+    # Debug: Check if data directory exists
+    if not data_dir.exists():
+        import streamlit as st
+        st.error(f"❌ Data directory not found at: {data_dir.absolute()}")
+        st.info(f"📂 Current working directory: {os.getcwd()}")
+        st.info(f"📂 Script location: {Path(__file__).parent.parent}")
+        st.info(f"📂 Tried paths: {current_file / 'data'}, {Path('data').absolute()}")
+        return {}
+
     clients = {}
+
+    # Debug: List all files in data directory
+    all_personas = list(data_dir.glob('*_personas.json'))
+    if not all_personas:
+        import streamlit as st
+        st.warning(f"⚠️ No *_personas.json files found in {data_dir.absolute()}")
+        all_files = list(data_dir.glob('*'))
+        if all_files:
+            st.info(f"Files in data directory: {[f.name for f in all_files[:10]]}")
 
     # Find all personas files
     for personas_file in data_dir.glob('*_personas.json'):
@@ -64,27 +93,104 @@ def detect_clients():
 
 def render():
     """Render the client manager page."""
-    # Custom CSS to improve text visibility in forms
+    # Custom CSS to improve text visibility in forms - HIGH CONTRAST
     st.markdown(f"""
     <style>
-        /* Override label colors for better contrast */
-        .stTextInput label, .stFileUploader label {{
-            color: {OFF_WHITE} !important;
+        /* Text inputs - MAXIMUM CONTRAST */
+        .stTextInput > div > div > input,
+        .stTextArea > div > div > textarea,
+        .stNumberInput > div > div > input,
+        .stTextInput input,
+        .stNumberInput input,
+        .stTextArea textarea,
+        input[type="text"],
+        input[type="number"],
+        textarea {{
+            background-color: {DARK_PURPLE} !important;
+            border: 2px solid rgba(232, 215, 160, 0.4) !important;
+            color: {CREAM} !important;
+            border-radius: 6px !important;
+            font-size: 1em !important;
+        }}
+
+        .stTextInput input::placeholder,
+        .stTextArea textarea::placeholder {{
+            color: rgba(232, 215, 160, 0.5) !important;
+        }}
+
+        /* Labels */
+        .stTextInput label,
+        .stFileUploader label,
+        .stNumberInput label,
+        .stSelectbox label,
+        .stTextArea label {{
+            color: {CREAM} !important;
             font-weight: 600 !important;
         }}
 
-        /* File uploader text */
+        /* Selectbox */
+        .stSelectbox select,
+        .stSelectbox > div > div {{
+            background-color: {DARK_PURPLE} !important;
+            color: {CREAM} !important;
+            border: 2px solid rgba(232, 215, 160, 0.4) !important;
+        }}
+
+        .stSelectbox [data-baseweb="select"] {{
+            background-color: {DARK_PURPLE} !important;
+        }}
+
+        .stSelectbox [data-baseweb="select"] > div {{
+            color: {CREAM} !important;
+            background-color: {DARK_PURPLE} !important;
+        }}
+
+        /* File uploader */
+        .stFileUploader section {{
+            background-color: {DARK_PURPLE} !important;
+            border: 2px dashed rgba(232, 215, 160, 0.4) !important;
+        }}
+
+        .stFileUploader section > div {{
+            color: {CREAM} !important;
+        }}
+
         .stFileUploader p {{
             color: {OFF_WHITE} !important;
         }}
 
-        /* Drag and drop text */
         [data-testid="stFileUploadDropzone"] {{
             color: {OFF_WHITE} !important;
         }}
 
         [data-testid="stFileUploadDropzone"] small {{
             color: {CREAM} !important;
+        }}
+
+        /* Tabs - HIGH CONTRAST */
+        .stTabs [data-baseweb="tab-list"] {{
+            background-color: transparent !important;
+        }}
+
+        .stTabs [data-baseweb="tab"] {{
+            background-color: {DARK_PURPLE} !important;
+            color: {CREAM} !important;
+            border: 2px solid rgba(232, 215, 160, 0.3) !important;
+            font-weight: 500 !important;
+        }}
+
+        .stTabs [data-baseweb="tab"] > div {{
+            color: {CREAM} !important;
+        }}
+
+        .stTabs [aria-selected="true"] {{
+            background-color: {CREAM} !important;
+            border: 2px solid {CREAM} !important;
+        }}
+
+        .stTabs [aria-selected="true"] > div {{
+            color: #1c1c1c !important;
+            font-weight: 600 !important;
         }}
     </style>
     """, unsafe_allow_html=True)

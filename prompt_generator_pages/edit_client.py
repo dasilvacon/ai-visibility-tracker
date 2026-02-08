@@ -25,6 +25,86 @@ def render_edit_client(client_slug: str, client_name: str):
         client_slug: Client slug (e.g., 'natasha_denona')
         client_name: Client display name (e.g., 'Natasha Denona')
     """
+    # CSS fixes for form visibility - MAXIMUM CONTRAST
+    st.markdown(f"""
+    <style>
+        /* Text inputs - MAXIMUM CONTRAST */
+        .stTextInput > div > div > input,
+        .stTextArea > div > div > textarea,
+        .stNumberInput > div > div > input,
+        .stTextInput input,
+        .stNumberInput input,
+        .stTextArea textarea,
+        input[type="text"],
+        input[type="number"],
+        textarea {{
+            background-color: {DARK_PURPLE} !important;
+            border: 2px solid rgba(232, 215, 160, 0.4) !important;
+            color: {CREAM} !important;
+            border-radius: 6px !important;
+            font-size: 1em !important;
+        }}
+
+        .stTextInput input::placeholder,
+        .stTextArea textarea::placeholder {{
+            color: rgba(232, 215, 160, 0.5) !important;
+        }}
+
+        /* Labels */
+        .stTextInput label,
+        .stNumberInput label,
+        .stSelectbox label,
+        .stTextArea label,
+        .stFileUploader label {{
+            color: {CREAM} !important;
+            font-weight: 600 !important;
+        }}
+
+        /* Selectbox */
+        .stSelectbox select,
+        .stSelectbox > div > div {{
+            background-color: {DARK_PURPLE} !important;
+            color: {CREAM} !important;
+            border: 2px solid rgba(232, 215, 160, 0.4) !important;
+        }}
+
+        .stSelectbox [data-baseweb="select"] {{
+            background-color: {DARK_PURPLE} !important;
+        }}
+
+        .stSelectbox [data-baseweb="select"] > div {{
+            color: {CREAM} !important;
+            background-color: {DARK_PURPLE} !important;
+        }}
+
+        /* Tabs - HIGH CONTRAST */
+        .stTabs [data-baseweb="tab-list"] {{
+            background-color: transparent !important;
+        }}
+
+        .stTabs [data-baseweb="tab"] {{
+            background-color: {DARK_PURPLE} !important;
+            color: {CREAM} !important;
+            border: 2px solid rgba(232, 215, 160, 0.3) !important;
+            font-weight: 500 !important;
+        }}
+
+        .stTabs [data-baseweb="tab"] > div {{
+            color: {CREAM} !important;
+        }}
+
+        .stTabs [aria-selected="true"] {{
+            background-color: {CREAM} !important;
+            border: 2px solid {CREAM} !important;
+        }}
+
+        .stTabs [aria-selected="true"] > div {{
+            color: #1c1c1c !important;
+            font-weight: 600 !important;
+        }}
+    </style>
+    """, unsafe_allow_html=True)
+
     st.title(f"✏️ Edit Client: {client_name}")
 
     # Load brand config

@@ -166,6 +166,96 @@ def generate_default_personas(client_name, keywords_df):
 
 def render_simple_setup():
     """Render simplified client setup with tabbed interface."""
+    # CSS fixes for form visibility - MAXIMUM CONTRAST
+    st.markdown(f"""
+    <style>
+        /* Text inputs - MAXIMUM CONTRAST */
+        .stTextInput > div > div > input,
+        .stTextArea > div > div > textarea,
+        .stNumberInput > div > div > input,
+        .stTextInput input,
+        .stNumberInput input,
+        .stTextArea textarea,
+        input[type="text"],
+        input[type="number"],
+        textarea {{
+            background-color: {DARK_PURPLE} !important;
+            border: 2px solid rgba(232, 215, 160, 0.4) !important;
+            color: {CREAM} !important;
+            border-radius: 6px !important;
+            font-size: 1em !important;
+        }}
+
+        .stTextInput input::placeholder,
+        .stTextArea textarea::placeholder {{
+            color: rgba(232, 215, 160, 0.5) !important;
+        }}
+
+        /* Labels */
+        .stTextInput label,
+        .stNumberInput label,
+        .stSelectbox label,
+        .stTextArea label,
+        .stFileUploader label {{
+            color: {CREAM} !important;
+            font-weight: 600 !important;
+        }}
+
+        /* Selectbox */
+        .stSelectbox select,
+        .stSelectbox > div > div {{
+            background-color: {DARK_PURPLE} !important;
+            color: {CREAM} !important;
+            border: 2px solid rgba(232, 215, 160, 0.4) !important;
+        }}
+
+        .stSelectbox [data-baseweb="select"] {{
+            background-color: {DARK_PURPLE} !important;
+        }}
+
+        .stSelectbox [data-baseweb="select"] > div {{
+            color: {CREAM} !important;
+            background-color: {DARK_PURPLE} !important;
+        }}
+
+        /* File uploader */
+        .stFileUploader section {{
+            background-color: {DARK_PURPLE} !important;
+            border: 2px dashed rgba(232, 215, 160, 0.4) !important;
+        }}
+
+        .stFileUploader section > div {{
+            color: {CREAM} !important;
+        }}
+
+        /* Tabs - HIGH CONTRAST */
+        .stTabs [data-baseweb="tab-list"] {{
+            background-color: transparent !important;
+        }}
+
+        .stTabs [data-baseweb="tab"] {{
+            background-color: {DARK_PURPLE} !important;
+            color: {CREAM} !important;
+            border: 2px solid rgba(232, 215, 160, 0.3) !important;
+            font-weight: 500 !important;
+        }}
+
+        .stTabs [data-baseweb="tab"] > div {{
+            color: {CREAM} !important;
+        }}
+
+        .stTabs [aria-selected="true"] {{
+            background-color: {CREAM} !important;
+            border: 2px solid {CREAM} !important;
+        }}
+
+        .stTabs [aria-selected="true"] > div {{
+            color: #1c1c1c !important;
+            font-weight: 600 !important;
+        }}
+    </style>
+    """, unsafe_allow_html=True)
+
     st.markdown(f"""
     <div style='background-color: {DARK_PURPLE}; padding: 20px; border-radius: 8px; border-left: 4px solid {CREAM}; margin-bottom: 24px;'>
         <h3 style='color: white; margin-top: 0;'>✨ Simple Client Setup</h3>

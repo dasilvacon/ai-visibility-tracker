@@ -127,21 +127,32 @@ st.markdown(f"""
         color: white !important;
     }}
 
-    .stButton button {{
-        background-color: {DARK_PURPLE};
-        color: white;
+    /* Buttons - ensure white text is visible */
+    .stButton > button {{
+        background-color: {DARK_PURPLE} !important;
+        color: white !important;
         border-radius: 6px;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         font-size: 0.85em;
         padding: 12px 24px;
+        border: none;
     }}
 
-    .stButton button:hover {{
-        background-color: {DARK_ACCENT};
+    .stButton > button:hover {{
+        background-color: {DARK_ACCENT} !important;
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(74, 68, 88, 0.4);
+    }}
+
+    .stButton > button[kind="primary"] {{
+        background-color: {CREAM} !important;
+        color: {DARK_BG} !important;
+    }}
+
+    .stButton > button[kind="primary"]:hover {{
+        background-color: {OFF_WHITE} !important;
     }}
 
     /* Sidebar styling */
@@ -170,20 +181,74 @@ st.markdown(f"""
         color: {CREAM} !important;
     }}
 
-    /* Text inputs */
-    .stTextInput input, .stNumberInput input, .stSelectbox select {{
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        border: 1px solid rgba(232, 215, 160, 0.3) !important;
-        color: white !important;
+    /* Text inputs - MAXIMUM CONTRAST for dark theme */
+    .stTextInput > div > div > input,
+    .stTextArea > div > div > textarea,
+    .stNumberInput > div > div > input,
+    .stTextInput input,
+    .stNumberInput input,
+    .stTextArea textarea {{
+        background-color: {DARK_PURPLE} !important;
+        border: 2px solid rgba(232, 215, 160, 0.4) !important;
+        color: {CREAM} !important;
+        border-radius: 6px !important;
+        font-size: 1em !important;
+    }}
+
+    /* Force input text to be visible */
+    input[type="text"],
+    input[type="number"],
+    input[type="password"],
+    input[type="email"],
+    textarea {{
+        background-color: {DARK_PURPLE} !important;
+        color: {CREAM} !important;
+    }}
+
+    .stTextInput input::placeholder,
+    .stTextArea textarea::placeholder {{
+        color: rgba(232, 215, 160, 0.5) !important;
+    }}
+
+    .stTextInput label,
+    .stNumberInput label,
+    .stSelectbox label,
+    .stTextArea label,
+    .stFileUploader label {{
+        color: {CREAM} !important;
+        font-size: 0.85em !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+    }}
+
+    /* Selectbox - ensure contrast */
+    .stSelectbox select,
+    .stSelectbox > div > div {{
+        background-color: {DARK_PURPLE} !important;
+        color: {CREAM} !important;
+        border: 2px solid rgba(232, 215, 160, 0.4) !important;
         border-radius: 6px !important;
     }}
 
-    .stTextInput label, .stNumberInput label, .stSelectbox label {{
+    .stSelectbox [data-baseweb="select"] {{
+        background-color: {DARK_PURPLE} !important;
+    }}
+
+    .stSelectbox [data-baseweb="select"] > div {{
         color: {CREAM} !important;
-        font-size: 0.75em !important;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-weight: 600;
+        background-color: {DARK_PURPLE} !important;
+    }}
+
+    /* Multi-select */
+    .stMultiSelect > div > div {{
+        background-color: {DARK_PURPLE} !important;
+        border: 2px solid rgba(232, 215, 160, 0.4) !important;
+    }}
+
+    .stMultiSelect [data-baseweb="tag"] {{
+        background-color: rgba(232, 215, 160, 0.3) !important;
+        color: {CREAM} !important;
     }}
 
     /* Slider */
@@ -196,20 +261,61 @@ st.markdown(f"""
         background-color: {DARK_PURPLE};
     }}
 
-    /* Tabs */
+    /* Tabs - HIGH CONTRAST */
     .stTabs [data-baseweb="tab-list"] {{
         gap: 8px;
+        background-color: transparent !important;
     }}
 
     .stTabs [data-baseweb="tab"] {{
-        background-color: {DARK_PURPLE};
-        color: {CREAM};
-        border-radius: 4px;
+        background-color: {DARK_PURPLE} !important;
+        color: {CREAM} !important;
+        border-radius: 4px !important;
+        border: 2px solid rgba(232, 215, 160, 0.3) !important;
+        font-weight: 500 !important;
     }}
 
+    .stTabs [data-baseweb="tab"] > div {{
+        color: {CREAM} !important;
+    }}
+
+    /* Active tab - cream background with DARK text */
     .stTabs [aria-selected="true"] {{
-        background-color: {CREAM};
-        color: {DARK_BG};
+        background-color: {CREAM} !important;
+        border: 2px solid {CREAM} !important;
+    }}
+
+    .stTabs [aria-selected="true"] > div {{
+        color: {DARK_BG} !important;
+        font-weight: 600 !important;
+    }}
+
+    /* Tab hover */
+    .stTabs [data-baseweb="tab"]:hover {{
+        background-color: rgba(232, 215, 160, 0.15) !important;
+    }}
+
+    /* File uploader */
+    .stFileUploader section {{
+        background-color: {DARK_PURPLE} !important;
+        border: 2px dashed rgba(232, 215, 160, 0.4) !important;
+        border-radius: 6px !important;
+    }}
+
+    .stFileUploader section > div {{
+        color: {CREAM} !important;
+    }}
+
+    .stFileUploader label {{
+        color: {CREAM} !important;
+    }}
+
+    [data-testid="stFileUploadDropzone"] {{
+        color: {CREAM} !important;
+    }}
+
+    [data-testid="stFileUploadDropzone"] small {{
+        color: rgba(232, 215, 160, 0.7) !important;
     }}
 
     /* Expanders */
@@ -246,6 +352,8 @@ if 'generated_prompts' not in st.session_state:
 if 'approval_manager' not in st.session_state:
     from src.prompt_generator.approval_manager import ApprovalManager
     st.session_state.approval_manager = ApprovalManager()
+if 'active_client' not in st.session_state:
+    st.session_state.active_client = 'natasha_denona'
 if 'generation_config' not in st.session_state:
     st.session_state.generation_config = {
         'total_prompts': 100,
@@ -253,7 +361,8 @@ if 'generation_config' not in st.session_state:
         'ai_ratio': 0.7,
         'deduplication_mode': 'high_similarity',
         'personas_file': 'data/natasha_denona_personas.json',
-        'keywords_file': 'data/natasha_denona_keywords.csv'
+        'keywords_file': 'data/natasha_denona_keywords.csv',
+        'client_name': 'Natasha Denona'
     }
 
 # Sidebar navigation
