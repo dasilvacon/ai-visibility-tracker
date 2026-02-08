@@ -81,8 +81,42 @@ def infer_intent_type(keyword):
 def parse_keyword_file(uploaded_file):
     """Parse uploaded keyword file and standardize format."""
     try:
-        # Read CSV
-        df = pd.read_csv(uploaded_file)
+        # Reset file pointer to beginning
+        uploaded_file.seek(0)
+
+        # Check if file is empty
+        content = uploaded_file.read()
+        if len(content) == 0:
+            st.error("❌ **File is empty!** Please upload a CSV file with keyword data.")
+            st.info("💡 Your CSV should have at least one column with keywords. Example:\n```\nkeyword\nbest luxury eyeshadow\nmakeup palette reviews\n```")
+            return None, None, None
+
+        # Reset for pandas
+        uploaded_file.seek(0)
+
+        # Try to read CSV
+        try:
+            df = pd.read_csv(uploaded_file)
+        except pd.errors.EmptyDataError:
+            st.error("❌ **No data found in file!** The CSV appears to be empty or has no valid rows.")
+            st.info("💡 Make sure your CSV has:\n- A header row with column names\n- At least one row of data\n\nExample:\n```\nkeyword,search_volume\nbest luxury eyeshadow,2400\nmakeup palette reviews,1800\n```")
+            return None, None, None
+        except Exception as e:
+            st.error(f"❌ **Cannot read CSV file:** {str(e)}")
+            st.info("💡 Make sure your file is a valid CSV format. Common issues:\n- File saved as .txt instead of .csv\n- Special characters in encoding\n- Empty file")
+            return None, None, None
+
+        # Check if dataframe is empty
+        if df.empty or len(df.columns) == 0:
+            st.error("❌ **No columns detected!** The CSV file has no valid data columns.")
+            st.info("💡 Your CSV needs at least one column with keyword data. Example format:\n```\nkeyword\nbest luxury eyeshadow\nmakeup palette reviews\n```")
+            return None, None, None
+
+        # Check if we have any data rows
+        if len(df) == 0:
+            st.error("❌ **No data rows!** The CSV only has headers but no actual keyword data.")
+            st.info("💡 Add some keywords below the header row:\n```\nkeyword\nbest luxury eyeshadow\nmakeup palette reviews\n```")
+            return None, None, None
 
         # Detect keyword column
         keyword_col = detect_keyword_column(df)
@@ -96,7 +130,10 @@ def parse_keyword_file(uploaded_file):
 
         # Add search volume if found
         if volume_col:
-            standardized['search_volume'] = df[volume_col]
+            try:
+                standardized['search_volume'] = pd.to_numeric(df[volume_col], errors='coerce').fillna(0).astype(int)
+            except:
+                standardized['search_volume'] = 0
         else:
             standardized['search_volume'] = 0
 
@@ -110,10 +147,17 @@ def parse_keyword_file(uploaded_file):
         standardized = standardized[standardized['keyword'].notna()]
         standardized = standardized[standardized['keyword'].str.strip() != '']
 
+        # Final validation
+        if len(standardized) == 0:
+            st.error("❌ **No valid keywords found!** All rows appear to be empty.")
+            st.info("💡 Make sure your CSV has actual keyword text in the cells, not just empty rows.")
+            return None, None, None
+
         return standardized, keyword_col, volume_col
 
     except Exception as e:
-        st.error(f"Error parsing file: {str(e)}")
+        st.error(f"❌ **Unexpected error:** {str(e)}")
+        st.info("💡 Please check that your file is a valid CSV. If you need help, download the template from the main Client Manager page.")
         return None, None, None
 
 
@@ -407,6 +451,46 @@ def render_simple_setup():
             Upload one or more keyword files. We'll combine them automatically.
         </p>
         """, unsafe_allow_html=True)
+
+        # Instructions and format guide
+        with st.expander("📋 CSV Format Guide", expanded=False):
+            st.markdown(f"""
+            <p style='color: {OFF_WHITE};'><strong>Your CSV file should have:</strong></p>
+            <ul style='color: {OFF_WHITE};'>
+                <li>At least one column with keywords (we'll auto-detect it)</li>
+                <li>Optional: A column with search volume numbers</li>
+                <li>At least one row of data (not just headers)</li>
+            </ul>
+            """, unsafe_allow_html=True)
+
+            st.markdown(f"<p style='color: {CREAM}; margin-top: 12px;'><strong>✅ Valid format examples:</strong></p>", unsafe_allow_html=True)
+            st.code("""# Simple format (one column)
+keyword
+best luxury eyeshadow
+makeup palette reviews
+natasha denona bronze palette
+
+# With volume (two columns)
+keyword,search_volume
+best luxury eyeshadow,2400
+makeup palette reviews,1800
+natasha denona bronze palette,1200
+
+# Ahrefs export (multiple columns - we'll detect keyword column)
+Keyword,Position,Search Volume,Keyword Difficulty
+best luxury eyeshadow,5,2400,45
+makeup palette reviews,12,1800,38
+            """, language="csv")
+
+            st.markdown(f"<p style='color: {CREAM}; margin-top: 12px;'><strong>❌ Common issues:</strong></p>", unsafe_allow_html=True)
+            st.markdown(f"""
+            <ul style='color: {OFF_WHITE};'>
+                <li>Empty file or no data rows</li>
+                <li>File saved as .txt instead of .csv</li>
+                <li>Only headers, no actual keywords</li>
+                <li>Special characters causing encoding issues</li>
+            </ul>
+            """, unsafe_allow_html=True)
 
         col1, col2 = st.columns(2)
 
