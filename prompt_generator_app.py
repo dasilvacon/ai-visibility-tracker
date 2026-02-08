@@ -22,12 +22,12 @@ st.set_page_config(
 from src.authentication import require_authentication, show_user_info
 require_authentication(allow_clients=False)  # Only admin can access
 
-# DaSilva brand colors (updated to match new website)
-DARK_BG = '#1c1c1c'
-DARK_PURPLE = '#4A4458'
-CREAM = '#E8D7A0'
-DARK_ACCENT = '#402e3a'
-OFF_WHITE = '#FBFBEF'
+# Simple, readable light theme colors
+BACKGROUND = '#FFFFFF'
+TEXT_COLOR = '#000000'
+ACCENT = '#4A4458'
+BORDER = '#CCCCCC'
+LIGHT_BG = '#F5F5F5'
 
 # DaSilva logo SVG (adjusted for prompt generator)
 LOGO_SVG = """
@@ -65,299 +65,194 @@ LOGO_SVG = """
 # Custom CSS for branding
 st.markdown(f"""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;600&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap');
-
-    * {{
-        font-family: 'Host Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }}
+    /* SIMPLE LIGHT THEME - EASY TO READ */
 
     .main {{
-        background-color: {DARK_BG};
+        background-color: {BACKGROUND};
     }}
 
     .stApp {{
-        background-color: {DARK_BG};
+        background-color: {BACKGROUND};
     }}
 
     [data-testid="stAppViewContainer"] {{
-        background-color: {DARK_BG};
+        background-color: {BACKGROUND};
     }}
 
-    h1, h2, h3 {{
-        color: white;
-        font-family: 'Instrument Serif', Georgia, serif;
-        font-weight: 400;
+    /* All text is black - easy to read */
+    h1, h2, h3, h4, h5, h6 {{
+        color: {TEXT_COLOR} !important;
     }}
 
     p, label, span, div, li, ul {{
-        color: {CREAM};
+        color: {TEXT_COLOR} !important;
     }}
 
-    /* Markdown content */
     .main .stMarkdown p, .main .stMarkdown li, .main .stMarkdown span {{
-        color: {CREAM} !important;
+        color: {TEXT_COLOR} !important;
     }}
 
-    .main .stMarkdown strong {{
-        color: white !important;
-    }}
-
-    .main .stMarkdown h1, .main .stMarkdown h2, .main .stMarkdown h3 {{
-        color: white !important;
-    }}
-
-    .stMetric {{
-        background-color: {DARK_PURPLE};
-        padding: 20px;
-        border-radius: 8px;
-        border: 1px solid rgba(232, 215, 160, 0.2);
-    }}
-
-    .stMetric label {{
-        color: {CREAM} !important;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-size: 0.75em !important;
-    }}
-
-    .stMetric [data-testid="stMetricValue"] {{
-        color: white !important;
-    }}
-
-    /* Buttons - ensure white text is visible */
-    .stButton > button {{
-        background-color: {DARK_PURPLE} !important;
-        color: white !important;
-        border-radius: 6px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-size: 0.85em;
-        padding: 12px 24px;
-        border: none;
-    }}
-
-    .stButton > button:hover {{
-        background-color: {DARK_ACCENT} !important;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(74, 68, 88, 0.4);
-    }}
-
-    .stButton > button[kind="primary"] {{
-        background-color: {CREAM} !important;
-        color: {DARK_BG} !important;
-    }}
-
-    .stButton > button[kind="primary"]:hover {{
-        background-color: {OFF_WHITE} !important;
-    }}
-
-    /* Sidebar styling */
+    /* Sidebar - light gray background */
     section[data-testid="stSidebar"] {{
-        background-color: {DARK_PURPLE};
+        background-color: {LIGHT_BG};
     }}
 
     section[data-testid="stSidebar"] > div {{
-        background-color: {DARK_PURPLE};
+        background-color: {LIGHT_BG};
     }}
 
-    section[data-testid="stSidebar"] h1 {{
-        color: white;
+    section[data-testid="stSidebar"] * {{
+        color: {TEXT_COLOR} !important;
     }}
 
-    section[data-testid="stSidebar"] p {{
-        color: {CREAM};
-    }}
-
-    section[data-testid="stSidebar"] label {{
-        color: {CREAM};
-    }}
-
-    /* Radio buttons in sidebar */
-    .stRadio > label {{
-        color: {CREAM} !important;
-    }}
-
-    /* Text inputs - MAXIMUM CONTRAST for dark theme */
+    /* Form inputs - WHITE background, BLACK text */
     .stTextInput > div > div > input,
     .stTextArea > div > div > textarea,
     .stNumberInput > div > div > input,
     .stTextInput input,
     .stNumberInput input,
-    .stTextArea textarea {{
-        background-color: {DARK_PURPLE} !important;
-        border: 2px solid rgba(232, 215, 160, 0.4) !important;
-        color: {CREAM} !important;
-        border-radius: 6px !important;
-        font-size: 1em !important;
-    }}
-
-    /* Force input text to be visible */
+    .stTextArea textarea,
     input[type="text"],
     input[type="number"],
     input[type="password"],
     input[type="email"],
     textarea {{
-        background-color: {DARK_PURPLE} !important;
-        color: {CREAM} !important;
+        background-color: {BACKGROUND} !important;
+        border: 1px solid {BORDER} !important;
+        color: {TEXT_COLOR} !important;
+        border-radius: 4px !important;
+        font-size: 1em !important;
     }}
 
     .stTextInput input::placeholder,
     .stTextArea textarea::placeholder {{
-        color: rgba(232, 215, 160, 0.5) !important;
+        color: #999999 !important;
     }}
 
+    /* Labels - black text */
     .stTextInput label,
     .stNumberInput label,
     .stSelectbox label,
     .stTextArea label,
-    .stFileUploader label {{
-        color: {CREAM} !important;
-        font-size: 0.85em !important;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-weight: 600;
+    .stFileUploader label,
+    .stSlider label,
+    .stRadio label,
+    .stCheckbox label {{
+        color: {TEXT_COLOR} !important;
+        font-weight: 600 !important;
     }}
 
-    /* Selectbox - ensure contrast */
+    /* Selectbox - white background, black text */
     .stSelectbox select,
     .stSelectbox > div > div {{
-        background-color: {DARK_PURPLE} !important;
-        color: {CREAM} !important;
-        border: 2px solid rgba(232, 215, 160, 0.4) !important;
-        border-radius: 6px !important;
+        background-color: {BACKGROUND} !important;
+        color: {TEXT_COLOR} !important;
+        border: 1px solid {BORDER} !important;
     }}
 
     .stSelectbox [data-baseweb="select"] {{
-        background-color: {DARK_PURPLE} !important;
+        background-color: {BACKGROUND} !important;
     }}
 
     .stSelectbox [data-baseweb="select"] > div {{
-        color: {CREAM} !important;
-        background-color: {DARK_PURPLE} !important;
+        color: {TEXT_COLOR} !important;
+        background-color: {BACKGROUND} !important;
     }}
 
-    /* Multi-select */
-    .stMultiSelect > div > div {{
-        background-color: {DARK_PURPLE} !important;
-        border: 2px solid rgba(232, 215, 160, 0.4) !important;
-    }}
-
-    .stMultiSelect [data-baseweb="tag"] {{
-        background-color: rgba(232, 215, 160, 0.3) !important;
-        color: {CREAM} !important;
-    }}
-
-    /* Slider */
-    .stSlider label {{
-        color: {CREAM} !important;
-    }}
-
-    /* Dataframe */
-    .stDataFrame {{
-        background-color: {DARK_PURPLE};
-    }}
-
-    /* Tabs - MAXIMUM CONTRAST */
+    /* Tabs - simple black on white */
     .stTabs [data-baseweb="tab-list"] {{
-        gap: 8px;
-        background-color: transparent !important;
+        background-color: {BACKGROUND} !important;
+        border-bottom: 2px solid {BORDER};
     }}
 
-    /* Inactive tabs */
     .stTabs [data-baseweb="tab"] {{
-        background-color: {DARK_PURPLE} !important;
-        color: {CREAM} !important;
-        border-radius: 4px !important;
-        border: 2px solid rgba(232, 215, 160, 0.3) !important;
+        background-color: {BACKGROUND} !important;
+        color: {TEXT_COLOR} !important;
+        border: 1px solid {BORDER} !important;
         font-weight: 500 !important;
     }}
 
     .stTabs [data-baseweb="tab"] > div,
     .stTabs [data-baseweb="tab"] span,
     .stTabs [data-baseweb="tab"] p {{
-        color: {CREAM} !important;
+        color: {TEXT_COLOR} !important;
     }}
 
-    /* Active tab - cream background with DARK text - FORCE IT */
+    /* Active tab - light gray background, black text */
     .stTabs [aria-selected="true"],
     .stTabs button[aria-selected="true"] {{
-        background-color: {CREAM} !important;
-        border: 2px solid {CREAM} !important;
-        color: {DARK_BG} !important;
+        background-color: {LIGHT_BG} !important;
+        border: 1px solid {BORDER} !important;
+        border-bottom: 2px solid {ACCENT} !important;
     }}
 
     .stTabs [aria-selected="true"] > div,
     .stTabs [aria-selected="true"] span,
     .stTabs [aria-selected="true"] p,
     .stTabs [aria-selected="true"] *,
-    .stTabs button[aria-selected="true"] > div,
-    .stTabs button[aria-selected="true"] span,
-    .stTabs button[aria-selected="true"] p,
     .stTabs button[aria-selected="true"] * {{
-        color: {DARK_BG} !important;
+        color: {TEXT_COLOR} !important;
         font-weight: 600 !important;
     }}
 
-    /* Tab hover */
-    .stTabs [data-baseweb="tab"]:hover {{
-        background-color: rgba(232, 215, 160, 0.15) !important;
+    /* Buttons */
+    .stButton > button {{
+        background-color: {ACCENT} !important;
+        color: white !important;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 16px;
     }}
 
-    /* Active tab hover - keep dark text */
-    .stTabs [aria-selected="true"]:hover,
-    .stTabs [aria-selected="true"]:hover * {{
-        color: {DARK_BG} !important;
+    .stButton > button:hover {{
+        background-color: #3a3448 !important;
     }}
 
     /* File uploader */
     .stFileUploader section {{
-        background-color: {DARK_PURPLE} !important;
-        border: 2px dashed rgba(232, 215, 160, 0.4) !important;
-        border-radius: 6px !important;
+        background-color: {BACKGROUND} !important;
+        border: 2px dashed {BORDER} !important;
     }}
 
     .stFileUploader section > div {{
-        color: {CREAM} !important;
-    }}
-
-    .stFileUploader label {{
-        color: {CREAM} !important;
+        color: {TEXT_COLOR} !important;
     }}
 
     [data-testid="stFileUploadDropzone"] {{
-        color: {CREAM} !important;
-    }}
-
-    [data-testid="stFileUploadDropzone"] small {{
-        color: rgba(232, 215, 160, 0.7) !important;
+        color: {TEXT_COLOR} !important;
     }}
 
     /* Expanders */
     .stExpander {{
-        background-color: {DARK_PURPLE};
-        border: 1px solid rgba(232, 215, 160, 0.2);
+        background-color: {BACKGROUND};
+        border: 1px solid {BORDER};
     }}
 
     .stExpander summary {{
-        color: {CREAM} !important;
+        color: {TEXT_COLOR} !important;
     }}
 
-    .stExpander p, .stExpander span {{
-        color: {CREAM} !important;
+    .stExpander * {{
+        color: {TEXT_COLOR} !important;
     }}
 
-    /* Info/Success/Warning/Error boxes */
+    /* Info/success/warning/error boxes */
     .stAlert {{
-        color: {DARK_BG} !important;
+        background-color: {LIGHT_BG} !important;
+        border: 1px solid {BORDER} !important;
+        color: {TEXT_COLOR} !important;
     }}
 
-    /* Progress bar */
-    .stProgress > div > div > div > div {{
-        background-color: {CREAM};
+    /* Metrics */
+    .stMetric {{
+        background-color: {LIGHT_BG};
+        padding: 16px;
+        border-radius: 4px;
+        border: 1px solid {BORDER};
+    }}
+
+    .stMetric label, .stMetric [data-testid="stMetricValue"] {{
+        color: {TEXT_COLOR} !important;
     }}
 </style>
 """, unsafe_allow_html=True)

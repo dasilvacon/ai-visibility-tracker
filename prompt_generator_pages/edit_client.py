@@ -11,10 +11,12 @@ import sys
 sys.path.insert(0, 'src')
 from src.data.brand_config_manager import BrandConfigManager
 
-# Brand colors
-DARK_PURPLE = '#4A4458'
-CREAM = '#E8D7A0'
-OFF_WHITE = '#FBFBEF'
+# Brand colors - LIGHT THEME
+BACKGROUND = '#FFFFFF'
+TEXT_COLOR = '#000000'
+LIGHT_BG = '#F5F5F5'
+BORDER = '#CCCCCC'
+ACCENT = '#4A4458'
 
 
 def render_edit_client(client_slug: str, client_name: str):
@@ -25,101 +27,52 @@ def render_edit_client(client_slug: str, client_name: str):
         client_slug: Client slug (e.g., 'natasha_denona')
         client_name: Client display name (e.g., 'Natasha Denona')
     """
-    # CSS fixes for form visibility - MAXIMUM CONTRAST
+    # Simple light theme CSS
     st.markdown(f"""
     <style>
-        /* Text inputs - MAXIMUM CONTRAST */
-        .stTextInput > div > div > input,
-        .stTextArea > div > div > textarea,
-        .stNumberInput > div > div > input,
+        .main {{
+            background-color: {BACKGROUND};
+        }}
+
+        /* All text - black on white */
+        h1, h2, h3, h4, h5, h6, p, label, span {{
+            color: {TEXT_COLOR} !important;
+        }}
+
+        /* Text inputs */
         .stTextInput input,
-        .stNumberInput input,
         .stTextArea textarea,
-        input[type="text"],
-        input[type="number"],
-        textarea {{
-            background-color: {DARK_PURPLE} !important;
-            border: 2px solid rgba(232, 215, 160, 0.4) !important;
-            color: {CREAM} !important;
-            border-radius: 6px !important;
-            font-size: 1em !important;
-        }}
-
-        .stTextInput input::placeholder,
-        .stTextArea textarea::placeholder {{
-            color: rgba(232, 215, 160, 0.5) !important;
-        }}
-
-        /* Labels */
-        .stTextInput label,
-        .stNumberInput label,
-        .stSelectbox label,
-        .stTextArea label,
-        .stFileUploader label {{
-            color: {CREAM} !important;
-            font-weight: 600 !important;
+        .stNumberInput input {{
+            background-color: {BACKGROUND} !important;
+            color: {TEXT_COLOR} !important;
+            border: 1px solid {BORDER} !important;
         }}
 
         /* Selectbox */
         .stSelectbox select,
         .stSelectbox > div > div {{
-            background-color: {DARK_PURPLE} !important;
-            color: {CREAM} !important;
-            border: 2px solid rgba(232, 215, 160, 0.4) !important;
+            background-color: {BACKGROUND} !important;
+            color: {TEXT_COLOR} !important;
+            border: 1px solid {BORDER} !important;
         }}
 
-        .stSelectbox [data-baseweb="select"] {{
-            background-color: {DARK_PURPLE} !important;
+        /* File uploader */
+        .stFileUploader section {{
+            background-color: {BACKGROUND} !important;
+            border: 2px dashed {BORDER} !important;
         }}
 
-        .stSelectbox [data-baseweb="select"] > div {{
-            color: {CREAM} !important;
-            background-color: {DARK_PURPLE} !important;
-        }}
-
-        /* Tabs - MAXIMUM CONTRAST */
-        .stTabs [data-baseweb="tab-list"] {{
-            background-color: transparent !important;
-        }}
-
-        /* Inactive tabs */
+        /* Tabs */
         .stTabs [data-baseweb="tab"] {{
-            background-color: {DARK_PURPLE} !important;
-            color: {CREAM} !important;
-            border: 2px solid rgba(232, 215, 160, 0.3) !important;
-            font-weight: 500 !important;
+            background-color: {BACKGROUND} !important;
+            color: {TEXT_COLOR} !important;
+            border-bottom: 2px solid {BORDER} !important;
         }}
 
-        .stTabs [data-baseweb="tab"] > div,
-        .stTabs [data-baseweb="tab"] span,
-        .stTabs [data-baseweb="tab"] p {{
-            color: {CREAM} !important;
-        }}
-
-        /* Active tab - cream background with DARK text - FORCE IT */
-        .stTabs [aria-selected="true"],
-        .stTabs button[aria-selected="true"] {{
-            background-color: {CREAM} !important;
-            border: 2px solid {CREAM} !important;
-            color: #1c1c1c !important;
-        }}
-
-        .stTabs [aria-selected="true"] > div,
-        .stTabs [aria-selected="true"] span,
-        .stTabs [aria-selected="true"] p,
-        .stTabs [aria-selected="true"] *,
-        .stTabs button[aria-selected="true"] > div,
-        .stTabs button[aria-selected="true"] span,
-        .stTabs button[aria-selected="true"] p,
-        .stTabs button[aria-selected="true"] * {{
-            color: #1c1c1c !important;
-            font-weight: 600 !important;
-        }}
-
-        /* Active tab hover - keep dark text */
-        .stTabs [aria-selected="true"]:hover,
-        .stTabs [aria-selected="true"]:hover * {{
-            color: #1c1c1c !important;
+        .stTabs [aria-selected="true"] {{
+            background-color: {LIGHT_BG} !important;
+            border-bottom: 2px solid {ACCENT} !important;
+            color: {TEXT_COLOR} !important;
         }}
     </style>
     """, unsafe_allow_html=True)

@@ -10,10 +10,15 @@ from pathlib import Path
 import re
 
 
-# Brand colors
-DARK_PURPLE = '#4A4458'
-CREAM = '#E8D7A0'
-OFF_WHITE = '#FBFBEF'
+# Brand colors - LIGHT THEME
+BACKGROUND = '#FFFFFF'
+TEXT_COLOR = '#000000'
+LIGHT_BG = '#F5F5F5'
+BORDER = '#CCCCCC'
+ACCENT = '#4A4458'
+# Legacy color names for inline styles
+CREAM = TEXT_COLOR
+OFF_WHITE = TEXT_COLOR
 
 
 def detect_keyword_column(df):
