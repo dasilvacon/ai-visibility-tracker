@@ -261,12 +261,13 @@ st.markdown(f"""
         background-color: {DARK_PURPLE};
     }}
 
-    /* Tabs - HIGH CONTRAST */
+    /* Tabs - MAXIMUM CONTRAST */
     .stTabs [data-baseweb="tab-list"] {{
         gap: 8px;
         background-color: transparent !important;
     }}
 
+    /* Inactive tabs */
     .stTabs [data-baseweb="tab"] {{
         background-color: {DARK_PURPLE} !important;
         color: {CREAM} !important;
@@ -275,17 +276,28 @@ st.markdown(f"""
         font-weight: 500 !important;
     }}
 
-    .stTabs [data-baseweb="tab"] > div {{
+    .stTabs [data-baseweb="tab"] > div,
+    .stTabs [data-baseweb="tab"] span,
+    .stTabs [data-baseweb="tab"] p {{
         color: {CREAM} !important;
     }}
 
-    /* Active tab - cream background with DARK text */
-    .stTabs [aria-selected="true"] {{
+    /* Active tab - cream background with DARK text - FORCE IT */
+    .stTabs [aria-selected="true"],
+    .stTabs button[aria-selected="true"] {{
         background-color: {CREAM} !important;
         border: 2px solid {CREAM} !important;
+        color: {DARK_BG} !important;
     }}
 
-    .stTabs [aria-selected="true"] > div {{
+    .stTabs [aria-selected="true"] > div,
+    .stTabs [aria-selected="true"] span,
+    .stTabs [aria-selected="true"] p,
+    .stTabs [aria-selected="true"] *,
+    .stTabs button[aria-selected="true"] > div,
+    .stTabs button[aria-selected="true"] span,
+    .stTabs button[aria-selected="true"] p,
+    .stTabs button[aria-selected="true"] * {{
         color: {DARK_BG} !important;
         font-weight: 600 !important;
     }}
@@ -293,6 +305,12 @@ st.markdown(f"""
     /* Tab hover */
     .stTabs [data-baseweb="tab"]:hover {{
         background-color: rgba(232, 215, 160, 0.15) !important;
+    }}
+
+    /* Active tab hover - keep dark text */
+    .stTabs [aria-selected="true"]:hover,
+    .stTabs [aria-selected="true"]:hover * {{
+        color: {DARK_BG} !important;
     }}
 
     /* File uploader */

@@ -77,11 +77,12 @@ def render_edit_client(client_slug: str, client_name: str):
             background-color: {DARK_PURPLE} !important;
         }}
 
-        /* Tabs - HIGH CONTRAST */
+        /* Tabs - MAXIMUM CONTRAST */
         .stTabs [data-baseweb="tab-list"] {{
             background-color: transparent !important;
         }}
 
+        /* Inactive tabs */
         .stTabs [data-baseweb="tab"] {{
             background-color: {DARK_PURPLE} !important;
             color: {CREAM} !important;
@@ -89,18 +90,36 @@ def render_edit_client(client_slug: str, client_name: str):
             font-weight: 500 !important;
         }}
 
-        .stTabs [data-baseweb="tab"] > div {{
+        .stTabs [data-baseweb="tab"] > div,
+        .stTabs [data-baseweb="tab"] span,
+        .stTabs [data-baseweb="tab"] p {{
             color: {CREAM} !important;
         }}
 
-        .stTabs [aria-selected="true"] {{
+        /* Active tab - cream background with DARK text - FORCE IT */
+        .stTabs [aria-selected="true"],
+        .stTabs button[aria-selected="true"] {{
             background-color: {CREAM} !important;
             border: 2px solid {CREAM} !important;
+            color: #1c1c1c !important;
         }}
 
-        .stTabs [aria-selected="true"] > div {{
+        .stTabs [aria-selected="true"] > div,
+        .stTabs [aria-selected="true"] span,
+        .stTabs [aria-selected="true"] p,
+        .stTabs [aria-selected="true"] *,
+        .stTabs button[aria-selected="true"] > div,
+        .stTabs button[aria-selected="true"] span,
+        .stTabs button[aria-selected="true"] p,
+        .stTabs button[aria-selected="true"] * {{
             color: #1c1c1c !important;
             font-weight: 600 !important;
+        }}
+
+        /* Active tab hover - keep dark text */
+        .stTabs [aria-selected="true"]:hover,
+        .stTabs [aria-selected="true"]:hover * {{
+            color: #1c1c1c !important;
         }}
     </style>
     """, unsafe_allow_html=True)
