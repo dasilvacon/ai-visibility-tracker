@@ -19,6 +19,8 @@ data/results/
 *.csv
 !data/prompts_template.csv
 !data/reports/*Natasha_Denona*.csv
+!data/*_keywords.csv
+!data/keywords_template.csv
 
 # Reports (with exceptions for deployment)
 data/reports/*
