@@ -31,16 +31,38 @@ CHARCOAL = '#1C1C1C'
 OFF_WHITE = '#FBFBEF'
 ACCENT_PINK = '#D4698B'
 
-# Custom CSS for branding
+# Custom CSS for branding with high contrast
 st.markdown(f"""
 <style>
+    /* Main background */
     .main {{
         background-color: {OFF_WHITE};
+        color: {CHARCOAL};
     }}
-    h1, h2, h3 {{
-        color: {DEEP_PLUM};
+
+    /* Headers */
+    h1, h2, h3, h4, h5, h6 {{
+        color: {DEEP_PLUM} !important;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }}
+
+    /* Regular text */
+    p, label, span, div {{
+        color: {CHARCOAL} !important;
+    }}
+
+    /* Login container */
+    .login-container {{
+        max-width: 400px;
+        margin: 100px auto;
+        padding: 40px;
+        background: white;
+        border-radius: 10px;
+        border: 2px solid {DUSTY_ROSE};
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }}
+
+    /* Metrics */
     .stMetric {{
         background-color: white;
         padding: 15px;
@@ -51,25 +73,147 @@ st.markdown(f"""
         color: {DEEP_PLUM} !important;
         font-weight: 600;
     }}
+    .stMetric [data-testid="stMetricValue"] {{
+        color: {CHARCOAL} !important;
+    }}
+
+    /* Buttons */
+    .stButton > button {{
+        background-color: {DUSTY_ROSE};
+        color: white !important;
+        border: none;
+        border-radius: 6px;
+        font-weight: 500;
+    }}
+    .stButton > button:hover {{
+        background-color: {ACCENT_PINK};
+    }}
+    .stButton > button[kind="primary"] {{
+        background-color: {DEEP_PLUM};
+        color: white !important;
+    }}
     .stDownloadButton button {{
         background-color: {DEEP_PLUM};
-        color: white;
+        color: white !important;
         border-radius: 6px;
     }}
     .stDownloadButton button:hover {{
         background-color: {ACCENT_PINK};
     }}
+
+    /* Sidebar */
+    [data-testid="stSidebar"] {{
+        background-color: {DEEP_PLUM};
+    }}
+    [data-testid="stSidebar"] * {{
+        color: {OFF_WHITE} !important;
+    }}
     div[data-testid="stSidebarNav"] {{
         background-color: {DEEP_PLUM};
     }}
-    .login-container {{
-        max-width: 400px;
-        margin: 100px auto;
-        padding: 40px;
-        background: white;
-        border-radius: 10px;
-        border: 2px solid {DUSTY_ROSE};
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+    /* Form inputs - MAXIMUM CONTRAST */
+    .stTextInput > div > div > input,
+    .stTextArea > div > div > textarea,
+    .stNumberInput > div > div > input,
+    .stTextInput input,
+    .stNumberInput input,
+    .stTextArea textarea {{
+        background-color: #FFFFFF !important;
+        border: 2px solid {DUSTY_ROSE} !important;
+        color: {CHARCOAL} !important;
+        border-radius: 6px !important;
+    }}
+
+    /* Selectbox */
+    .stSelectbox select,
+    .stSelectbox > div > div {{
+        background-color: #FFFFFF !important;
+        color: {CHARCOAL} !important;
+        border: 2px solid {DUSTY_ROSE} !important;
+        border-radius: 6px !important;
+    }}
+    .stSelectbox [data-baseweb="select"] {{
+        background-color: #FFFFFF !important;
+    }}
+    .stSelectbox [data-baseweb="select"] > div {{
+        color: {CHARCOAL} !important;
+        background-color: #FFFFFF !important;
+    }}
+
+    /* Placeholder text */
+    .stTextInput input::placeholder,
+    .stTextArea textarea::placeholder {{
+        color: {DUSTY_ROSE} !important;
+        opacity: 0.7 !important;
+    }}
+
+    /* Input labels - dark and readable */
+    .stTextInput label,
+    .stNumberInput label,
+    .stSelectbox label,
+    .stTextArea label,
+    .stMultiSelect label,
+    .stFileUploader label {{
+        color: {DEEP_PLUM} !important;
+        font-weight: 500 !important;
+    }}
+
+    /* Multi-select */
+    .stMultiSelect > div > div {{
+        background-color: #FFFFFF !important;
+        border: 2px solid {DUSTY_ROSE} !important;
+    }}
+    .stMultiSelect [data-baseweb="tag"] {{
+        background-color: {DUSTY_ROSE} !important;
+        color: white !important;
+    }}
+
+    /* Tabs - fix yellow on yellow */
+    .stTabs [data-baseweb="tab-list"] {{
+        background-color: {OFF_WHITE} !important;
+    }}
+
+    .stTabs [data-baseweb="tab"] {{
+        background-color: white !important;
+        color: {DEEP_PLUM} !important;
+        border: 2px solid {DUSTY_ROSE} !important;
+        border-radius: 4px 4px 0 0 !important;
+        font-weight: 500 !important;
+    }}
+
+    .stTabs [data-baseweb="tab"] > div {{
+        color: {DEEP_PLUM} !important;
+    }}
+
+    .stTabs [aria-selected="true"] {{
+        background-color: {DEEP_PLUM} !important;
+        border: 2px solid {DEEP_PLUM} !important;
+        color: white !important;
+    }}
+
+    .stTabs [aria-selected="true"] > div {{
+        color: white !important;
+    }}
+
+    .stTabs [data-baseweb="tab"]:hover {{
+        background-color: {OFF_WHITE} !important;
+    }}
+
+    /* File uploader */
+    .stFileUploader section {{
+        background-color: #FFFFFF !important;
+        border: 2px dashed {DUSTY_ROSE} !important;
+    }}
+    .stFileUploader section > div {{
+        color: {DEEP_PLUM} !important;
+    }}
+
+    /* Alert boxes */
+    .stAlert {{
+        background-color: #FFFFFF !important;
+        border-left: 4px solid {DUSTY_ROSE} !important;
+        color: {CHARCOAL} !important;
     }}
 </style>
 """, unsafe_allow_html=True)

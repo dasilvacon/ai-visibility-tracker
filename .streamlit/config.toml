@@ -1,8 +1,8 @@
 [theme]
-primaryColor = "#D4698B"
-backgroundColor = "#FBFBEF"
-secondaryBackgroundColor = "#FFFFFF"
-textColor = "#402E3A"
+primaryColor = "#A78E8B"        # Dusty rose (for accents)
+backgroundColor = "#FBFBEF"      # Cream (page background)
+secondaryBackgroundColor = "#FFFFFF"  # White (widget backgrounds)
+textColor = "#1C1C1C"           # Charcoal (main text - high contrast)
 font = "sans serif"
 
 [server]
