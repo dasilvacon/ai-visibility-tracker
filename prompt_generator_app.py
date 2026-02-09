@@ -281,7 +281,7 @@ if 'generation_config' not in st.session_state:
 # Sidebar navigation
 with st.sidebar:
     # DaSilva logo at top
-    header_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: ' + OFF_WHITE + ';')
+    header_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: ' + ACCENT + ';')
     st.markdown(
         "<div style='text-align: center; margin-bottom: 20px;'>" +
         header_logo +
@@ -309,12 +309,12 @@ with st.sidebar:
 
     # Quick stats
     if st.session_state.generated_prompts:
-        st.markdown("<p style='color: white; font-weight: 600;'>Session Stats</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: black; font-weight: 600;'>Session Stats</p>", unsafe_allow_html=True)
         stats = st.session_state.approval_manager.get_approval_stats()
-        st.markdown(f"<p style='color: {OFF_WHITE};'>Total: {stats['total']}</p>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color: {OFF_WHITE};'>✓ Approved: {stats['approved']}</p>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color: {OFF_WHITE};'>✗ Rejected: {stats['rejected']}</p>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color: {OFF_WHITE};'>⏳ Pending: {stats['pending']}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: {TEXT_COLOR};'>Total: {stats['total']}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: {TEXT_COLOR};'>✓ Approved: {stats['approved']}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: {TEXT_COLOR};'>✗ Rejected: {stats['rejected']}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: {TEXT_COLOR};'>⏳ Pending: {stats['pending']}</p>", unsafe_allow_html=True)
 
     # Show user info and logout button
     show_user_info()
@@ -322,12 +322,12 @@ with st.sidebar:
     st.markdown("---")
 
     # DaSilva logo in footer
-    footer_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: ' + OFF_WHITE + ';')
+    footer_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: ' + ACCENT + ';')
     st.markdown(
         "<div style='text-align: center; margin-top: 20px; opacity: 0.7;'>" +
         footer_logo +
         "</div>" +
-        "<p style='text-align: center; color: " + CREAM + "; font-size: 0.75em; font-family: \"DM Mono\", monospace; margin-top: 12px; opacity: 0.8;'>DaSilva Consulting</p>",
+        "<p style='text-align: center; color: " + ACCENT + "; font-size: 0.75em; font-family: \"DM Mono\", monospace; margin-top: 12px; opacity: 0.8;'>DaSilva Consulting</p>",
         unsafe_allow_html=True
     )
 
