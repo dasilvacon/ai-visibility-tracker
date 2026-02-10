@@ -193,16 +193,20 @@ def render():
                 approved_dir = Path('data/prompt_generation/approved')
                 approved_dir.mkdir(parents=True, exist_ok=True)
 
+                # Get client name from session state
+                client_name = st.session_state.generation_config.get('client_name', 'Unknown Client')
+
                 # Save to approved directory first
-                approved_file = approved_dir / f"approved_{timestamp}.csv"
+                approved_file = approved_dir / f"approved_{client_name.replace(' ', '_')}_{timestamp}.csv"
 
                 with open(approved_file, 'w', newline='') as f:
-                    fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
+                    fieldnames = ['prompt_id', 'client_name', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
                     writer = csv.DictWriter(f, fieldnames=fieldnames)
                     writer.writeheader()
 
                     for prompt in approved_prompts:
                         row = {k: prompt.get(k, '') for k in fieldnames}
+                        row['client_name'] = client_name  # Add client name to each row
                         writer.writerow(row)
 
                 st.success(f"✅ Saved to {approved_file}")
@@ -228,23 +232,25 @@ def render():
 
                         # Append new prompts
                         with open(main_csv, 'a', newline='') as f:
-                            fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
+                            fieldnames = ['prompt_id', 'client_name', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
                             writer = csv.DictWriter(f, fieldnames=fieldnames)
 
                             for prompt in new_prompts:
                                 row = {k: prompt.get(k, '') for k in fieldnames}
+                                row['client_name'] = client_name  # Add client name to each row
                                 writer.writerow(row)
 
                         st.success(f"✅ Appended {len(new_prompts)} prompts to {main_csv}")
                     else:
                         # File doesn't exist, create it
                         with open(main_csv, 'w', newline='') as f:
-                            fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
+                            fieldnames = ['prompt_id', 'client_name', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
                             writer = csv.DictWriter(f, fieldnames=fieldnames)
                             writer.writeheader()
 
                             for prompt in approved_prompts:
                                 row = {k: prompt.get(k, '') for k in fieldnames}
+                                row['client_name'] = client_name  # Add client name to each row
                                 writer.writerow(row)
 
                         st.success(f"✅ Created new {main_csv} with {len(approved_prompts)} prompts")
@@ -254,12 +260,13 @@ def render():
                         main_csv = Path('data/generated_prompts.csv')
 
                         with open(main_csv, 'w', newline='') as f:
-                            fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
+                            fieldnames = ['prompt_id', 'client_name', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
                             writer = csv.DictWriter(f, fieldnames=fieldnames)
                             writer.writeheader()
 
                             for prompt in approved_prompts:
                                 row = {k: prompt.get(k, '') for k in fieldnames}
+                                row['client_name'] = client_name  # Add client name to each row
                                 writer.writerow(row)
 
                         st.success(f"✅ Replaced {main_csv} with {len(approved_prompts)} prompts")
@@ -269,11 +276,14 @@ def render():
                 else:  # Custom location
                     # Provide download button
                     csv_data = []
-                    fieldnames = ['prompt_id', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
+                    fieldnames = ['prompt_id', 'client_name', 'persona', 'category', 'intent_type', 'prompt_text', 'expected_visibility_score', 'notes', 'batch_id', 'batch_name', 'date_added', 'status']
 
                     csv_content = ','.join(fieldnames) + '\n'
                     for prompt in approved_prompts:
-                        row = [str(prompt.get(k, '')) for k in fieldnames]
+                        # Add client_name to prompt data
+                        prompt_with_client = prompt.copy()
+                        prompt_with_client['client_name'] = client_name
+                        row = [str(prompt_with_client.get(k, '')) for k in fieldnames]
                         csv_content += ','.join(f'"{v}"' for v in row) + '\n'
 
                     st.download_button(
