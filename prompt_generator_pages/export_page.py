@@ -13,6 +13,55 @@ import sys
 sys.path.insert(0, 'src')
 
 
+def archive_exported_drafts(exported_prompts, client_name):
+    """Archive draft files after prompts have been successfully exported."""
+    draft_dir = Path('data/prompt_generation/drafts')
+    archive_dir = Path('data/prompt_generation/exported')
+    archive_dir.mkdir(parents=True, exist_ok=True)
+
+    if not draft_dir.exists():
+        return
+
+    # Get batch IDs from exported prompts
+    exported_batch_ids = set(p.get('batch_id') for p in exported_prompts)
+
+    # Move draft files for exported batches to archive
+    archived_count = 0
+    for batch_id in exported_batch_ids:
+        if not batch_id:
+            continue
+
+        draft_file = draft_dir / f"batch_{batch_id}_prompts.json"
+
+        if draft_file.exists():
+            try:
+                # Read draft to check if ALL prompts were exported
+                with open(draft_file, 'r') as f:
+                    draft_data = json.load(f)
+
+                # Only archive if client matches
+                if draft_data.get('client_name') == client_name:
+                    # Move to archive with timestamp
+                    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                    archive_file = archive_dir / f"batch_{batch_id}_{timestamp}.json"
+
+                    # Add export metadata
+                    draft_data['exported_at'] = datetime.now().isoformat()
+
+                    with open(archive_file, 'w') as f:
+                        json.dump(draft_data, f, indent=2, default=str)
+
+                    # Delete original draft
+                    draft_file.unlink()
+                    archived_count += 1
+
+            except Exception as e:
+                st.warning(f"Could not archive draft {draft_file.name}: {str(e)}")
+
+    if archived_count > 0:
+        st.info(f"📂 Archived {archived_count} draft batch(es) - prompts are now in the main CSV")
+
+
 def render():
     """Render the export page."""
 
@@ -241,6 +290,9 @@ def render():
                                 writer.writerow(row)
 
                         st.success(f"✅ Appended {len(new_prompts)} prompts to {main_csv}")
+
+                        # Archive draft files for exported prompts
+                        archive_exported_drafts(approved_prompts, client_name)
                     else:
                         # File doesn't exist, create it
                         with open(main_csv, 'w', newline='') as f:
@@ -254,6 +306,9 @@ def render():
                                 writer.writerow(row)
 
                         st.success(f"✅ Created new {main_csv} with {len(approved_prompts)} prompts")
+
+                        # Archive draft files for exported prompts
+                        archive_exported_drafts(approved_prompts, client_name)
 
                 elif export_mode == "Replace generated_prompts.csv":
                     if st.checkbox("⚠ I understand this will delete all existing prompts in generated_prompts.csv"):
@@ -270,6 +325,9 @@ def render():
                                 writer.writerow(row)
 
                         st.success(f"✅ Replaced {main_csv} with {len(approved_prompts)} prompts")
+
+                        # Archive draft files for exported prompts
+                        archive_exported_drafts(approved_prompts, client_name)
                     else:
                         st.warning("Please check the confirmation box to replace the file.")
 

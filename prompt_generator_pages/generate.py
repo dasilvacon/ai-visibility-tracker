@@ -430,23 +430,28 @@ def render():
                     st.markdown(f"**Expected Score:** {prompt['expected_visibility_score']}")
                     st.markdown(f"**Notes:** {prompt['notes']}")
 
-            # Auto-save draft
+            # Save prompts to persistent draft file (critical for not losing work!)
             draft_dir = Path('data/prompt_generation/drafts')
             draft_dir.mkdir(parents=True, exist_ok=True)
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            draft_file = draft_dir / f"session_{timestamp}.json"
+
+            # Use batch_id for filename so we can reload later
+            draft_file = draft_dir / f"batch_{batch_id}_prompts.json"
 
             session_data = {
-                'timestamp': timestamp,
+                'batch_id': batch_id,
+                'batch_name': batch_name,
+                'client_name': client_name,
+                'timestamp': datetime.now().isoformat(),
                 'config': st.session_state.generation_config,
                 'prompts': prompts,
-                'stats': stats
+                'stats': stats,
+                'approval_statuses': {p['prompt_id']: 'pending' for p in prompts}
             }
 
             with open(draft_file, 'w') as f:
                 json.dump(session_data, f, indent=2, default=str)
 
-            st.success(f"✅ Session auto-saved to {draft_file}")
+            st.success(f"✅ Prompts saved! You can review them anytime - they won't be lost.")
 
             # Navigation hint
             st.info("👉 Go to **Review & Approve** to filter and approve prompts.")

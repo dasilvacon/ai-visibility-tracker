@@ -5,8 +5,54 @@ Review & Approval page for prompt generator app.
 import streamlit as st
 import pandas as pd
 import sys
+import json
+from pathlib import Path
 
 sys.path.insert(0, 'src')
+
+
+def save_approval_statuses_to_drafts(client_name):
+    """Save current approval statuses back to draft files."""
+    if 'approval_manager' not in st.session_state:
+        return
+
+    approval_mgr = st.session_state.approval_manager
+    all_prompts = approval_mgr.get_all_prompts()
+
+    # Group prompts by batch_id
+    prompts_by_batch = {}
+    for prompt in all_prompts:
+        batch_id = prompt.get('batch_id', 'unknown')
+        if batch_id not in prompts_by_batch:
+            prompts_by_batch[batch_id] = []
+        prompts_by_batch[batch_id].append(prompt)
+
+    # Update each draft file
+    draft_dir = Path('data/prompt_generation/drafts')
+    if not draft_dir.exists():
+        return
+
+    for batch_id, prompts in prompts_by_batch.items():
+        draft_file = draft_dir / f"batch_{batch_id}_prompts.json"
+
+        if draft_file.exists():
+            try:
+                # Read existing draft data
+                with open(draft_file, 'r') as f:
+                    draft_data = json.load(f)
+
+                # Update approval statuses
+                draft_data['approval_statuses'] = {
+                    p['prompt_id']: p.get('approval_status', 'pending')
+                    for p in prompts
+                }
+
+                # Write back
+                with open(draft_file, 'w') as f:
+                    json.dump(draft_data, f, indent=2, default=str)
+
+            except Exception as e:
+                st.error(f"Error saving approval statuses to {draft_file.name}: {str(e)}")
 
 
 def render():
@@ -71,37 +117,49 @@ def render():
 
     st.title("🔍 Review & Approve Prompts")
 
-    # AGGRESSIVE DEBUG - Show this immediately
-    st.write("🔍 DEBUG: Page loaded successfully")
-    st.write(f"🔍 DEBUG: generated_prompts exists: {'generated_prompts' in st.session_state}")
-    st.write(f"🔍 DEBUG: generated_prompts count: {len(st.session_state.get('generated_prompts', []))}")
-    st.write(f"🔍 DEBUG: approval_manager exists: {'approval_manager' in st.session_state}")
+    # Load prompts from persistent draft files (critical for not losing work!)
+    client_name = st.session_state.generation_config.get('client_name', 'Unknown Client')
+    draft_dir = Path('data/prompt_generation/drafts')
 
-    if 'approval_manager' in st.session_state:
-        try:
-            mgr_prompts = st.session_state.approval_manager.get_all_prompts()
-            st.write(f"🔍 DEBUG: Approval manager has {len(mgr_prompts)} prompts")
-            if len(mgr_prompts) > 0 and len(st.session_state.get('generated_prompts', [])) == 0:
-                st.warning("⚠️ MISMATCH: Approval manager has prompts but generated_prompts is empty!")
-                st.info("Copying prompts from approval manager to session state...")
-                st.session_state.generated_prompts = mgr_prompts
-        except Exception as e:
-            st.error(f"Error checking approval manager: {str(e)}")
+    # Find all draft files for this client
+    all_draft_prompts = []
+    draft_files = []
+
+    if draft_dir.exists():
+        import json
+        for draft_file in draft_dir.glob('batch_*_prompts.json'):
+            try:
+                with open(draft_file, 'r') as f:
+                    draft_data = json.load(f)
+
+                # Only load drafts for the active client
+                if draft_data.get('client_name') == client_name:
+                    draft_files.append(draft_file)
+                    prompts = draft_data.get('prompts', [])
+                    approval_statuses = draft_data.get('approval_statuses', {})
+
+                    # Add approval status to each prompt
+                    for prompt in prompts:
+                        prompt['approval_status'] = approval_statuses.get(prompt['prompt_id'], 'pending')
+                        all_draft_prompts.append(prompt)
+
+            except Exception as e:
+                st.error(f"Error loading draft file {draft_file.name}: {str(e)}")
+
+    # Load prompts into session state and approval manager if empty
+    if not st.session_state.get('generated_prompts') and all_draft_prompts:
+        st.session_state.generated_prompts = all_draft_prompts
+        if 'approval_manager' in st.session_state:
+            # Load with existing approval statuses
+            st.session_state.approval_manager.load_prompts(all_draft_prompts, default_status='pending')
+        st.info(f"📂 Loaded {len(all_draft_prompts)} prompts from {len(draft_files)} saved batches")
 
     st.markdown("---")
 
-    # Debug info
-    if not st.session_state.generated_prompts:
-        st.warning("⚠️ No prompts found in session.")
-        st.info("💡 **What to try:**\n- Go to **Generate** page\n- Generate prompts\n- Come back here")
-
-        # Show debug info
-        with st.expander("🔧 Debug Info"):
-            st.write(f"Session state keys: {list(st.session_state.keys())}")
-            st.write(f"Generated prompts count: {len(st.session_state.generated_prompts)}")
-            if 'approval_manager' in st.session_state:
-                all_prompts = st.session_state.approval_manager.get_all_prompts()
-                st.write(f"Approval manager prompts count: {len(all_prompts)}")
+    # Check if we have prompts to review
+    if not st.session_state.get('generated_prompts') and not all_draft_prompts:
+        st.warning("⚠️ No prompts found to review.")
+        st.info("💡 **What to do:**\n- Go to **Generate** page\n- Generate prompts\n- They'll be automatically saved and you can review them anytime")
         return
 
     st.success(f"✅ Found {len(st.session_state.generated_prompts)} prompts to review")
@@ -458,6 +516,9 @@ def render():
                             if rejected_ids:
                                 approval_mgr.reject_prompts(rejected_ids)
 
+                            # Save approval statuses to draft files
+                            save_approval_statuses_to_drafts(client_name)
+
                             # Show summary
                             st.success("✅ Client approvals imported successfully!")
 
@@ -486,12 +547,14 @@ def render():
     with col1:
         if st.button("✓ Approve All Visible", use_container_width=True):
             approval_mgr.bulk_approve_filtered(filtered_prompts)
+            save_approval_statuses_to_drafts(client_name)
             st.success(f"Approved {len(filtered_prompts)} prompts!")
             st.rerun()
 
     with col2:
         if st.button("✗ Reject All Visible", use_container_width=True):
             approval_mgr.bulk_reject_filtered(filtered_prompts)
+            save_approval_statuses_to_drafts(client_name)
             st.success(f"Rejected {len(filtered_prompts)} prompts!")
             st.rerun()
 
@@ -499,6 +562,7 @@ def render():
         if st.button("↺ Reset All Visible", use_container_width=True):
             prompt_ids = [p['prompt_id'] for p in filtered_prompts]
             approval_mgr.reset_prompts(prompt_ids)
+            save_approval_statuses_to_drafts(client_name)
             st.success(f"Reset {len(filtered_prompts)} prompts to pending!")
             st.rerun()
 
@@ -614,6 +678,7 @@ def render():
                     if current_status != 'approved':
                         if st.button("✓ Approve", key=f"approve_{selected_id}", use_container_width=True):
                             approval_mgr.approve_prompts([selected_id])
+                            save_approval_statuses_to_drafts(client_name)
                             st.success("Approved!")
                             st.rerun()
 
@@ -621,6 +686,7 @@ def render():
                     if current_status != 'rejected':
                         if st.button("✗ Reject", key=f"reject_{selected_id}", use_container_width=True):
                             approval_mgr.reject_prompts([selected_id])
+                            save_approval_statuses_to_drafts(client_name)
                             st.success("Rejected!")
                             st.rerun()
 
@@ -628,6 +694,7 @@ def render():
                     if current_status != 'pending':
                         if st.button("↺ Reset", key=f"reset_{selected_id}", use_container_width=True):
                             approval_mgr.reset_prompts([selected_id])
+                            save_approval_statuses_to_drafts(client_name)
                             st.success("Reset to pending!")
                             st.rerun()
 
