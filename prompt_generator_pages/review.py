@@ -71,8 +71,18 @@ def render():
 
     st.title("🔍 Review & Approve Prompts")
 
+    # Debug info
     if not st.session_state.generated_prompts:
-        st.warning("No prompts generated yet. Go to **Generate** to create prompts first.")
+        st.warning("⚠️ No prompts found in session.")
+        st.info("💡 **What to try:**\n- Go to **Generate** page\n- Generate prompts\n- Come back here")
+
+        # Show debug info
+        with st.expander("🔧 Debug Info"):
+            st.write(f"Session state keys: {list(st.session_state.keys())}")
+            st.write(f"Generated prompts count: {len(st.session_state.generated_prompts)}")
+            if 'approval_manager' in st.session_state:
+                all_prompts = st.session_state.approval_manager.get_all_prompts()
+                st.write(f"Approval manager prompts count: {len(all_prompts)}")
         return
 
     # Get approval manager
