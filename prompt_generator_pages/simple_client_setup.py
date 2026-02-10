@@ -16,9 +16,10 @@ TEXT_COLOR = '#000000'
 LIGHT_BG = '#F5F5F5'
 BORDER = '#CCCCCC'
 ACCENT = '#4A4458'
-# Legacy color names for inline styles
-CREAM = TEXT_COLOR
+# Legacy color names for inline styles (for backwards compatibility)
+CREAM = ACCENT
 OFF_WHITE = TEXT_COLOR
+DARK_PURPLE = LIGHT_BG
 
 
 def detect_keyword_column(df):

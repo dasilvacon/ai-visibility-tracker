@@ -73,10 +73,10 @@ def render():
     if 'active_client' in st.session_state and st.session_state.active_client:
         client_name = st.session_state.generation_config.get('client_name', 'Unknown Client')
         st.markdown(f"""
-        <div style='background: linear-gradient(135deg, {DARK_PURPLE} 0%, #5a5468 100%);
+        <div style='background: linear-gradient(135deg, {LIGHT_BG} 0%, #5a5468 100%);
                     padding: 16px 24px;
                     border-radius: 8px;
-                    border-left: 4px solid {CREAM};
+                    border-left: 4px solid {ACCENT};
                     margin-bottom: 24px;'>
             <p style='color: white; margin: 0; font-size: 1.1em;'>
                 <strong>🌟 Active Client:</strong> {client_name}
@@ -89,8 +89,8 @@ def render():
 
     # Help text
     st.markdown(f"""
-    <div style='background-color: {DARK_PURPLE}; padding: 16px; border-radius: 6px; margin-bottom: 20px;'>
-        <p style='color: {OFF_WHITE}; margin: 0;'>
+    <div style='background-color: {LIGHT_BG}; padding: 16px; border-radius: 6px; margin-bottom: 20px;'>
+        <p style='color: {TEXT_COLOR}; margin: 0;'>
             View and manage all prompt batches for this client. Archive batches from expired campaigns
             or restore previously archived batches.
         </p>
@@ -150,8 +150,8 @@ def render():
             is_baseline = 'baseline' in batch_name.lower() or 'initial' in batch_name.lower()
 
             # Batch card
-            border_color = CREAM if is_baseline else "rgba(232, 215, 160, 0.3)"
-            bg_color = f"linear-gradient(135deg, {DARK_PURPLE} 0%, #5a5468 100%)" if is_baseline else DARK_PURPLE
+            border_color = ACCENT if is_baseline else "rgba(232, 215, 160, 0.3)"
+            bg_color = f"linear-gradient(135deg, {LIGHT_BG} 0%, #5a5468 100%)" if is_baseline else LIGHT_BG
 
             st.markdown(f"""
             <div style='background: {bg_color};
@@ -163,10 +163,10 @@ def render():
                     {'🌟 ' if is_baseline else '📦 '}{batch_name}
                 </h3>
                 <div style='margin-bottom: 12px;'>
-                    <p style='color: {CREAM}; margin: 4px 0; font-size: 0.9em;'>
+                    <p style='color: {ACCENT}; margin: 4px 0; font-size: 0.9em;'>
                         <strong>Added:</strong> {formatted_date} | <strong>Prompts:</strong> {prompt_count}
                     </p>
-                    {f"<p style='color: {OFF_WHITE}; margin: 8px 0 0 0; font-size: 0.85em;'><em>{notes}</em></p>" if notes else ""}
+                    {f"<p style='color: {TEXT_COLOR}; margin: 8px 0 0 0; font-size: 0.85em;'><em>{notes}</em></p>" if notes else ""}
                 </div>
             </div>
             """, unsafe_allow_html=True)

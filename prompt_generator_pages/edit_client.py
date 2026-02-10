@@ -115,7 +115,7 @@ def render_edit_client(client_slug: str, client_name: str):
 
     # TAB 1: BASIC INFO
     with tab1:
-        st.markdown(f"<h3 style='color: {CREAM};'>Basic Client Information</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color: {ACCENT};'>Basic Client Information</h3>", unsafe_allow_html=True)
 
         with st.form("basic_info_form"):
             brand_name = st.text_input(
@@ -162,7 +162,7 @@ def render_edit_client(client_slug: str, client_name: str):
 
     # TAB 2: BUSINESS GOALS
     with tab2:
-        st.markdown(f"<h3 style='color: {CREAM};'>Business Goals & Strategy</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color: {ACCENT};'>Business Goals & Strategy</h3>", unsafe_allow_html=True)
 
         business_goals = config['brand'].get('business_goals', {})
 
@@ -223,8 +223,8 @@ def render_edit_client(client_slug: str, client_name: str):
 
     # TAB 3: EXPECTED COMPETITORS
     with tab3:
-        st.markdown(f"<h3 style='color: {CREAM};'>Expected Competitors</h3>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color: {OFF_WHITE}; margin-bottom: 16px;'>Manage your tracked competitors. Categorize them as Direct, Adjacent, or Aspirational.</p>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color: {ACCENT};'>Expected Competitors</h3>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: {TEXT_COLOR}; margin-bottom: 16px;'>Manage your tracked competitors. Categorize them as Direct, Adjacent, or Aspirational.</p>", unsafe_allow_html=True)
 
         expected_competitors = config.get('competitors', {}).get('expected', [])
 
@@ -266,7 +266,7 @@ def render_edit_client(client_slug: str, client_name: str):
 
         # Display existing competitors
         if expected_competitors:
-            st.markdown(f"<p style='color: {CREAM}; font-weight: 600; margin-top: 24px;'>Current Competitors ({len(expected_competitors)})</p>", unsafe_allow_html=True)
+            st.markdown(f"<p style='color: {ACCENT}; font-weight: 600; margin-top: 24px;'>Current Competitors ({len(expected_competitors)})</p>", unsafe_allow_html=True)
 
             category_emoji = {"direct": "🎯", "adjacent": "🔄", "aspirational": "⭐"}
 
@@ -335,13 +335,13 @@ def render_edit_client(client_slug: str, client_name: str):
 
     # TAB 4: DISCOVERED COMPETITORS
     with tab4:
-        st.markdown(f"<h3 style='color: {CREAM};'>Discovered Competitors</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color: {ACCENT};'>Discovered Competitors</h3>", unsafe_allow_html=True)
         st.markdown(f"""
         <div style='background-color: rgba(232, 215, 160, 0.15); padding: 16px; border-radius: 6px; margin-bottom: 20px;'>
-            <p style='color: {CREAM}; margin: 0;'>
+            <p style='color: {ACCENT}; margin: 0;'>
                 ⚠️ <strong>These brands appeared in AI responses but weren't on your expected list.</strong>
             </p>
-            <p style='color: {OFF_WHITE}; margin: 8px 0 0 0; font-size: 0.9em;'>
+            <p style='color: {TEXT_COLOR}; margin: 8px 0 0 0; font-size: 0.9em;'>
                 They represent emerging threats or market shifts. You can promote them to your expected competitors or dismiss them.
             </p>
         </div>
@@ -423,7 +423,7 @@ def render_edit_client(client_slug: str, client_name: str):
 
     # TAB 5: ADVANCED
     with tab5:
-        st.markdown(f"<h3 style='color: {CREAM};'>Advanced Configuration</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color: {ACCENT};'>Advanced Configuration</h3>", unsafe_allow_html=True)
         st.warning("⚠️ Advanced users only. Editing raw JSON/CSV can break client configuration.")
 
         # Brand Config JSON Editor
