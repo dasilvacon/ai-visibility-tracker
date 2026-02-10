@@ -180,12 +180,13 @@ def render():
         )
 
     st.markdown("---")
-    st.markdown("Configure and generate prompts with real-time deduplication.")
 
-    # Sidebar configuration
-    with st.sidebar:
-        st.markdown("### Generation Settings")
+    # Generation Settings (moved from sidebar to main content for visibility)
+    st.markdown("### ⚙️ Generation Settings")
 
+    col1, col2 = st.columns(2)
+
+    with col1:
         # Number of prompts (PROMINENT CONTROL)
         total_prompts = st.slider(
             "Total Prompts to Generate",
@@ -197,17 +198,6 @@ def render():
         )
         st.session_state.generation_config['total_prompts'] = total_prompts
 
-        # Competitor mention ratio
-        competitor_ratio = st.slider(
-            "Competitor Mentions (%)",
-            min_value=0,
-            max_value=50,
-            value=int(st.session_state.generation_config.get('competitor_ratio', 0.3) * 100),
-            step=5,
-            help="Percentage of prompts that should include competitor brand mentions"
-        ) / 100
-        st.session_state.generation_config['competitor_ratio'] = competitor_ratio
-
         # AI generation ratio
         ai_ratio = st.slider(
             "AI Generation (%)",
@@ -218,6 +208,18 @@ def render():
             help="Percentage of prompts generated using AI vs templates"
         ) / 100
         st.session_state.generation_config['ai_ratio'] = ai_ratio
+
+    with col2:
+        # Competitor mention ratio
+        competitor_ratio = st.slider(
+            "Competitor Mentions (%)",
+            min_value=0,
+            max_value=50,
+            value=int(st.session_state.generation_config.get('competitor_ratio', 0.3) * 100),
+            step=5,
+            help="Percentage of prompts that should include competitor brand mentions"
+        ) / 100
+        st.session_state.generation_config['competitor_ratio'] = competitor_ratio
 
         # Deduplication mode
         dedup_mode = st.selectbox(
@@ -240,6 +242,8 @@ def render():
         st.session_state.generation_config['deduplication_mode'] = dedup_mode
         st.session_state.generation_config['dedup_threshold'] = dedup_threshold
         st.session_state.generation_config['enable_dedup'] = enable_dedup
+
+    st.markdown("---")
 
     # Main content
     col1, col2 = st.columns([2, 1])
