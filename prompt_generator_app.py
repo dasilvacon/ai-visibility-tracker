@@ -337,21 +337,30 @@ if 'navigate_to_edit' in st.session_state and st.session_state.navigate_to_edit:
     st.session_state.page = 'edit_client'
 
 # Main content - route to appropriate page
-if st.session_state.page == 'generate':
-    from prompt_generator_pages import generate
-    generate.render()
-elif st.session_state.page == 'review_&_approve':
-    from prompt_generator_pages import review
-    review.render()
-elif st.session_state.page == 'export':
-    from prompt_generator_pages import export_page
-    export_page.render()
-elif st.session_state.page == 'prompt_library':
-    from prompt_generator_pages import library
-    library.render()
-elif st.session_state.page == 'client_manager':
-    from prompt_generator_pages import settings
-    settings.render()
-elif st.session_state.page == 'edit_client':
-    from prompt_generator_pages import edit_client
-    edit_client.render()
+try:
+    if st.session_state.page == 'generate':
+        from prompt_generator_pages import generate
+        generate.render()
+    elif st.session_state.page == 'review_approve':
+        st.write(f"🔍 DEBUG: Loading review page, state: {st.session_state.page}")
+        from prompt_generator_pages import review
+        st.write("🔍 DEBUG: Review module imported successfully")
+        review.render()
+        st.write("🔍 DEBUG: Review render() completed")
+    elif st.session_state.page == 'export':
+        from prompt_generator_pages import export_page
+        export_page.render()
+    elif st.session_state.page == 'prompt_library':
+        from prompt_generator_pages import library
+        library.render()
+    elif st.session_state.page == 'client_manager':
+        from prompt_generator_pages import settings
+        settings.render()
+    elif st.session_state.page == 'edit_client':
+        from prompt_generator_pages import edit_client
+        edit_client.render()
+    else:
+        st.error(f"❌ Unknown page: {st.session_state.page}")
+except Exception as e:
+    st.error(f"❌ ERROR loading page '{st.session_state.page}': {str(e)}")
+    st.exception(e)
