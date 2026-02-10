@@ -343,6 +343,77 @@ def render_simple_setup():
     </div>
     """, unsafe_allow_html=True)
 
+    # Client Data Status Dashboard
+    from src.client_manager import ClientRegistry
+    registry = ClientRegistry()
+    all_clients = registry.get_all_clients()
+    uncommitted = registry.check_uncommitted_files()
+
+    if uncommitted:
+        st.markdown(f"""
+        <div style='background-color: rgba(232, 215, 160, 0.2); padding: 16px; border-radius: 8px; border-left: 4px solid #E8D7A0; margin-bottom: 24px;'>
+            <h4 style='color: #E8D7A0; margin-top: 0;'>⚠️ Uncommitted Client Data</h4>
+            <p style='color: {OFF_WHITE}; margin: 0;'>
+                <strong>Important:</strong> {len(uncommitted)} client(s) have files that aren't saved to GitHub yet.
+                These clients will disappear if the app redeploys!
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        with st.expander("📋 View Uncommitted Clients", expanded=True):
+            for client_slug, files in uncommitted.items():
+                client = registry.get_client(client_slug)
+                st.markdown(f"**{client['name']}** ({len(files)} uncommitted files)")
+                for filepath in files:
+                    st.text(f"  • {filepath}")
+
+            st.markdown("---")
+            st.markdown("#### 💾 Save Client Data to GitHub")
+            st.markdown("""
+            To prevent losing client data, you need to commit and push these files to GitHub.
+
+            **Option 1: Automatic (Recommended)**
+            - Use the button below to commit all client files at once
+
+            **Option 2: Manual**
+            - Use git commands in your terminal:
+            ```
+            git add data/*.json data/*_keywords.csv data/*_personas.json
+            git commit -m "Add client data files"
+            git push
+            ```
+            """)
+
+            col1, col2 = st.columns([1, 3])
+            with col1:
+                if st.button("💾 Commit All Client Data", type="primary", use_container_width=True):
+                    import subprocess
+                    try:
+                        # Add all client files
+                        subprocess.run(['git', 'add', 'data/*.json', 'data/*_keywords.csv', 'data/*_personas.json', 'data/clients.json'], check=True)
+
+                        # Commit
+                        commit_msg = f"Add client data for: {', '.join(c['name'] for c in registry.get_all_clients() if c['slug'] in uncommitted)}"
+                        subprocess.run(['git', 'commit', '-m', commit_msg], check=True)
+
+                        # Push
+                        subprocess.run(['git', 'push'], check=True)
+
+                        st.success("✅ Client data committed and pushed to GitHub!")
+                        st.balloons()
+                        st.rerun()
+                    except subprocess.CalledProcessError as e:
+                        st.error(f"❌ Git operation failed: {str(e)}")
+                        st.info("💡 Try the manual git commands above instead.")
+
+            with col2:
+                st.info("This will add, commit, and push all client files to GitHub.")
+
+    elif all_clients:
+        st.success(f"✅ All {len(all_clients)} clients are safely saved to GitHub!")
+
+    st.markdown("---")
+
     # Initialize session state for client data
     if 'new_client_data' not in st.session_state:
         st.session_state.new_client_data = {
@@ -758,6 +829,19 @@ makeup palette reviews,12,1800,38
                     # Save brand config
                     brand_config_path = data_dir / f"{client_slug}_brand_config.json"
                     manager.save_config(str(brand_config_path), config)
+
+                    # Register client in registry
+                    from src.client_manager import ClientRegistry
+                    registry = ClientRegistry()
+                    registry.add_client(
+                        client_name=new_client_name,
+                        client_slug=client_slug,
+                        files={
+                            'keywords': str(keywords_path),
+                            'personas': str(personas_path),
+                            'brand_config': str(brand_config_path)
+                        }
+                    )
 
                     st.success(f"✅ {new_client_name} created successfully!")
                     st.balloons()

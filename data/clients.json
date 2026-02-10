@@ -1,0 +1,16 @@
+{
+  "clients": [
+    {
+      "name": "Natasha Denona",
+      "slug": "natasha_denona",
+      "files": {
+        "keywords": "data/natasha_denona_keywords.csv",
+        "personas": "data/natasha_denona_personas.json",
+        "brand_config": "data/natasha_denona_brand_config.json"
+      },
+      "created_at": "2026-02-10T15:16:53.249352",
+      "updated_at": "2026-02-10T15:16:53.249354"
+    }
+  ],
+  "last_updated": "2026-02-10T15:16:53.249356"
+}

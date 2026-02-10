@@ -22,6 +22,11 @@ data/results/
 !data/*_keywords.csv
 !data/keywords_template.csv
 
+# Client data files (ALWAYS include these - critical for preserving client data)
+!data/*_personas.json
+!data/*_brand_config.json
+!data/clients.json
+
 # Reports (with exceptions for deployment)
 data/reports/*
 !data/reports/*Natasha_Denona*
