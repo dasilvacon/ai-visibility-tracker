@@ -71,6 +71,25 @@ def render():
 
     st.title("🔍 Review & Approve Prompts")
 
+    # AGGRESSIVE DEBUG - Show this immediately
+    st.write("🔍 DEBUG: Page loaded successfully")
+    st.write(f"🔍 DEBUG: generated_prompts exists: {'generated_prompts' in st.session_state}")
+    st.write(f"🔍 DEBUG: generated_prompts count: {len(st.session_state.get('generated_prompts', []))}")
+    st.write(f"🔍 DEBUG: approval_manager exists: {'approval_manager' in st.session_state}")
+
+    if 'approval_manager' in st.session_state:
+        try:
+            mgr_prompts = st.session_state.approval_manager.get_all_prompts()
+            st.write(f"🔍 DEBUG: Approval manager has {len(mgr_prompts)} prompts")
+            if len(mgr_prompts) > 0 and len(st.session_state.get('generated_prompts', [])) == 0:
+                st.warning("⚠️ MISMATCH: Approval manager has prompts but generated_prompts is empty!")
+                st.info("Copying prompts from approval manager to session state...")
+                st.session_state.generated_prompts = mgr_prompts
+        except Exception as e:
+            st.error(f"Error checking approval manager: {str(e)}")
+
+    st.markdown("---")
+
     # Debug info
     if not st.session_state.generated_prompts:
         st.warning("⚠️ No prompts found in session.")
@@ -84,6 +103,8 @@ def render():
                 all_prompts = st.session_state.approval_manager.get_all_prompts()
                 st.write(f"Approval manager prompts count: {len(all_prompts)}")
         return
+
+    st.success(f"✅ Found {len(st.session_state.generated_prompts)} prompts to review")
 
     # Get approval manager
     approval_mgr = st.session_state.approval_manager
