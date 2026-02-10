@@ -275,87 +275,206 @@ def render():
 
     st.markdown("---")
 
+    # Client Review Workflow Section
+    st.markdown("### 📋 Client Review Workflow")
+    st.markdown("If your client wants to approve prompts, export a review file for them to fill out, then import their decisions.")
+
+    col1, col2 = st.columns(2)
+
+    # Export for Client Review
+    with col1:
+        with st.expander("📤 Export for Client Review", expanded=False):
+            st.markdown("""
+            **Create an Excel file for your client to review and approve prompts.**
+
+            The file includes an "Approved?" column they can fill with "Yes" or "No".
+            """)
+
+            # Choose which prompts to export for review
+            review_status_filter = st.radio(
+                "Which prompts to include?",
+                ["Pending Only", "All Prompts", "Pending + Approved"],
+                index=0,  # Default to pending only
+                help="Choose which prompts to send to client for review",
+                key="client_review_filter"
+            )
+
+            # Get prompts based on filter
+            if review_status_filter == "All Prompts":
+                review_prompts = all_prompts
+            elif review_status_filter == "Pending Only":
+                review_prompts = approval_mgr.get_prompts_by_status('pending')
+            else:  # Pending + Approved
+                pending = approval_mgr.get_prompts_by_status('pending')
+                approved_for_review = approval_mgr.get_prompts_by_status('approved')
+                review_prompts = pending + approved_for_review
+
+            st.info(f"📊 {len(review_prompts)} prompts will be included")
+
+            if len(review_prompts) == 0:
+                st.warning("No prompts to export for review.")
+            else:
+                # Preview
+                st.markdown("**Preview (First 5)**")
+                preview_df = pd.DataFrame(review_prompts[:5])[['prompt_id', 'persona', 'prompt_text']]
+                st.dataframe(preview_df, use_container_width=True, height=200)
+
+                if st.button("📥 Export Client Review File", key="export_client_review_btn", type="primary", use_container_width=True):
+                    try:
+                        from datetime import datetime
+                        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                        client_name = st.session_state.generation_config.get('client_name', 'Unknown Client')
+
+                        # Create DataFrame for Excel export
+                        review_data = []
+                        for prompt in review_prompts:
+                            review_data.append({
+                                'Prompt ID': prompt['prompt_id'],
+                                'Persona': prompt['persona'],
+                                'Category': prompt['category'],
+                                'Intent Type': prompt['intent_type'],
+                                'Prompt Text': prompt['prompt_text'],
+                                'Expected Score': prompt['expected_visibility_score'],
+                                'Notes': prompt.get('notes', ''),
+                                'Current Status': prompt.get('approval_status', 'pending').title(),
+                                'Approved?': ''  # Empty column for client to fill
+                            })
+
+                        df = pd.DataFrame(review_data)
+
+                        # Create Excel file with formatting
+                        from io import BytesIO
+                        output = BytesIO()
+
+                        # Use pandas ExcelWriter with openpyxl engine
+                        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                            df.to_excel(writer, index=False, sheet_name='Prompts for Review')
+
+                            # Get workbook and worksheet
+                            workbook = writer.book
+                            worksheet = writer.sheets['Prompts for Review']
+
+                            # Freeze header row
+                            worksheet.freeze_panes = 'A2'
+
+                            # Set column widths
+                            worksheet.column_dimensions['A'].width = 15  # Prompt ID
+                            worksheet.column_dimensions['B'].width = 20  # Persona
+                            worksheet.column_dimensions['C'].width = 20  # Category
+                            worksheet.column_dimensions['D'].width = 15  # Intent Type
+                            worksheet.column_dimensions['E'].width = 60  # Prompt Text
+                            worksheet.column_dimensions['F'].width = 12  # Expected Score
+                            worksheet.column_dimensions['G'].width = 30  # Notes
+                            worksheet.column_dimensions['H'].width = 15  # Current Status
+                            worksheet.column_dimensions['I'].width = 15  # Approved?
+
+                            # Add instructions in a note
+                            from openpyxl.comments import Comment
+                            worksheet['I1'].comment = Comment(
+                                'Fill this column with "Yes" or "No" to approve or reject each prompt',
+                                'Instructions'
+                            )
+
+                        excel_data = output.getvalue()
+
+                        # Provide download button
+                        st.download_button(
+                            label="💾 Download Excel File",
+                            data=excel_data,
+                            file_name=f"client_review_{client_name.replace(' ', '_')}_{timestamp}.xlsx",
+                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            key="download_client_review"
+                        )
+
+                        st.success(f"✅ Client review file ready!")
+                        st.info("📧 Send this file to your client. After they fill it out, use 'Import Client Approvals' to upload their decisions.")
+
+                    except Exception as e:
+                        st.error(f"❌ Error creating client review file: {str(e)}")
+                        st.exception(e)
+
     # Import Client Approvals
-    with st.expander("📥 Import Client Approvals", expanded=False):
-        st.markdown("""
-        **Upload the Excel file that your client filled out with their approval decisions.**
+    with col2:
+        with st.expander("📥 Import Client Approvals", expanded=False):
+            st.markdown("""
+            **Upload the Excel file that your client filled out with their approval decisions.**
 
-        The file should have:
-        - A "Prompt ID" column (to match prompts)
-        - An "Approved?" column with "Yes" or "No" values
-        """)
+            The file should have:
+            - A "Prompt ID" column (to match prompts)
+            - An "Approved?" column with "Yes" or "No" values
+            """)
 
-        uploaded_file = st.file_uploader(
-            "Choose client review file",
-            type=['xlsx', 'xls', 'csv'],
-            help="Upload the Excel or CSV file with client approvals"
-        )
+            uploaded_file = st.file_uploader(
+                "Choose client review file",
+                type=['xlsx', 'xls', 'csv'],
+                help="Upload the Excel or CSV file with client approvals"
+            )
 
-        if uploaded_file is not None:
-            try:
-                # Read file based on type
-                if uploaded_file.name.endswith('.csv'):
-                    df = pd.read_csv(uploaded_file)
-                else:
-                    df = pd.read_excel(uploaded_file)
+            if uploaded_file is not None:
+                try:
+                    # Read file based on type
+                    if uploaded_file.name.endswith('.csv'):
+                        df = pd.read_csv(uploaded_file)
+                    else:
+                        df = pd.read_excel(uploaded_file)
 
-                # Validate required columns
-                if 'Prompt ID' not in df.columns or 'Approved?' not in df.columns:
-                    st.error("❌ File must contain 'Prompt ID' and 'Approved?' columns")
-                else:
-                    st.success(f"✅ File loaded: {len(df)} prompts found")
+                    # Validate required columns
+                    if 'Prompt ID' not in df.columns or 'Approved?' not in df.columns:
+                        st.error("❌ File must contain 'Prompt ID' and 'Approved?' columns")
+                    else:
+                        st.success(f"✅ File loaded: {len(df)} prompts found")
 
-                    # Preview
-                    st.markdown("#### Preview")
-                    st.dataframe(df.head(10), use_container_width=True)
+                        # Preview
+                        st.markdown("**Preview**")
+                        st.dataframe(df.head(10), use_container_width=True, height=200)
 
-                    # Process approvals
-                    if st.button("🚀 Import Approvals", key="import_approvals_btn", type="primary"):
-                        approved_ids = []
-                        rejected_ids = []
-                        skipped_count = 0
+                        # Process approvals
+                        if st.button("🚀 Import Approvals", key="import_approvals_btn", type="primary", use_container_width=True):
+                            approved_ids = []
+                            rejected_ids = []
+                            skipped_count = 0
 
-                        for _, row in df.iterrows():
-                            prompt_id = str(row['Prompt ID']).strip()
-                            approval_value = str(row['Approved?']).strip().lower()
+                            for _, row in df.iterrows():
+                                prompt_id = str(row['Prompt ID']).strip()
+                                approval_value = str(row['Approved?']).strip().lower()
 
-                            # Check if prompt exists
-                            prompt_exists = any(p['prompt_id'] == prompt_id for p in all_prompts)
+                                # Check if prompt exists
+                                prompt_exists = any(p['prompt_id'] == prompt_id for p in all_prompts)
 
-                            if not prompt_exists:
-                                skipped_count += 1
-                                continue
+                                if not prompt_exists:
+                                    skipped_count += 1
+                                    continue
 
-                            # Process approval decision
-                            if approval_value in ['yes', 'y', 'approve', 'approved', 'true', '1']:
-                                approved_ids.append(prompt_id)
-                            elif approval_value in ['no', 'n', 'reject', 'rejected', 'false', '0']:
-                                rejected_ids.append(prompt_id)
-                            # If empty or anything else, leave as is (pending)
+                                # Process approval decision
+                                if approval_value in ['yes', 'y', 'approve', 'approved', 'true', '1']:
+                                    approved_ids.append(prompt_id)
+                                elif approval_value in ['no', 'n', 'reject', 'rejected', 'false', '0']:
+                                    rejected_ids.append(prompt_id)
+                                # If empty or anything else, leave as is (pending)
 
-                        # Apply approvals
-                        if approved_ids:
-                            approval_mgr.approve_prompts(approved_ids)
-                        if rejected_ids:
-                            approval_mgr.reject_prompts(rejected_ids)
+                            # Apply approvals
+                            if approved_ids:
+                                approval_mgr.approve_prompts(approved_ids)
+                            if rejected_ids:
+                                approval_mgr.reject_prompts(rejected_ids)
 
-                        # Show summary
-                        st.success("✅ Client approvals imported successfully!")
+                            # Show summary
+                            st.success("✅ Client approvals imported successfully!")
 
-                        col1, col2, col3 = st.columns(3)
-                        with col1:
-                            st.metric("Approved", len(approved_ids))
-                        with col2:
-                            st.metric("Rejected", len(rejected_ids))
-                        with col3:
-                            st.metric("Skipped (not found)", skipped_count)
+                            subcol1, subcol2, subcol3 = st.columns(3)
+                            with subcol1:
+                                st.metric("Approved", len(approved_ids))
+                            with subcol2:
+                                st.metric("Rejected", len(rejected_ids))
+                            with subcol3:
+                                st.metric("Skipped", skipped_count)
 
-                        st.info("🔄 Refreshing page to show updated statuses...")
-                        st.rerun()
+                            st.info("🔄 Refreshing page...")
+                            st.rerun()
 
-            except Exception as e:
-                st.error(f"❌ Error processing file: {str(e)}")
-                st.exception(e)
+                except Exception as e:
+                    st.error(f"❌ Error processing file: {str(e)}")
+                    st.exception(e)
 
     st.markdown("---")
 
