@@ -412,7 +412,38 @@ def render():
                         with open(keywords_path, 'wb') as f:
                             f.write(keywords_upload.getvalue())
 
-                        st.success(f"✅ {new_client_name} added successfully!")
+                        # Register client in registry
+                        from src.client_manager import ClientRegistry
+                        registry = ClientRegistry()
+                        registry.add_client(
+                            client_name=new_client_name,
+                            client_slug=client_slug,
+                            files={
+                                'keywords': str(keywords_path),
+                                'personas': str(personas_path),
+                                'brand_config': ''  # Manual setup doesn't create brand_config
+                            }
+                        )
+
+                        # Auto-commit client data to git
+                        try:
+                            import subprocess
+                            # Add all client files
+                            subprocess.run(['git', 'add', str(keywords_path), str(personas_path), 'data/clients.json'], check=False)
+
+                            # Commit
+                            commit_msg = f"Add new client (manual): {new_client_name}"
+                            subprocess.run(['git', 'commit', '-m', commit_msg], check=False)
+
+                            # Push
+                            subprocess.run(['git', 'push'], check=False)
+
+                            st.success(f"✅ {new_client_name} added and saved to GitHub!")
+                        except Exception as e:
+                            # If git fails, still show success but warn about manual commit needed
+                            st.success(f"✅ {new_client_name} added successfully!")
+                            st.warning(f"⚠️ Could not auto-commit to git. Please commit manually or use the 'Commit All Client Data' button.")
+
                         st.balloons()
 
                         # Auto-activate the new client
