@@ -275,6 +275,90 @@ def render():
 
     st.markdown("---")
 
+    # Import Client Approvals
+    with st.expander("📥 Import Client Approvals", expanded=False):
+        st.markdown("""
+        **Upload the Excel file that your client filled out with their approval decisions.**
+
+        The file should have:
+        - A "Prompt ID" column (to match prompts)
+        - An "Approved?" column with "Yes" or "No" values
+        """)
+
+        uploaded_file = st.file_uploader(
+            "Choose client review file",
+            type=['xlsx', 'xls', 'csv'],
+            help="Upload the Excel or CSV file with client approvals"
+        )
+
+        if uploaded_file is not None:
+            try:
+                # Read file based on type
+                if uploaded_file.name.endswith('.csv'):
+                    df = pd.read_csv(uploaded_file)
+                else:
+                    df = pd.read_excel(uploaded_file)
+
+                # Validate required columns
+                if 'Prompt ID' not in df.columns or 'Approved?' not in df.columns:
+                    st.error("❌ File must contain 'Prompt ID' and 'Approved?' columns")
+                else:
+                    st.success(f"✅ File loaded: {len(df)} prompts found")
+
+                    # Preview
+                    st.markdown("#### Preview")
+                    st.dataframe(df.head(10), use_container_width=True)
+
+                    # Process approvals
+                    if st.button("🚀 Import Approvals", key="import_approvals_btn", type="primary"):
+                        approved_ids = []
+                        rejected_ids = []
+                        skipped_count = 0
+
+                        for _, row in df.iterrows():
+                            prompt_id = str(row['Prompt ID']).strip()
+                            approval_value = str(row['Approved?']).strip().lower()
+
+                            # Check if prompt exists
+                            prompt_exists = any(p['prompt_id'] == prompt_id for p in all_prompts)
+
+                            if not prompt_exists:
+                                skipped_count += 1
+                                continue
+
+                            # Process approval decision
+                            if approval_value in ['yes', 'y', 'approve', 'approved', 'true', '1']:
+                                approved_ids.append(prompt_id)
+                            elif approval_value in ['no', 'n', 'reject', 'rejected', 'false', '0']:
+                                rejected_ids.append(prompt_id)
+                            # If empty or anything else, leave as is (pending)
+
+                        # Apply approvals
+                        if approved_ids:
+                            approval_mgr.approve_prompts(approved_ids)
+                        if rejected_ids:
+                            approval_mgr.reject_prompts(rejected_ids)
+
+                        # Show summary
+                        st.success("✅ Client approvals imported successfully!")
+
+                        col1, col2, col3 = st.columns(3)
+                        with col1:
+                            st.metric("Approved", len(approved_ids))
+                        with col2:
+                            st.metric("Rejected", len(rejected_ids))
+                        with col3:
+                            st.metric("Skipped (not found)", skipped_count)
+
+                        st.info("🔄 Refreshing page to show updated statuses...")
+                        st.rerun()
+
+            except Exception as e:
+                st.error(f"❌ Error processing file: {str(e)}")
+                st.exception(e)
+
+    st.markdown("---")
+
     # Bulk actions bar
     st.markdown(f"### Filtered Results ({len(filtered_prompts)} prompts)")
 
