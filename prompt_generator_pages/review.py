@@ -88,29 +88,51 @@ def render():
     # Get approval manager
     approval_mgr = st.session_state.approval_manager
 
+    # Get all prompts first - with error handling
+    try:
+        all_prompts = approval_mgr.get_all_prompts()
+
+        if not all_prompts:
+            st.error("Approval manager has no prompts. This is unexpected!")
+            st.write(f"Debug: generated_prompts count = {len(st.session_state.generated_prompts)}")
+            return
+
+    except Exception as e:
+        st.error(f"Error getting prompts from approval manager: {str(e)}")
+        st.exception(e)
+        return
+
     # Sidebar filters
     with st.sidebar:
         st.markdown("### Filters")
 
-        # Get all unique values for filters
-        all_prompts = approval_mgr.get_all_prompts()
-        personas = sorted(set(p['persona'] for p in all_prompts))
-        categories = sorted(set(p['category'] for p in all_prompts))
-        intent_types = sorted(set(p['intent_type'] for p in all_prompts))
+        # Get all unique values for filters - with error handling
+        try:
+            personas = sorted(set(p['persona'] for p in all_prompts))
+            categories = sorted(set(p['category'] for p in all_prompts))
+            intent_types = sorted(set(p['intent_type'] for p in all_prompts))
+        except Exception as e:
+            st.error(f"Error extracting filter values: {str(e)}")
+            st.exception(e)
+            return
 
-        # Get unique batches
-        batches = sorted(set(p.get('batch_name', 'Unknown') for p in all_prompts))
+        # Get unique batches - with error handling
+        try:
+            batches = sorted(set(p.get('batch_name', 'Unknown') for p in all_prompts))
 
-        # Batch filter (NEW)
-        if len(batches) > 1:
-            selected_batches = st.multiselect(
-                "Batch",
-                batches,
-                default=batches,
-                help="Filter by prompt batch"
-            )
-        else:
-            selected_batches = batches
+            # Batch filter (NEW)
+            if len(batches) > 1:
+                selected_batches = st.multiselect(
+                    "Batch",
+                    batches,
+                    default=batches,
+                    help="Filter by prompt batch"
+                )
+            else:
+                selected_batches = batches
+        except Exception as e:
+            st.error(f"Error creating batch filter: {str(e)}")
+            selected_batches = ['Unknown']
 
         # Persona filter
         selected_personas = st.multiselect(
@@ -171,52 +193,64 @@ def render():
         if st.button("Clear All Filters"):
             st.rerun()
 
-    # Apply filters
-    if status_filter == "All":
-        filtered_prompts = all_prompts
-    else:
-        filtered_prompts = approval_mgr.get_prompts_by_status(status_filter.lower())
+    # Apply filters - with error handling
+    try:
+        if status_filter == "All":
+            filtered_prompts = all_prompts
+        else:
+            filtered_prompts = approval_mgr.get_prompts_by_status(status_filter.lower())
 
-    # Apply batch filter (NEW)
-    filtered_prompts = [p for p in filtered_prompts if p.get('batch_name', 'Unknown') in selected_batches]
+        # Apply batch filter (NEW)
+        filtered_prompts = [p for p in filtered_prompts if p.get('batch_name', 'Unknown') in selected_batches]
 
-    # Apply persona filter
-    filtered_prompts = [p for p in filtered_prompts if p['persona'] in selected_personas]
+        # Apply persona filter
+        filtered_prompts = [p for p in filtered_prompts if p['persona'] in selected_personas]
 
-    # Apply category filter
-    filtered_prompts = [p for p in filtered_prompts if p['category'] in selected_categories]
+        # Apply category filter
+        filtered_prompts = [p for p in filtered_prompts if p['category'] in selected_categories]
 
-    # Apply intent filter
-    filtered_prompts = [p for p in filtered_prompts if p['intent_type'] in selected_intents]
+        # Apply intent filter
+        filtered_prompts = [p for p in filtered_prompts if p['intent_type'] in selected_intents]
 
-    # Apply competitor filter
-    if has_competitor:
-        filtered_prompts = [p for p in filtered_prompts if 'vs' in p.get('notes', '')]
+        # Apply competitor filter
+        if has_competitor:
+            filtered_prompts = [p for p in filtered_prompts if 'vs' in p.get('notes', '')]
 
-    # Apply score range filter
-    filtered_prompts = [p for p in filtered_prompts
-                       if score_range[0] <= p['expected_visibility_score'] <= score_range[1]]
-
-    # Apply text search
-    if search_text:
+        # Apply score range filter
         filtered_prompts = [p for p in filtered_prompts
-                          if search_text.lower() in p['prompt_text'].lower()]
+                           if score_range[0] <= p['expected_visibility_score'] <= score_range[1]]
 
-    # Stats dashboard
-    stats = approval_mgr.get_approval_stats()
-    col1, col2, col3, col4 = st.columns(4)
+        # Apply text search
+        if search_text:
+            filtered_prompts = [p for p in filtered_prompts
+                              if search_text.lower() in p['prompt_text'].lower()]
 
-    with col1:
-        st.metric("Total Prompts", stats['total'])
+        st.write(f"🔍 Debug: Filtered {len(filtered_prompts)} prompts from {len(all_prompts)} total")
 
-    with col2:
-        st.metric("Approved", stats['approved'], delta=f"{stats['approval_rate']:.1f}%")
+    except Exception as e:
+        st.error(f"❌ Error applying filters: {str(e)}")
+        st.exception(e)
+        return
 
-    with col3:
-        st.metric("Rejected", stats['rejected'], delta=f"{stats['rejection_rate']:.1f}%")
+    # Stats dashboard - with error handling
+    try:
+        stats = approval_mgr.get_approval_stats()
+        col1, col2, col3, col4 = st.columns(4)
 
-    with col4:
-        st.metric("Pending", stats['pending'])
+        with col1:
+            st.metric("Total Prompts", stats['total'])
+
+        with col2:
+            st.metric("Approved", stats['approved'], delta=f"{stats['approval_rate']:.1f}%")
+
+        with col3:
+            st.metric("Rejected", stats['rejected'], delta=f"{stats['rejection_rate']:.1f}%")
+
+        with col4:
+            st.metric("Pending", stats['pending'])
+    except Exception as e:
+        st.error(f"❌ Error displaying stats: {str(e)}")
+        st.exception(e)
 
     st.markdown("---")
 
@@ -269,21 +303,28 @@ def render():
 
     # Convert to DataFrame for display
     if page_prompts:
-        df_data = []
-        for prompt in page_prompts:
-            df_data.append({
-                'ID': prompt['prompt_id'],
-                'Batch': prompt.get('batch_name', 'Unknown'),
-                'Persona': prompt['persona'],
-                'Category': prompt['category'],
-                'Intent': prompt['intent_type'],
-                'Prompt Text': prompt['prompt_text'],
-                'Score': prompt['expected_visibility_score'],
-                'Competitor': '✓' if 'vs' in prompt.get('notes', '') else '',
-                'Status': prompt.get('approval_status', 'pending').title()
-            })
+        try:
+            df_data = []
+            for prompt in page_prompts:
+                df_data.append({
+                    'ID': prompt['prompt_id'],
+                    'Batch': prompt.get('batch_name', 'Unknown'),
+                    'Persona': prompt['persona'],
+                    'Category': prompt['category'],
+                    'Intent': prompt['intent_type'],
+                    'Prompt Text': prompt['prompt_text'],
+                    'Score': prompt['expected_visibility_score'],
+                    'Competitor': '✓' if 'vs' in prompt.get('notes', '') else '',
+                    'Status': prompt.get('approval_status', 'pending').title()
+                })
 
-        df = pd.DataFrame(df_data)
+            df = pd.DataFrame(df_data)
+        except Exception as e:
+            st.error(f"❌ Error creating dataframe: {str(e)}")
+            st.exception(e)
+            st.write("First prompt sample:")
+            st.json(page_prompts[0])
+            return
 
         # Interactive table with selection
         st.markdown(f"Showing {start_idx + 1} - {end_idx} of {len(filtered_prompts)} prompts")
