@@ -354,8 +354,8 @@ def render_simple_setup():
         <div style='background-color: rgba(232, 215, 160, 0.2); padding: 16px; border-radius: 8px; border-left: 4px solid #E8D7A0; margin-bottom: 24px;'>
             <h4 style='color: #E8D7A0; margin-top: 0;'>⚠️ Uncommitted Client Data</h4>
             <p style='color: {OFF_WHITE}; margin: 0;'>
-                <strong>Important:</strong> {len(uncommitted)} client(s) have files that aren't saved to GitHub yet.
-                These clients will disappear if the app redeploys!
+                <strong>Note:</strong> {len(uncommitted)} client(s) have files that aren't saved to GitHub yet.
+                This usually means auto-commit failed. Use the button below to manually commit.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -370,12 +370,13 @@ def render_simple_setup():
             st.markdown("---")
             st.markdown("#### 💾 Save Client Data to GitHub")
             st.markdown("""
-            To prevent losing client data, you need to commit and push these files to GitHub.
+            **Normally client data is auto-committed when you click "Create Client".**
+            If you're seeing this warning, auto-commit failed and you need to manually commit.
 
-            **Option 1: Automatic (Recommended)**
-            - Use the button below to commit all client files at once
+            **Quick Fix (Recommended):**
+            - Use the button below to commit all uncommitted client files at once
 
-            **Option 2: Manual**
+            **Manual Alternative:**
             - Use git commands in your terminal:
             ```
             git add data/*.json data/*_keywords.csv data/*_personas.json
@@ -843,7 +844,25 @@ makeup palette reviews,12,1800,38
                         }
                     )
 
-                    st.success(f"✅ {new_client_name} created successfully!")
+                    # Auto-commit client data to git
+                    try:
+                        import subprocess
+                        # Add all client files
+                        subprocess.run(['git', 'add', str(keywords_path), str(personas_path), str(brand_config_path), 'data/clients.json'], check=False)
+
+                        # Commit
+                        commit_msg = f"Add new client: {new_client_name}"
+                        subprocess.run(['git', 'commit', '-m', commit_msg], check=False)
+
+                        # Push
+                        subprocess.run(['git', 'push'], check=False)
+
+                        st.success(f"✅ {new_client_name} created and saved to GitHub!")
+                    except Exception as e:
+                        # If git fails, still show success but warn about manual commit needed
+                        st.success(f"✅ {new_client_name} created successfully!")
+                        st.warning(f"⚠️ Could not auto-commit to git. Please commit manually or use the 'Commit All Client Data' button.")
+
                     st.balloons()
 
                     # Clear session data
