@@ -254,6 +254,25 @@ def render():
             help="Filter by expected visibility score"
         )
 
+        # Quality score filter (if prompts have quality scores)
+        has_quality_scores = any('quality_score' in p for p in all_prompts)
+        if has_quality_scores:
+            quality_range = st.slider(
+                "Quality Score Range",
+                min_value=0,
+                max_value=100,
+                value=(0, 100),
+                step=5,
+                help="Filter by prompt quality score"
+            )
+
+            quality_level_filter = st.multiselect(
+                "Quality Level",
+                ["Excellent", "Good", "Fair", "Poor"],
+                default=["Excellent", "Good", "Fair", "Poor"],
+                help="Filter by quality level classification"
+            )
+
         # Text search
         search_text = st.text_input(
             "Search Prompt Text",
@@ -303,6 +322,19 @@ def render():
         if search_text:
             filtered_prompts = [p for p in filtered_prompts
                               if search_text.lower() in p['prompt_text'].lower()]
+
+        # Apply quality filters (if quality scores exist)
+        has_quality_scores = any('quality_score' in p for p in all_prompts)
+        if has_quality_scores:
+            # Quality score range
+            filtered_prompts = [p for p in filtered_prompts
+                               if 'quality_score' not in p or
+                               quality_range[0] <= p['quality_score'].get('overall_score', 0) <= quality_range[1]]
+
+            # Quality level
+            filtered_prompts = [p for p in filtered_prompts
+                               if 'quality_score' not in p or
+                               p['quality_score'].get('quality_level', 'Unknown') in quality_level_filter]
 
         st.write(f"🔍 Debug: Filtered {len(filtered_prompts)} prompts from {len(all_prompts)} total")
 
@@ -594,7 +626,7 @@ def render():
         try:
             df_data = []
             for prompt in page_prompts:
-                df_data.append({
+                row_data = {
                     'ID': prompt['prompt_id'],
                     'Batch': prompt.get('batch_name', 'Unknown'),
                     'Persona': prompt['persona'],
@@ -603,8 +635,16 @@ def render():
                     'Prompt Text': prompt['prompt_text'],
                     'Score': prompt['expected_visibility_score'],
                     'Competitor': '✓' if 'vs' in prompt.get('notes', '') else '',
-                    'Status': prompt.get('approval_status', 'pending').title()
-                })
+                }
+
+                # Add quality info if available
+                if 'quality_score' in prompt:
+                    qs = prompt['quality_score']
+                    row_data['Quality'] = f"{qs['overall_score']}/100"
+                    row_data['Quality Level'] = qs['quality_level']
+
+                row_data['Status'] = prompt.get('approval_status', 'pending').title()
+                df_data.append(row_data)
 
             df = pd.DataFrame(df_data)
         except Exception as e:
@@ -705,6 +745,39 @@ def render():
                 st.markdown(f"**Intent:** {selected_prompt['intent_type']}")
                 st.markdown(f"**Score:** {selected_prompt['expected_visibility_score']}")
                 st.markdown(f"**Status:** {current_status.title()}")
+
+                # Show quality score if available
+                if 'quality_score' in selected_prompt:
+                    st.markdown("---")
+                    st.markdown("#### Quality Score")
+                    qs = selected_prompt['quality_score']
+
+                    # Overall quality
+                    quality_level = qs['quality_level']
+                    quality_emoji = {"Excellent": "🟢", "Good": "🟡", "Fair": "🟠", "Poor": "🔴"}
+                    emoji = quality_emoji.get(quality_level, "⚪")
+
+                    st.markdown(f"**Overall:** {emoji} {quality_level} ({qs['overall_score']}/100)")
+
+                    # Dimension scores
+                    dims = qs['dimension_scores']
+                    st.markdown(f"- **Naturalness:** {dims['naturalness']:.0f}/100")
+                    st.markdown(f"- **Clarity:** {dims['clarity']:.0f}/100")
+                    st.markdown(f"- **Length:** {dims['length']:.0f}/100 ({qs['word_count']} words)")
+                    st.markdown(f"- **Relevance:** {dims['keyword_relevance']:.0f}/100")
+                    st.markdown(f"- **Diversity:** {dims['diversity']:.0f}/100")
+
+                    # Issues
+                    if qs.get('issues'):
+                        st.markdown("**Issues:**")
+                        for issue in qs['issues']:
+                            st.markdown(f"- {issue}")
+
+                    # Recommendations
+                    if qs.get('recommendations'):
+                        st.markdown("**Recommendations:**")
+                        for rec in qs['recommendations']:
+                            st.markdown(f"- {rec}")
 
     else:
         st.info("No prompts match the current filters.")

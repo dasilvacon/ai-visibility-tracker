@@ -306,14 +306,15 @@ def render():
         else:
             deduplicator = None
 
-        # Initialize generator
+        # Initialize generator with quality scoring enabled
         generator = PromptGenerator(
             personas_file=personas_file,
             keywords_file=keywords_file,
             api_client=None,  # No AI client for now (template-based only)
             use_ai_generation=False,  # Disable AI for now
             deduplicator=deduplicator,
-            enable_deduplication=enable_dedup
+            enable_deduplication=enable_dedup,
+            enable_quality_scoring=True  # Enable quality scoring
         )
 
         # Progress tracking
@@ -393,6 +394,53 @@ def render():
 
             # Display stats
             st.markdown("### Generation Statistics")
+
+            # Quality stats (if available)
+            quality_stats = stats.get('quality_stats', {})
+            if quality_stats:
+                st.markdown("#### Quality Scores")
+                col1, col2, col3, col4, col5 = st.columns(5)
+
+                with col1:
+                    avg_score = quality_stats.get('average_score', 0)
+                    st.metric("Average Quality", f"{avg_score}/100")
+
+                with col2:
+                    excellent = quality_stats.get('quality_distribution', {}).get('Excellent', 0)
+                    st.metric("Excellent", excellent, delta=None, delta_color="normal")
+
+                with col3:
+                    good = quality_stats.get('quality_distribution', {}).get('Good', 0)
+                    st.metric("Good", good)
+
+                with col4:
+                    fair = quality_stats.get('quality_distribution', {}).get('Fair', 0)
+                    st.metric("Fair", fair)
+
+                with col5:
+                    poor = quality_stats.get('quality_distribution', {}).get('Poor', 0)
+                    st.metric("Poor", poor)
+
+                # Dimension breakdown
+                if 'dimension_averages' in quality_stats:
+                    st.markdown("#### Quality Dimensions (Average)")
+                    dim_cols = st.columns(5)
+                    dim_averages = quality_stats['dimension_averages']
+
+                    with dim_cols[0]:
+                        st.metric("Naturalness", f"{dim_averages.get('naturalness', 0):.1f}")
+                    with dim_cols[1]:
+                        st.metric("Clarity", f"{dim_averages.get('clarity', 0):.1f}")
+                    with dim_cols[2]:
+                        st.metric("Length", f"{dim_averages.get('length', 0):.1f}")
+                    with dim_cols[3]:
+                        st.metric("Relevance", f"{dim_averages.get('keyword_relevance', 0):.1f}")
+                    with dim_cols[4]:
+                        st.metric("Diversity", f"{dim_averages.get('diversity', 0):.1f}")
+
+                st.markdown("---")
+
+            st.markdown("#### Generation Metrics")
             col1, col2, col3, col4 = st.columns(4)
 
             with col1:
@@ -424,10 +472,63 @@ def render():
             preview_prompts = prompts[-10:]
 
             for prompt in preview_prompts:
-                with st.expander(f"{prompt['persona']} - {prompt['intent_type']}"):
+                # Get quality info for title
+                quality_badge = ""
+                if 'quality_score' in prompt:
+                    qs = prompt['quality_score']
+                    level = qs['quality_level']
+                    score = qs['overall_score']
+
+                    # Color-code by quality level
+                    if level == "Excellent":
+                        quality_badge = f"🟢 {score}/100"
+                    elif level == "Good":
+                        quality_badge = f"🟡 {score}/100"
+                    elif level == "Fair":
+                        quality_badge = f"🟠 {score}/100"
+                    else:
+                        quality_badge = f"🔴 {score}/100"
+
+                title = f"{prompt['persona']} - {prompt['intent_type']}"
+                if quality_badge:
+                    title += f" | {quality_badge}"
+
+                with st.expander(title):
                     st.markdown(f"**Prompt:** {prompt['prompt_text']}")
                     st.markdown(f"**Category:** {prompt['category']}")
                     st.markdown(f"**Expected Score:** {prompt['expected_visibility_score']}")
+
+                    # Show quality breakdown if available
+                    if 'quality_score' in prompt:
+                        qs = prompt['quality_score']
+                        st.markdown("---")
+                        st.markdown(f"**Quality Level:** {qs['quality_level']} ({qs['overall_score']}/100)")
+
+                        # Show dimension scores in columns
+                        dim_cols = st.columns(5)
+                        dims = qs['dimension_scores']
+                        with dim_cols[0]:
+                            st.metric("Natural", f"{dims['naturalness']:.0f}")
+                        with dim_cols[1]:
+                            st.metric("Clarity", f"{dims['clarity']:.0f}")
+                        with dim_cols[2]:
+                            st.metric("Length", f"{dims['length']:.0f}")
+                        with dim_cols[3]:
+                            st.metric("Relevant", f"{dims['keyword_relevance']:.0f}")
+                        with dim_cols[4]:
+                            st.metric("Diverse", f"{dims['diversity']:.0f}")
+
+                        # Show issues and recommendations if any
+                        if qs.get('issues'):
+                            st.markdown("**Issues:**")
+                            for issue in qs['issues']:
+                                st.markdown(f"- {issue}")
+
+                        if qs.get('recommendations'):
+                            st.markdown("**Recommendations:**")
+                            for rec in qs['recommendations']:
+                                st.markdown(f"- {rec}")
+
                     st.markdown(f"**Notes:** {prompt['notes']}")
 
             # Save prompts to persistent draft file (critical for not losing work!)

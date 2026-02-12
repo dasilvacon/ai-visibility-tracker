@@ -13,6 +13,7 @@ from .persona_manager import PersonaManager
 from .keyword_processor import KeywordProcessor
 from .prompt_builder import PromptBuilder
 from .deduplicator import PromptDeduplicator
+from .quality_scorer import PromptQualityScorer
 
 
 class PromptGenerator:
@@ -22,7 +23,8 @@ class PromptGenerator:
                  api_client: Optional[Any] = None,
                  use_ai_generation: bool = True,
                  deduplicator: Optional[PromptDeduplicator] = None,
-                 enable_deduplication: bool = True):
+                 enable_deduplication: bool = True,
+                 enable_quality_scoring: bool = True):
         """
         Initialize the prompt generator.
 
@@ -33,6 +35,7 @@ class PromptGenerator:
             use_ai_generation: Whether to use AI API for generation
             deduplicator: Optional custom deduplicator instance
             enable_deduplication: Whether to enable deduplication during generation
+            enable_quality_scoring: Whether to enable quality scoring for prompts
         """
         self.persona_manager = PersonaManager(personas_file)
         self.keyword_processor = KeywordProcessor(keywords_file)
@@ -50,6 +53,13 @@ class PromptGenerator:
         else:
             self.deduplicator = None
 
+        # Initialize quality scorer
+        self.enable_quality_scoring = enable_quality_scoring
+        if enable_quality_scoring:
+            self.quality_scorer = PromptQualityScorer()
+        else:
+            self.quality_scorer = None
+
         self.generated_prompts = []
         self.generation_stats = {
             'total_generated': 0,
@@ -59,7 +69,8 @@ class PromptGenerator:
             'with_competitors': 0,
             'duplicates_removed': 0,
             'start_time': None,
-            'end_time': None
+            'end_time': None,
+            'quality_stats': {}
         }
 
     def generate_prompts(self, total_count: int = 1000,
@@ -108,7 +119,20 @@ class PromptGenerator:
         self.generation_stats['end_time'] = datetime.now()
         self.generation_stats['total_generated'] = len(self.generated_prompts)
 
-        print(f"\n✓ Total prompts generated: {len(self.generated_prompts)}")
+        # Calculate quality statistics if scoring is enabled
+        if self.enable_quality_scoring and self.quality_scorer:
+            quality_stats = self.quality_scorer.get_batch_statistics(self.generated_prompts)
+            self.generation_stats['quality_stats'] = quality_stats
+
+            print(f"\n✓ Total prompts generated: {len(self.generated_prompts)}")
+            print(f"✓ Average quality score: {quality_stats.get('average_score', 0)}")
+            print(f"  - Excellent: {quality_stats.get('quality_distribution', {}).get('Excellent', 0)}")
+            print(f"  - Good: {quality_stats.get('quality_distribution', {}).get('Good', 0)}")
+            print(f"  - Fair: {quality_stats.get('quality_distribution', {}).get('Fair', 0)}")
+            print(f"  - Poor: {quality_stats.get('quality_distribution', {}).get('Poor', 0)}")
+        else:
+            print(f"\n✓ Total prompts generated: {len(self.generated_prompts)}")
+
         if self.enable_deduplication:
             duplicates = self.generation_stats['duplicates_removed']
             print(f"✓ Duplicates removed: {duplicates}")
@@ -231,7 +255,7 @@ class PromptGenerator:
         if include_competitor and keyword_data['competitor_brands']:
             competitor_note = f" (vs {keyword_data['competitor_brands'][0]})"
 
-        return {
+        prompt_dict = {
             'prompt_id': prompt_id,
             'persona': persona['name'],
             'category': category,
@@ -240,6 +264,27 @@ class PromptGenerator:
             'expected_visibility_score': round(visibility_score, 1),
             'notes': f"Generated from keyword: {keyword}{competitor_note}"
         }
+
+        # Add quality score if enabled
+        if self.enable_quality_scoring and self.quality_scorer:
+            # Collect existing prompt texts for diversity scoring
+            existing_texts = [p['prompt_text'] for p in self.generated_prompts]
+
+            # Build context for scoring
+            score_context = {
+                'keyword': keyword,
+                'intent_type': intent_type,
+                'persona': persona['name']
+            }
+
+            quality_score = self.quality_scorer.score_prompt(
+                prompt_text,
+                context=score_context,
+                existing_prompts=existing_texts
+            )
+            prompt_dict['quality_score'] = quality_score
+
+        return prompt_dict
 
     def _generate_with_templates(self, persona: Dict[str, Any], keyword: str,
                                  intent_type: str, include_competitor: bool) -> str:
@@ -359,13 +404,48 @@ Return ONLY the clean query text, nothing else."""
         if not self.generated_prompts:
             raise ValueError("No prompts to save. Run generate_prompts() first.")
 
+        # Base fieldnames
         fieldnames = ['prompt_id', 'persona', 'category', 'intent_type',
-                     'prompt_text', 'expected_visibility_score', 'notes']
+                     'prompt_text', 'expected_visibility_score']
+
+        # Add quality score fields if present
+        if self.generated_prompts and 'quality_score' in self.generated_prompts[0]:
+            fieldnames.extend(['quality_overall', 'quality_level', 'quality_naturalness',
+                             'quality_clarity', 'quality_length', 'quality_relevance',
+                             'quality_diversity'])
+
+        fieldnames.append('notes')
+
+        # Flatten quality scores for CSV export
+        export_prompts = []
+        for prompt in self.generated_prompts:
+            export_prompt = {
+                'prompt_id': prompt['prompt_id'],
+                'persona': prompt['persona'],
+                'category': prompt['category'],
+                'intent_type': prompt['intent_type'],
+                'prompt_text': prompt['prompt_text'],
+                'expected_visibility_score': prompt['expected_visibility_score'],
+                'notes': prompt.get('notes', '')
+            }
+
+            # Add quality scores if present
+            if 'quality_score' in prompt:
+                qs = prompt['quality_score']
+                export_prompt['quality_overall'] = qs['overall_score']
+                export_prompt['quality_level'] = qs['quality_level']
+                export_prompt['quality_naturalness'] = qs['dimension_scores']['naturalness']
+                export_prompt['quality_clarity'] = qs['dimension_scores']['clarity']
+                export_prompt['quality_length'] = qs['dimension_scores']['length']
+                export_prompt['quality_relevance'] = qs['dimension_scores']['keyword_relevance']
+                export_prompt['quality_diversity'] = qs['dimension_scores']['diversity']
+
+            export_prompts.append(export_prompt)
 
         with open(output_file, 'w', newline='', encoding='utf-8') as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
-            writer.writerows(self.generated_prompts)
+            writer.writerows(export_prompts)
 
         print(f"\n✓ Prompts saved to: {output_file}")
         return output_file
