@@ -817,35 +817,35 @@ def main():
             # Import and display client manager page
             try:
                 from prompt_generator_pages import settings
-                settings.show()
+                settings.render()
             except Exception as e:
                 st.error(f"Error loading Client Manager: {e}")
         elif st.session_state.page == 'Generate' and st.session_state.get('role') == 'admin':
             # Import and display generate page
             try:
                 from prompt_generator_pages import generate
-                generate.show()
+                generate.render()
             except Exception as e:
                 st.error(f"Error loading Generate page: {e}")
         elif st.session_state.page == 'Review & Approve' and st.session_state.get('role') == 'admin':
             # Import and display review page
             try:
                 from prompt_generator_pages import review
-                review.show()
+                review.render()
             except Exception as e:
                 st.error(f"Error loading Review page: {e}")
         elif st.session_state.page == 'Export' and st.session_state.get('role') == 'admin':
             # Import and display export page
             try:
                 from prompt_generator_pages import export_page
-                export_page.show()
+                export_page.render()
             except Exception as e:
                 st.error(f"Error loading Export page: {e}")
         elif st.session_state.page == 'Prompt Library' and st.session_state.get('role') == 'admin':
             # Import and display library page
             try:
                 from prompt_generator_pages import library
-                library.show()
+                library.render()
             except Exception as e:
                 st.error(f"Error loading Prompt Library: {e}")
 
