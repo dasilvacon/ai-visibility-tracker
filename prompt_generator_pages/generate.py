@@ -92,6 +92,11 @@ def render():
     </div>
     """, unsafe_allow_html=True)
 
+    # DEBUG: Show session state
+    with st.expander("🐛 Debug: Session State", expanded=False):
+        st.write("**active_client:**", st.session_state.get('active_client'))
+        st.write("**generation_config:**", st.session_state.get('generation_config'))
+
     # Check if client is properly configured
     client_name = st.session_state.generation_config.get('client_name')
     personas_file = st.session_state.generation_config.get('personas_file')

@@ -173,6 +173,12 @@ def render():
     # Auto-detect clients
     clients = detect_clients()
 
+    # DEBUG: Show session state
+    with st.expander("🐛 Debug: Session State", expanded=False):
+        st.write("**active_client:**", st.session_state.get('active_client'))
+        st.write("**generation_config:**", st.session_state.get('generation_config'))
+        st.write("**Detected clients:**", list(clients.keys()))
+
     # Active Client Section
     st.markdown("## 🌟 Active Client")
     st.markdown(f"<p style='color: {TEXT_COLOR}; margin-bottom: 16px;'>This is the client you're currently working with. All prompts will be generated for this client.</p>", unsafe_allow_html=True)
