@@ -1,15 +1,16 @@
 """
-AI Visibility Tracker - HTML Report Viewer with Authentication
-Displays the full HTML report for each client
+AI Visibility Tracker - Integrated App with Role-Based Access
+- Dashboard: All users can view their visibility reports
+- Prompt Generator: Admin-only access to create and manage prompts
 
 Improvements:
-- Removed debug section for production security
-- Added session timeout (30 minutes)
+- Integrated prompt generator for admin users
+- Role-based navigation (admin sees both Dashboard + Prompt Generator)
+- Session timeout (30 minutes)
 - Welcome message with report context
 - Loading state while report renders
 - Last Updated timestamp
 - Branded error states with contact info
-- Improved logout button placement
 """
 
 import streamlit as st
@@ -23,7 +24,7 @@ st.set_page_config(
     page_title="AI Visibility Dashboard",
     page_icon="📊",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 # ============================================
@@ -90,6 +91,8 @@ if 'brand_name' not in st.session_state:
     st.session_state.brand_name = None
 if 'login_time' not in st.session_state:
     st.session_state.login_time = None
+if 'page' not in st.session_state:
+    st.session_state.page = 'Dashboard'
 
 # ============================================
 # CSS STYLES
@@ -262,14 +265,28 @@ dashboard_css = f"""
         font-family: 'Host Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }}
 
-    /* Hide sidebar completely */
+    /* Style the sidebar */
     section[data-testid="stSidebar"] {{
-        display: none;
+        background-color: {DARK_PURPLE};
     }}
 
-    /* Hide top hamburger menu button */
-    button[kind="header"] {{
-        display: none;
+    section[data-testid="stSidebar"] > div {{
+        background-color: {DARK_PURPLE};
+    }}
+
+    /* Sidebar text */
+    section[data-testid="stSidebar"] label {{
+        color: {CREAM} !important;
+    }}
+
+    section[data-testid="stSidebar"] p {{
+        color: rgba(232, 215, 160, 0.8) !important;
+    }}
+
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3 {{
+        color: white !important;
     }}
 
     /* Hide Streamlit branding and menu */
@@ -351,15 +368,19 @@ dashboard_css = f"""
         font-size: 0.85em !important;
     }}
     .stSelectbox > div > div {{
-        background-color: rgba(255, 255, 255, 0.1) !important;
+        background-color: {DARK_PURPLE} !important;
         border: 1px solid rgba(232, 215, 160, 0.4) !important;
-        color: white !important;
+        color: {CREAM} !important;
     }}
     .stSelectbox [data-baseweb="select"] {{
-        background-color: rgba(255, 255, 255, 0.1) !important;
+        background-color: {DARK_PURPLE} !important;
     }}
     .stSelectbox [data-baseweb="select"] > div {{
-        color: white !important;
+        color: {CREAM} !important;
+    }}
+    .stSelectbox select {{
+        background-color: {DARK_PURPLE} !important;
+        color: {CREAM} !important;
     }}
     .stDownloadButton button {{
         background-color: {DARK_PURPLE};
@@ -578,7 +599,6 @@ def login_page():
 
 def display_error_state(title: str, message: str):
     """Display a branded error state."""
-    st.markdown(dashboard_css, unsafe_allow_html=True)
     st.markdown(f"""
     <div class='error-container'>
         <div class='error-icon'>📋</div>
@@ -593,8 +613,6 @@ def display_error_state(title: str, message: str):
 
 def display_html_report():
     """Display the full HTML report with improved UX."""
-    st.markdown(dashboard_css, unsafe_allow_html=True)
-
     # Check for session timeout
     if check_session_timeout():
         st.warning("⏰ Your session has expired. Please log in again.")
@@ -631,38 +649,32 @@ def display_html_report():
     # Get report metadata
     metadata = get_report_metadata(html_report_path)
 
-    # Header row with welcome message and logout
-    header_col1, header_col2 = st.columns([4, 1])
-
-    with header_col1:
-        if metadata:
-            st.markdown(f"""
-            <div class='welcome-header'>
-                <div class='welcome-title'>Welcome, {st.session_state.brand_name}</div>
-                <div class='welcome-subtitle'>Here's your latest AI Visibility Report</div>
-                <div class='report-meta'>
-                    <span>📅 Last Updated: {metadata['last_updated']}</span>
-                </div>
+    # Header with welcome message
+    if metadata:
+        st.markdown(f"""
+        <div class='welcome-header'>
+            <div class='welcome-title'>Welcome, {st.session_state.brand_name}</div>
+            <div class='welcome-subtitle'>Here's your latest AI Visibility Report</div>
+            <div class='report-meta'>
+                <span>📅 Last Updated: {metadata['last_updated']}</span>
             </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown(f"""
-            <div class='welcome-header'>
-                <div class='welcome-title'>Welcome, {st.session_state.brand_name}</div>
-                <div class='welcome-subtitle'>AI Visibility Dashboard</div>
-            </div>
-            """, unsafe_allow_html=True)
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown(f"""
+        <div class='welcome-header'>
+            <div class='welcome-title'>Welcome, {st.session_state.brand_name}</div>
+            <div class='welcome-subtitle'>AI Visibility Dashboard</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    with header_col2:
-        st.write("")  # Spacing
-        # Show change brand button for admin
-        if st.session_state.get('role') == 'admin':
+    # Admin brand selector
+    if st.session_state.get('role') == 'admin':
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
             if st.button("🔄 Change Brand", use_container_width=True):
                 st.session_state.brand_name = None
                 st.rerun()
-        if st.button("🚪 Logout", use_container_width=True):
-            logout()
-            st.rerun()
 
     # Check if report exists
     if not html_report_path.exists():
@@ -715,6 +727,70 @@ def display_html_report():
         )
 
 # ============================================
+# NAVIGATION
+# ============================================
+
+def show_navigation():
+    """Show navigation sidebar based on user role."""
+    with st.sidebar:
+        # Logo
+        white_logo = LOGO_SVG.replace('fill: currentColor;', f'fill: {OFF_WHITE};').replace('width: 180px', 'width: 140px')
+        st.markdown(f"<div style='text-align: center; margin: 20px 0 30px 0;'>{white_logo}</div>", unsafe_allow_html=True)
+
+        # User info
+        st.markdown(f"""
+        <div style='text-align: center; margin-bottom: 30px; padding: 16px; background: rgba(232, 215, 160, 0.1); border-radius: 8px;'>
+            <div style='color: {CREAM}; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;'>
+                Logged in as
+            </div>
+            <div style='color: white; font-size: 1.1em; font-weight: 600;'>
+                {st.session_state.username}
+            </div>
+            <div style='color: {CREAM}; font-size: 0.75em; margin-top: 4px; opacity: 0.7;'>
+                {st.session_state.role.upper()}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Navigation menu
+        st.markdown(f"<h3 style='color: {CREAM}; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;'>Navigation</h3>", unsafe_allow_html=True)
+
+        # Dashboard (available to all)
+        if st.button("📊 Dashboard", use_container_width=True, key="nav_dashboard"):
+            st.session_state.page = 'Dashboard'
+            st.rerun()
+
+        # Admin-only pages
+        if st.session_state.get('role') == 'admin':
+            st.markdown(f"<div style='margin: 24px 0 12px 0; padding-top: 16px; border-top: 1px solid rgba(232, 215, 160, 0.2);'><p style='color: {CREAM}; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;'>Prompt Generator</p></div>", unsafe_allow_html=True)
+
+            if st.button("👥 Client Manager", use_container_width=True, key="nav_client_manager"):
+                st.session_state.page = 'Client Manager'
+                st.rerun()
+
+            if st.button("✨ Generate", use_container_width=True, key="nav_generate"):
+                st.session_state.page = 'Generate'
+                st.rerun()
+
+            if st.button("✓ Review & Approve", use_container_width=True, key="nav_review"):
+                st.session_state.page = 'Review & Approve'
+                st.rerun()
+
+            if st.button("📤 Export", use_container_width=True, key="nav_export"):
+                st.session_state.page = 'Export'
+                st.rerun()
+
+            if st.button("📚 Prompt Library", use_container_width=True, key="nav_library"):
+                st.session_state.page = 'Prompt Library'
+                st.rerun()
+
+        # Logout
+        st.markdown("<div style='margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(232, 215, 160, 0.2);'></div>", unsafe_allow_html=True)
+        if st.button("🚪 Logout", use_container_width=True, key="nav_logout"):
+            logout()
+            st.rerun()
+
+# ============================================
 # MAIN APP LOGIC
 # ============================================
 
@@ -728,7 +804,50 @@ def main():
     if not st.session_state.authenticated:
         login_page()
     else:
-        display_html_report()
+        # Apply dashboard CSS for all authenticated pages
+        st.markdown(dashboard_css, unsafe_allow_html=True)
+
+        # Show navigation for authenticated users
+        show_navigation()
+
+        # Route to selected page
+        if st.session_state.page == 'Dashboard':
+            display_html_report()
+        elif st.session_state.page == 'Client Manager' and st.session_state.get('role') == 'admin':
+            # Import and display client manager page
+            try:
+                from prompt_generator_pages import settings
+                settings.show()
+            except Exception as e:
+                st.error(f"Error loading Client Manager: {e}")
+        elif st.session_state.page == 'Generate' and st.session_state.get('role') == 'admin':
+            # Import and display generate page
+            try:
+                from prompt_generator_pages import generate
+                generate.show()
+            except Exception as e:
+                st.error(f"Error loading Generate page: {e}")
+        elif st.session_state.page == 'Review & Approve' and st.session_state.get('role') == 'admin':
+            # Import and display review page
+            try:
+                from prompt_generator_pages import review
+                review.show()
+            except Exception as e:
+                st.error(f"Error loading Review page: {e}")
+        elif st.session_state.page == 'Export' and st.session_state.get('role') == 'admin':
+            # Import and display export page
+            try:
+                from prompt_generator_pages import export_page
+                export_page.show()
+            except Exception as e:
+                st.error(f"Error loading Export page: {e}")
+        elif st.session_state.page == 'Prompt Library' and st.session_state.get('role') == 'admin':
+            # Import and display library page
+            try:
+                from prompt_generator_pages import library
+                library.show()
+            except Exception as e:
+                st.error(f"Error loading Prompt Library: {e}")
 
 if __name__ == "__main__":
     main()
