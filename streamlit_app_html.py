@@ -70,12 +70,14 @@ LOGO_SVG = """
 </svg>
 """
 
-# DaSilva brand colors (updated to match new website)
-DARK_BG = '#1c1c1c'
+# DaSilva brand colors - Light theme
+LIGHT_BG = '#FFFFFF'
+LIGHT_GRAY = '#F5F5F5'
 DARK_PURPLE = '#4A4458'
 CREAM = '#E8D7A0'
 DARK_ACCENT = '#402e3a'
-OFF_WHITE = '#FBFBEF'
+TEXT_DARK = '#1c1c1c'
+BORDER_LIGHT = '#E0E0E0'
 
 # ============================================
 # SESSION STATE INITIALIZATION
@@ -131,13 +133,13 @@ login_css = f"""
         font-family: 'Host Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }}
     .main {{
-        background-color: {DARK_BG};
+        background-color: {TEXT_DARK};
     }}
     .stApp {{
-        background-color: {DARK_BG};
+        background-color: {TEXT_DARK};
     }}
     [data-testid="stAppViewContainer"] {{
-        background-color: {DARK_BG};
+        background-color: {TEXT_DARK};
     }}
 
     /* FIX 2: Style the form directly instead of wrapper div */
@@ -265,28 +267,40 @@ dashboard_css = f"""
         font-family: 'Host Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }}
 
-    /* Style the sidebar */
+    /* Light theme - White background */
+    .main {{
+        background-color: {LIGHT_BG};
+    }}
+    .stApp {{
+        background-color: {LIGHT_BG};
+    }}
+    [data-testid="stAppViewContainer"] {{
+        background-color: {LIGHT_BG};
+    }}
+
+    /* Style the sidebar with light purple */
     section[data-testid="stSidebar"] {{
-        background-color: {DARK_PURPLE};
+        background-color: {LIGHT_GRAY};
+        border-right: 1px solid {BORDER_LIGHT};
     }}
 
     section[data-testid="stSidebar"] > div {{
-        background-color: {DARK_PURPLE};
+        background-color: {LIGHT_GRAY};
     }}
 
-    /* Sidebar text */
+    /* Sidebar text - dark for readability */
     section[data-testid="stSidebar"] label {{
-        color: {CREAM} !important;
+        color: {TEXT_DARK} !important;
     }}
 
     section[data-testid="stSidebar"] p {{
-        color: rgba(232, 215, 160, 0.8) !important;
+        color: {TEXT_DARK} !important;
     }}
 
     section[data-testid="stSidebar"] h1,
     section[data-testid="stSidebar"] h2,
     section[data-testid="stSidebar"] h3 {{
-        color: white !important;
+        color: {TEXT_DARK} !important;
     }}
 
     /* Hide Streamlit branding and menu */
@@ -301,24 +315,14 @@ dashboard_css = f"""
     header {{
         display: none;
     }}
-
-    .main {{
-        background-color: {DARK_BG};
-    }}
-    .stApp {{
-        background-color: {DARK_BG};
-    }}
-    [data-testid="stAppViewContainer"] {{
-        background-color: {DARK_BG};
-    }}
     .welcome-header {{
-        background: {DARK_PURPLE};
-        color: white;
+        background: {LIGHT_GRAY};
+        color: {TEXT_DARK};
         padding: 32px 40px;
         border-radius: 8px;
         margin-bottom: 32px;
-        border: 1px solid rgba(232, 215, 160, 0.2);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        border: 1px solid {BORDER_LIGHT};
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }}
     .welcome-title {{
         font-family: 'Instrument Serif', Georgia, serif;
@@ -326,11 +330,12 @@ dashboard_css = f"""
         font-weight: 400;
         margin-bottom: 8px;
         letter-spacing: -0.02em;
+        color: {TEXT_DARK};
     }}
     .welcome-subtitle {{
-        opacity: 0.85;
+        opacity: 0.7;
         font-size: 1em;
-        color: {CREAM};
+        color: {DARK_PURPLE};
         text-transform: uppercase;
         letter-spacing: 0.05em;
         font-size: 0.85em;
@@ -340,7 +345,8 @@ dashboard_css = f"""
         gap: 24px;
         margin-top: 16px;
         font-size: 0.75em;
-        color: rgba(232, 215, 160, 0.7);
+        color: {TEXT_DARK};
+        opacity: 0.7;
         font-family: 'DM Mono', monospace;
         letter-spacing: 0.02em;
     }}
@@ -362,25 +368,26 @@ dashboard_css = f"""
         box-shadow: 0 4px 12px rgba(74, 68, 88, 0.4);
     }}
     .stSelectbox label {{
-        color: {CREAM} !important;
+        color: {TEXT_DARK} !important;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         font-size: 0.85em !important;
+        font-weight: 600;
     }}
     .stSelectbox > div > div {{
-        background-color: {DARK_PURPLE} !important;
-        border: 1px solid rgba(232, 215, 160, 0.4) !important;
-        color: {CREAM} !important;
+        background-color: white !important;
+        border: 1px solid {BORDER_LIGHT} !important;
+        color: {TEXT_DARK} !important;
     }}
     .stSelectbox [data-baseweb="select"] {{
-        background-color: {DARK_PURPLE} !important;
+        background-color: white !important;
     }}
     .stSelectbox [data-baseweb="select"] > div {{
-        color: {CREAM} !important;
+        color: {TEXT_DARK} !important;
     }}
     .stSelectbox select {{
-        background-color: {DARK_PURPLE} !important;
-        color: {CREAM} !important;
+        background-color: white !important;
+        color: {TEXT_DARK} !important;
     }}
     .stDownloadButton button {{
         background-color: {DARK_PURPLE};
@@ -403,10 +410,10 @@ dashboard_css = f"""
         max-width: 500px;
         margin: 60px auto;
         padding: 40px;
-        background: {DARK_PURPLE};
+        background: {LIGHT_GRAY};
         border-radius: 8px;
-        border: 1px solid rgba(232, 215, 160, 0.3);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        border: 1px solid {BORDER_LIGHT};
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         text-align: center;
     }}
     .error-icon {{
@@ -414,36 +421,38 @@ dashboard_css = f"""
         margin-bottom: 16px;
     }}
     .error-title {{
-        color: white;
+        color: {TEXT_DARK};
         font-family: 'Instrument Serif', Georgia, serif;
         font-size: 1.5em;
         font-weight: 400;
         margin-bottom: 12px;
     }}
     .error-message {{
-        color: rgba(232, 215, 160, 0.8);
+        color: {TEXT_DARK};
+        opacity: 0.8;
         margin-bottom: 20px;
         line-height: 1.6;
     }}
     .error-contact {{
-        background: rgba(232, 215, 160, 0.1);
+        background: white;
         padding: 16px;
         border-radius: 4px;
         font-size: 0.9em;
-        color: {CREAM};
+        color: {TEXT_DARK};
+        border: 1px solid {BORDER_LIGHT};
     }}
     .error-contact a {{
-        color: {CREAM};
+        color: {DARK_PURPLE};
         text-decoration: underline;
     }}
     hr {{
-        border-color: rgba(232, 215, 160, 0.2) !important;
+        border-color: {BORDER_LIGHT} !important;
     }}
     p {{
-        color: rgba(232, 215, 160, 0.8);
+        color: {TEXT_DARK};
     }}
     p a {{
-        color: {CREAM};
+        color: {DARK_PURPLE};
     }}
     small {{
         font-family: 'DM Mono', monospace;
@@ -543,7 +552,7 @@ def login_page():
     with col2:
         # FIX 1: Title card - ONE complete HTML block using concatenation to avoid f-string curly brace conflicts
         # Make logo smaller (120px instead of 180px) and left-aligned
-        white_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: ' + OFF_WHITE + ';').replace('width: 180px', 'width: 120px')
+        white_logo = LOGO_SVG.replace('fill: currentColor;', 'fill: #FFFFFF;').replace('width: 180px', 'width: 120px')
         st.markdown(
             "<div style='text-align: center; margin-bottom: 0;'>" +
             "<div style='background: " + DARK_PURPLE + "; padding: 40px 40px 30px 40px; border-radius: 8px 8px 0 0; border: 1px solid rgba(232, 215, 160, 0.2);'>" +
@@ -584,7 +593,7 @@ def login_page():
         st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
 
         # FIX 3: Footer - ONE complete HTML block using concatenation to avoid f-string curly brace conflicts
-        footer_logo = LOGO_SVG.replace('width: 180px', 'width: 120px').replace('fill: currentColor;', 'fill: ' + OFF_WHITE + ';')
+        footer_logo = LOGO_SVG.replace('width: 180px', 'width: 120px').replace('fill: currentColor;', 'fill: #FFFFFF;')
         st.markdown(
             "<div style='text-align: center; margin-top: 20px;'>" +
             "<div style='opacity: 0.5; margin-bottom: 16px;'>" +
@@ -715,13 +724,13 @@ def display_html_report():
             )
 
         # Dashboard footer - using concatenation to avoid f-string curly brace conflicts
-        dashboard_footer_logo = LOGO_SVG.replace('width: 180px', 'width: 140px').replace('fill: currentColor;', 'fill: ' + OFF_WHITE + ';')
+        dashboard_footer_logo = LOGO_SVG.replace('width: 180px', 'width: 140px').replace('fill: currentColor;', 'fill: ' + TEXT_DARK + ';')
         st.markdown(
-            "<div style='text-align: center; margin-top: 24px; color: " + CREAM + "; opacity: 0.6;'>" +
+            "<div style='text-align: center; margin-top: 24px; opacity: 0.5;'>" +
             dashboard_footer_logo +
             "</div>" +
-            "<p style='text-align: center; color: rgba(232, 215, 160, 0.6); font-size: 0.85em; margin-top: 12px;'>" +
-            "<small style='opacity: 0.8;'>Questions? <a href='mailto:" + SUPPORT_EMAIL + "' style='color: " + CREAM + ";'>Contact us</a></small>" +
+            "<p style='text-align: center; color: " + TEXT_DARK + "; font-size: 0.85em; margin-top: 12px; opacity: 0.6;'>" +
+            "<small>Questions? <a href='mailto:" + SUPPORT_EMAIL + "' style='color: " + DARK_PURPLE + ";'>Contact us</a></small>" +
             "</p>",
             unsafe_allow_html=True
         )
@@ -733,27 +742,27 @@ def display_html_report():
 def show_navigation():
     """Show navigation sidebar based on user role."""
     with st.sidebar:
-        # Logo
-        white_logo = LOGO_SVG.replace('fill: currentColor;', f'fill: {OFF_WHITE};').replace('width: 180px', 'width: 140px')
-        st.markdown(f"<div style='text-align: center; margin: 20px 0 30px 0;'>{white_logo}</div>", unsafe_allow_html=True)
+        # Logo - dark version for light sidebar
+        dark_logo = LOGO_SVG.replace('fill: currentColor;', f'fill: {TEXT_DARK};').replace('width: 180px', 'width: 140px')
+        st.markdown(f"<div style='text-align: center; margin: 20px 0 30px 0;'>{dark_logo}</div>", unsafe_allow_html=True)
 
         # User info
         st.markdown(f"""
-        <div style='text-align: center; margin-bottom: 30px; padding: 16px; background: rgba(232, 215, 160, 0.1); border-radius: 8px;'>
-            <div style='color: {CREAM}; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;'>
+        <div style='text-align: center; margin-bottom: 30px; padding: 16px; background: white; border-radius: 8px; border: 1px solid {BORDER_LIGHT};'>
+            <div style='color: {DARK_PURPLE}; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;'>
                 Logged in as
             </div>
-            <div style='color: white; font-size: 1.1em; font-weight: 600;'>
+            <div style='color: {TEXT_DARK}; font-size: 1.1em; font-weight: 600;'>
                 {st.session_state.username}
             </div>
-            <div style='color: {CREAM}; font-size: 0.75em; margin-top: 4px; opacity: 0.7;'>
+            <div style='color: {DARK_PURPLE}; font-size: 0.75em; margin-top: 4px; opacity: 0.7;'>
                 {st.session_state.role.upper()}
             </div>
         </div>
         """, unsafe_allow_html=True)
 
         # Navigation menu
-        st.markdown(f"<h3 style='color: {CREAM}; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;'>Navigation</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color: {TEXT_DARK}; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;'>Navigation</h3>", unsafe_allow_html=True)
 
         # Dashboard (available to all)
         if st.button("📊 Dashboard", use_container_width=True, key="nav_dashboard"):
@@ -762,7 +771,7 @@ def show_navigation():
 
         # Admin-only pages
         if st.session_state.get('role') == 'admin':
-            st.markdown(f"<div style='margin: 24px 0 12px 0; padding-top: 16px; border-top: 1px solid rgba(232, 215, 160, 0.2);'><p style='color: {CREAM}; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;'>Prompt Generator</p></div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='margin: 24px 0 12px 0; padding-top: 16px; border-top: 1px solid {BORDER_LIGHT};'><p style='color: {TEXT_DARK}; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;'>Prompt Generator</p></div>", unsafe_allow_html=True)
 
             if st.button("👥 Client Manager", use_container_width=True, key="nav_client_manager"):
                 st.session_state.page = 'Client Manager'
@@ -785,7 +794,7 @@ def show_navigation():
                 st.rerun()
 
         # Logout
-        st.markdown("<div style='margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(232, 215, 160, 0.2);'></div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='margin-top: 40px; padding-top: 20px; border-top: 1px solid {BORDER_LIGHT};'></div>", unsafe_allow_html=True)
         if st.button("🚪 Logout", use_container_width=True, key="nav_logout"):
             logout()
             st.rerun()
