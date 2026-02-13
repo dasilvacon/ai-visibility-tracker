@@ -189,7 +189,7 @@ login_css = f"""
     .stTextInput input {{
         background-color: #f9f9f9 !important;
         border: 1px solid #ddd !important;
-        color: {DARK_BG} !important;
+        color: {TEXT_DARK} !important;
         border-radius: 6px !important;
         padding: 14px !important;
         font-size: 1em !important;
