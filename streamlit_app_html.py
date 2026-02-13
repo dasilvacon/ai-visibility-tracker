@@ -209,7 +209,8 @@ login_css = f"""
         font-weight: 600;
         margin-bottom: 8px !important;
     }}
-    .stButton button {{
+    /* Login form button styling */
+    [data-testid="stForm"] .stButton button {{
         background-color: {DARK_PURPLE} !important;
         color: white !important;
         border-radius: 6px !important;
@@ -223,8 +224,8 @@ login_css = f"""
         transition: all 0.2s ease !important;
         margin-top: 24px !important;
     }}
-    .stButton button:hover {{
-        background-color: {DARK_ACCENT};
+    [data-testid="stForm"] .stButton button:hover {{
+        background-color: {DARK_ACCENT} !important;
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(74, 68, 88, 0.4);
     }}
@@ -351,21 +352,39 @@ dashboard_css = f"""
         letter-spacing: 0.02em;
     }}
     .stButton button {{
-        background-color: {DARK_PURPLE};
-        color: white;
-        border-radius: 4px;
-        padding: 10px 20px;
-        font-weight: 700;
-        border: none;
+        background-color: white;
+        color: {TEXT_DARK};
+        border-radius: 6px;
+        padding: 12px 20px;
+        font-weight: 600;
+        border: 2px solid {BORDER_LIGHT};
         text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-size: 0.75em;
+        letter-spacing: 0.05em;
+        font-size: 0.8em;
         transition: all 0.2s ease;
     }}
     .stButton button:hover {{
-        background-color: {DARK_ACCENT};
+        background-color: {DARK_PURPLE};
+        color: white;
+        border-color: {DARK_PURPLE};
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(74, 68, 88, 0.4);
+        box-shadow: 0 4px 12px rgba(74, 68, 88, 0.3);
+    }}
+
+    /* Sidebar buttons - better contrast */
+    section[data-testid="stSidebar"] .stButton button {{
+        background-color: white;
+        color: {TEXT_DARK};
+        border: 2px solid {BORDER_LIGHT};
+        font-weight: 600;
+        padding: 12px 16px;
+        text-align: left;
+    }}
+
+    section[data-testid="stSidebar"] .stButton button:hover {{
+        background-color: {DARK_PURPLE};
+        color: white;
+        border-color: {DARK_PURPLE};
     }}
     .stSelectbox label {{
         color: {TEXT_DARK} !important;
@@ -392,7 +411,7 @@ dashboard_css = f"""
     .stDownloadButton button {{
         background-color: {DARK_PURPLE};
         color: white;
-        border-radius: 4px;
+        border-radius: 6px;
         padding: 12px 24px;
         font-weight: 700;
         border: none;
@@ -405,6 +424,17 @@ dashboard_css = f"""
         background-color: {DARK_ACCENT};
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(74, 68, 88, 0.4);
+    }}
+
+    /* Main content area buttons (not sidebar) */
+    [data-testid="stAppViewContainer"] .stButton button {{
+        background-color: {DARK_PURPLE};
+        color: white;
+        border: none;
+    }}
+
+    [data-testid="stAppViewContainer"] .stButton button:hover {{
+        background-color: {DARK_ACCENT};
     }}
     .error-container {{
         max-width: 500px;
