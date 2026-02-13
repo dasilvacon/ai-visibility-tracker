@@ -1,13 +1,7 @@
-[theme]
-primaryColor = "#A78E8B"        # Dusty rose (for accents)
-backgroundColor = "#FBFBEF"      # Cream (page background)
-secondaryBackgroundColor = "#FFFFFF"  # White (widget backgrounds)
-textColor = "#1C1C1C"           # Charcoal (main text - high contrast)
-font = "sans serif"
+# Streamlit Cloud Configuration
 
 [server]
 headless = true
-enableCORS = false
 port = 8501
 
 [browser]
