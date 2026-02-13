@@ -92,9 +92,13 @@ def render():
     </div>
     """, unsafe_allow_html=True)
 
-    # Show active client banner
-    if 'active_client' in st.session_state and st.session_state.active_client:
-        client_name = st.session_state.generation_config.get('client_name', 'Unknown Client')
+    # Check if client is properly configured
+    client_name = st.session_state.generation_config.get('client_name')
+    personas_file = st.session_state.generation_config.get('personas_file')
+    keywords_file = st.session_state.generation_config.get('keywords_file')
+
+    # Show active client banner or warning
+    if client_name and personas_file and keywords_file:
         st.markdown(f"""
         <div style='background: linear-gradient(135deg, #4A4458 0%, #5a5468 100%);
                     padding: 16px 24px;
@@ -108,11 +112,11 @@ def render():
         """, unsafe_allow_html=True)
     else:
         st.warning("⚠️ No client selected. Go to **Client Manager** to select a client first.")
+        st.info("💡 Once you select a client, you'll be able to generate prompts here.")
         return
 
     # Initialize batch manager
     batch_manager = BatchManager()
-    client_name = st.session_state.generation_config.get('client_name', 'Unknown Client')
 
     # Check for existing prompts
     existing_prompt_count = batch_manager.count_existing_prompts(client_name, status='active')
@@ -257,18 +261,25 @@ def render():
 
     with col2:
         st.markdown("### Data Sources")
-        personas_file = Path(st.session_state.generation_config.get('personas_file', 'data/natasha_denoma_personas.json'))
-        keywords_file = Path(st.session_state.generation_config.get('keywords_file', 'data/natasha_denoda_keywords.csv'))
+        personas_file_path = st.session_state.generation_config.get('personas_file')
+        keywords_file_path = st.session_state.generation_config.get('keywords_file')
 
-        if personas_file.exists():
-            st.success(f"✓ Personas loaded")
-        else:
-            st.warning(f"⚠ Personas file not found")
+        # Check if files are configured
+        if personas_file_path and keywords_file_path:
+            personas_file = Path(personas_file_path)
+            keywords_file = Path(keywords_file_path)
 
-        if keywords_file.exists():
-            st.success(f"✓ Keywords loaded")
+            if personas_file.exists():
+                st.success(f"✓ Personas loaded")
+            else:
+                st.warning(f"⚠ Personas file not found")
+
+            if keywords_file.exists():
+                st.success(f"✓ Keywords loaded")
+            else:
+                st.warning(f"⚠ Keywords file not found")
         else:
-            st.warning(f"⚠ Keywords file not found")
+            st.warning("⚠️ No data sources configured. Select a client in Client Manager.")
 
     st.markdown("---")
 
@@ -290,11 +301,15 @@ def render():
 
     # Generation process
     if generate_button:
-        personas_file = st.session_state.generation_config.get('personas_file', 'data/natasha_denoma_personas.json')
-        keywords_file = st.session_state.generation_config.get('keywords_file', 'data/natasha_denoda_keywords.csv')
+        personas_file = st.session_state.generation_config.get('personas_file')
+        keywords_file = st.session_state.generation_config.get('keywords_file')
+
+        if not personas_file or not keywords_file:
+            st.error("❌ No data sources configured. Please select a client in Client Manager first.")
+            return
 
         if not Path(personas_file).exists() or not Path(keywords_file).exists():
-            st.error("Please configure valid personas and keywords files in Settings.")
+            st.error("❌ Data files not found. Please check your client configuration in Client Manager.")
             return
 
         # Initialize deduplicator
