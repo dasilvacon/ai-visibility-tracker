@@ -823,6 +823,10 @@ def show_navigation():
             st.session_state.page = 'Dashboard'
             st.rerun()
 
+        if st.button("📈 Historical Trends", use_container_width=True, key="nav_historical"):
+            st.session_state.page = 'Historical Trends'
+            st.rerun()
+
         # Admin-only pages
         if st.session_state.get('role') == 'admin':
             st.markdown(f"<div style='margin: 24px 0 12px 0; padding-top: 16px; border-top: 1px solid {BORDER_LIGHT};'><p style='color: {TEXT_DARK}; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;'>Prompt Generator</p></div>", unsafe_allow_html=True)
@@ -876,6 +880,13 @@ def main():
         # Route to selected page
         if st.session_state.page == 'Dashboard':
             display_html_report()
+        elif st.session_state.page == 'Historical Trends':
+            # Import and display historical trends page
+            try:
+                from dashboard_pages import historical_trends
+                historical_trends.render()
+            except Exception as e:
+                st.error(f"Error loading Historical Trends: {e}")
         elif st.session_state.page == 'Client Manager' and st.session_state.get('role') == 'admin':
             # Import and display client manager page
             try:
