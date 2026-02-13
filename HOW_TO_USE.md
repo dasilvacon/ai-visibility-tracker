@@ -1,57 +1,39 @@
 # AI Visibility Tracker - Quick Start Guide
 
-## 🎯 Which App Should I Use?
+## 🎯 One Integrated App
 
-This project has **TWO separate Streamlit apps**. Use the right one for your task:
-
----
-
-## 🎨 App 1: Prompt Generator
-**File:** `prompt_generator_app.py`
-**Purpose:** CREATE and MANAGE test prompts
-**Who:** Admin only (agency staff)
-
-### How to Run:
-```bash
-streamlit run prompt_generator_app.py
-```
-
-### What It Does:
-- Create and manage clients
-- Generate test prompts with AI quality scoring
-- Review and approve prompts before testing
-- Export approved prompts to CSV
-- Manage prompt library
-
-### Workflow:
-1. **Client Manager** → Set up new client or select existing
-2. **Generate** → Create 100-300 prompts with quality scores
-3. **Review & Approve** → Filter by quality, approve best prompts
-4. **Export** → Download CSV of approved prompts
-5. Use CSV for testing (see below)
+This project now has **ONE integrated Streamlit app** with role-based access:
 
 ---
 
-## 📊 App 2: AI Visibility Dashboard
+## 📊 Integrated App
 **File:** `streamlit_app_html.py`
-**Purpose:** VIEW test results and reports
-**Who:** Clients and admin
+**Purpose:** Dashboard + Prompt Generator (role-based)
+**Who:** All users (features based on role)
 
 ### How to Run:
 ```bash
 streamlit run streamlit_app_html.py
 ```
 
-### What It Does:
-- Display HTML reports from completed tests
-- Show visibility scores and metrics
-- Client-facing dashboard with authentication
-- Monthly progress tracking
+### What Admin Users See:
+- **Dashboard** → View reports for any client
+- **Prompt Generator** → Full access to:
+  - Client Manager
+  - Generate (with quality scoring)
+  - Review & Approve
+  - Export
+  - Prompt Library
+
+### What Client Users See:
+- **Dashboard** → View their own reports only
+- **No access** to prompt generation features
 
 ### Workflow:
 1. **Login** with credentials
-2. **View Reports** - Interactive HTML reports
-3. **Track Progress** - See visibility improvements
+2. **Navigate** using sidebar
+3. **Admin:** Access all features
+4. **Clients:** View their reports only
 
 ---
 
@@ -63,8 +45,8 @@ streamlit run streamlit_app_html.py
 │  PROMPTS        │  →   │  PROMPTS        │  →   │  RESULTS        │
 ├─────────────────┤      ├─────────────────┤      ├─────────────────┤
 │                 │      │                 │      │                 │
-│ Prompt          │      │ CLI Tool        │      │ AI Visibility   │
-│ Generator       │      │ (main.py)       │      │ Dashboard       │
+│ Integrated App  │      │ CLI Tool        │      │ Integrated App  │
+│ (Admin Only)    │      │ (main.py)       │      │ (All Users)     │
 │                 │      │                 │      │                 │
 │ Output:         │      │ Input:          │      │ Input:          │
 │ prompts.csv     │  →   │ prompts.csv     │  →   │ results HTML    │
@@ -84,17 +66,18 @@ streamlit run streamlit_app_html.py
 ### Step 1: Set Up Client
 
 ```bash
-streamlit run prompt_generator_app.py
+streamlit run streamlit_app_html.py
 ```
 
-1. Click **"Client Manager"** in sidebar
-2. Click **"Add New Client"**
-3. Fill in:
+1. **Login as admin**
+2. Click **"Client Manager"** in sidebar
+3. Click **"Add New Client"**
+4. Fill in:
    - Client name (e.g., "Say I Do")
    - Industry (e.g., "Wedding")
    - Keywords file (upload CSV or use template)
    - Personas file (upload JSON or use template)
-4. Click **"Save Client"**
+5. Click **"Save Client"**
 
 ### Step 2: Generate Prompts
 
@@ -163,13 +146,13 @@ python main.py --client "Say I Do" --prompts say_i_do_prompts.csv
 ### Step 6: View Results
 
 ```bash
-streamlit run streamlit_app_html.py
+# App is already running
 ```
 
-1. Login with client credentials
-2. View the generated HTML report
+1. Navigate to **"Dashboard"** in sidebar
+2. Select client to view their report
 3. See visibility scores for each AI platform
-4. Share dashboard URL with client
+4. Share dashboard URL with client (they'll only see their own report)
 
 ---
 
@@ -196,8 +179,14 @@ streamlit run streamlit_app_html.py
 
 ## 🆘 Troubleshooting
 
+### Problem: "I don't see the Prompt Generator in the sidebar"
+**Solution:** Make sure you're logged in as admin. Client users don't have access to prompt generation.
+
 ### Problem: "I don't see quality scores"
-**Solution:** Make sure you're running `prompt_generator_app.py`, NOT `streamlit_app_html.py`
+**Solution:**
+1. Make sure you're in the "Generate" page (admin only)
+2. Restart the app if you recently updated the code: `Ctrl+C` then `streamlit run streamlit_app_html.py`
+3. Regenerate prompts (old prompts don't have quality scores)
 
 ### Problem: "My client disappeared"
 **Solution:** Check `data/clients.json` - clients are now persisted. If missing, re-create via Client Manager.
@@ -205,14 +194,8 @@ streamlit run streamlit_app_html.py
 ### Problem: "Prompts were lost after I closed the app"
 **Solution:** Fixed as of Feb 10! Prompts now save to `data/prompt_generation/drafts/` automatically.
 
-### Problem: "Can't see quality columns in Review page"
-**Solution:**
-1. Stop the Streamlit app (Ctrl+C)
-2. Restart: `streamlit run prompt_generator_app.py`
-3. Regenerate prompts (old prompts don't have quality scores)
-
-### Problem: "How do I get prompts into the main dashboard?"
-**Solution:** Currently manual - export CSV from Prompt Generator, then run tests via CLI. Results auto-appear in dashboard.
+### Problem: "How do I get prompts into the dashboard?"
+**Solution:** Export CSV from Prompt Generator → Export, then run tests via CLI. Results auto-appear in dashboard.
 
 ---
 
@@ -220,8 +203,7 @@ streamlit run streamlit_app_html.py
 
 ```
 ai-visibility-tracker/
-├── prompt_generator_app.py          ← RUN THIS to create prompts
-├── streamlit_app_html.py            ← RUN THIS to view results
+├── streamlit_app_html.py            ← MAIN APP - Dashboard + Prompt Generator
 ├── main.py                          ← CLI tool for running tests
 │
 ├── data/
@@ -239,10 +221,11 @@ ai-visibility-tracker/
 │   │   └── approval_manager.py
 │   └── authentication.py
 │
-├── prompt_generator_pages/          ← Pages for prompt generator app
+├── prompt_generator_pages/          ← Admin pages (integrated into main app)
 │   ├── generate.py
 │   ├── review.py
 │   ├── export_page.py
+│   ├── library.py
 │   └── settings.py (Client Manager)
 │
 └── docs/
@@ -255,10 +238,7 @@ ai-visibility-tracker/
 ## 🚀 Quick Command Reference
 
 ```bash
-# Start prompt generator (create prompts)
-streamlit run prompt_generator_app.py
-
-# Start dashboard (view results)
+# Start integrated app (dashboard + prompt generator)
 streamlit run streamlit_app_html.py
 
 # Run tests via CLI

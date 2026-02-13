@@ -5,7 +5,7 @@
 There is now **ONE integrated app** for everything:
 
 ```bash
-streamlit run app.py
+streamlit run streamlit_app_html.py
 ```
 
 That's it! The app automatically shows different features based on who logs in.
@@ -45,7 +45,7 @@ That's it! The app automatically shows different features based on who logs in.
 
 ```bash
 # Start the app
-streamlit run app.py
+streamlit run streamlit_app_html.py
 
 # Login as admin
 # Navigate to: Prompt Generator → Client Manager
@@ -102,16 +102,16 @@ python main.py --client "Client Name" --prompts approved_prompts.csv
 ## Old Apps (Deprecated)
 
 These are no longer needed:
-- ~~`streamlit_app_html.py`~~ → Use `app.py` instead
-- ~~`prompt_generator_app.py`~~ → Use `app.py` instead
+- ~~`prompt_generator_app.py`~~ → Use `streamlit_app_html.py` instead
+- ~~`app.py`~~ → Removed (was temporary)
 
-Everything is now integrated into `app.py`.
+Everything is now integrated into `streamlit_app_html.py`.
 
 ---
 
 ## Next Steps
 
-1. **Start the app:** `streamlit run app.py`
+1. **Start the app:** `streamlit run streamlit_app_html.py`
 2. **Login as admin**
 3. **Go to Prompt Generator → Generate**
 4. **Generate 50-100 test prompts**
@@ -131,7 +131,7 @@ Everything is now integrated into `app.py`.
 
 ```bash
 # Start integrated app
-streamlit run app.py
+streamlit run streamlit_app_html.py
 
 # Run tests via CLI
 python main.py --client "Client Name" --prompts prompts.csv
@@ -147,4 +147,4 @@ git push origin main
 
 ---
 
-**You're all set! Just run `streamlit run app.py` and everything works together.**
+**You're all set! Just run `streamlit run streamlit_app_html.py` and everything works together.**
