@@ -18,6 +18,11 @@ import streamlit.components.v1 as components
 from pathlib import Path
 from datetime import datetime, timedelta
 import os
+import sys
+
+# Add src to path for prompt generator imports
+if 'src' not in sys.path:
+    sys.path.insert(0, 'src')
 
 # Page config
 st.set_page_config(
@@ -95,6 +100,25 @@ if 'login_time' not in st.session_state:
     st.session_state.login_time = None
 if 'page' not in st.session_state:
     st.session_state.page = 'Dashboard'
+
+# Prompt generator session state (for admin pages)
+if 'generated_prompts' not in st.session_state:
+    st.session_state.generated_prompts = []
+if 'approval_manager' not in st.session_state:
+    from src.prompt_generator.approval_manager import ApprovalManager
+    st.session_state.approval_manager = ApprovalManager()
+if 'active_client' not in st.session_state:
+    st.session_state.active_client = None
+if 'generation_config' not in st.session_state:
+    st.session_state.generation_config = {
+        'total_prompts': 100,
+        'competitor_ratio': 0.3,
+        'ai_ratio': 0.7,
+        'deduplication_mode': 'high_similarity',
+        'personas_file': None,
+        'keywords_file': None,
+        'client_name': None
+    }
 
 # ============================================
 # CSS STYLES
