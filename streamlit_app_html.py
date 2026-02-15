@@ -829,6 +829,9 @@ def show_navigation():
 
         # Admin-only pages
         if st.session_state.get('role') == 'admin':
+            if st.button("🚀 Run New Report", use_container_width=True, key="nav_run_report"):
+                st.session_state.page = 'Run Report'
+                st.rerun()
             st.markdown(f"<div style='margin: 24px 0 12px 0; padding-top: 16px; border-top: 1px solid {BORDER_LIGHT};'><p style='color: {TEXT_DARK}; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;'>Prompt Generator</p></div>", unsafe_allow_html=True)
 
             if st.button("👥 Client Manager", use_container_width=True, key="nav_client_manager"):
@@ -887,6 +890,13 @@ def main():
                 historical_trends.render()
             except Exception as e:
                 st.error(f"Error loading Historical Trends: {e}")
+        elif st.session_state.page == 'Run Report' and st.session_state.get('role') == 'admin':
+            # Import and display run report page
+            try:
+                from dashboard_pages import run_report
+                run_report.render()
+            except Exception as e:
+                st.error(f"Error loading Run Report: {e}")
         elif st.session_state.page == 'Client Manager' and st.session_state.get('role') == 'admin':
             # Import and display client manager page
             try:

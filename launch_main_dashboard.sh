@@ -2,4 +2,8 @@
 echo "🚀 Launching AI Visibility Dashboard..."
 echo "📍 Running on: http://localhost:8501"
 echo ""
-streamlit run streamlit_app.py --server.port 8501
+
+# Activate virtual environment
+source venv/bin/activate
+
+streamlit run streamlit_app_html.py --server.port 8501
