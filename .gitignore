@@ -54,3 +54,8 @@ build/
 
 # Streamlit secrets (contains passwords)
 .streamlit/secrets.toml
+
+# Google Cloud Storage credentials (NEVER commit!)
+gcs-credentials.json
+.gcs-credentials.json
+*-credentials.json

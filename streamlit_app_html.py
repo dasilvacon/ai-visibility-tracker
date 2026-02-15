@@ -24,6 +24,13 @@ import sys
 if 'src' not in sys.path:
     sys.path.insert(0, 'src')
 
+# Try to import GCS manager (optional, falls back to local files)
+try:
+    from storage.gcs_manager import GCSManager
+    GCS_AVAILABLE = True
+except Exception:
+    GCS_AVAILABLE = False
+
 # Page config
 st.set_page_config(
     page_title="AI Visibility Dashboard",
@@ -590,6 +597,26 @@ def logout():
     st.session_state.brand_name = None
     st.session_state.login_time = None
 
+def get_gcs_manager():
+    """
+    Get GCS manager if configured, otherwise return None.
+
+    Returns:
+        GCSManager instance or None
+    """
+    if not GCS_AVAILABLE:
+        return None
+
+    try:
+        # Check if GCS is configured in secrets
+        if hasattr(st, 'secrets') and 'gcs' in st.secrets:
+            if 'bucket_name' in st.secrets['gcs']:
+                return GCSManager()
+    except Exception:
+        pass
+
+    return None
+
 # ============================================
 # PAGE COMPONENTS
 # ============================================
@@ -682,35 +709,74 @@ def display_html_report():
         st.rerun()
         return
 
+    # Check if GCS is available
+    gcs = get_gcs_manager()
+    use_gcs = gcs is not None
+
     # If admin and no brand selected, show brand selector
     if st.session_state.get('role') == 'admin' and st.session_state.brand_name is None:
-        reports_dir = Path('data/reports')
-        if reports_dir.exists():
-            html_reports = list(reports_dir.glob('visibility_report_*.html'))
-            available_brands = [f.stem.replace('visibility_report_', '').replace('_', ' ') for f in html_reports]
-
-            if available_brands:
-                st.markdown("""
-                <div class='welcome-header'>
-                    <div class='welcome-title'>Welcome, Administrator</div>
-                    <div class='welcome-subtitle'>Select a brand to view their report</div>
-                </div>
-                """, unsafe_allow_html=True)
-
-                selected_brand = st.selectbox("Select Brand", available_brands)
-                if st.button("View Report", use_container_width=True):
-                    st.session_state.brand_name = selected_brand
-                    st.rerun()
-                return
+        if use_gcs:
+            # Get brands from GCS
+            try:
+                available_brands = gcs.get_all_clients()
+            except Exception as e:
+                st.error(f"Error loading brands from cloud storage: {e}")
+                available_brands = []
+        else:
+            # Get brands from local files
+            reports_dir = Path('data/reports')
+            if reports_dir.exists():
+                html_reports = list(reports_dir.glob('visibility_report_*.html'))
+                available_brands = [f.stem.replace('visibility_report_', '').replace('_', ' ') for f in html_reports]
             else:
-                display_error_state("No Reports Found", "No brand reports are available yet.")
-                return
+                available_brands = []
+
+        if available_brands:
+            st.markdown("""
+            <div class='welcome-header'>
+                <div class='welcome-title'>Welcome, Administrator</div>
+                <div class='welcome-subtitle'>Select a brand to view their report</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            selected_brand = st.selectbox("Select Brand", available_brands)
+            if st.button("View Report", use_container_width=True):
+                st.session_state.brand_name = selected_brand
+                st.rerun()
+            return
+        else:
+            display_error_state("No Reports Found", "No brand reports are available yet.")
+            return
 
     brand_slug = st.session_state.brand_name.replace(' ', '_')
-    html_report_path = Path(f'data/reports/visibility_report_{brand_slug}.html')
 
-    # Get report metadata
-    metadata = get_report_metadata(html_report_path)
+    # Get report metadata and content
+    if use_gcs:
+        # Check if report exists in GCS
+        filename = f'visibility_report_{brand_slug}.html'
+        try:
+            report_exists = gcs.check_report_exists(st.session_state.brand_name, filename)
+        except Exception:
+            report_exists = False
+
+        # Get metadata from GCS
+        metadata = None
+        if report_exists:
+            try:
+                reports = gcs.list_client_reports(st.session_state.brand_name)
+                html_report = next((r for r in reports if r['name'] == filename), None)
+                if html_report:
+                    metadata = {
+                        'last_updated': html_report['updated'].strftime('%B %d, %Y at %I:%M %p'),
+                        'file_size': f"{html_report['size'] / 1024:.1f} KB"
+                    }
+            except Exception:
+                pass
+    else:
+        # Use local files
+        html_report_path = Path(f'data/reports/visibility_report_{brand_slug}.html')
+        report_exists = html_report_path.exists()
+        metadata = get_report_metadata(html_report_path) if report_exists else None
 
     # Header with welcome message
     if metadata:
@@ -740,7 +806,7 @@ def display_html_report():
                 st.rerun()
 
     # Check if report exists
-    if not html_report_path.exists():
+    if not report_exists:
         display_error_state(
             "Report Not Found",
             f"We couldn't find a report for {st.session_state.brand_name}. "
@@ -751,8 +817,19 @@ def display_html_report():
     # Show loading state
     with st.spinner("Loading your report..."):
         # Read the HTML report
-        with open(html_report_path, 'r', encoding='utf-8') as f:
-            html_content = f.read()
+        if use_gcs:
+            try:
+                html_content = gcs.get_report_content(
+                    st.session_state.brand_name,
+                    f'visibility_report_{brand_slug}.html'
+                ).decode('utf-8')
+            except Exception as e:
+                st.error(f"Error loading report from cloud storage: {e}")
+                return
+        else:
+            html_report_path = Path(f'data/reports/visibility_report_{brand_slug}.html')
+            with open(html_report_path, 'r', encoding='utf-8') as f:
+                html_content = f.read()
 
         # Calculate approximate height based on content length
         # This is a rough heuristic - adjust multiplier as needed
@@ -768,14 +845,14 @@ def display_html_report():
     footer_col1, footer_col2, footer_col3 = st.columns([1, 2, 1])
 
     with footer_col2:
-        with open(html_report_path, 'r', encoding='utf-8') as f:
-            st.download_button(
-                label="📥 Download Full Report",
-                data=f.read(),
-                file_name=f"AI_Visibility_Report_{brand_slug}.html",
-                mime="text/html",
-                use_container_width=True
-            )
+        # Provide download button
+        st.download_button(
+            label="📥 Download Full Report",
+            data=html_content,
+            file_name=f"AI_Visibility_Report_{brand_slug}.html",
+            mime="text/html",
+            use_container_width=True
+        )
 
         # Dashboard footer - using concatenation to avoid f-string curly brace conflicts
         dashboard_footer_logo = LOGO_SVG.replace('width: 180px', 'width: 140px').replace('fill: currentColor;', 'fill: ' + TEXT_DARK + ';')
