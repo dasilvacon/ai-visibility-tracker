@@ -1,19 +1,19 @@
 ================================================================================
 AI VISIBILITY ANALYSIS - Natasha Denona
 ================================================================================
-Generated: January 25, 2026 at 09:17 AM
+Generated: February 19, 2026 at 05:11 PM
 
 ================================================================================
 SECTION 1: THE BOTTOM LINE
 ================================================================================
 
-Natasha Denona isn't showing up. You're visible in 16.3% of responses.
+Natasha Denona isn't showing up. You're visible in 14.7% of responses.
 
-Your top competitor: Charlotte Tilbury at 22.4%
-The gap: 6.1 percentage points
+Your top competitor: Charlotte Tilbury at 17.5%
+The gap: 2.8 percentage points
 
-Your strongest persona: Luxury Beauty Enthusiast (22.3%)
-Your weakest persona: Specific Need Shopper (8.1%)
+Your strongest persona: Luxury Beauty Enthusiast (21.4%)
+Your weakest persona: Specific Need Shopper (6.5%)
 
 ================================================================================
 
@@ -22,7 +22,7 @@ SECTION 2: WHERE YOU'RE LOSING
 ================================================================================
 
 → Beauty Beginner (Aspirational)
-   Tested: 60 | Mentioned: 9 times | Rate: 15.0%
+   Tested: 180 | Mentioned: 24 times | Rate: 13.3%
 
    Examples where you lost:
    • Prompt: "Which is better for me: long lasting eyeshadow oily lids or Tom Ford Beauty"
@@ -33,7 +33,7 @@ SECTION 2: WHERE YOU'RE LOSING
    Fix: Create content targeting Beauty Beginner (Aspirational). Focus on their pain points.
 
 → Professional Makeup Artist
-   Tested: 74 | Mentioned: 8 times | Rate: 10.8%
+   Tested: 222 | Mentioned: 25 times | Rate: 11.3%
 
    Examples where you lost:
    • Prompt: "Which is better for me: professional makeup artist eyeshadow or Tom Ford Beauty"
@@ -44,7 +44,7 @@ SECTION 2: WHERE YOU'RE LOSING
    Fix: Create content targeting Professional Makeup Artist. Focus on their pain points.
 
 → Specific Need Shopper
-   Tested: 62 | Mentioned: 5 times | Rate: 8.1%
+   Tested: 186 | Mentioned: 12 times | Rate: 6.5%
 
    Examples where you lost:
    • Prompt: "Differences between best luxury eyeshadow palette and Tom Ford Beauty"
@@ -61,7 +61,7 @@ SECTION 3: WHERE YOU'RE WINNING
 ================================================================================
 
 → Luxury Beauty Enthusiast
-   Tested: 166 | Mentioned: 37 times | Rate: 22.3%
+   Tested: 374 | Mentioned: 80 times | Rate: 21.4%
 
    Examples where you won:
    • Prompt: "Compare best luxury eyeshadow palette to Stila"
@@ -86,11 +86,11 @@ SECTION 4: ALL COMPETITORS
 ================================================================================
 
 Listed Competitors (you're tracking):
-  • Charlotte Tilbury: 22.4% | 81 mentions → Your top competitor
-  • Pat McGrath Labs: 14.6% | 53 mentions → Rising threat
-  • Anastasia Beverly Hills: 13.5% | 49 mentions → Rising threat
-  • Tom Ford Beauty: 5.8% | 21 mentions
-  • Huda Beauty: 5.2% | 19 mentions
+  • Charlotte Tilbury: 17.5% | 168 mentions → Your top competitor
+  • Pat McGrath Labs: 12.0% | 115 mentions → Rising threat
+  • Anastasia Beverly Hills: 10.5% | 101 mentions → Rising threat
+  • Tom Ford Beauty: 5.1% | 49 mentions
+  • Huda Beauty: 4.8% | 46 mentions
 
 No unlisted brands found. All mentioned brands are on your tracking list.
 
@@ -118,8 +118,8 @@ CONTENT TO CREATE
 ================================================================================
 
 1. Educational/How-To Content 🔴 HIGH PRIORITY
-   Gap: You show up 17.0% | Competitors show up 41.7%
-   Missing: ~310 mentions per month
+   Gap: You show up 14.8% | Competitors show up 33.2%
+   Missing: ~615 mentions per month
 
    Example questions you're missing:
    - "Compare how to apply eyeshadow for beginners to Pat McGrath Labs"
@@ -136,8 +136,8 @@ CONTENT TO CREATE
    Keywords: "how to apply", "tutorial", "guide", "tips"
 
 2. Informational Content 🔴 HIGH PRIORITY
-   Gap: You show up 19.8% | Competitors show up 41.7%
-   Missing: ~170 mentions per month
+   Gap: You show up 15.3% | Competitors show up 33.2%
+   Missing: ~375 mentions per month
 
    Example questions you're missing:
    - "Differences between cruelty free luxury eyeshadow and Too Faced"
@@ -154,8 +154,8 @@ CONTENT TO CREATE
    Keywords: "what is", "how does", "guide to"
 
 3. Product/Purchase Pages 🟡 MEDIUM PRIORITY
-   Gap: You show up 20.0% | Competitors show up 41.7%
-   Missing: ~60 mentions per month
+   Gap: You show up 21.4% | Competitors show up 33.2%
+   Missing: ~85 mentions per month
 
    Example questions you're missing:
    - "Which is better for me: best bridal eyeshadow palette or Tom Ford Beauty"
@@ -171,45 +171,9 @@ CONTENT TO CREATE
    Put it: Landing pages, Blog, Product descriptions
    Keywords: "buy", "purchase", "order", "shop"
 
-4. Business/Professional Content 🟡 MEDIUM PRIORITY
-   Gap: You show up 12.0% | Competitors show up 41.7%
-   Missing: ~60 mentions per month
-
-   Example questions you're missing:
-   - "Compare luxury makeup worth the price to Sephora"
-   - "luxury makeup worth the price vs Anastasia Beverly Hills"
-   - "luxury makeup worth the price vs Anastasia Beverly Hills"
-   These are real questions where Anastasia Beverly Hills appeared but you didn't.
-
-   Create:
-   • Write business case studies showing ROI
-   • Create professional buyer guides
-   • Add bulk ordering and professional discount information
-
-   Put it: Blog, Resource center, FAQ pages
-   Keywords: "professional", "bulk order", "business account"
-
-5. Comparison Content 🟢 LOW PRIORITY
-   Gap: You show up 12.0% | Competitors show up 41.7%
-   Missing: ~60 mentions per month
-
-   Example questions you're missing:
-   - "Compare luxury makeup worth the price to Sephora"
-   - "luxury makeup worth the price vs Anastasia Beverly Hills"
-   - "luxury makeup worth the price vs Anastasia Beverly Hills"
-   These are real questions where Anastasia Beverly Hills appeared but you didn't.
-
-   Create:
-   • Create 'vs competitor' comparison pages
-   • Add feature comparison charts
-   • Write honest head-to-head reviews
-
-   Put it: Landing pages, Blog, Product descriptions
-   Keywords: "vs", "versus", "compare", "difference between"
-
-6. Educational/How-To Content 🟢 LOW PRIORITY
-   Gap: You show up 2.4% | Competitors show up 41.7%
-   Missing: ~65 mentions per month
+4. Educational/How-To Content 🟡 MEDIUM PRIORITY
+   Gap: You show up 2.7% | Competitors show up 33.2%
+   Missing: ~135 mentions per month
 
    Example questions you're missing:
    - "Compare how to apply eyeshadow for beginners to Pat McGrath Labs"
@@ -225,6 +189,42 @@ CONTENT TO CREATE
    Put it: Landing pages, Blog, Product descriptions
    Keywords: "educational queries"
 
+5. Business/Professional Content 🟢 LOW PRIORITY
+   Gap: You show up 13.9% | Competitors show up 33.2%
+   Missing: ~95 mentions per month
+
+   Example questions you're missing:
+   - "Compare luxury makeup worth the price to Sephora"
+   - "luxury makeup worth the price vs Anastasia Beverly Hills"
+   - "luxury makeup worth the price vs Anastasia Beverly Hills"
+   These are real questions where Anastasia Beverly Hills appeared but you didn't.
+
+   Create:
+   • Write business case studies showing ROI
+   • Create professional buyer guides
+   • Add bulk ordering and professional discount information
+
+   Put it: Blog, Resource center, FAQ pages
+   Keywords: "professional", "bulk order", "business account"
+
+6. Comparison Content 🟢 LOW PRIORITY
+   Gap: You show up 13.9% | Competitors show up 33.2%
+   Missing: ~95 mentions per month
+
+   Example questions you're missing:
+   - "Compare luxury makeup worth the price to Sephora"
+   - "luxury makeup worth the price vs Anastasia Beverly Hills"
+   - "luxury makeup worth the price vs Anastasia Beverly Hills"
+   These are real questions where Anastasia Beverly Hills appeared but you didn't.
+
+   Create:
+   • Create 'vs competitor' comparison pages
+   • Add feature comparison charts
+   • Write honest head-to-head reviews
+
+   Put it: Landing pages, Blog, Product descriptions
+   Keywords: "vs", "versus", "compare", "difference between"
+
 ================================================================================
 
 ================================================================================
@@ -232,8 +232,8 @@ AUDIENCES TO TARGET
 ================================================================================
 
 1. Luxury Beauty Enthusiast 🔴 HIGH PRIORITY
-   Gap: You show up 22.3% | Competitors show up 41.7%
-   Missing: ~130 mentions per month
+   Gap: You show up 21.4% | Competitors show up 33.2%
+   Missing: ~175 mentions per month
    Why they matter: Premium buyers, brand advocates, high lifetime value
 
    Example questions you're missing:
@@ -252,8 +252,8 @@ AUDIENCES TO TARGET
    Keywords: "luxury eyeshadow", "high-end makeup", "premium beauty products"
 
 2. Professional Makeup Artist 🟡 MEDIUM PRIORITY
-   Gap: You show up 10.8% | Competitors show up 41.7%
-   Missing: ~90 mentions per month
+   Gap: You show up 11.3% | Competitors show up 33.2%
+   Missing: ~195 mentions per month
    Why they matter: High-value buyers, frequent purchases, recommend to clients
 
    Example questions you're missing:
@@ -272,8 +272,8 @@ AUDIENCES TO TARGET
    Keywords: "professional makeup", "pro artist", "makeup for work"
 
 3. Specific Need Shopper 🟡 MEDIUM PRIORITY
-   Gap: You show up 8.1% | Competitors show up 41.7%
-   Missing: ~85 mentions per month
+   Gap: You show up 6.5% | Competitors show up 33.2%
+   Missing: ~200 mentions per month
    Why they matter: High intent, specific problems to solve, ready to buy
 
    Example questions you're missing:
@@ -292,8 +292,8 @@ AUDIENCES TO TARGET
    Keywords: "Specific Need Shopper makeup", "Specific Need Shopper beauty", "Specific Need Shopper products"
 
 4. Beauty Beginner (Aspirational) 🟡 MEDIUM PRIORITY
-   Gap: You show up 15.0% | Competitors show up 41.7%
-   Missing: ~65 mentions per month
+   Gap: You show up 13.3% | Competitors show up 33.2%
+   Missing: ~145 mentions per month
    Why they matter: Key target audience for your brand
 
    Example questions you're missing:
@@ -320,29 +320,41 @@ SECTION 6: SOURCES & CITATIONS
 Where are brands being mentioned? This section shows which third-party sites
 (Sephora, Reddit, beauty blogs) are citing which brands in AI responses.
 
-Total unique sources found: 9
-Sources mentioning your brand: 3
+Total unique sources found: 12
+Sources mentioning your brand: 6
 Gap opportunities (competitors only): 5
 
 TOP SOURCES MENTIONING YOUR BRAND:
 
 1. sephora.com
-   Total appearances: 25
-   Your brand: 4 mentions (16.0%)
-   Competitors: 19 mentions (76.0%)
-   Top competitor: Charlotte Tilbury (10 mentions)
+   Total appearances: 59
+   Your brand: 20 mentions (33.9%)
+   Competitors: 55 mentions (93.2%)
+   Top competitor: Charlotte Tilbury (27 mentions)
 
 2. ulta.com
-   Total appearances: 11
-   Your brand: 4 mentions (36.4%)
-   Competitors: 14 mentions (127.3%)
-   Top competitor: Charlotte Tilbury (6 mentions)
+   Total appearances: 18
+   Your brand: 9 mentions (50.0%)
+   Competitors: 23 mentions (127.8%)
+   Top competitor: Charlotte Tilbury (11 mentions)
 
-3. instagram.com
-   Total appearances: 6
-   Your brand: 5 mentions (83.3%)
-   Competitors: 8 mentions (133.3%)
-   Top competitor: Pat McGrath Labs (3 mentions)
+3. glamour.com
+   Total appearances: 14
+   Your brand: 2 mentions (14.3%)
+   Competitors: 14 mentions (100.0%)
+   Top competitor: Anastasia Beverly Hills (4 mentions)
+
+4. instagram.com
+   Total appearances: 13
+   Your brand: 6 mentions (46.2%)
+   Competitors: 18 mentions (138.5%)
+   Top competitor: Huda Beauty (7 mentions)
+
+5. nordstrom.com
+   Total appearances: 4
+   Your brand: 1 mentions (25.0%)
+   Competitors: 5 mentions (125.0%)
+   Top competitor: Anastasia Beverly Hills (2 mentions)
 
 ================================================================================
 SOURCES YOU'RE MISSING (Competitors Present)
@@ -351,45 +363,45 @@ SOURCES YOU'RE MISSING (Competitors Present)
 These are high-value sources where competitors are being cited but you're not.
 Reach out to these sites for features, reviews, or backlinks.
 
-1. youtube.com - Opportunity Score: 48/100
+1. youtube.com - Opportunity Score: 68/100
    Your brand: 0 mentions (0.0%)
-   Competitors: 2 mentions (40.0%)
-   Top competitor: Pat McGrath Labs (1 mentions)
+   Competitors: 3 mentions (33.3%)
+   Top competitor: Huda Beauty (2 mentions)
 
    ACTION TO TAKE:
    → Send PR packages to top beauty YouTubers
    → Reach out for sponsored reviews or collaborations
 
-2. glamour.com - Opportunity Score: 44/100
+2. reddit.com - Opportunity Score: 52/100
    Your brand: 0 mentions (0.0%)
-   Competitors: 2 mentions (50.0%)
-   Top competitor: Pat McGrath Labs (1 mentions)
-
-   ACTION TO TAKE:
-   → Reach out for backlink opportunities
-   → Request product features or reviews
-
-3. reddit.com - Opportunity Score: 40/100
-   Your brand: 0 mentions (0.0%)
-   Competitors: 2 mentions (66.7%)
-   Top competitor: Pat McGrath Labs (1 mentions)
+   Competitors: 3 mentions (60.0%)
+   Top competitor: Huda Beauty (2 mentions)
 
    ACTION TO TAKE:
    → Increase Reddit presence - answer questions, engage authentically
    → Consider sponsoring relevant subreddit threads
 
-4. nordstrom.com - Opportunity Score: 36/100
+3. tiktok.com - Opportunity Score: 52/100
    Your brand: 0 mentions (0.0%)
-   Competitors: 2 mentions (100.0%)
-   Top competitor: Anastasia Beverly Hills (2 mentions)
+   Competitors: 4 mentions (100.0%)
+   Top competitor: Pat McGrath Labs (2 mentions)
 
    ACTION TO TAKE:
    → Reach out for backlink opportunities
    → Request product features or reviews
 
-5. beautylish.com - Opportunity Score: 28/100
+4. temptalia.com - Opportunity Score: 48/100
    Your brand: 0 mentions (0.0%)
-   Competitors: 1 mentions (100.0%)
+   Competitors: 1 mentions (16.7%)
+   Top competitor: Huda Beauty (1 mentions)
+
+   ACTION TO TAKE:
+   → Reach out for product review features
+   → Send PR package with your best products
+
+5. allure.com - Opportunity Score: 32/100
+   Your brand: 0 mentions (0.0%)
+   Competitors: 2 mentions (200.0%)
    Top competitor: Charlotte Tilbury (1 mentions)
 
    ACTION TO TAKE:

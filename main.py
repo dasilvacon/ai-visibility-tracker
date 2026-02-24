@@ -16,6 +16,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from api_clients.openai_client import OpenAIClient
 from api_clients.anthropic_client import AnthropicClient
+from api_clients.perplexity_client import PerplexityClient
+from api_clients.gemini_client import GeminiClient
 from database.prompts_db import PromptsDatabase
 from tracking.results_tracker import ResultsTracker
 from reporting.report_generator import ReportGenerator
@@ -24,6 +26,9 @@ from analysis.visibility_scorer import VisibilityScorer
 from analysis.competitor_analyzer import CompetitorAnalyzer
 from analysis.gap_analyzer import GapAnalyzer
 from analysis.source_analyzer import SourceAnalyzer
+from analysis.head_to_head_analyzer import HeadToHeadAnalyzer
+from analysis.citation_classifier import CitationClassifier
+from analysis.composite_scorer import CompositeScorer
 from reporting.html_report_generator import HTMLReportGenerator
 from reporting.csv_exporter import CSVExporter
 from reporting.pdf_exporter import PDFExporter
@@ -88,6 +93,30 @@ class VisibilityTracker:
                 print("✓ Anthropic client initialized")
             except Exception as e:
                 print(f"✗ Failed to initialize Anthropic client: {e}")
+
+        # Perplexity
+        if api_keys.get('perplexity') and not api_keys['perplexity'].startswith('YOUR_'):
+            try:
+                self.clients['perplexity'] = PerplexityClient(
+                    api_key=api_keys['perplexity'],
+                    model=models.get('perplexity', 'pplx-70b-online'),
+                    config=self.config
+                )
+                print("✓ Perplexity client initialized")
+            except Exception as e:
+                print(f"✗ Failed to initialize Perplexity client: {e}")
+
+        # Gemini
+        if api_keys.get('gemini') and not api_keys['gemini'].startswith('YOUR_'):
+            try:
+                self.clients['gemini'] = GeminiClient(
+                    api_key=api_keys['gemini'],
+                    model=models.get('gemini', 'gemini-2.0-flash-exp'),
+                    config=self.config
+                )
+                print("✓ Gemini client initialized")
+            except Exception as e:
+                print(f"✗ Failed to initialize Gemini client: {e}")
 
         if not self.clients:
             print("Error: No API clients could be initialized. Please check your config.json")
@@ -263,14 +292,28 @@ class VisibilityTracker:
         brand_name = brand_config['brand']['name']
         brand_aliases = brand_config['brand'].get('aliases', [])
 
-        # Handle both old format (list of strings) and new format (list of dicts with 'name' and 'website')
+        # Handle both old format (list) and new format (dict with 'expected' and 'discovered')
         competitors_raw = brand_config.get('competitors', [])
         competitors = []
-        for comp in competitors_raw:
-            if isinstance(comp, str):
-                competitors.append(comp)
-            elif isinstance(comp, dict):
-                competitors.append(comp.get('name', comp.get('website', '')))
+
+        if isinstance(competitors_raw, dict):
+            # New format: {'expected': [...], 'discovered': [...]}
+            expected = competitors_raw.get('expected', [])
+            discovered = competitors_raw.get('discovered', [])
+            all_competitors = expected + discovered
+
+            for comp in all_competitors:
+                if isinstance(comp, dict) and 'name' in comp:
+                    competitors.append(comp['name'])
+                elif isinstance(comp, str):
+                    competitors.append(comp)
+        elif isinstance(competitors_raw, list):
+            # Old format: direct list
+            for comp in competitors_raw:
+                if isinstance(comp, str):
+                    competitors.append(comp)
+                elif isinstance(comp, dict):
+                    competitors.append(comp.get('name', comp.get('website', '')))
 
         print(f"\nBrand: {brand_name}")
         print(f"Competitors: {', '.join(competitors)}")
@@ -423,8 +466,55 @@ class VisibilityTracker:
 
         print(f"\n✓ Analysis report saved to: {analysis_report_path}")
 
+        # Run competitive analysis features
+        print("6. Running competitive analysis features...")
+
+        # Extract brand domains and competitor domains from config
+        brand_website = brand_config['brand'].get('website', '')
+        brand_domains = [brand_website.replace('https://', '').replace('http://', '')] if brand_website else []
+
+        competitor_domains_dict = {}
+        for comp in competitors_raw:
+            if isinstance(comp, dict) and 'name' in comp and 'website' in comp:
+                comp_name = comp['name']
+                comp_website = comp['website']
+                comp_domain = comp_website.replace('https://', '').replace('http://', '')
+                competitor_domains_dict[comp_name] = [comp_domain]
+
+        # Head-to-head analysis
+        h2h_analyzer = HeadToHeadAnalyzer(
+            brand_name=brand_name,
+            competitor_names=competitors
+        )
+        h2h_results = h2h_analyzer.aggregate_head_to_head_results(scored_results)
+        print(f"   ✓ Found {h2h_results['total_comparison_queries']} comparison queries")
+        print(f"   ✓ Win rate: {h2h_results['overall_win_rate']:.1f}%")
+
+        # Citation classification
+        citation_classifier = CitationClassifier(
+            brand_domains=brand_domains,
+            competitor_domains=competitor_domains_dict
+        )
+        citation_stats = citation_classifier.classify_all_sources(scored_results)
+        print(f"   ✓ Citation authority: {citation_stats['citation_authority_score']:.1f}/100")
+
+        # Composite scoring
+        composite_scorer = CompositeScorer()
+        composite_metrics = {
+            'visibility_rate': visibility_summary.get('brand_visibility_rate', 0),
+            'prominence_rate': visibility_summary.get('average_prominence_score', 0) * 10,
+            'competitive_win_rate': h2h_results.get('overall_win_rate', 0),
+            'total_comparison_queries': h2h_results.get('total_comparison_queries', 0),
+            'citation_authority_score': citation_stats.get('citation_authority_score', 0),
+            'total_citations': citation_stats.get('total_citations', 0),
+            'positioning_quality_score': 70  # Default
+        }
+        scorecard = composite_scorer.create_full_scorecard(composite_metrics)
+        maturity_stage = scorecard['maturity_stage']
+        print(f"   ✓ Overall maturity: {maturity_stage} ({scorecard['composite_score']:.0f}/100)")
+
         # Generate HTML report
-        print("Generating HTML report...")
+        print("7. Generating HTML report with competitive features...")
         html_generator = HTMLReportGenerator(
             self.config.get('output', {}).get('reports_directory', 'data/reports')
         )
@@ -436,6 +526,9 @@ class VisibilityTracker:
             gap_analysis=gap_analysis,
             action_plan=action_plan,
             scored_results=scored_results,
+            composite_scorecard=scorecard,
+            head_to_head_results=h2h_results,
+            citation_stats=citation_stats,
             website_verification=website_verification,
             source_analysis=source_analysis
         )
@@ -978,7 +1071,7 @@ def main():
     parser.add_argument(
         '--platforms',
         nargs='+',
-        choices=['openai', 'anthropic', 'perplexity', 'deepseek', 'grok'],
+        choices=['openai', 'anthropic', 'perplexity', 'gemini', 'deepseek', 'grok'],
         help='Platforms to test (default: all available)'
     )
     parser.add_argument(

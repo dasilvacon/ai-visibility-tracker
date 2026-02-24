@@ -26,6 +26,9 @@ class HTMLReportGenerator:
                        gap_analysis: Dict[str, Any],
                        action_plan: Dict[str, Any],
                        scored_results: List[Dict[str, Any]],
+                       composite_scorecard: Dict[str, Any] = None,
+                       head_to_head_results: Dict[str, Any] = None,
+                       citation_stats: Dict[str, Any] = None,
                        website_verification: Dict[str, Any] = None,
                        source_analysis: Dict[str, Any] = None) -> str:
         """
@@ -37,8 +40,11 @@ class HTMLReportGenerator:
             competitive_analysis: Competitive analysis results
             gap_analysis: Gap analysis results
             action_plan: Action plan with opportunities
-            website_verification: Optional website content verification results
             scored_results: List of scored results
+            composite_scorecard: Optional composite score with letter grade
+            head_to_head_results: Optional head-to-head competitive results
+            citation_stats: Optional citation classification statistics
+            website_verification: Optional website content verification results
             source_analysis: Optional source analysis results
 
         Returns:
@@ -54,6 +60,9 @@ class HTMLReportGenerator:
             gap_analysis,
             action_plan,
             scored_results,
+            composite_scorecard,
+            head_to_head_results,
+            citation_stats,
             source_analysis
         )
 
@@ -231,54 +240,66 @@ class HTMLReportGenerator:
         target_visibility = min(visibility_rate + (competitor_rate - visibility_rate) * 0.5, 100)
 
         return f"""
-        <div class="exec-summary">
-            <h2>The Bottom Line</h2>
-
-            <p style="font-size: 18px; line-height: 1.7; margin-bottom: 20px;">
-                You're at <strong>{visibility_rate:.0f}%</strong> visibility while one or more competitors appear in <strong>{competitor_rate:.0f}%</strong> of queries.
-                That means {100 - visibility_rate:.0f}% of the time, when people ask AI about your space, you're not part of the conversation.
+        <!-- Hero Section -->
+        <div class="hero-card">
+            <h2 style="margin: 0 0 12px 0; font-size: 20px; color: #6B5660; font-weight: 600;">The Bottom Line</h2>
+            <p style="font-size: 24px; line-height: 1.5; margin: 0; color: #4D2E3A; font-weight: 600;">
+                You're at <strong style="font-size: 32px; color: #A7868F;">{visibility_rate:.0f}%</strong> visibility while competitors appear in <strong style="font-size: 32px; color: #E74C3C;">{competitor_rate:.0f}%</strong> of queries
             </p>
 
-            <div class="exec-finding">
-                <div class="exec-finding-title">🚨 What Needs Your Attention First</div>
-                <div class="exec-finding-text">
-                    ChatGPT is where 73% of AI users live. You're at <strong>{chatgpt_rate:.0f}%</strong> there while one or more competitors
-                    appear in <strong>{chatgpt_comp_rate:.0f}%</strong> of queries. This gap alone costs you an estimated
-                    <strong>${monthly_cost_low:,}-${monthly_cost_high:,}/month</strong> in lost organic traffic
-                    (based on ~{int(missed_visitors_monthly)} monthly missed impressions × ${avg_visitor_value} avg visitor value).
+            <div class="hero-stat-grid">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">{visibility_rate:.0f}%</div>
+                    <div class="hero-stat-label">Your Visibility</div>
+                    <div class="progress-bar-container" style="margin-top: 12px;">
+                        <div class="progress-bar {'green' if visibility_rate >= 60 else 'yellow' if visibility_rate >= 30 else 'red'}" style="width: {visibility_rate}%"></div>
+                    </div>
                 </div>
-                <div style="margin-top: 16px; font-size: 14px; opacity: 0.9;">
-                    <div class="exec-bullet">Best persona: {strongest_persona[0]} at {strongest_persona[1]:.0f}% visibility</div>
-                    <div class="exec-bullet">Worst persona: {weakest_persona[0]} at {weakest_persona[1]:.0f}% visibility</div>
-                    <div class="exec-bullet">Top competitor: {top_comp['name']} at {top_comp['mention_rate']:.0f}% (vs your {visibility_rate:.0f}%)</div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">${int(monthly_cost_high/1000)}K+</div>
+                    <div class="hero-stat-label">Monthly Cost of Gap</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">{target_visibility:.0f}%</div>
+                    <div class="hero-stat-label">90-Day Target</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Insights (Collapsible) -->
+        <div class="accordion-group">
+            <button class="accordion-button" onclick="toggleAccordion(this)">
+                <span>📊 What This Means For Your Business</span>
+                <span class="accordion-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <div class="info-card">
+                    <div class="info-card-title">🚨 Priority Alert: ChatGPT Gap</div>
+                    <div class="info-card-content">
+                        <p>ChatGPT represents <strong>73% of all AI users</strong>. You're at <strong>{chatgpt_rate:.0f}%</strong> visibility there while competitors appear in <strong>{chatgpt_comp_rate:.0f}%</strong> of queries.</p>
+                        <p style="margin-top: 12px;"><strong>Estimated Impact:</strong> ${monthly_cost_low:,}-${monthly_cost_high:,}/month in lost traffic (~{int(missed_visitors_monthly)} monthly missed impressions)</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-title">🎯 Where You're Strongest & Weakest</div>
+                    <div class="info-card-content">
+                        <p><strong style="color: #27AE60;">✓ Best Performing:</strong> {strongest_persona[0]} ({strongest_persona[1]:.0f}% visibility)</p>
+                        <p style="margin-top: 8px;"><strong style="color: #E74C3C;">⚠️ Needs Work:</strong> {weakest_persona[0]} ({weakest_persona[1]:.0f}% visibility)</p>
+                        <p style="margin-top: 8px;"><strong>Top Competitor:</strong> {top_comp['name']} at {top_comp['mention_rate']:.0f}% vs your {visibility_rate:.0f}%</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="exec-summary-grid">
-                <div class="exec-stat">
-                    <div class="exec-stat-label">Current Visibility</div>
-                    <div class="exec-stat-value">{visibility_rate:.0f}%</div>
-                    <div class="exec-stat-desc">{100 - visibility_rate:.0f}% of queries = invisible</div>
-                </div>
-                <div class="exec-stat">
-                    <div class="exec-stat-label">90-Day Target</div>
-                    <div class="exec-stat-value">{target_visibility:.0f}%</div>
-                    <div class="exec-stat-desc">Close 50% of the gap to competitors</div>
-                </div>
-                <div class="exec-stat">
-                    <div class="exec-stat-label">Monthly Revenue at Risk</div>
-                    <div class="exec-stat-value">${int(monthly_cost_high/1000)}K+</div>
-                    <div class="exec-stat-desc">Lost to competitors</div>
-                </div>
-                <div class="exec-stat">
-                    <div class="exec-stat-label">Annual Impact</div>
-                    <div class="exec-stat-value">${int(monthly_cost_high*12/1000)}K+</div>
-                    <div class="exec-stat-desc">If gap persists</div>
-                </div>
-            </div>
-
-            <div style="margin-top: 20px; padding: 12px 16px; background: rgba(255,255,255,0.5); border-radius: 4px; font-size: 11px; color: #6B5660; line-height: 1.5;">
-                <strong>How we calculate this:</strong> Visibility % = times your brand appeared in {total_results} AI queries tested. Revenue estimates assume industry average ${avg_visitor_value} visitor value and 3x monthly query scaling. Your actual opportunity may be higher or lower based on your conversion rate and average order value.
+            <button class="accordion-button" onclick="toggleAccordion(this)">
+                <span>🧮 How We Calculate These Numbers</span>
+                <span class="accordion-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <p><strong>Visibility %:</strong> Times your brand appeared in {total_results} AI queries tested across 4 platforms (ChatGPT, Claude, Perplexity, Gemini)</p>
+                <p style="margin-top: 12px;"><strong>Revenue Impact:</strong> Based on industry average ${avg_visitor_value} visitor value and 3x monthly query scaling from test sample</p>
+                <p style="margin-top: 12px;"><strong>90-Day Target:</strong> Close 50% of the gap to competitors (realistic and achievable)</p>
+                <p style="margin-top: 12px; font-size: 13px; color: #6B5660;"><em>Note: Your actual opportunity may be higher or lower based on your conversion rate and average order value.</em></p>
             </div>
         </div>
         """
@@ -546,21 +567,15 @@ class HTMLReportGenerator:
         </div>
         """
 
-        # Table 1: Sources with your brand
+        # Table 1: Sources with your brand (wrapped in accordion)
         if sources_with_brand:
-            html += """
-            <h3 style="margin-top: 48px;">✓ Where You're Being Mentioned</h3>
-            <p style="color: #6B5660; margin-bottom: 20px;">
-                These sources are citing your brand in AI responses. Maintain and strengthen these relationships.
-            </p>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 48px;">
+            sources_table = """
+            <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
                 <thead>
                     <tr style="background: #F3EFF2; border-bottom: 2px solid #D4C5CE;">
                         <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Source</th>
-                        <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Appearances</th>
-                        <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Your Brand %</th>
-                        <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Top Competitor</th>
-                        <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Competitor %</th>
+                        <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Times Cited</th>
+                        <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Presence Rate</th>
                         <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Status</th>
                     </tr>
                 </thead>
@@ -568,43 +583,52 @@ class HTMLReportGenerator:
             """
 
             for source in sources_with_brand[:10]:
-                status = "✓ Present"
+                status = "✓ Active"
                 status_color = "#27AE60"
 
-                html += f"""
+                sources_table += f"""
                 <tr style="border-bottom: 1px solid #E8E4E3;">
                     <td style="padding: 12px; color: #4D2E3A; font-weight: 500;">{source['source']}</td>
-                    <td style="padding: 12px; text-align: center; color: #6B5660;">{source['total_appearances']}</td>
-                    <td style="padding: 12px; text-align: center; color: #6B5660; font-weight: 600;">{source['brand_mention_rate']}%</td>
-                    <td style="padding: 12px; color: #6B5660;">{source.get('top_competitor', '—')}</td>
-                    <td style="padding: 12px; text-align: center; color: #6B5660;">{source['competitor_rate']}%</td>
+                    <td style="padding: 12px; text-align: center; color: #6B5660; font-weight: 600; font-size: 18px;">{source['total_appearances']}</td>
+                    <td style="padding: 12px; text-align: center; color: #27AE60; font-weight: 600;">{source['brand_mention_rate']}%</td>
                     <td style="padding: 12px; color: {status_color}; font-weight: 500;">{status}</td>
                 </tr>
                 """
 
                 # Add example URLs if available
                 if source.get('example_urls'):
-                    html += f"""
+                    sources_table += f"""
                     <tr style="border-bottom: 1px solid #E8E4E3;">
-                        <td colspan="6" style="padding: 8px 12px 12px 32px; color: #A7868F; font-size: 13px;">
+                        <td colspan="4" style="padding: 8px 12px 12px 32px; color: #A7868F; font-size: 13px;">
                             Example: <a href="{source['example_urls'][0]}" target="_blank" style="color: #D4698B;">{source['example_urls'][0][:80]}...</a>
                         </td>
                     </tr>
                     """
 
-            html += """
+            sources_table += """
                 </tbody>
             </table>
             """
 
-        # Table 2: Gap opportunities - sources to target
+            html += f"""
+            <div class="accordion-group" style="margin-top: 48px;">
+                <button class="accordion-button" onclick="toggleAccordion(this)">
+                    <span>✓ Where You're Being Mentioned ({len(sources_with_brand)} sources)</span>
+                    <span class="accordion-icon">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <p style="color: #6B5660; margin: 16px 0;">
+                        These sources are citing your brand in AI responses. Maintain and strengthen these relationships.
+                    </p>
+                    {sources_table}
+                </div>
+            </div>
+            """
+
+        # Table 2: Gap opportunities - sources to target (wrapped in accordion)
         if recommended_targets:
-            html += """
-            <h3 style="margin-top: 48px;">⚠️ Sources You're Missing (Targeting Opportunities)</h3>
-            <p style="color: #6B5660; margin-bottom: 20px;">
-                These sources cite your competitors but not you. Reach out for features, reviews, or backlinks.
-            </p>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 32px;">
+            targets_table = """
+            <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
                 <thead>
                     <tr style="background: #FFF4E6; border-bottom: 2px solid #F0C674;">
                         <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Source</th>
@@ -632,7 +656,7 @@ class HTMLReportGenerator:
                 score = target['opportunity_score']
                 score_color = "#27AE60" if score >= 70 else ("#F39C12" if score >= 40 else "#E74C3C")
 
-                html += f"""
+                targets_table += f"""
                 <tr style="border-bottom: 1px solid #E8E4E3;">
                     <td style="padding: 12px; color: #4D2E3A; font-weight: 500;">
                         {i}. {target['source']}
@@ -657,7 +681,7 @@ class HTMLReportGenerator:
 
                 # Add example URL and specific action steps
                 if target.get('example_urls'):
-                    html += f"""
+                    targets_table += f"""
                     <tr style="border-bottom: 1px solid #E8E4E3;">
                         <td colspan="6" style="padding: 8px 12px 12px 32px;">
                             <div style="color: #A7868F; font-size: 13px; margin-bottom: 6px;">
@@ -667,42 +691,57 @@ class HTMLReportGenerator:
 
                     # Add specific action steps based on source type
                     if 'reddit' in target['source'].lower():
-                        html += """
+                        targets_table += """
                             <div style="color: #6B5660; font-size: 13px; margin-top: 4px;">
                                 • Answer questions authentically in relevant subreddits<br>
                                 • Consider sponsoring relevant threads or AMAs
                             </div>
                         """
                     elif 'youtube' in target['source'].lower():
-                        html += """
+                        targets_table += """
                             <div style="color: #6B5660; font-size: 13px; margin-top: 4px;">
                                 • Send PR packages to top beauty YouTubers<br>
                                 • Reach out for sponsored reviews or collaborations
                             </div>
                         """
                     elif any(word in target['source'].lower() for word in ['blog', 'temptalia', 'review']):
-                        html += """
+                        targets_table += """
                             <div style="color: #6B5660; font-size: 13px; margin-top: 4px;">
                                 • Reach out for product review features<br>
                                 • Send PR package with your best products
                             </div>
                         """
                     else:
-                        html += """
+                        targets_table += """
                             <div style="color: #6B5660; font-size: 13px; margin-top: 4px;">
                                 • Reach out for backlink opportunities<br>
                                 • Request product features or reviews
                             </div>
                         """
 
-                    html += """
+                    targets_table += """
                         </td>
                     </tr>
                     """
 
-            html += """
+            targets_table += """
                 </tbody>
             </table>
+            """
+
+            html += f"""
+            <div class="accordion-group" style="margin-top: 32px;">
+                <button class="accordion-button" onclick="toggleAccordion(this)">
+                    <span>⚠️ Sources You're Missing - Targeting Opportunities ({len(recommended_targets)} sources)</span>
+                    <span class="accordion-icon">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <p style="color: #6B5660; margin: 16px 0;">
+                        These sources cite your competitors but not you. Reach out for features, reviews, or backlinks.
+                    </p>
+                    {targets_table}
+                </div>
+            </div>
             """
 
             # Add expandable table with ALL sources
@@ -828,6 +867,9 @@ class HTMLReportGenerator:
                    gap_analysis: Dict[str, Any],
                    action_plan: Dict[str, Any],
                    scored_results: List[Dict[str, Any]],
+                   composite_scorecard: Dict[str, Any] = None,
+                   head_to_head_results: Dict[str, Any] = None,
+                   citation_stats: Dict[str, Any] = None,
                    source_analysis: Dict[str, Any] = None) -> str:
         """Build complete HTML report with DaSilva branding."""
 
@@ -1653,7 +1695,226 @@ class HTMLReportGenerator:
             margin-left: 4px;
         }}
 
+        /* Accordion/Collapse Styles */
+        .accordion {{
+            margin: 16px 0;
+        }}
+
+        .accordion-button {{
+            width: 100%;
+            padding: 16px 20px;
+            background: #F8F8F7;
+            border: 1px solid #E8E4E3;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6B5660;
+            transition: all 0.2s ease;
+            text-align: left;
+        }}
+
+        .accordion-button:hover {{
+            background: #F3EFF2;
+            color: #4D2E3A;
+        }}
+
+        .accordion-button.active {{
+            background: #4D2E3A;
+            color: white;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }}
+
+        .accordion-icon {{
+            font-size: 18px;
+            transition: transform 0.2s ease;
+        }}
+
+        .accordion-button.active .accordion-icon {{
+            transform: rotate(180deg);
+        }}
+
+        .accordion-content {{
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: white;
+            border: 1px solid #E8E4E3;
+            border-top: none;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }}
+
+        .accordion-content.active {{
+            max-height: 2000px;
+            padding: 20px;
+        }}
+
+        /* Hero Stats Card */
+        .hero-card {{
+            background: linear-gradient(135deg, #F7EBF0 0%, #FEFEFE 100%);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 32px 0;
+            box-shadow: 0 4px 20px rgba(77, 46, 58, 0.08);
+            border: 1px solid #E8E4E3;
+        }}
+
+        .hero-stat-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }}
+
+        .hero-stat {{
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #E8E4E3;
+        }}
+
+        .hero-stat-value {{
+            font-size: 48px;
+            font-weight: 700;
+            color: #4D2E3A;
+            line-height: 1;
+            margin-bottom: 8px;
+        }}
+
+        .hero-stat-label {{
+            font-size: 13px;
+            color: #6B5660;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }}
+
+        /* Progress Bar */
+        .progress-bar-container {{
+            width: 100%;
+            height: 12px;
+            background: #E8E4E3;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 8px 0;
+        }}
+
+        .progress-bar {{
+            height: 100%;
+            background: linear-gradient(90deg, #A7868F 0%, #6B5660 100%);
+            transition: width 0.5s ease;
+            border-radius: 6px;
+        }}
+
+        .progress-bar.green {{
+            background: linear-gradient(90deg, #27AE60 0%, #10b981 100%);
+        }}
+
+        .progress-bar.yellow {{
+            background: linear-gradient(90deg, #F59E0B 0%, #F39C12 100%);
+        }}
+
+        .progress-bar.red {{
+            background: linear-gradient(90deg, #E74C3C 0%, #C0392B 100%);
+        }}
+
+        /* Collapsible Table Rows */
+        .table-row-hidden {{
+            display: none;
+        }}
+
+        .show-more-btn {{
+            margin: 16px auto;
+            display: block;
+            padding: 12px 24px;
+            background: #F8F8F7;
+            border: 1px solid #E8E4E3;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6B5660;
+            transition: all 0.2s ease;
+        }}
+
+        .show-more-btn:hover {{
+            background: #4D2E3A;
+            color: white;
+            border-color: #4D2E3A;
+        }}
+
+        /* Info Cards */
+        .info-card {{
+            background: white;
+            border: 1px solid #E8E4E3;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: 0 2px 8px rgba(28, 28, 28, 0.04);
+        }}
+
+        .info-card-title {{
+            font-size: 16px;
+            font-weight: 700;
+            color: #4D2E3A;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+
+        .info-card-content {{
+            font-size: 14px;
+            line-height: 1.6;
+            color: #6B5660;
+        }}
+
     </style>
+    <script>
+        // Accordion functionality
+        function toggleAccordion(button) {{
+            const content = button.nextElementSibling;
+            const isActive = button.classList.contains('active');
+
+            // Close all accordions in the same parent
+            const parent = button.closest('.accordion-group');
+            if (parent) {{
+                parent.querySelectorAll('.accordion-button').forEach(btn => {{
+                    btn.classList.remove('active');
+                    btn.nextElementSibling.classList.remove('active');
+                }});
+            }}
+
+            // Toggle current accordion
+            if (!isActive) {{
+                button.classList.add('active');
+                content.classList.add('active');
+            }}
+        }}
+
+        // Show more rows functionality
+        function toggleTableRows(tableId) {{
+            const table = document.getElementById(tableId);
+            const hiddenRows = table.querySelectorAll('.table-row-hidden');
+            const button = table.nextElementSibling;
+
+            hiddenRows.forEach(row => {{
+                row.classList.toggle('table-row-hidden');
+            }});
+
+            if (button && button.classList.contains('show-more-btn')) {{
+                button.textContent = hiddenRows[0].classList.contains('table-row-hidden')
+                    ? 'Show More ▼'
+                    : 'Show Less ▲';
+            }}
+        }}
+    </script>
 </head>
 <body>
     <div class="container">
@@ -1666,16 +1927,24 @@ class HTMLReportGenerator:
 
         <div class="tabs">
             <button class="tab active" onclick="switchTab(event, 'overview')">Executive Summary</button>
-            <button class="tab" onclick="switchTab(event, 'action-plan')">Action Plan & Recommendations</button>
+            <button class="tab" onclick="switchTab(event, 'competitive-intel')">What Competitors Are Doing</button>
             <button class="tab" onclick="switchTab(event, 'roi')">ROI Estimator</button>
             <button class="tab" onclick="switchTab(event, 'prompts')">What AI Actually Said</button>
             <button class="tab" onclick="switchTab(event, 'sources')">Sources & Citations</button>
         </div>
 
         <div id="overview" class="tab-content active">
+            {self._build_composite_score_badge(composite_scorecard) if composite_scorecard else ''}
+
             {self._build_top_executive_summary(brand_name, visibility_summary, competitive_analysis, scored_results)}
 
+            {self._build_score_breakdown(composite_scorecard) if composite_scorecard else ''}
+
             {self._build_executive_summary(brand_name, visibility_summary, competitive_analysis)}
+
+            {self._build_competitive_battlecard(head_to_head_results) if head_to_head_results else ''}
+
+            {self._build_visibility_by_platform(scored_results)}
 
             {self._build_chatgpt_crisis_alert(brand_name, scored_results)}
 
@@ -1684,28 +1953,8 @@ class HTMLReportGenerator:
             {self._build_brief_priorities(gap_analysis, action_plan)}
         </div>
 
-        <div id="action-plan" class="tab-content">
-            <h2>Action Plan & Recommendations</h2>
-            <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 32px;">
-                Detailed analysis and prioritized recommendations to improve your AI visibility.
-                This section contains all the tactical work your team needs to do.
-            </p>
-
-            {self._build_quick_wins(gap_analysis, source_analysis, competitive_analysis)}
-
-            {self._build_content_gap_analysis(gap_analysis, scored_results)}
-
-            {self._build_visibility_by_persona(scored_results)}
-
-            {self._build_visibility_by_platform(scored_results)}
-
-            {self._build_what_winners_are_doing(competitive_analysis)}
-
-            {self._build_unlisted_brands(competitive_analysis)}
-
-            {self._build_top_opportunities(gap_analysis, action_plan)}
-
-            {self._build_action_plan(action_plan, gap_analysis, visibility_summary, competitive_analysis)}
+        <div id="competitive-intel" class="tab-content">
+            {self._build_competitive_intelligence_tab(brand_name, visibility_summary, competitive_analysis, gap_analysis, action_plan, head_to_head_results, scored_results)}
         </div>
 
         <div id="roi" class="tab-content">
@@ -1717,6 +1966,8 @@ class HTMLReportGenerator:
         </div>
 
         <div id="sources" class="tab-content">
+            {self._build_citation_analysis(citation_stats) if citation_stats else ''}
+
             {self._build_sources_tab(brand_name, source_analysis) if source_analysis else '<p>No source analysis available.</p>'}
         </div>
 
@@ -2026,12 +2277,14 @@ class HTMLReportGenerator:
         platform_mapping = {
             'openai': ('ChatGPT (OpenAI)', '73% of all AI users'),
             'anthropic': ('Claude (Anthropic)', '15% of AI users'),
-            'perplexity': ('Perplexity', 'Research-focused'),
+            'perplexity': ('Perplexity', '5% - Research-focused'),
+            'gemini': ('Gemini (Google)', '7% - Search integration'),
             'deepseek': ('DeepSeek', 'Technical audience'),
             'grok': ('Grok (X.AI)', 'Twitter integration')
         }
 
         rows = ""
+        row_count = 0
         for platform, stats in sorted(platform_stats.items(), key=lambda x: x[1]['mentions'] / max(x[1]['total'], 1), reverse=True):
             mention_rate = (stats['mentions'] / stats['total'] * 100) if stats['total'] > 0 else 0
             avg_prominence = sum(stats['avg_prominence']) / len(stats['avg_prominence']) if stats['avg_prominence'] else 0
@@ -2048,34 +2301,64 @@ class HTMLReportGenerator:
             if platform_lower == 'openai' and mention_rate < 20:
                 crisis_emoji = " 🚨"
 
+            # Progress bar color
+            bar_color = 'green' if mention_rate >= 60 else 'yellow' if mention_rate >= 30 else 'red'
+
             rows += f"""
             <tr>
-                <td><strong>{platform_display}{crisis_emoji}</strong><br><span style="font-size: 12px; color: #6B5660; font-weight: normal;">{platform_context}</span></td>
-                <td>{stats['total']}</td>
-                <td>{stats['mentions']}</td>
-                <td><span class="badge {badge_class}">{mention_rate:.0f}%</span></td>
-                <td>{avg_prominence:.1f}/10</td>
-                <td>{status}</td>
+                <td>
+                    <strong>{platform_display}{crisis_emoji}</strong><br>
+                    <span style="font-size: 12px; color: #6B5660; font-weight: normal;">{platform_context}</span>
+                </td>
+                <td style="text-align: center;">{stats['total']}</td>
+                <td style="text-align: center;"><strong>{stats['mentions']}</strong></td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="progress-bar-container" style="flex: 1;">
+                            <div class="progress-bar {bar_color}" style="width: {mention_rate}%"></div>
+                        </div>
+                        <span style="font-weight: 600; min-width: 45px;">{mention_rate:.0f}%</span>
+                    </div>
+                </td>
+                <td style="text-align: center;">{status}</td>
             </tr>
             """
+            row_count += 1
 
         return f"""
-        <h2>Performance by Platform</h2>
-        <p>Which AI platforms know your brand?</p>
-        <table>
-            <tr>
-                <th>Platform</th>
-                <th>Tested</th>
-                <th>Mentions</th>
-                <th>Rate</th>
-                <th>Prominence</th>
-                <th>Status</th>
-            </tr>
-            {rows}
-        </table>
+        <div class="info-card" style="margin-top: 32px;">
+            <div class="info-card-title">🎯 Performance by Platform</div>
+            <div class="info-card-content">
+                <p style="margin-bottom: 20px;">See how you perform across ChatGPT, Claude, Perplexity, and Gemini</p>
+                <table style="width: 100%;">
+                    <thead>
+                        <tr style="background: #F8F8F7;">
+                            <th style="text-align: left;">Platform</th>
+                            <th style="text-align: center;">Tests Run</th>
+                            <th style="text-align: center;">Mentions</th>
+                            <th style="text-align: left;">Visibility Rate</th>
+                            <th style="text-align: center;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-        <div style="margin: 20px 0; padding: 10px 14px; background: #F8F8F7; border-left: 3px solid #A7868F; border-radius: 4px; font-size: 11px; color: #6B5660; line-height: 1.5;">
-            <strong>Why platform matters:</strong> Each AI platform has different training data and user demographics. ChatGPT represents 73% of AI users, making it the highest priority. Market share percentages based on public usage data as of 2025.
+        <div class="accordion-group" style="margin-top: 16px;">
+            <button class="accordion-button" onclick="toggleAccordion(this)">
+                <span>❓ Why Platform Breakdown Matters</span>
+                <span class="accordion-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <p><strong>ChatGPT (73% market share):</strong> Highest priority - most users, consumer-focused</p>
+                <p style="margin-top: 8px;"><strong>Claude (15% market share):</strong> Growing fast, knowledge workers and developers</p>
+                <p style="margin-top: 8px;"><strong>Perplexity (5% market share):</strong> Research-focused users, high intent</p>
+                <p style="margin-top: 8px;"><strong>Gemini (7% market share):</strong> Google integration, search overlap</p>
+                <p style="margin-top: 16px; font-size: 13px; color: #6B5660;"><em>Market share based on public usage data as of 2025. Each platform has different training data and may cite different sources.</em></p>
+            </div>
         </div>
         """
 
@@ -2810,11 +3093,15 @@ class HTMLReportGenerator:
         revenue_lift_high = projected_revenue_high - current_revenue
 
         html = f"""
-        <h2>💰 ROI Estimator</h2>
-        <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 32px;">
-            Estimated business impact of implementing the recommendations in this report.
-            These are conservative projections based on industry benchmarks and your current performance.
-        </p>
+        <div class="info-card">
+            <div class="info-card-title">💰 ROI Estimator</div>
+            <div class="info-card-content">
+                <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 0;">
+                    Estimated business impact of implementing the recommendations in this report.
+                    These are conservative projections based on industry benchmarks and your current performance.
+                </p>
+            </div>
+        </div>
 
         <div style="background: linear-gradient(135deg, #4D2E3A 0%, #A78E8B 100%); color: white; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
             <h3 style="color: white; margin: 0 0 24px 0; font-size: 24px;">📈 Projected Impact (90 Days)</h3>
@@ -2880,38 +3167,50 @@ class HTMLReportGenerator:
             </div>
         </div>
 
-        <div style="background: #E8F5E9; padding: 24px; border-radius: 8px; border-left: 4px solid #27AE60; margin-bottom: 32px;">
-            <h4 style="color: #27AE60; margin: 0 0 12px 0;">📊 How to Track Actual AI-Driven Revenue</h4>
-            <p style="margin: 0 0 12px 0; color: #2E7D32; line-height: 1.7;">
-                To measure real performance (not just projections), set up tracking in Google Analytics:
-            </p>
-            <ol style="margin: 0; padding-left: 20px; color: #2E7D32; line-height: 1.8;">
-                <li><strong>Tag AI traffic sources:</strong> Create UTM parameters for AI platforms (ChatGPT, Perplexity, Claude)</li>
-                <li><strong>Set up conversion tracking:</strong> Track purchases/leads from AI referrers</li>
-                <li><strong>Create custom reports:</strong> Filter by AI traffic to see actual conversion rates</li>
-                <li><strong>Monitor over time:</strong> Compare AI traffic before/after implementing recommendations</li>
-            </ol>
-            <p style="margin: 12px 0 0 0; color: #2E7D32; font-size: 14px; line-height: 1.7;">
-                <strong>Note:</strong> AI platforms often show as "direct" traffic or don't pass referrer data,
-                making actual attribution challenging. These projections provide a conservative baseline expectation.
-            </p>
-        </div>
+        <div class="accordion-group" style="margin-top: 32px;">
+            <button class="accordion-button" onclick="toggleAccordion(this)">
+                <span>📊 How to Track Actual AI-Driven Revenue</span>
+                <span class="accordion-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <div style="background: #E8F5E9; padding: 24px; border-radius: 8px; border-left: 4px solid #27AE60; margin-top: 16px;">
+                    <p style="margin: 0 0 12px 0; color: #2E7D32; line-height: 1.7;">
+                        To measure real performance (not just projections), set up tracking in Google Analytics:
+                    </p>
+                    <ol style="margin: 0; padding-left: 20px; color: #2E7D32; line-height: 1.8;">
+                        <li><strong>Tag AI traffic sources:</strong> Create UTM parameters for AI platforms (ChatGPT, Perplexity, Claude)</li>
+                        <li><strong>Set up conversion tracking:</strong> Track purchases/leads from AI referrers</li>
+                        <li><strong>Create custom reports:</strong> Filter by AI traffic to see actual conversion rates</li>
+                        <li><strong>Monitor over time:</strong> Compare AI traffic before/after implementing recommendations</li>
+                    </ol>
+                    <p style="margin: 12px 0 0 0; color: #2E7D32; font-size: 14px; line-height: 1.7;">
+                        <strong>Note:</strong> AI platforms often show as "direct" traffic or don't pass referrer data,
+                        making actual attribution challenging. These projections provide a conservative baseline expectation.
+                    </p>
+                </div>
+            </div>
 
-        <div style="background: #E3F2FD; padding: 24px; border-radius: 8px; border-left: 4px solid #1976D2;">
-            <h4 style="color: #1976D2; margin: 0 0 12px 0;">📌 Methodology & Assumptions</h4>
-            <ul style="margin: 0; padding-left: 20px; color: #1565C0; line-height: 1.8;">
-                <li><strong>Traffic Estimate:</strong> 100 AI-influenced visitors per 1% visibility rate (conservative)</li>
-                <li><strong>Conversion Rate:</strong> 2% (typical e-commerce rate for qualified traffic)</li>
-                <li><strong>Average Order Value:</strong> $45 (beauty industry benchmark)</li>
-                <li><strong>Improvement Timeline:</strong> 90 days for full implementation</li>
-                <li><strong>Visibility Gain:</strong> Based on implementing Top 10 recommendations</li>
-            </ul>
+            <button class="accordion-button" onclick="toggleAccordion(this)">
+                <span>📌 Methodology & Assumptions</span>
+                <span class="accordion-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <div style="background: #E3F2FD; padding: 24px; border-radius: 8px; border-left: 4px solid #1976D2; margin-top: 16px;">
+                    <ul style="margin: 0; padding-left: 20px; color: #1565C0; line-height: 1.8;">
+                        <li><strong>Traffic Estimate:</strong> 100 AI-influenced visitors per 1% visibility rate (conservative)</li>
+                        <li><strong>Conversion Rate:</strong> 2% (typical e-commerce rate for qualified traffic)</li>
+                        <li><strong>Average Order Value:</strong> $45 (beauty industry benchmark)</li>
+                        <li><strong>Improvement Timeline:</strong> 90 days for full implementation</li>
+                        <li><strong>Visibility Gain:</strong> Based on implementing Top 10 recommendations</li>
+                    </ul>
 
-            <p style="margin: 16px 0 0 0; color: #1565C0; font-size: 14px; line-height: 1.7;">
-                <strong>Note:</strong> These are conservative estimates. Actual results may vary based on implementation quality,
-                brand awareness, product pricing, and market conditions. AI visibility often compounds over time as more
-                content gets indexed and cited.
-            </p>
+                    <p style="margin: 16px 0 0 0; color: #1565C0; font-size: 14px; line-height: 1.7;">
+                        <strong>Note:</strong> These are conservative estimates. Actual results may vary based on implementation quality,
+                        brand awareness, product pricing, and market conditions. AI visibility often compounds over time as more
+                        content gets indexed and cited.
+                    </p>
+                </div>
+            </div>
         </div>
         """
 
@@ -3361,28 +3660,51 @@ class HTMLReportGenerator:
         """
 
         return f"""
-        <h2>What AI Actually Said</h2>
-        <p style="margin-bottom: 24px;">See exactly what AI platforms say when asked about your space. Use this to understand competitor positioning and find content opportunities.</p>
+        <div class="info-card">
+            <div class="info-card-title">What AI Actually Said</div>
+            <div class="info-card-content">
+                <p style="margin-bottom: 0;">See exactly what AI platforms say when asked about your space. Use this to understand competitor positioning and find content opportunities.</p>
+            </div>
+        </div>
 
         {quick_insights_html}
 
-        <div style="background: #F8F8F7; padding: 16px; border-radius: 8px; margin-bottom: 24px; display: flex; gap: 24px; align-items: center; font-size: 13px;">
-            <div><strong>Row colors:</strong></div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width: 16px; height: 16px; background: #E8F5E8; border: 1px solid #ccc; border-radius: 2px;"></div>
-                <span>You win (7-10)</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width: 16px; height: 16px; background: #FFF8E8; border: 1px solid #ccc; border-radius: 2px;"></div>
-                <span>Mixed (4-6)</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width: 16px; height: 16px; background: #FFE8E8; border: 1px solid #ccc; border-radius: 2px;"></div>
-                <span>You lose (0)</span>
-            </div>
-            <div style="margin-left: auto; font-weight: 600; color: #6B5660;">
-                <mark style="background: #FFE8B1; padding: 2px 4px;">Your brand</mark>
-                <mark style="background: #D4E8F7; padding: 2px 4px;">Competitors</mark>
+        <div class="accordion-group" style="margin-bottom: 24px;">
+            <button class="accordion-button" onclick="toggleAccordion(this)">
+                <span>🎨 How to Read This Table</span>
+                <span class="accordion-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <div style="background: #F8F8F7; padding: 16px; border-radius: 8px; margin-top: 16px;">
+                    <div style="margin-bottom: 16px;">
+                        <strong style="color: #4D2E3A;">Row colors:</strong>
+                        <div style="display: flex; gap: 24px; margin-top: 12px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 20px; height: 20px; background: #E8F5E8; border: 1px solid #ccc; border-radius: 4px;"></div>
+                                <span>You win (7-10 prominence)</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 20px; height: 20px; background: #FFF8E8; border: 1px solid #ccc; border-radius: 4px;"></div>
+                                <span>Mixed (4-6 prominence)</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 20px; height: 20px; background: #FFE8E8; border: 1px solid #ccc; border-radius: 4px;"></div>
+                                <span>You lose (not mentioned)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <strong style="color: #4D2E3A;">Text highlighting:</strong>
+                        <div style="display: flex; gap: 16px; margin-top: 12px;">
+                            <div style="font-weight: 600; color: #6B5660;">
+                                <mark style="background: #FFE8B1; padding: 4px 8px; border-radius: 3px;">Your brand</mark>
+                            </div>
+                            <div style="font-weight: 600; color: #6B5660;">
+                                <mark style="background: #D4E8F7; padding: 4px 8px; border-radius: 3px;">Competitors</mark>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -3446,5 +3768,686 @@ class HTMLReportGenerator:
             <strong>About this data:</strong> We tested {len(prompts_data)} real queries across different AI platforms and personas to see exactly what they say when asked about your space.
             <strong>Prominence scores</strong> (0-10) show how featured your brand is: 8-10 = top recommendation, 5-7 = mentioned alongside competitors, 1-4 = brief reference, 0 = not mentioned.
             Use this section to verify recommendations, study competitor positioning, and find content opportunities based on what AI is actually citing.
+        </div>
+        """
+
+    def _build_composite_score_badge(self, composite_scorecard: Dict[str, Any]) -> str:
+        """Build composite score badge for header."""
+        if not composite_scorecard:
+            return ""
+
+        score = composite_scorecard.get('composite_score', 0)
+        grade = composite_scorecard.get('letter_grade', 'C')
+        label = composite_scorecard.get('grade_label', 'Fair')
+        description = composite_scorecard.get('grade_description', '')
+        color = composite_scorecard.get('grade_color', '#f59e0b')
+
+        return f"""
+        <div style="background: linear-gradient(135deg, {color}15 0%, {color}25 100%); border: 2px solid {color}; border-radius: 12px; padding: 32px; margin: 32px 0; text-align: center;">
+            <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #6B5660; margin-bottom: 16px;">
+                Overall AI Visibility Grade
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
+                <div style="background: {color}; color: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 64px; font-weight: 700; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
+                    {grade}
+                </div>
+                <div style="text-align: left;">
+                    <div style="font-size: 48px; font-weight: 700; color: #4D2E3A; line-height: 1;">
+                        {score}<span style="font-size: 24px; color: #A7868F;">/100</span>
+                    </div>
+                    <div style="font-size: 18px; font-weight: 600; color: #6B5660; margin-top: 8px;">
+                        {label}
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 24px; font-size: 15px; color: #6B5660; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
+                {description}
+            </div>
+        </div>
+        """
+
+    def _build_score_breakdown(self, composite_scorecard: Dict[str, Any]) -> str:
+        """Build score breakdown table showing all dimensions."""
+        if not composite_scorecard:
+            return ""
+
+        dimensions = composite_scorecard.get('dimension_breakdown', [])
+        if not dimensions:
+            return ""
+
+        rows = []
+        for dim in dimensions:
+            name = dim.get('dimension', '')
+            score = dim.get('score', 0)
+            grade = dim.get('grade', 'C')
+            weight = dim.get('weight', '0%')
+            description = dim.get('description', '')
+
+            # Color based on grade
+            if grade == 'A':
+                grade_color = '#10b981'
+                row_bg = '#f0fdf4'
+            elif grade == 'B':
+                grade_color = '#3b82f6'
+                row_bg = '#eff6ff'
+            elif grade == 'C':
+                grade_color = '#f59e0b'
+                row_bg = '#fffbeb'
+            else:
+                grade_color = '#ef4444'
+                row_bg = '#fef2f2'
+
+            rows.append(f"""
+                <tr style="background: {row_bg};">
+                    <td style="font-weight: 600; color: #4D2E3A;">{name}</td>
+                    <td style="font-size: 13px; color: #6B5660;">{description}</td>
+                    <td style="text-align: center; font-weight: 600;">{weight}</td>
+                    <td style="text-align: center;">
+                        <span style="font-size: 20px; font-weight: 700; color: #4D2E3A;">{score:.1f}</span>
+                        <span style="font-size: 12px; color: #A7868F;">/100</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="background: {grade_color}; color: white; padding: 4px 12px; border-radius: 4px; font-weight: 600; font-size: 14px;">
+                            {grade}
+                        </span>
+                    </td>
+                </tr>
+            """)
+
+        strengths = composite_scorecard.get('strengths', [])
+        weaknesses = composite_scorecard.get('weaknesses', [])
+
+        strengths_html = ""
+        if strengths:
+            strengths_html = f"""
+            <div style="margin-top: 24px; padding: 16px; background: #f0fdf4; border-left: 4px solid #10b981; border-radius: 4px;">
+                <div style="font-weight: 600; color: #065f46; margin-bottom: 8px;">💪 Strengths</div>
+                <div style="color: #047857;">{', '.join(strengths)}</div>
+            </div>
+            """
+
+        weaknesses_html = ""
+        if weaknesses:
+            weaknesses_html = f"""
+            <div style="margin-top: 16px; padding: 16px; background: #fef2f2; border-left: 4px solid #ef4444; border-radius: 4px;">
+                <div style="font-weight: 600; color: #991b1b; margin-bottom: 8px;">🎯 Areas for Improvement</div>
+                <div style="color: #dc2626;">{', '.join(weaknesses)}</div>
+            </div>
+            """
+
+        return f"""
+        <div style="margin: 48px 0;">
+            <h2>Score Breakdown</h2>
+            <p style="color: #6B5660; margin-bottom: 24px;">
+                Your overall score is calculated from these five weighted dimensions:
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>What This Measures</th>
+                        <th style="text-align: center;">Weight</th>
+                        <th style="text-align: center;">Score</th>
+                        <th style="text-align: center;">Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {''.join(rows)}
+                </tbody>
+            </table>
+            {strengths_html}
+            {weaknesses_html}
+        </div>
+        """
+
+    def _build_competitive_battlecard(self, head_to_head_results: Dict[str, Any]) -> str:
+        """Build competitive battlecard showing head-to-head results."""
+        if not head_to_head_results:
+            return ""
+
+        battlecard = head_to_head_results.get('battlecard', [])
+        if not battlecard:
+            return ""
+
+        total_wins = head_to_head_results.get('total_wins', 0)
+        total_losses = head_to_head_results.get('total_losses', 0)
+        total_ties = head_to_head_results.get('total_ties', 0)
+        overall_win_rate = head_to_head_results.get('overall_win_rate', 0)
+
+        rows = []
+        for comp in battlecard[:10]:  # Top 10 competitors
+            name = comp.get('competitor', '')
+            wins = comp.get('wins', 0)
+            losses = comp.get('losses', 0)
+            ties = comp.get('ties', 0)
+            status = comp.get('status', 'tied')
+            win_rate = comp.get('win_rate', 0)
+
+            # Status indicator
+            if status == 'winning':
+                status_color = '#10b981'
+                status_icon = '✅'
+                status_text = 'Winning'
+            elif status == 'losing':
+                status_color = '#ef4444'
+                status_icon = '❌'
+                status_text = 'Losing'
+            else:
+                status_color = '#f59e0b'
+                status_icon = '⚖️'
+                status_text = 'Tied'
+
+            rows.append(f"""
+                <tr>
+                    <td style="font-weight: 600; color: #4D2E3A;">{status_icon} {name}</td>
+                    <td style="text-align: center; font-weight: 600; color: #10b981;">{wins}</td>
+                    <td style="text-align: center; font-weight: 600; color: #ef4444;">{losses}</td>
+                    <td style="text-align: center; font-weight: 600; color: #f59e0b;">{ties}</td>
+                    <td style="text-align: center; color: #6B5660;">{wins + losses + ties}</td>
+                    <td style="text-align: center;">
+                        <span style="font-weight: 600; color: #4D2E3A;">{win_rate:.1f}%</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="background: {status_color}; color: white; padding: 4px 12px; border-radius: 4px; font-weight: 600; font-size: 12px;">
+                            {status_text.upper()}
+                        </span>
+                    </td>
+                </tr>
+            """)
+
+        return f"""
+        <div style="margin: 48px 0;">
+            <h2>Competitive Battlecard</h2>
+            <p style="color: #6B5660; margin-bottom: 24px;">
+                Head-to-head comparison results when your brand and competitors are mentioned together.
+            </p>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px;">
+                <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 8px; padding: 20px; text-align: center;">
+                    <div style="font-size: 36px; font-weight: 700; color: #10b981;">{total_wins}</div>
+                    <div style="font-size: 14px; color: #065f46; font-weight: 600;">You Win</div>
+                </div>
+                <div style="background: #fef2f2; border: 2px solid #ef4444; border-radius: 8px; padding: 20px; text-align: center;">
+                    <div style="font-size: 36px; font-weight: 700; color: #ef4444;">{total_losses}</div>
+                    <div style="font-size: 14px; color: #991b1b; font-weight: 600;">They Win</div>
+                </div>
+                <div style="background: #fffbeb; border: 2px solid #f59e0b; border-radius: 8px; padding: 20px; text-align: center;">
+                    <div style="font-size: 36px; font-weight: 700; color: #f59e0b;">{total_ties}</div>
+                    <div style="font-size: 14px; color: #92400e; font-weight: 600;">Tied</div>
+                </div>
+            </div>
+
+            <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin-bottom: 24px;">
+                <div style="font-weight: 600; color: #1e40af; margin-bottom: 4px;">Overall Win Rate</div>
+                <div style="font-size: 28px; font-weight: 700; color: #1e40af;">{overall_win_rate:.1f}%</div>
+                <div style="font-size: 13px; color: #1e3a8a; margin-top: 4px;">Ties count as 0.5 wins</div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Competitor</th>
+                        <th style="text-align: center;">You Win</th>
+                        <th style="text-align: center;">They Win</th>
+                        <th style="text-align: center;">Tied</th>
+                        <th style="text-align: center;">Total</th>
+                        <th style="text-align: center;">Win Rate</th>
+                        <th style="text-align: center;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {''.join(rows)}
+                </tbody>
+            </table>
+        </div>
+        """
+
+    def _build_high_intent_losses(self, head_to_head_results: Dict[str, Any]) -> str:
+        """Build section showing high-intent comparison queries being lost."""
+        if not head_to_head_results:
+            return ""
+
+        battlecard = head_to_head_results.get('battlecard', [])
+        if not battlecard:
+            return ""
+
+        # Get competitors where we're losing
+        losing_comps = [c for c in battlecard if c.get('status') == 'losing'][:5]
+
+        if not losing_comps:
+            return """
+            <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 8px; padding: 24px; margin: 32px 0;">
+                <div style="font-weight: 600; color: #065f46; font-size: 18px; margin-bottom: 8px;">
+                    ✅ No Critical Losses
+                </div>
+                <div style="color: #047857;">
+                    You're not significantly losing head-to-head comparisons. Keep monitoring competitive positioning.
+                </div>
+            </div>
+            """
+
+        loss_items = []
+        for comp in losing_comps:
+            name = comp.get('competitor', '')
+            losses = comp.get('losses', 0)
+            wins = comp.get('wins', 0)
+            sample_prompts = comp.get('sample_prompts', [])[:2]  # Top 2 examples
+
+            prompt_examples = ""
+            for prompt_data in sample_prompts:
+                prompt = prompt_data.get('prompt', '')
+                outcome = prompt_data.get('outcome', '')
+                platform = prompt_data.get('platform', '')
+
+                if outcome == 'loss':
+                    prompt_examples += f"""
+                    <div style="margin-top: 8px; padding: 12px; background: rgba(239, 68, 68, 0.05); border-left: 3px solid #ef4444; border-radius: 4px;">
+                        <div style="font-size: 13px; color: #4D2E3A; margin-bottom: 4px;">"{prompt[:100]}..."</div>
+                        <div style="font-size: 11px; color: #A7868F;">Platform: {platform}</div>
+                    </div>
+                    """
+
+            loss_items.append(f"""
+                <div style="padding: 20px; background: white; border: 1px solid #E8E4E3; border-radius: 8px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div>
+                            <span style="font-size: 18px; font-weight: 600; color: #4D2E3A;">{name}</span>
+                            <span style="margin-left: 12px; background: #fef2f2; color: #ef4444; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">
+                                LOSING {losses}-{wins}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="font-size: 14px; color: #6B5660; margin-bottom: 8px;">
+                        Example comparison queries where {name} is winning:
+                    </div>
+                    {prompt_examples}
+                </div>
+            """)
+
+        return f"""
+        <div style="margin: 48px 0;">
+            <h3 style="color: #ef4444;">⚠️ High-Intent Prompts You're Losing</h3>
+            <p style="color: #6B5660; margin-bottom: 24px;">
+                These are direct comparison queries where buyers are choosing competitors over you.
+                Winning these queries should be a top priority.
+            </p>
+            {''.join(loss_items)}
+        </div>
+        """
+
+    def _build_citation_analysis(self, citation_stats: Dict[str, Any]) -> str:
+        """Build citation analysis showing owned vs third-party control."""
+        if not citation_stats:
+            return ""
+
+        owned_pct = citation_stats.get('owned_percentage', 0)
+        third_party_pct = citation_stats.get('third_party_percentage', 0)
+        competitor_pct = citation_stats.get('competitor_percentage', 0)
+        authority_score = citation_stats.get('citation_authority_score', 0)
+        top_domains = citation_stats.get('top_domains', [])
+
+        # Determine color based on owned percentage
+        if owned_pct >= 50:
+            owned_color = '#10b981'
+            owned_status = 'Strong'
+        elif owned_pct >= 30:
+            owned_color = '#f59e0b'
+            owned_status = 'Moderate'
+        else:
+            owned_color = '#ef4444'
+            owned_status = 'Weak'
+
+        # Build top domains list
+        domain_rows = []
+        for domain_data in top_domains[:15]:
+            domain = domain_data.get('domain', '')
+            count = domain_data.get('citations', 0)
+            dtype = domain_data.get('classification', 'Unknown')
+
+            if dtype == 'Owned':
+                badge_color = '#10b981'
+            elif dtype == 'Competitor':
+                badge_color = '#ef4444'
+            else:
+                badge_color = '#6B5660'
+
+            domain_rows.append(f"""
+                <tr>
+                    <td style="font-weight: 500; color: #4D2E3A;">{domain}</td>
+                    <td style="text-align: center; font-weight: 600; color: #4D2E3A;">{count}</td>
+                    <td style="text-align: center;">
+                        <span style="background: {badge_color}; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                            {dtype.upper()}
+                        </span>
+                    </td>
+                </tr>
+            """)
+
+        return f"""
+        <div style="margin: 48px 0;">
+            <h2>Citation Authority Analysis</h2>
+            <p style="color: #6B5660; margin-bottom: 24px;">
+                Who controls your AI narrative? This shows what sources AI platforms cite when mentioning your brand.
+            </p>
+
+            <div style="background: linear-gradient(135deg, rgba(77, 46, 58, 0.05) 0%, rgba(77, 46, 58, 0.1) 100%); border: 2px solid #4D2E3A; border-radius: 12px; padding: 32px; margin-bottom: 32px;">
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #6B5660; margin-bottom: 8px;">
+                        Citation Authority Score
+                    </div>
+                    <div style="font-size: 56px; font-weight: 700; color: #4D2E3A;">
+                        {authority_score:.0f}<span style="font-size: 28px; color: #A7868F;">/100</span>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                    <div style="background: white; border-radius: 8px; padding: 20px; text-align: center;">
+                        <div style="font-size: 36px; font-weight: 700; color: {owned_color};">{owned_pct:.0f}%</div>
+                        <div style="font-size: 12px; color: #6B5660; font-weight: 600; margin-top: 4px;">OWNED</div>
+                        <div style="font-size: 11px; color: #A7868F; margin-top: 4px;">{owned_status} Control</div>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 20px; text-align: center;">
+                        <div style="font-size: 36px; font-weight: 700; color: #6B5660;">{third_party_pct:.0f}%</div>
+                        <div style="font-size: 12px; color: #6B5660; font-weight: 600; margin-top: 4px;">THIRD-PARTY</div>
+                        <div style="font-size: 11px; color: #A7868F; margin-top: 4px;">External Sites</div>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 20px; text-align: center;">
+                        <div style="font-size: 36px; font-weight: 700; color: #ef4444;">{competitor_pct:.0f}%</div>
+                        <div style="font-size: 12px; color: #6B5660; font-weight: 600; margin-top: 4px;">COMPETITOR</div>
+                        <div style="font-size: 11px; color: #A7868F; margin-top: 4px;">Rival Sites</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(167, 134, 143, 0.1); border-left: 4px solid #A7868F; padding: 16px; border-radius: 4px; margin-bottom: 24px;">
+                <div style="font-weight: 600; color: #4D2E3A; margin-bottom: 8px;">💡 What This Means</div>
+                <div style="font-size: 14px; color: #6B5660; line-height: 1.6;">
+                    {'You have strong control over your narrative with ' + str(round(owned_pct)) + '% owned citations.' if owned_pct >= 50 else 
+                     'Third-party sites control ' + str(round(third_party_pct)) + '% of your narrative. Build more authoritative owned content.' if third_party_pct >= 50 else
+                     'Mixed control - increase owned content to strengthen your narrative.'}
+                </div>
+            </div>
+
+            <h3>Top Cited Domains</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Domain</th>
+                        <th style="text-align: center;">Citations</th>
+                        <th style="text-align: center;">Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {''.join(domain_rows)}
+                </tbody>
+            </table>
+        </div>
+        """
+
+    def _build_competitive_intelligence_tab(self, brand_name: str,
+                                           visibility_summary: Dict[str, Any],
+                                           competitive_analysis: Dict[str, Any],
+                                           gap_analysis: Dict[str, Any],
+                                           action_plan: Dict[str, Any],
+                                           head_to_head_results: Dict[str, Any],
+                                           scored_results: List[Dict[str, Any]]) -> str:
+        """Build competitive intelligence tab showing what competitors are doing vs what you should do."""
+
+        brand_vis = visibility_summary.get('brand_visibility_rate', 0)
+        competitor_mentions = visibility_summary.get('competitors_encountered', [])
+
+        # Build "Why This Matters" section with industry facts (now collapsible)
+        why_matters_html = self._build_why_this_matters(brand_name, visibility_summary)
+
+        # Build competitive comparison table
+        competitive_comparison_html = self._build_competitive_comparison_table(
+            brand_name, visibility_summary, competitive_analysis, scored_results
+        )
+
+        # Build simplified top 3-5 opportunities
+        top_opportunities_html = self._build_simplified_opportunities(
+            gap_analysis, action_plan, competitive_analysis, scored_results
+        )
+
+        return f"""
+        <div class="info-card">
+            <div class="info-card-title">What Competitors Are Doing (That You're Not)</div>
+            <div class="info-card-content">
+                <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 0;">
+                    The brands showing up in AI responses are doing specific things that you aren't. Here's what the data shows.
+                </p>
+            </div>
+        </div>
+
+        {competitive_comparison_html}
+
+        {top_opportunities_html}
+
+        <div class="accordion-group" style="margin-top: 32px;">
+            {why_matters_html}
+        </div>
+        """
+
+    def _build_why_this_matters(self, brand_name: str, visibility_summary: Dict[str, Any]) -> str:
+        """Build compelling 'Why This Matters' section with industry stats."""
+
+        brand_vis = visibility_summary.get('brand_visibility_rate', 0)
+
+        # Select relevant industry facts based on their visibility level
+        if brand_vis < 20:
+            primary_fact = "Brands invisible in AI responses are seeing <strong>40% drops in organic search traffic</strong> as users shift to AI for research."
+            urgency = "critical"
+        elif brand_vis < 40:
+            primary_fact = "Companies with strong AI visibility are seeing <strong>2-3x more consideration</strong> in buyer research compared to those who aren't visible."
+            urgency = "high"
+        else:
+            primary_fact = "Market leaders maintain their position by showing up in <strong>60%+ of relevant AI queries</strong> - you're at {brand_vis:.0f}%."
+            urgency = "moderate"
+
+        return f"""
+        <button class="accordion-button" onclick="toggleAccordion(this)">
+            <span>🚨 Why AI Visibility Matters Now (Industry Data)</span>
+            <span class="accordion-icon">▼</span>
+        </button>
+        <div class="accordion-content">
+            <div style="background: linear-gradient(135deg, #4D2E3A 0%, #6B5660 100%); color: white; padding: 32px; border-radius: 12px; margin-top: 16px;">
+                <div style="font-size: 18px; line-height: 1.8; margin-bottom: 20px;">
+                    {primary_fact}
+                </div>
+                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; margin-top: 16px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center;">
+                        <div>
+                            <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">53%</div>
+                            <div style="font-size: 13px; opacity: 0.9;">of B2B buyers now use AI for vendor research</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">68%</div>
+                            <div style="font-size: 13px; opacity: 0.9;">of consumers trust AI recommendations as much as search results</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">$0</div>
+                            <div style="font-size: 13px; opacity: 0.9;">cost per AI impression vs $2-5 per click on Google Ads</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        """
+
+    def _build_competitive_comparison_table(self, brand_name: str,
+                                          visibility_summary: Dict[str, Any],
+                                          competitive_analysis: Dict[str, Any],
+                                          scored_results: List[Dict[str, Any]]) -> str:
+        """Build table showing what competitors are doing vs what client should do."""
+        
+        brand_vis = visibility_summary.get('brand_visibility_rate', 0)
+
+        # Use the already-calculated competitive analysis data
+        top_competitors = competitive_analysis.get('top_competitors', [])
+
+        # Build competitor rows from competitive_analysis
+        competitor_rows = ""
+        for comp_data in top_competitors[:5]:
+            comp = comp_data['name']
+            rate = comp_data['mention_rate']
+            status = "🏆 Leading" if rate > brand_vis * 1.5 else "⚠️ Ahead" if rate > brand_vis else "✓ Behind"
+
+            # Get what they're doing (sample analysis)
+            what_theyre_doing = self._infer_competitor_strategy(comp, scored_results)
+
+            competitor_rows += f"""
+            <tr>
+                <td style="font-weight: 600;">{comp}</td>
+                <td style="text-align: center; font-size: 20px; font-weight: 700; color: {'#27AE60' if rate > brand_vis else '#6B5660'};">
+                    {rate:.1f}%
+                </td>
+                <td style="text-align: center;">{status}</td>
+                <td style="font-size: 14px; color: #6B5660;">{what_theyre_doing}</td>
+            </tr>
+            """
+
+        if not competitor_rows:
+            competitor_rows = """
+            <tr>
+                <td colspan="4" style="text-align: center; color: #6B5660; padding: 24px;">
+                    No competitor data available. Competitors may not have been mentioned in AI responses during this analysis period.
+                </td>
+            </tr>
+            """
+        
+        you_row = f"""
+        <tr style="background: #FFF9E6; border: 2px solid #F59E0B;">
+            <td style="font-weight: 700; color: #4D2E3A;">👉 {brand_name} (You)</td>
+            <td style="text-align: center; font-size: 20px; font-weight: 700; color: #4D2E3A;">
+                {brand_vis:.1f}%
+            </td>
+            <td style="text-align: center; font-weight: 600; color: #F59E0B;">Your Position</td>
+            <td style="font-size: 14px; color: #6B5660; font-style: italic;">See opportunities below</td>
+        </tr>
+        """
+        
+        return f"""
+        <div class="info-card">
+            <div class="info-card-title">The Competitive Landscape</div>
+            <div class="info-card-content">
+                <p style="color: #6B5660; margin-bottom: 16px;">
+                    Here's who AI mentions most often in your space, and what they're doing to earn that visibility:
+                </p>
+
+                <table style="margin-bottom: 0;">
+                    <thead>
+                        <tr>
+                            <th>Brand</th>
+                            <th style="text-align: center;">AI Visibility Rate</th>
+                            <th style="text-align: center;">Status</th>
+                            <th>What They're Doing</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {you_row}
+                        {competitor_rows}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        """
+
+    def _infer_competitor_strategy(self, competitor: str, scored_results: List[Dict[str, Any]]) -> str:
+        """Infer what a competitor is doing based on where they appear."""
+
+        # Sample a few results where competitor appears
+        appearances = []
+        for r in scored_results:
+            visibility = r.get('visibility', {})
+            competitors_mentioned = visibility.get('competitors_mentioned', [])
+            if competitor in competitors_mentioned:
+                appearances.append(r)
+
+        if not appearances:
+            return "Strong brand presence"
+
+        # Check for patterns
+        comparison_count = sum(1 for r in appearances if 'vs' in r.get('prompt_text', '').lower() or 'versus' in r.get('prompt_text', '').lower() or 'compare' in r.get('prompt_text', '').lower())
+        how_to_count = sum(1 for r in appearances if 'how to' in r.get('prompt_text', '').lower())
+        best_count = sum(1 for r in appearances if 'best' in r.get('prompt_text', '').lower())
+
+        if comparison_count > len(appearances) * 0.4:
+            return "Heavy comparison content & head-to-head positioning"
+        elif how_to_count > len(appearances) * 0.3:
+            return "Educational content & how-to guides"
+        elif best_count > len(appearances) * 0.3:
+            return "Product reviews & best-of listicles"
+        else:
+            return "Comprehensive content across query types"
+
+    def _build_simplified_opportunities(self, gap_analysis: Dict[str, Any],
+                                       action_plan: Dict[str, Any],
+                                       competitive_analysis: Dict[str, Any],
+                                       scored_results: List[Dict[str, Any]]) -> str:
+        """Build simplified top 3-5 opportunities that focus on competitive advantage."""
+        
+        geo_aeo_wins = action_plan.get('geo_aeo_quick_wins', [])[:3]  # Top 3 only
+        
+        opportunities_html = ""
+        
+        for i, win in enumerate(geo_aeo_wins, 1):
+            # Get 2 example queries only
+            example_queries = win.get('example_queries', [])[:2]
+            queries_html = ""
+            for query in example_queries:
+                cleaned = self._clean_query_for_display(query)
+                queries_html += f'<li style="margin: 4px 0; color: #6B5660; font-size: 14px;">"{cleaned}"</li>'
+            
+            opportunities_html += f"""
+            <div style="background: #F7EBF0; border-left: 4px solid #A78E8B; padding: 24px; border-radius: 8px; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h4 style="margin: 0; color: #4D2E3A; font-size: 18px;">{i}. {win['title']}</h4>
+                    <span style="background: #8B3A3A; color: white; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 600;">
+                        HIGH IMPACT
+                    </span>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <strong style="color: #6B5660;">Why this matters:</strong>
+                    <p style="margin: 6px 0 0 0; color: #4D2E3A; font-size: 15px; line-height: 1.6;">{win['why']}</p>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <strong style="color: #6B5660;">Examples of queries where competitors show up:</strong>
+                    <ul style="margin: 8px 0; padding-left: 20px;">{queries_html}</ul>
+                </div>
+                
+                <div style="background: white; padding: 16px; border-radius: 6px; margin-top: 16px;">
+                    <strong style="color: #4D2E3A;">📈 Estimated Impact:</strong>
+                    <p style="margin: 6px 0 0 0; color: #6B5660; font-size: 14px;">{win['estimated_impact']}</p>
+                </div>
+            </div>
+            """
+        
+        if not opportunities_html:
+            opportunities_html = "<p>No immediate opportunities identified. Building general content presence is the priority.</p>"
+        
+        return f"""
+        <div class="info-card" style="margin-top: 32px;">
+            <div class="info-card-title">🎯 Your Top Opportunities</div>
+            <div class="info-card-content">
+                <p style="color: #6B5660; margin-bottom: 24px;">
+                    Based on competitive analysis, these are the highest-impact areas where you can catch up to leaders in your space:
+                </p>
+                {opportunities_html}
+            </div>
+        </div>
+
+        <div class="accordion-group" style="margin-top: 24px;">
+            <button class="accordion-button" onclick="toggleAccordion(this)">
+                <span>📊 Want the Detailed Tactical Plan?</span>
+                <span class="accordion-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <p style="color: #6B5660; line-height: 1.6; margin: 16px 0;">
+                    This report shows you the strategic overview. DaSilva Consulting has a detailed, proprietary action plan
+                    with specific content briefs, technical SEO requirements, and distribution strategies for each opportunity.
+                </p>
+            </div>
         </div>
         """

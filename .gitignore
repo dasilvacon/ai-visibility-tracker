@@ -10,6 +10,7 @@ config_auth.yaml
 .env
 *.key
 *.pem
+gcs-credentials.json
 
 # Results and data (exclude from public repo)
 data/results/

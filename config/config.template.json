@@ -3,6 +3,7 @@
     "openai": "YOUR_OPENAI_API_KEY_HERE",
     "anthropic": "YOUR_ANTHROPIC_API_KEY_HERE",
     "perplexity": "YOUR_PERPLEXITY_API_KEY_HERE",
+    "gemini": "YOUR_GOOGLE_API_KEY_HERE",
     "deepseek": "YOUR_DEEPSEEK_API_KEY_HERE",
     "grok": "YOUR_GROK_API_KEY_HERE"
   },
@@ -10,6 +11,7 @@
     "openai": "gpt-4",
     "anthropic": "claude-sonnet-4-20250514",
     "perplexity": "pplx-70b-online",
+    "gemini": "gemini-2.0-flash-exp",
     "deepseek": "deepseek-chat",
     "grok": "grok-beta"
   },
