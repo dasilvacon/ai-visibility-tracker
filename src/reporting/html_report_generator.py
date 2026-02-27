@@ -29,6 +29,7 @@ class HTMLReportGenerator:
                        composite_scorecard: Dict[str, Any] = None,
                        head_to_head_results: Dict[str, Any] = None,
                        citation_stats: Dict[str, Any] = None,
+                       sentiment_analysis: Dict[str, Any] = None,
                        website_verification: Dict[str, Any] = None,
                        source_analysis: Dict[str, Any] = None) -> str:
         """
