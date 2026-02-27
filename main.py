@@ -29,6 +29,7 @@ from analysis.source_analyzer import SourceAnalyzer
 from analysis.head_to_head_analyzer import HeadToHeadAnalyzer
 from analysis.citation_classifier import CitationClassifier
 from analysis.composite_scorer import CompositeScorer
+from analysis.sentiment_analyzer import SentimentAnalyzer
 from reporting.html_report_generator import HTMLReportGenerator
 from reporting.csv_exporter import CSVExporter
 from reporting.pdf_exporter import PDFExporter
@@ -498,6 +499,15 @@ class VisibilityTracker:
         citation_stats = citation_classifier.classify_all_sources(scored_results)
         print(f"   ✓ Citation authority: {citation_stats['citation_authority_score']:.1f}/100")
 
+        # Sentiment analysis
+        sentiment_analyzer = SentimentAnalyzer(
+            brand_name=brand_name,
+            competitor_names=competitors
+        )
+        sentiment_analysis = sentiment_analyzer.analyze_sentiment(scored_results)
+        sentiment_score = sentiment_analysis.get('overall_score', {}).get('score', 0)
+        print(f"   ✓ Sentiment score: {sentiment_score:.1f}/100 ({sentiment_analysis['overall_score']['grade']})")
+
         # Composite scoring
         composite_scorer = CompositeScorer()
         composite_metrics = {
@@ -529,6 +539,7 @@ class VisibilityTracker:
             composite_scorecard=scorecard,
             head_to_head_results=h2h_results,
             citation_stats=citation_stats,
+            sentiment_analysis=sentiment_analysis,
             website_verification=website_verification,
             source_analysis=source_analysis
         )

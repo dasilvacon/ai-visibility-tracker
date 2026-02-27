@@ -5,6 +5,10 @@
 
 set -e  # Exit on error
 
+# Set environment for gcloud
+export PATH=/opt/homebrew/share/google-cloud-sdk/bin:$PATH
+export CLOUDSDK_PYTHON=/opt/homebrew/bin/python3.13
+
 # Colors for output
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -17,10 +21,18 @@ echo -e "${BLUE}║   AI Visibility Dashboard - Cloud Run Deployment      ║${N
 echo -e "${BLUE}╚════════════════════════════════════════════════════════╝${NC}"
 echo ""
 
+# Load configuration from setup if available
+if [ -f ".env.deployment" ]; then
+    echo -e "${GREEN}✓ Loading configuration from .env.deployment${NC}"
+    source .env.deployment
+else
+    echo -e "${YELLOW}⚠ No .env.deployment found. Run ./setup_cloud_run.sh first${NC}"
+fi
+
 # Configuration
-PROJECT_ID="${GCP_PROJECT_ID:-your-project-id}"
-SERVICE_NAME="ai-visibility-dashboard"
-REGION="${GCP_REGION:-us-east1}"
+PROJECT_ID="${PROJECT_ID:-${GCP_PROJECT_ID:-your-project-id}}"
+SERVICE_NAME="${SERVICE_NAME:-ai-visibility-dashboard}"
+REGION="${REGION:-${GCP_REGION:-us-east1}}"
 IMAGE_NAME="gcr.io/${PROJECT_ID}/${SERVICE_NAME}"
 
 # Check if gcloud is installed
