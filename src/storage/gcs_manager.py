@@ -33,9 +33,14 @@ class GCSManager:
                 self.credentials = service_account.Credentials.from_service_account_info(creds_dict)
             elif 'credentials_file' in st.secrets['gcs']:
                 creds_path = st.secrets['gcs']['credentials_file']
-                self.credentials = service_account.Credentials.from_service_account_file(creds_path)
+                if os.path.exists(creds_path):
+                    self.credentials = service_account.Credentials.from_service_account_file(creds_path)
+                else:
+                    # File doesn't exist, use default credentials (Cloud Run service account)
+                    self.credentials = None
             else:
-                raise ValueError("No credentials found in Streamlit secrets")
+                # No credentials specified, use default (Cloud Run service account)
+                self.credentials = None
         else:
             # Fall back to parameters or environment variables
             self.bucket_name = bucket_name or os.getenv('GCS_BUCKET_NAME')
