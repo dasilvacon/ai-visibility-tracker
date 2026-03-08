@@ -21,13 +21,19 @@ if [ -n "$GITHUB_TOKEN" ]; then
     GITHUB_TOKEN=$(echo "$GITHUB_TOKEN" | tr -d '\n\r')
     echo "   Token length: ${#GITHUB_TOKEN} characters"
 
+    # Configure git to store credentials (use token as username for GitHub)
+    git config --global credential.helper store
+    echo "https://oauth2:${GITHUB_TOKEN}@github.com" > ~/.git-credentials
+    chmod 600 ~/.git-credentials
+    echo "✓ Git credentials configured"
+
     # Check if we're in a git repository
     if ! git rev-parse --git-dir > /dev/null 2>&1; then
         echo "📦 Initializing git repository..."
         git init
 
         echo "   Adding remote..."
-        REMOTE_URL="https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git"
+        REMOTE_URL="https://github.com/dasilvacon/ai-visibility-tracker.git"
         if git remote add origin "$REMOTE_URL"; then
             echo "✓ Remote added successfully"
         else
@@ -45,8 +51,8 @@ if [ -n "$GITHUB_TOKEN" ]; then
             echo "⚠️  Git fetch failed, continuing with existing data..."
         fi
     else
-        # Update remote URL with token
-        REMOTE_URL="https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git"
+        # Update remote URL (use HTTPS without token embedded, credentials stored separately)
+        REMOTE_URL="https://github.com/dasilvacon/ai-visibility-tracker.git"
         git remote set-url origin "$REMOTE_URL"
         echo "✓ GitHub authentication configured"
 
