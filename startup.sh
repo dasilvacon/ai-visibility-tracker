@@ -44,8 +44,8 @@ if [ -n "$GITHUB_TOKEN" ]; then
         # Fetch initial data from remote
         echo "📥 Fetching initial data from GitHub..."
         if git fetch origin main 2>&1; then
-            # Create main branch tracking origin/main (this checks out origin/main and creates local main)
-            git checkout -b main origin/main 2>&1 || git reset --hard origin/main
+            # Create main branch tracking origin/main
+            git checkout -b main origin/main 2>&1
             echo "✓ Client data synced from GitHub"
         else
             echo "⚠️  Git fetch failed, continuing with existing data..."
