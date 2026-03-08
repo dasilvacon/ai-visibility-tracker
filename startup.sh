@@ -17,16 +17,24 @@ fi
 # Set up GitHub authentication and sync data
 if [ -n "$GITHUB_TOKEN" ]; then
     echo "🔐 Setting up GitHub authentication..."
+    echo "   Token length: ${#GITHUB_TOKEN} characters"
 
     # Check if we're in a git repository
     if ! git rev-parse --git-dir > /dev/null 2>&1; then
         echo "📦 Initializing git repository..."
         git init
-        git remote add origin https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git
+
+        echo "   Adding remote..."
+        if git remote add origin https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git; then
+            echo "✓ Remote added successfully"
+        else
+            echo "✗ Failed to add remote"
+            # Continue anyway to start Streamlit
+        fi
 
         # Fetch initial data from remote
         echo "📥 Fetching initial data from GitHub..."
-        if git fetch origin main 2>&1 | grep -v "warning:"; then
+        if git fetch origin main 2>&1; then
             # Checkout the main branch
             git checkout -b main origin/main
             echo "✓ Client data synced from GitHub"
