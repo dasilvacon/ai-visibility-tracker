@@ -58,7 +58,11 @@ if [ -n "$GITHUB_TOKEN" ]; then
 
         # Fetch and reset to match remote
         echo "📥 Syncing client data from GitHub..."
-        if git fetch origin main && git reset --hard origin/main; then
+        if git fetch origin main; then
+            # Ensure we're on main branch (not detached HEAD)
+            git checkout main 2>/dev/null || git checkout -b main origin/main
+            # Reset to match remote
+            git reset --hard origin/main
             echo "✓ Client data synced from GitHub"
         else
             echo "⚠️  Git sync failed, continuing with existing data..."
