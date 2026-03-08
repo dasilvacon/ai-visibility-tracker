@@ -1,7 +1,8 @@
 #!/bin/bash
 # Startup script for Cloud Run - sets up git and syncs data
 
-set -e
+# Don't exit on error - we'll handle errors manually
+set +e
 
 echo "🚀 Starting AI Visibility Dashboard..."
 
@@ -13,21 +14,31 @@ if [ -n "$GIT_USER_NAME" ] && [ -n "$GIT_USER_EMAIL" ]; then
     echo "✓ Git configured"
 fi
 
-# Set up GitHub authentication with Personal Access Token
+# Set up GitHub authentication and sync data
 if [ -n "$GITHUB_TOKEN" ]; then
     echo "🔐 Setting up GitHub authentication..."
 
-    # Change remote from SSH to HTTPS with token
-    git remote set-url origin https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git
-
-    echo "✓ GitHub authentication configured"
-
-    # Pull latest client data from repository
-    echo "📥 Syncing client data from GitHub..."
-    if git pull origin main --rebase; then
-        echo "✓ Client data synced"
+    # Check if we're in a git repository
+    if ! git rev-parse --git-dir > /dev/null 2>&1; then
+        echo "📦 Initializing git repository..."
+        git init
+        git remote add origin https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git
+        echo "✓ Git repository initialized"
     else
-        echo "⚠️  Git pull failed, continuing with existing data..."
+        # Update remote URL with token
+        git remote set-url origin https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git
+        echo "✓ GitHub authentication configured"
+    fi
+
+    # Fetch and pull latest client data from repository
+    echo "📥 Syncing client data from GitHub..."
+    git fetch origin main
+
+    # Reset to match remote (overwrite local with remote data)
+    if git reset --hard origin/main; then
+        echo "✓ Client data synced from GitHub"
+    else
+        echo "⚠️  Git sync failed, continuing with existing data..."
     fi
 else
     echo "⚠️  No GITHUB_TOKEN found - git operations will be disabled"
