@@ -23,8 +23,7 @@ RUN pip install --no-cache-dir google-cloud-storage
 # Copy application code
 COPY . .
 
-# Copy startup script
-COPY startup.sh /app/startup.sh
+# Make startup script executable
 RUN chmod +x /app/startup.sh
 
 # Expose port (Cloud Run will set PORT env variable)
