@@ -845,23 +845,59 @@ makeup palette reviews,12,1800,38
                     )
 
                     # Auto-commit client data to git
+                    git_success = False
                     try:
                         import subprocess
+
+                        # Check if git is available
+                        git_check = subprocess.run(['git', '--version'], capture_output=True, timeout=5)
+                        if git_check.returncode != 0:
+                            raise Exception("Git is not installed or not available")
+
                         # Add all client files
-                        subprocess.run(['git', 'add', str(keywords_path), str(personas_path), str(brand_config_path), 'data/clients.json'], check=False)
+                        add_result = subprocess.run(
+                            ['git', 'add', str(keywords_path), str(personas_path), str(brand_config_path), 'data/clients.json'],
+                            capture_output=True,
+                            text=True,
+                            timeout=10
+                        )
+                        if add_result.returncode != 0:
+                            raise Exception(f"Git add failed: {add_result.stderr}")
 
                         # Commit
                         commit_msg = f"Add new client: {new_client_name}"
-                        subprocess.run(['git', 'commit', '-m', commit_msg], check=False)
+                        commit_result = subprocess.run(
+                            ['git', 'commit', '-m', commit_msg],
+                            capture_output=True,
+                            text=True,
+                            timeout=10
+                        )
+                        if commit_result.returncode != 0:
+                            # Check if it's just "nothing to commit" (which is okay)
+                            if "nothing to commit" not in commit_result.stdout.lower():
+                                raise Exception(f"Git commit failed: {commit_result.stderr}")
 
                         # Push
-                        subprocess.run(['git', 'push'], check=False)
+                        push_result = subprocess.run(
+                            ['git', 'push'],
+                            capture_output=True,
+                            text=True,
+                            timeout=30
+                        )
+                        if push_result.returncode != 0:
+                            raise Exception(f"Git push failed: {push_result.stderr}")
 
+                        git_success = True
                         st.success(f"✅ {new_client_name} created and saved to GitHub!")
+
+                    except subprocess.TimeoutExpired:
+                        st.success(f"✅ {new_client_name} created successfully!")
+                        st.warning(f"⚠️ Git operation timed out. Files saved locally but not pushed to GitHub.")
                     except Exception as e:
                         # If git fails, still show success but warn about manual commit needed
                         st.success(f"✅ {new_client_name} created successfully!")
-                        st.warning(f"⚠️ Could not auto-commit to git. Please commit manually or use the 'Commit All Client Data' button.")
+                        st.warning(f"⚠️ Could not auto-commit to git: {str(e)}")
+                        st.info("💡 Files are saved locally. Use the 'Commit All Client Data' button above to sync to GitHub.")
 
                     st.balloons()
 

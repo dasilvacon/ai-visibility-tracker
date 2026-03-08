@@ -104,6 +104,15 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     fi
 fi
 
+# Check for git credentials
+echo ""
+echo -e "${YELLOW}⚠ Important: Git credentials are required for client data persistence${NC}"
+echo "  These secrets should exist in Google Secret Manager:"
+echo "  - github-token (Personal Access Token with repo access)"
+echo "  - git-user-name (Your name for git commits)"
+echo "  - git-user-email (Your email for git commits)"
+echo ""
+
 # Deploy to Cloud Run
 echo ""
 echo -e "${BLUE}→ Deploying to Cloud Run...${NC}"
@@ -118,6 +127,9 @@ gcloud run deploy ${SERVICE_NAME} \
     --min-instances 0 \
     --max-instances 10 \
     --set-secrets="/app/.streamlit/secrets.toml=streamlit-secrets:latest" \
+    --set-secrets="GITHUB_TOKEN=github-token:latest" \
+    --set-env-vars="GIT_USER_NAME=Tiffany DaSilva" \
+    --set-env-vars="GIT_USER_EMAIL=tiffany@dasilvaconsulting.com" \
     --port 8080
 
 echo ""
