@@ -368,53 +368,45 @@ def render_simple_setup():
                     st.text(f"  • {filepath}")
 
             st.markdown("---")
-            st.markdown("#### 💾 Save Client Data to GitHub")
+            st.markdown("#### ☁️ Backup Client Data to Cloud Storage")
             st.markdown("""
-            **Normally client data is auto-committed when you click "Create Client".**
-            If you're seeing this warning, auto-commit failed and you need to manually commit.
-
-            **Quick Fix (Recommended):**
-            - Use the button below to commit all uncommitted client files at once
-
-            **Manual Alternative:**
-            - Use git commands in your terminal:
-            ```
-            git add data/*.json data/*_keywords.csv data/*_personas.json
-            git commit -m "Add client data files"
-            git push
-            ```
+            **Normally client data is auto-backed-up when you click "Create Client".**
+            If you're seeing this warning, the cloud backup may have failed. Use the button below to manually backup.
             """)
 
             col1, col2 = st.columns([1, 3])
             with col1:
-                if st.button("💾 Commit All Client Data", type="primary", use_container_width=True):
-                    import subprocess
-                    import os
+                if st.button("☁️ Backup to Cloud", type="primary", use_container_width=True):
                     try:
-                        # Determine git working directory (works both locally and in Docker)
-                        git_cwd = '/app' if os.path.exists('/app') and os.path.isdir('/app/.git') else Path.cwd()
+                        from src.client_manager.gcs_sync import GCSClientSync
 
-                        # Add all client files (add entire data directory)
-                        subprocess.run(['git', 'add', 'data/'], check=True, cwd=git_cwd, capture_output=True, text=True)
+                        gcs_sync = GCSClientSync()
 
-                        # Commit
-                        commit_msg = f"Add client data for: {', '.join(c['name'] for c in registry.get_all_clients() if c['slug'] in uncommitted)}"
-                        commit_result = subprocess.run(['git', 'commit', '-m', commit_msg], check=True, cwd=git_cwd, capture_output=True, text=True)
+                        # Upload all uncommitted client files
+                        success_count = 0
+                        for client_slug in uncommitted:
+                            client = registry.get_client(client_slug)
+                            if client:
+                                if gcs_sync.upload_client_files(client_slug, client['files']):
+                                    success_count += 1
 
-                        # Push to origin main explicitly
-                        push_result = subprocess.run(['git', 'push', 'origin', 'main'], check=True, cwd=git_cwd, capture_output=True, text=True)
+                        # Upload registry
+                        registry_ok = gcs_sync.upload_registry()
 
-                        st.success("✅ Client data committed and pushed to GitHub!")
-                        st.balloons()
-                        st.rerun()
-                    except subprocess.CalledProcessError as e:
-                        st.error(f"❌ Git operation failed: {str(e)}")
-                        if e.stderr:
-                            st.error(f"Error details: {e.stderr}")
-                        st.info("💡 Try the manual git commands above instead.")
+                        if success_count > 0 and registry_ok:
+                            st.success(f"✅ Backed up {success_count} client(s) to cloud storage!")
+                            st.balloons()
+                            st.rerun()
+                        else:
+                            st.error("❌ Cloud backup failed. Check logs for details.")
+
+                    except Exception as e:
+                        st.error(f"❌ Cloud backup failed: {str(e)}")
+                        import traceback
+                        st.code(traceback.format_exc(), language="python")
 
             with col2:
-                st.info("This will add, commit, and push all client files to GitHub.")
+                st.info("This will upload all client files to Google Cloud Storage for persistent storage.")
 
     elif all_clients:
         st.success(f"✅ All {len(all_clients)} clients are safely saved to GitHub!")
@@ -850,70 +842,31 @@ makeup palette reviews,12,1800,38
                         }
                     )
 
-                    # Auto-commit client data to git
-                    git_success = False
+                    # Save client data to Google Cloud Storage
+                    gcs_success = False
                     try:
-                        import subprocess
-                        import os
+                        from src.client_manager.gcs_sync import GCSClientSync
 
-                        # Determine git working directory (works both locally and in Docker)
-                        git_cwd = '/app' if os.path.exists('/app') and os.path.isdir('/app/.git') else Path.cwd()
-
-                        # Check if git is available
-                        git_check = subprocess.run(['git', '--version'], capture_output=True, timeout=5)
-                        if git_check.returncode != 0:
-                            raise Exception("Git is not installed or not available")
-
-                        # Add all client files
-                        add_result = subprocess.run(
-                            ['git', 'add', str(keywords_path), str(personas_path), str(brand_config_path), 'data/clients.json'],
-                            capture_output=True,
-                            text=True,
-                            timeout=10,
-                            cwd=git_cwd
+                        gcs_sync = GCSClientSync()
+                        gcs_success = gcs_sync.sync_client_to_gcs(
+                            client_slug=client_slug,
+                            files={
+                                'keywords': str(keywords_path),
+                                'personas': str(personas_path),
+                                'brand_config': str(brand_config_path)
+                            }
                         )
-                        if add_result.returncode != 0:
-                            raise Exception(f"Git add failed: {add_result.stderr}")
 
-                        # Commit
-                        commit_msg = f"Add new client: {new_client_name}"
-                        commit_result = subprocess.run(
-                            ['git', 'commit', '-m', commit_msg],
-                            capture_output=True,
-                            text=True,
-                            timeout=10,
-                            cwd=git_cwd
-                        )
-                        if commit_result.returncode != 0:
-                            # Check if it's just "nothing to commit" (which is okay)
-                            if "nothing to commit" not in commit_result.stdout.lower():
-                                raise Exception(f"Git commit failed: {commit_result.stderr}")
+                        if gcs_success:
+                            st.success(f"✅ {new_client_name} created and saved to cloud storage!")
+                        else:
+                            st.warning(f"⚠️ {new_client_name} created locally but cloud backup may have failed. Check logs.")
 
-                        # Push to origin main explicitly
-                        push_result = subprocess.run(
-                            ['git', 'push', 'origin', 'main'],
-                            capture_output=True,
-                            text=True,
-                            timeout=30,
-                            cwd=git_cwd
-                        )
-                        if push_result.returncode != 0:
-                            raise Exception(f"Git push failed: {push_result.stderr}")
-
-                        git_success = True
-                        st.success(f"✅ {new_client_name} created and saved to GitHub!")
-
-                    except subprocess.TimeoutExpired:
-                        st.success(f"✅ {new_client_name} created successfully!")
-                        st.warning(f"⚠️ Git operation timed out. Files saved locally but not pushed to GitHub.")
                     except Exception as e:
-                        # If git fails, still show success but warn about manual commit needed
+                        # If GCS fails, still show success but warn
                         st.success(f"✅ {new_client_name} created successfully!")
-                        st.error(f"⚠️ Could not auto-commit to git: {str(e)}")
-                        # Show more detailed error for debugging
-                        import traceback
-                        st.code(traceback.format_exc(), language="python")
-                        st.info("💡 Files are saved locally. Use the 'Commit All Client Data' button above to sync to GitHub.")
+                        st.warning(f"⚠️ Cloud storage backup failed: {str(e)}")
+                        st.info("💡 Files are saved locally and will be backed up on next container restart.")
 
                     st.balloons()
 
