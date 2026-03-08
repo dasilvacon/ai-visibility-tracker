@@ -25,7 +25,8 @@ if [ -n "$GITHUB_TOKEN" ]; then
         git init
 
         echo "   Adding remote..."
-        if git remote add origin https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git; then
+        REMOTE_URL="https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git"
+        if git remote add origin "$REMOTE_URL"; then
             echo "✓ Remote added successfully"
         else
             echo "✗ Failed to add remote"
@@ -43,7 +44,8 @@ if [ -n "$GITHUB_TOKEN" ]; then
         fi
     else
         # Update remote URL with token
-        git remote set-url origin https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git
+        REMOTE_URL="https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git"
+        git remote set-url origin "$REMOTE_URL"
         echo "✓ GitHub authentication configured"
 
         # Fetch and reset to match remote
