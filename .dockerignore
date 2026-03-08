@@ -64,7 +64,12 @@ tests/
 check.py
 example_*.py
 generate_*_report.py
-*.sh
+# Exclude shell scripts except startup.sh
+deploy*.sh
+setup*.sh
+test*.sh
+*upload*.sh
+simple_upload.sh
 
 # Large data files (use GCS instead)
 data/reports/*.html
