@@ -23,22 +23,28 @@ if [ -n "$GITHUB_TOKEN" ]; then
         echo "📦 Initializing git repository..."
         git init
         git remote add origin https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git
-        echo "✓ Git repository initialized"
+
+        # Fetch initial data from remote
+        echo "📥 Fetching initial data from GitHub..."
+        if git fetch origin main 2>&1 | grep -v "warning:"; then
+            # Checkout the main branch
+            git checkout -b main origin/main
+            echo "✓ Client data synced from GitHub"
+        else
+            echo "⚠️  Git fetch failed, continuing with existing data..."
+        fi
     else
         # Update remote URL with token
         git remote set-url origin https://${GITHUB_TOKEN}@github.com/dasilvacon/ai-visibility-tracker.git
         echo "✓ GitHub authentication configured"
-    fi
 
-    # Fetch and pull latest client data from repository
-    echo "📥 Syncing client data from GitHub..."
-    git fetch origin main
-
-    # Reset to match remote (overwrite local with remote data)
-    if git reset --hard origin/main; then
-        echo "✓ Client data synced from GitHub"
-    else
-        echo "⚠️  Git sync failed, continuing with existing data..."
+        # Fetch and reset to match remote
+        echo "📥 Syncing client data from GitHub..."
+        if git fetch origin main && git reset --hard origin/main; then
+            echo "✓ Client data synced from GitHub"
+        else
+            echo "⚠️  Git sync failed, continuing with existing data..."
+        fi
     fi
 else
     echo "⚠️  No GITHUB_TOKEN found - git operations will be disabled"
