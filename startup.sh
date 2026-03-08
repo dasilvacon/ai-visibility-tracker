@@ -38,8 +38,9 @@ if [ -n "$GITHUB_TOKEN" ]; then
         # Fetch initial data from remote
         echo "📥 Fetching initial data from GitHub..."
         if git fetch origin main 2>&1; then
-            # Checkout the main branch
-            git checkout -b main origin/main
+            # Reset to match remote (overwrite local files with remote)
+            git reset --hard origin/main
+            git checkout -b main
             echo "✓ Client data synced from GitHub"
         else
             echo "⚠️  Git fetch failed, continuing with existing data..."
