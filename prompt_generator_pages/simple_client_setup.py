@@ -347,69 +347,9 @@ def render_simple_setup():
     from src.client_manager import ClientRegistry
     registry = ClientRegistry()
     all_clients = registry.get_all_clients()
-    uncommitted = registry.check_uncommitted_files()
 
-    if uncommitted:
-        st.markdown(f"""
-        <div style='background-color: rgba(232, 215, 160, 0.2); padding: 16px; border-radius: 8px; border-left: 4px solid #E8D7A0; margin-bottom: 24px;'>
-            <h4 style='color: #E8D7A0; margin-top: 0;'>⚠️ Uncommitted Client Data</h4>
-            <p style='color: {OFF_WHITE}; margin: 0;'>
-                <strong>Note:</strong> {len(uncommitted)} client(s) have files that aren't saved to GitHub yet.
-                This usually means auto-commit failed. Use the button below to manually commit.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-
-        with st.expander("📋 View Uncommitted Clients", expanded=True):
-            for client_slug, files in uncommitted.items():
-                client = registry.get_client(client_slug)
-                st.markdown(f"**{client['name']}** ({len(files)} uncommitted files)")
-                for filepath in files:
-                    st.text(f"  • {filepath}")
-
-            st.markdown("---")
-            st.markdown("#### ☁️ Backup Client Data to Cloud Storage")
-            st.markdown("""
-            **Normally client data is auto-backed-up when you click "Create Client".**
-            If you're seeing this warning, the cloud backup may have failed. Use the button below to manually backup.
-            """)
-
-            col1, col2 = st.columns([1, 3])
-            with col1:
-                if st.button("☁️ Backup to Cloud", type="primary", use_container_width=True):
-                    try:
-                        from src.client_manager.gcs_sync import GCSClientSync
-
-                        gcs_sync = GCSClientSync()
-
-                        # Upload all uncommitted client files
-                        success_count = 0
-                        for client_slug in uncommitted:
-                            client = registry.get_client(client_slug)
-                            if client:
-                                if gcs_sync.upload_client_files(client_slug, client['files']):
-                                    success_count += 1
-
-                        # Upload registry
-                        registry_ok = gcs_sync.upload_registry()
-
-                        if success_count > 0 and registry_ok:
-                            st.success(f"✅ Backed up {success_count} client(s) to cloud storage!")
-                            st.balloons()
-                            st.rerun()
-                        else:
-                            st.error("❌ Cloud backup failed. Check logs for details.")
-
-                    except Exception as e:
-                        st.error(f"❌ Cloud backup failed: {str(e)}")
-                        import traceback
-                        st.code(traceback.format_exc(), language="python")
-
-            with col2:
-                st.info("This will upload all client files to Google Cloud Storage for persistent storage.")
-
-    elif all_clients:
-        st.success(f"✅ All {len(all_clients)} clients are safely saved to GitHub!")
+    if all_clients:
+        st.success(f"✅ All {len(all_clients)} client(s) stored in cloud storage!")
 
     st.markdown("---")
 
