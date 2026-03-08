@@ -434,15 +434,19 @@ def render():
                         # Auto-commit client data to git
                         try:
                             import subprocess
+                            import os
+                            # Determine git working directory (works both locally and in Docker)
+                            git_cwd = '/app' if os.path.exists('/app') and os.path.isdir('/app/.git') else Path.cwd()
+
                             # Add all client files
-                            subprocess.run(['git', 'add', str(keywords_path), str(personas_path), 'data/clients.json'], check=False)
+                            subprocess.run(['git', 'add', str(keywords_path), str(personas_path), 'data/clients.json'], check=False, cwd=git_cwd)
 
                             # Commit
                             commit_msg = f"Add new client (manual): {new_client_name}"
-                            subprocess.run(['git', 'commit', '-m', commit_msg], check=False)
+                            subprocess.run(['git', 'commit', '-m', commit_msg], check=False, cwd=git_cwd)
 
-                            # Push
-                            subprocess.run(['git', 'push'], check=False)
+                            # Push to origin main explicitly
+                            subprocess.run(['git', 'push', 'origin', 'main'], check=False, cwd=git_cwd)
 
                             st.success(f"✅ {new_client_name} added and saved to GitHub!")
                         except Exception as e:

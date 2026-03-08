@@ -389,22 +389,28 @@ def render_simple_setup():
             with col1:
                 if st.button("💾 Commit All Client Data", type="primary", use_container_width=True):
                     import subprocess
+                    import os
                     try:
-                        # Add all client files
-                        subprocess.run(['git', 'add', 'data/*.json', 'data/*_keywords.csv', 'data/*_personas.json', 'data/clients.json'], check=True)
+                        # Determine git working directory (works both locally and in Docker)
+                        git_cwd = '/app' if os.path.exists('/app') and os.path.isdir('/app/.git') else Path.cwd()
+
+                        # Add all client files (add entire data directory)
+                        subprocess.run(['git', 'add', 'data/'], check=True, cwd=git_cwd, capture_output=True, text=True)
 
                         # Commit
                         commit_msg = f"Add client data for: {', '.join(c['name'] for c in registry.get_all_clients() if c['slug'] in uncommitted)}"
-                        subprocess.run(['git', 'commit', '-m', commit_msg], check=True)
+                        commit_result = subprocess.run(['git', 'commit', '-m', commit_msg], check=True, cwd=git_cwd, capture_output=True, text=True)
 
-                        # Push
-                        subprocess.run(['git', 'push'], check=True)
+                        # Push to origin main explicitly
+                        push_result = subprocess.run(['git', 'push', 'origin', 'main'], check=True, cwd=git_cwd, capture_output=True, text=True)
 
                         st.success("✅ Client data committed and pushed to GitHub!")
                         st.balloons()
                         st.rerun()
                     except subprocess.CalledProcessError as e:
                         st.error(f"❌ Git operation failed: {str(e)}")
+                        if e.stderr:
+                            st.error(f"Error details: {e.stderr}")
                         st.info("💡 Try the manual git commands above instead.")
 
             with col2:
@@ -848,6 +854,10 @@ makeup palette reviews,12,1800,38
                     git_success = False
                     try:
                         import subprocess
+                        import os
+
+                        # Determine git working directory (works both locally and in Docker)
+                        git_cwd = '/app' if os.path.exists('/app') and os.path.isdir('/app/.git') else Path.cwd()
 
                         # Check if git is available
                         git_check = subprocess.run(['git', '--version'], capture_output=True, timeout=5)
@@ -859,7 +869,8 @@ makeup palette reviews,12,1800,38
                             ['git', 'add', str(keywords_path), str(personas_path), str(brand_config_path), 'data/clients.json'],
                             capture_output=True,
                             text=True,
-                            timeout=10
+                            timeout=10,
+                            cwd=git_cwd
                         )
                         if add_result.returncode != 0:
                             raise Exception(f"Git add failed: {add_result.stderr}")
@@ -870,19 +881,21 @@ makeup palette reviews,12,1800,38
                             ['git', 'commit', '-m', commit_msg],
                             capture_output=True,
                             text=True,
-                            timeout=10
+                            timeout=10,
+                            cwd=git_cwd
                         )
                         if commit_result.returncode != 0:
                             # Check if it's just "nothing to commit" (which is okay)
                             if "nothing to commit" not in commit_result.stdout.lower():
                                 raise Exception(f"Git commit failed: {commit_result.stderr}")
 
-                        # Push
+                        # Push to origin main explicitly
                         push_result = subprocess.run(
-                            ['git', 'push'],
+                            ['git', 'push', 'origin', 'main'],
                             capture_output=True,
                             text=True,
-                            timeout=30
+                            timeout=30,
+                            cwd=git_cwd
                         )
                         if push_result.returncode != 0:
                             raise Exception(f"Git push failed: {push_result.stderr}")
@@ -896,7 +909,10 @@ makeup palette reviews,12,1800,38
                     except Exception as e:
                         # If git fails, still show success but warn about manual commit needed
                         st.success(f"✅ {new_client_name} created successfully!")
-                        st.warning(f"⚠️ Could not auto-commit to git: {str(e)}")
+                        st.error(f"⚠️ Could not auto-commit to git: {str(e)}")
+                        # Show more detailed error for debugging
+                        import traceback
+                        st.code(traceback.format_exc(), language="python")
                         st.info("💡 Files are saved locally. Use the 'Commit All Client Data' button above to sync to GitHub.")
 
                     st.balloons()
