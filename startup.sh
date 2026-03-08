@@ -17,6 +17,8 @@ fi
 # Set up GitHub authentication and sync data
 if [ -n "$GITHUB_TOKEN" ]; then
     echo "🔐 Setting up GitHub authentication..."
+    # Strip any trailing newline from the token
+    GITHUB_TOKEN=$(echo "$GITHUB_TOKEN" | tr -d '\n\r')
     echo "   Token length: ${#GITHUB_TOKEN} characters"
 
     # Check if we're in a git repository
