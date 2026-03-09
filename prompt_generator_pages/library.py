@@ -258,6 +258,12 @@ def render_prompt_management(all_active_prompts, all_archived_prompts, client_na
                     else:
                         ids_to_archive = [id.strip() for id in prompt_ids_input.split('\n') if id.strip()]
                         archive_prompts_by_ids(ids_to_archive, client_name, main_csv_path, archived_csv_path)
+                        # Sync to GCS
+                        try:
+                            from src.client_manager.gcs_sync import GCSClientSync
+                            GCSClientSync().upload_prompt_data()
+                        except Exception:
+                            pass
                         st.success(f"✅ Archived {len(ids_to_archive)} prompts!")
                         st.rerun()
 
@@ -276,6 +282,12 @@ def render_prompt_management(all_active_prompts, all_archived_prompts, client_na
                     else:
                         ids_to_archive = [p['prompt_id'] for p in filtered_prompts]
                         archive_prompts_by_ids(ids_to_archive, client_name, main_csv_path, archived_csv_path, reason=archive_reason)
+                        # Sync to GCS
+                        try:
+                            from src.client_manager.gcs_sync import GCSClientSync
+                            GCSClientSync().upload_prompt_data()
+                        except Exception:
+                            pass
                         st.success(f"✅ Archived {len(filtered_prompts)} prompts!")
                         st.rerun()
 
@@ -319,6 +331,12 @@ def render_prompt_management(all_active_prompts, all_archived_prompts, client_na
                 else:
                     ids_to_restore = [id.strip() for id in restore_ids_input.split('\n') if id.strip()]
                     restore_prompts_by_ids(ids_to_restore, client_name, main_csv_path, archived_csv_path)
+                    # Sync to GCS
+                    try:
+                        from src.client_manager.gcs_sync import GCSClientSync
+                        GCSClientSync().upload_prompt_data()
+                    except Exception:
+                        pass
                     st.success(f"✅ Restored {len(ids_to_restore)} prompts!")
                     st.rerun()
 

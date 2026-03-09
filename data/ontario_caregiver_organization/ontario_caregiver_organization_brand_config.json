@@ -1,0 +1,55 @@
+{
+  "brand": {
+    "name": "Ontario Caregiver Organization",
+    "aliases": [],
+    "description": "Provincial nonprofit improving the lives of Ontario's 4.2 million unpaid caregivers through free programs (helpline, peer support, coaching, SCALE mental health program) and working with health-system partners on caregiver inclusion practices.",
+    "website": "https://ontariocaregiver.ca/",
+    "business_goals": {
+      "revenue_targets": "Not revenue-based (charity). Primary goal is spread and scale \u2014 getting more caregivers to connect with programs, services, and resources. A SMART target will be defined after the audit establishes baseline visibility.",
+      "market_positioning": "Show up when caregivers (or people who don't yet identify as caregivers) are searching for help navigating a diagnosis, burnout, home care, respite, or financial support. Also appear when healthcare providers and employers search for caregiver inclusion resources. Should be recognized as Ontario's authoritative, go-to source for unpaid caregiver support.",
+      "target_metrics": [
+        "Program and service registrations, helpline encounters (calls + live chat), LLM referral traffic (ChatGPT is already their #1 LLM source at 92%), share of voice in AI responses about caregiving in Ontario, downloads of toolkits and resources, newsletter subscribers (90 Second + Connect)."
+      ],
+      "freeform_notes": "ChatGPT already drives referral traffic primarily to peer support, helpline, and SCALE pages. Caregivers are using AI to navigate the healthcare system (discharge planning, doctor scripts, ER prep). OCO does NOT offer emergency services, respite care, crisis support, or financial support \u2014 this must never be implied in AI responses. Avoid anything that sounds like government advocacy. "
+    }
+  },
+  "competitors": {
+    "expected": [
+      {
+        "name": "Canadian Centre for Caregiving Excellence",
+        "website": "canadiancaregiving.org",
+        "category": "adjacent",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "Alzheimer Society of Ontario",
+        "website": "alzheimer.ca",
+        "category": "adjacent",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "Family Caregivers of BC",
+        "website": "familycaregiversbc.ca",
+        "category": "adjacent",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "Caregiver Support Canada",
+        "website": "caregivercanada.ca",
+        "category": "adjacent",
+        "added_date": "2026-03-08",
+        "notes": ""
+      }
+    ],
+    "discovered": []
+  },
+  "metadata": {
+    "created_at": "2026-03-08T16:23:46.146537Z",
+    "last_modified": "2026-03-08T16:23:46.146627Z",
+    "schema_version": "2.0"
+  },
+  "legacy_settings": {}
+}

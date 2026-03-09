@@ -113,30 +113,18 @@ else
 fi
 echo ""
 
-# Test 6: Test push (dry-run)
-echo -e "${BLUE}Test 6: Push Test (Dry-Run)${NC}"
-if git push --dry-run 2>&1 | grep -q "Everything up-to-date\|Would update"; then
-    echo -e "${GREEN}✓ Push would succeed (dry-run)${NC}"
-
-    # Actually push the test commit
-    echo -e "${BLUE}→ Pushing test commit to GitHub...${NC}"
-    if git push; then
-        echo -e "${GREEN}✓ Push successful!${NC}"
-    else
-        echo -e "${RED}✗ Push failed${NC}"
-        echo "  This might be due to authentication issues"
-
-        # Rollback the commit
-        echo -e "${YELLOW}→ Rolling back test commit...${NC}"
-        git reset --soft HEAD~1
-        git reset HEAD "$TEST_FILE"
-        rm "$TEST_FILE"
-        exit 1
-    fi
+# Test 6: Test push
+echo -e "${BLUE}Test 6: Push Test${NC}"
+echo -e "${BLUE}→ Pushing test commit to GitHub...${NC}"
+if git push 2>&1; then
+    echo -e "${GREEN}✓ Push successful!${NC}"
 else
-    echo -e "${RED}✗ Push would fail${NC}"
+    echo -e "${RED}✗ Push failed${NC}"
+    echo "  This might be due to authentication issues"
+    echo "  Make sure you can push to the repository"
 
     # Rollback the commit
+    echo -e "${YELLOW}→ Rolling back test commit...${NC}"
     git reset --soft HEAD~1
     git reset HEAD "$TEST_FILE"
     rm "$TEST_FILE"

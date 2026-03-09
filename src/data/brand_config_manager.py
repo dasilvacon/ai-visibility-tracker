@@ -56,14 +56,16 @@ class BrandConfigManager:
 
         return config
 
-    def save_config(self, path: str, config: dict) -> None:
+    def save_config(self, path: str, config: dict, sync_to_gcs: bool = True) -> None:
         """
         Save brand configuration to file with validation.
         Uses atomic write (write to temp, then rename) to prevent corruption.
+        Automatically syncs to GCS if running in cloud environment.
 
         Args:
             path: Path to brand_config.json file
             config: Brand configuration dict (v2.0 schema)
+            sync_to_gcs: Whether to sync to Google Cloud Storage (default: True)
 
         Raises:
             ValueError: If config fails validation
@@ -87,11 +89,37 @@ class BrandConfigManager:
 
             # Rename temp to actual (atomic operation)
             shutil.move(temp_path, path)
+
+            # Sync to GCS if requested
+            if sync_to_gcs:
+                self._sync_to_gcs(path)
+
         except Exception as e:
             # Clean up temp file if something went wrong
             if os.path.exists(temp_path):
                 os.remove(temp_path)
             raise e
+
+    def _sync_to_gcs(self, path: str) -> None:
+        """
+        Sync brand config to GCS (silent fail - doesn't block saves).
+
+        Args:
+            path: Path to brand_config.json file
+        """
+        try:
+            from src.client_manager.gcs_sync import GCSClientSync
+
+            # Extract client slug from path
+            filename = Path(path).name
+            # Pattern: {client_slug}_brand_config.json
+            client_slug = filename.replace('_brand_config.json', '')
+
+            gcs_sync = GCSClientSync()
+            gcs_sync.upload_client_files(client_slug, {'brand_config': path})
+        except Exception:
+            # Silent fail - GCS sync is nice-to-have, not critical
+            pass
 
     def migrate_v1_to_v2(self, old_config: dict) -> dict:
         """

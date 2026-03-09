@@ -11,131 +11,172 @@
             box-sizing: border-box;
         }
 
+        /* DaSilva Color System */
+        :root {
+            --dasilva-purple: #4A4458;
+            --dasilva-purple-dark: #3A3448;
+            --dasilva-purple-light: #6B5660;
+            --dasilva-cream: #E8D7A0;
+            --dasilva-cream-dark: #D4C89F;
+            --text-primary: #2D2D2D;
+            --text-secondary: #5A5A5A;
+            --bg-primary: #FEFEFE;
+            --bg-secondary: #F8F8F7;
+            --border-light: #E8E4E3;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+            font-size: 16px;
             line-height: 1.6;
-            color: #1C1C1C;
-            background: #F8F8F7;
-            padding: 32px;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            padding: 40px;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: #FEFEFE;
-            padding: 64px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(28, 28, 28, 0.08);
+            background: var(--bg-primary);
+            padding: 80px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(74, 68, 88, 0.08);
         }
 
         h1 {
-            color: #4D2E3A;
-            margin-bottom: 12px;
-            font-size: 36px;
+            color: var(--dasilva-purple);
+            margin-bottom: 16px;
+            font-size: 42px;
             font-weight: 700;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
         }
 
         h2 {
-            color: #4D2E3A;
-            margin-top: 56px;
-            margin-bottom: 28px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #E8E4E3;
-            font-size: 24px;
+            color: var(--dasilva-purple);
+            margin-top: 64px;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--dasilva-cream);
+            font-size: 28px;
             font-weight: 600;
+            letter-spacing: -0.01em;
         }
 
         h3 {
-            color: #6B5660;
-            margin-top: 40px;
-            margin-bottom: 20px;
-            font-size: 18px;
+            color: var(--dasilva-purple-light);
+            margin-top: 48px;
+            margin-bottom: 24px;
+            font-size: 20px;
             font-weight: 600;
         }
 
         .header {
-            border-bottom: 1px solid #E8E4E3;
-            padding-bottom: 32px;
-            margin-bottom: 48px;
+            border-bottom: 3px solid var(--dasilva-cream);
+            padding-bottom: 40px;
+            margin-bottom: 56px;
+            background: linear-gradient(135deg, rgba(74, 68, 88, 0.02) 0%, rgba(232, 215, 160, 0.05) 100%);
+            padding: 40px;
+            margin: -40px -40px 56px -40px;
+            border-radius: 12px 12px 0 0;
         }
 
         .brand-name {
-            color: #4D2E3A;
-            font-size: 28px;
+            color: var(--dasilva-purple);
+            font-size: 32px;
             font-weight: 600;
-            margin-top: 12px;
-        }
-
-        .timestamp {
-            color: #A7868F;
-            font-size: 14px;
             margin-top: 16px;
         }
 
-        .dasilva-credit {
-            color: #A7868F;
+        .timestamp {
+            color: var(--text-secondary);
             font-size: 14px;
-            margin-top: 6px;
+            margin-top: 20px;
+        }
+
+        .dasilva-credit {
+            color: var(--dasilva-purple-light);
+            font-size: 15px;
+            font-weight: 500;
+            margin-top: 8px;
         }
 
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin: 40px 0;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 48px 0;
         }
 
         .metric-card {
-            background: #FEFEFE;
-            border: 1px solid #E8E4E3;
-            padding: 32px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(28, 28, 28, 0.08);
-            transition: box-shadow 0.2s ease;
+            background: white;
+            border: 2px solid var(--border-light);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(74, 68, 88, 0.06);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--dasilva-purple) 0%, var(--dasilva-cream) 100%);
         }
 
         .metric-card:hover {
-            box-shadow: 0 4px 12px rgba(28, 28, 28, 0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(74, 68, 88, 0.12);
+            border-color: var(--dasilva-cream);
         }
 
         .metric-card.strong {
-            background: #D4E8D4;
-            border-color: #9FBC9F;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            border-color: #86efac;
         }
 
-        .metric-card.strong .metric-value,
-        .metric-card.strong .metric-label,
-        .metric-card.strong .metric-status {
-            color: #2D5F2D;
+        .metric-card.strong::before {
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+        }
+
+        .metric-card.strong .metric-value {
+            color: #10b981;
         }
 
         .metric-card.needs-work {
-            background: #F7E8D4;
-            border-color: #D4B894;
+            background: linear-gradient(135deg, #ffffff 0%, #fefce8 100%);
+            border-color: var(--dasilva-cream);
         }
 
-        .metric-card.needs-work .metric-value,
-        .metric-card.needs-work .metric-label,
-        .metric-card.needs-work .metric-status {
-            color: #5A4A3A;
+        .metric-card.needs-work::before {
+            background: linear-gradient(90deg, var(--dasilva-purple) 0%, var(--dasilva-cream) 100%);
+        }
+
+        .metric-card.needs-work .metric-value {
+            color: var(--dasilva-purple);
         }
 
         .metric-card.weak {
-            background: #F0D4D4;
-            border-color: #C9A7A7;
+            background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+            border-color: #fecaca;
         }
 
-        .metric-card.weak .metric-value,
-        .metric-card.weak .metric-label,
-        .metric-card.weak .metric-status {
-            color: #6B3A3A;
+        .metric-card.weak::before {
+            background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+        }
+
+        .metric-card.weak .metric-value {
+            color: #ef4444;
         }
 
         .metric-value {
-            font-size: 48px;
+            font-size: 52px;
             font-weight: 700;
-            margin: 16px 0;
+            margin: 20px 0;
             line-height: 1;
         }
 
@@ -157,28 +198,30 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 32px 0;
-            background: #FEFEFE;
-            border: 1px solid #E8E4E3;
-            border-radius: 8px;
+            margin: 40px 0;
+            background: white;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(28, 28, 28, 0.08);
+            box-shadow: 0 2px 12px rgba(74, 68, 88, 0.06);
         }
 
         th {
-            background: #4D2E3A;
+            background: linear-gradient(135deg, var(--dasilva-purple) 0%, var(--dasilva-purple-dark) 100%);
             color: white;
-            padding: 16px 20px;
+            padding: 20px 24px;
             text-align: left;
             font-weight: 600;
-            font-size: 12px;
+            font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 1px;
         }
 
         td {
-            padding: 16px 20px;
-            border-bottom: 1px solid #E8E4E3;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary);
+            font-size: 15px;
         }
 
         tr:last-child td {
@@ -186,7 +229,7 @@
         }
 
         tr:hover {
-            background: #F8F8F7;
+            background: rgba(74, 68, 88, 0.02);
         }
 
         .badge {
@@ -291,38 +334,44 @@
 
         p {
             margin: 16px 0;
-            color: #6B5660;
+            font-size: 15px;
+            color: #5A4850;
+            line-height: 1.7;
         }
 
         /* Tabs */
         .tabs {
             display: flex;
-            gap: 0;
-            margin-bottom: 40px;
-            border-bottom: 2px solid #E8E4E3;
+            gap: 8px;
+            margin-bottom: 48px;
+            border-bottom: 2px solid var(--border-light);
+            margin-top: 32px;
         }
 
         .tab {
-            padding: 16px 32px;
+            padding: 18px 36px;
             background: transparent;
             border: none;
-            color: #6B5660;
-            font-size: 16px;
-            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
             border-bottom: 3px solid transparent;
             margin-bottom: -2px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
         .tab:hover {
-            color: #4D2E3A;
-            background: #F8F8F7;
+            color: var(--dasilva-purple);
+            background: rgba(74, 68, 88, 0.03);
         }
 
         .tab.active {
-            color: #4D2E3A;
-            border-bottom: 3px solid #A7868F;
+            color: var(--dasilva-purple);
+            border-bottom: 3px solid var(--dasilva-purple);
+            font-weight: 600;
+            background: linear-gradient(180deg, transparent 0%, rgba(74, 68, 88, 0.02) 100%);
         }
 
         .tab-content {
@@ -600,58 +649,6 @@
             content: "→";
             position: absolute;
             left: 0;
-            font-weight: 700;
-            color: #A7868F;
-        }
-
-        /* Crisis Alert Box */
-        .crisis-alert {
-            background: #F7E8E8;
-            border: 2px solid #B85450;
-            border-radius: 8px;
-            padding: 28px;
-            margin: 32px 0;
-            box-shadow: 0 4px 12px rgba(184, 84, 80, 0.15);
-        }
-
-        .crisis-alert-title {
-            color: #8B3A3A;
-            font-size: 18px;
-            font-weight: 700;
-            margin: 0 0 16px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .crisis-comparison {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 20px;
-            align-items: center;
-            margin: 20px 0;
-        }
-
-        .crisis-metric {
-            text-align: center;
-        }
-
-        .crisis-metric-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #6B5660;
-            margin-bottom: 8px;
-        }
-
-        .crisis-metric-value {
-            font-size: 36px;
-            font-weight: 700;
-            color: #4D2E3A;
-        }
-
-        .crisis-vs {
-            font-size: 24px;
             font-weight: 700;
             color: #A7868F;
         }
@@ -1043,91 +1040,73 @@
         <div class="header">
             <h1>AI Visibility Report</h1>
             <div class="brand-name">Natasha Denona</div>
-            <div class="timestamp">Report generated February 19, 2026 at 05:11 PM</div>
+            <div class="timestamp">Report generated March 05, 2026 at 11:26 PM</div>
             <div class="dasilva-credit">DaSilva Consulting</div>
         </div>
 
         <div class="tabs">
-            <button class="tab active" onclick="switchTab(event, 'overview')">Executive Summary</button>
-            <button class="tab" onclick="switchTab(event, 'competitive-intel')">What Competitors Are Doing</button>
-            <button class="tab" onclick="switchTab(event, 'roi')">ROI Estimator</button>
+            <button class="tab active" onclick="switchTab(event, 'overview')">Your Performance Overview</button>
+            <button class="tab" onclick="switchTab(event, 'sentiment')">How AI Describes You</button>
             <button class="tab" onclick="switchTab(event, 'prompts')">What AI Actually Said</button>
-            <button class="tab" onclick="switchTab(event, 'sources')">Sources & Citations</button>
+            <button class="tab" onclick="switchTab(event, 'sources')">Where AI Gets Its Information</button>
+            <button class="tab" onclick="switchTab(event, 'competitive-intel')">What Your Competitors Are Doing</button>
         </div>
 
         <div id="overview" class="tab-content active">
             
-        <div style="background: linear-gradient(135deg, #f59e0b15 0%, #f59e0b25 100%); border: 2px solid #f59e0b; border-radius: 12px; padding: 32px; margin: 32px 0; text-align: center;">
-            <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #6B5660; margin-bottom: 16px;">
-                Overall AI Visibility Grade
-            </div>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
-                <div style="background: #f59e0b; color: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 64px; font-weight: 700; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
-                    Growing
-                </div>
-                <div style="text-align: left;">
-                    <div style="font-size: 48px; font-weight: 700; color: #4D2E3A; line-height: 1;">
-                        32.1<span style="font-size: 24px; color: #A7868F;">/100</span>
-                    </div>
-                    <div style="font-size: 18px; font-weight: 600; color: #6B5660; margin-top: 8px;">
-                        Growing
-                    </div>
-                </div>
-            </div>
-            <div style="margin-top: 24px; font-size: 15px; color: #6B5660; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
-                You are building meaningful AI presence
-            </div>
-        </div>
-        
+        <h2 style="margin-top: 48px;">Executive Summary</h2>
 
-            
-        <!-- Hero Section -->
-        <div class="hero-card">
-            <h2 style="margin: 0 0 12px 0; font-size: 20px; color: #6B5660; font-weight: 600;">The Bottom Line</h2>
-            <p style="font-size: 24px; line-height: 1.5; margin: 0; color: #4D2E3A; font-weight: 600;">
-                You're at <strong style="font-size: 32px; color: #A7868F;">15%</strong> visibility while competitors appear in <strong style="font-size: 32px; color: #E74C3C;">33%</strong> of queries
+        <!-- The Business Impact -->
+        <div class="insight" style="background: linear-gradient(135deg, #4D2E3A15 0%, #4D2E3A25 100%); border-left: 4px solid #4D2E3A; padding: 32px; border-radius: 8px; margin: 32px 0;">
+            <p style="font-size: 18px; line-height: 1.7; margin: 0; color: #4D2E3A; font-weight: 500;">
+                Natasha Denona is at <strong>15%</strong> AI visibility while your top competitor (Charlotte Tilbury) appears in <strong>17%</strong> of queries.
+                That gap represents approximately <strong>$3K/month</strong> in missed qualified traffic
+                (~534 monthly impressions from pre-qualified prospects).
             </p>
+            <p style="font-size: 16px; line-height: 1.7; margin: 24px 0 0 0; color: #6B5660;">
+                <strong>Primary recommendation:</strong> Focus on ChatGPT first - it's 73% of AI users and you're at 9% there. Infrastructure fixes take 2-4 weeks.
+            </p>
+        </div>
 
-            <div class="hero-stat-grid">
-                <div class="hero-stat">
-                    <div class="hero-stat-value">15%</div>
-                    <div class="hero-stat-label">Your Visibility</div>
-                    <div class="progress-bar-container" style="margin-top: 12px;">
-                        <div class="progress-bar red" style="width: 14.656964656964657%"></div>
-                    </div>
-                </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-value">$4K+</div>
-                    <div class="hero-stat-label">Monthly Cost of Gap</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-value">24%</div>
-                    <div class="hero-stat-label">90-Day Target</div>
-                </div>
+        <!-- Three Core Metrics -->
+        <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin: 40px 0;">
+            <div class="metric-card weak">
+                <div class="metric-label">Visibility Rate</div>
+                <div class="metric-value">15%</div>
+                <div class="metric-status">First-mover opportunity</div>
+            </div>
+            <div class="metric-card weak">
+                <div class="metric-label">Prominence Score</div>
+                <div class="metric-value">0.6/10</div>
+                <div class="metric-status">Brief mentions</div>
+            </div>
+            <div class="metric-card needs-work">
+                <div class="metric-label">vs Charlotte Tilbury</div>
+                <div class="metric-value">-3%</div>
+                <div class="metric-status">3% gap to close</div>
             </div>
         </div>
 
-        <!-- Key Insights (Collapsible) -->
-        <div class="accordion-group">
+        <!-- What This Means (Educational, not fear-based) -->
+        <div class="accordion-group" style="margin-top: 32px;">
             <button class="accordion-button" onclick="toggleAccordion(this)">
-                <span>📊 What This Means For Your Business</span>
+                <span>💡 What This Means For Your Business</span>
                 <span class="accordion-icon">▼</span>
             </button>
             <div class="accordion-content">
-                <div class="info-card">
-                    <div class="info-card-title">🚨 Priority Alert: ChatGPT Gap</div>
+                <div class="info-card" style="background: #F0F7FF; border-left: 4px solid #3b82f6;">
+                    <div class="info-card-title" style="color: #1e40af;">Most Exciting: ChatGPT Opportunity</div>
                     <div class="info-card-content">
-                        <p>ChatGPT represents <strong>73% of all AI users</strong>. You're at <strong>9%</strong> visibility there while competitors appear in <strong>33%</strong> of queries.</p>
-                        <p style="margin-top: 12px;"><strong>Estimated Impact:</strong> $2,500-$4,100/month in lost traffic (~534 monthly missed impressions)</p>
+                        <p>ChatGPT represents <strong>73% of all AI users</strong> - the largest single opportunity. You're currently at <strong>9%</strong> visibility there.</p>
+                        <p style="margin-top: 12px;"><strong>First-mover advantage is real:</strong> Infrastructure fixes take 2-4 weeks to implement. Early adopters establish authority with AI assistants before competitors recognize this shift.</p>
                     </div>
                 </div>
 
-                <div class="info-card">
-                    <div class="info-card-title">🎯 Where You're Strongest & Weakest</div>
+                <div class="info-card" style="background: #F0FFF4; border-left: 4px solid #10b981; margin-top: 16px;">
+                    <div class="info-card-title" style="color: #065f46;">Quality Over Quantity</div>
                     <div class="info-card-content">
-                        <p><strong style="color: #27AE60;">✓ Best Performing:</strong> Luxury Beauty Enthusiast (21% visibility)</p>
-                        <p style="margin-top: 8px;"><strong style="color: #E74C3C;">⚠️ Needs Work:</strong> Specific Need Shopper (6% visibility)</p>
-                        <p style="margin-top: 8px;"><strong>Top Competitor:</strong> Charlotte Tilbury at 17% vs your 15%</p>
+                        <p>AI-sourced traffic shows higher engagement despite lower volume. Prospects are <strong>pre-qualified through AI research</strong> - they've already asked intelligent questions and received recommendations.</p>
+                        <p style="margin-top: 12px;"><strong>Conservative estimate:</strong> $3,200/month opportunity based on $6 average visitor value and 3x monthly scaling from test sample. Your actual opportunity depends on conversion rate and average order value.</p>
                     </div>
                 </div>
             </div>
@@ -1137,167 +1116,24 @@
                 <span class="accordion-icon">▼</span>
             </button>
             <div class="accordion-content">
-                <p><strong>Visibility %:</strong> Times your brand appeared in 962 AI queries tested across 4 platforms (ChatGPT, Claude, Perplexity, Gemini)</p>
-                <p style="margin-top: 12px;"><strong>Revenue Impact:</strong> Based on industry average $6 visitor value and 3x monthly query scaling from test sample</p>
-                <p style="margin-top: 12px;"><strong>90-Day Target:</strong> Close 50% of the gap to competitors (realistic and achievable)</p>
-                <p style="margin-top: 12px; font-size: 13px; color: #6B5660;"><em>Note: Your actual opportunity may be higher or lower based on your conversion rate and average order value.</em></p>
+                <p><strong>Visibility %:</strong> Percentage of 962 queries where Natasha Denona appeared in AI responses across ChatGPT, Claude, Perplexity, and Gemini.</p>
+                <p style="margin-top: 12px;"><strong>Prominence Score (0-10):</strong> How featured you are when mentioned. 8-10 = top recommendation with detail, 5-7 = listed as option, 1-4 = brief reference, 0 = not mentioned.</p>
+                <p style="margin-top: 12px;"><strong>Revenue Impact:</strong> Conservative estimate using industry average visitor value and 3x monthly query scaling. The industry is full of "grift" right now - we use realistic numbers, not inflated promises.</p>
+                <p style="margin-top: 12px;"><strong>90-Day Target (24%):</strong> Close 50% of the gap to competitors (realistic and achievable with proper infrastructure).</p>
             </div>
         </div>
         
 
             
-        <div style="margin: 48px 0;">
-            <h2>Score Breakdown</h2>
-            <p style="color: #6B5660; margin-bottom: 24px;">
-                Your overall score is calculated from these five weighted dimensions:
+        <div style="margin-top: 64px;">
+            <h2>Platform Performance</h2>
+            <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 32px;">
+                <strong>What this shows:</strong> Each AI platform has different training data, algorithms, and user bases.
+                ChatGPT represents 73% of all AI users, so focus there first. This section breaks down your visibility
+                on each platform to help you prioritize where to invest your content efforts.
             </p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Dimension</th>
-                        <th>What This Measures</th>
-                        <th style="text-align: center;">Weight</th>
-                        <th style="text-align: center;">Score</th>
-                        <th style="text-align: center;">Grade</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                <tr style="background: #fef2f2;">
-                    <td style="font-weight: 600; color: #4D2E3A;">Visibility</td>
-                    <td style="font-size: 13px; color: #6B5660;">How often your brand appears in AI responses</td>
-                    <td style="text-align: center; font-weight: 600;">54%</td>
-                    <td style="text-align: center;">
-                        <span style="font-size: 20px; font-weight: 700; color: #4D2E3A;">14.7</span>
-                        <span style="font-size: 12px; color: #A7868F;">/100</span>
-                    </td>
-                    <td style="text-align: center;">
-                        <span style="background: #ef4444; color: white; padding: 4px 12px; border-radius: 4px; font-weight: 600; font-size: 14px;">
-                            Emerging
-                        </span>
-                    </td>
-                </tr>
-            
-                <tr style="background: #fef2f2;">
-                    <td style="font-weight: 600; color: #4D2E3A;">Prominence</td>
-                    <td style="font-size: 13px; color: #6B5660;">Position and prominence when mentioned</td>
-                    <td style="text-align: center; font-weight: 600;">36%</td>
-                    <td style="text-align: center;">
-                        <span style="font-size: 20px; font-weight: 700; color: #4D2E3A;">47.8</span>
-                        <span style="font-size: 12px; color: #A7868F;">/100</span>
-                    </td>
-                    <td style="text-align: center;">
-                        <span style="background: #ef4444; color: white; padding: 4px 12px; border-radius: 4px; font-weight: 600; font-size: 14px;">
-                            Growing
-                        </span>
-                    </td>
-                </tr>
-            
-                <tr style="background: #fef2f2;">
-                    <td style="font-weight: 600; color: #4D2E3A;">Positioning Quality</td>
-                    <td style="font-size: 13px; color: #6B5660;">Quality and differentiation of AI descriptions</td>
-                    <td style="text-align: center; font-weight: 600;">10%</td>
-                    <td style="text-align: center;">
-                        <span style="font-size: 20px; font-weight: 700; color: #4D2E3A;">70.0</span>
-                        <span style="font-size: 12px; color: #A7868F;">/100</span>
-                    </td>
-                    <td style="text-align: center;">
-                        <span style="background: #ef4444; color: white; padding: 4px 12px; border-radius: 4px; font-weight: 600; font-size: 14px;">
-                            Established
-                        </span>
-                    </td>
-                </tr>
-            
-                </tbody>
-            </table>
-            
-            
-            <div style="margin-top: 16px; padding: 16px; background: #fef2f2; border-left: 4px solid #ef4444; border-radius: 4px;">
-                <div style="font-weight: 600; color: #991b1b; margin-bottom: 8px;">🎯 Areas for Improvement</div>
-                <div style="color: #dc2626;">Visibility, Prominence, Competitive Win Rate, Citation Authority</div>
-            </div>
-            
-        </div>
-        
-
-            
-        <h2>The Numbers</h2>
-
-        <div class="insight">
-            <div class="insight-title">What This Means</div>
-            Natasha Denona isn't showing up in AI responses. That's the priority.
-        </div>
-
-        <div class="metrics-grid">
-            <div class="metric-card weak">
-                <div class="metric-label">Visibility Rate</div>
-                <div class="metric-value">15%</div>
-                <div class="metric-status">Not showing up</div>
-            </div>
-            <div class="metric-card weak">
-                <div class="metric-label">Prominence Score</div>
-                <div class="metric-value">0.6/10</div>
-                <div class="metric-status">Not mentioned</div>
-            </div>
-            <div class="metric-card weak">
-                <div class="metric-label">Share of Voice</div>
-                <div class="metric-value">15%</div>
-                <div class="metric-status">vs competitors</div>
-            </div>
-            <div class="metric-card needs-work">
-                <div class="metric-label">Competitor Rate</div>
-                <div class="metric-value">33%</div>
-                <div class="metric-status">in same responses</div>
-            </div>
-        </div>
-
-        <div style="margin: 20px 0; padding: 10px 14px; background: #F8F8F7; border-left: 3px solid #A7868F; border-radius: 4px; font-size: 11px; color: #6B5660; line-height: 1.5;">
-            <strong>What these metrics mean:</strong> Visibility Rate = % of queries where you appeared. Prominence Score = how prominently featured (0-10 scale, based on position and detail). Share of Voice = your mentions vs total brand mentions. Competitor Rate = % of queries where any competitor appeared.
-        </div>
-
-        <h3>Prominence Breakdown</h3>
-        <p>Where Natasha Denona ranks when mentioned:</p>
-        <table>
-            <tr>
-                <th>Level</th>
-                <th>Count</th>
-                <th>%</th>
-                <th>What This Means</th>
-            </tr>
-            <tr>
-                <td><span class="badge badge-strong">Featured (7-10)</span></td>
-                <td>31</td>
-                <td>3.2%</td>
-                <td>Top recommendation or detailed mention</td>
-            </tr>
-            <tr>
-                <td><span class="badge badge-needs-work">Mentioned (4-6)</span></td>
-                <td>39</td>
-                <td>4.1%</td>
-                <td>Listed as an option</td>
-            </tr>
-            <tr>
-                <td><span class="badge badge-weak">Brief (1-3)</span></td>
-                <td>60</td>
-                <td>6.2%</td>
-                <td>Passing reference only</td>
-            </tr>
-            <tr>
-                <td><span class="badge badge-not-showing">Not Mentioned (0)</span></td>
-                <td>832</td>
-                <td>86.5%</td>
-                <td>Invisible in response</td>
-            </tr>
-        </table>
-        
-
-            
-
-            
-        <div class="info-card" style="margin-top: 32px;">
-            <div class="info-card-title">🎯 Performance by Platform</div>
-            <div class="info-card-content">
-                <p style="margin-bottom: 20px;">See how you perform across ChatGPT, Claude, Perplexity, and Gemini</p>
+            <div class="info-card">
+                <div class="info-card-content">
                 <table style="width: 100%;">
                     <thead>
                         <tr style="background: #F8F8F7;">
@@ -1384,10 +1220,10 @@
             
                     </tbody>
                 </table>
+                </div>
             </div>
-        </div>
 
-        <div class="accordion-group" style="margin-top: 16px;">
+            <div class="accordion-group" style="margin-top: 16px;">
             <button class="accordion-button" onclick="toggleAccordion(this)">
                 <span>❓ Why Platform Breakdown Matters</span>
                 <span class="accordion-icon">▼</span>
@@ -1400,53 +1236,77 @@
                 <p style="margin-top: 16px; font-size: 13px; color: #6B5660;"><em>Market share based on public usage data as of 2025. Each platform has different training data and may cite different sources.</em></p>
             </div>
         </div>
-        
-
-            
-        <div class="crisis-alert">
-            <div class="crisis-alert-title">
-                ⚠️ PLATFORM ALERT: ChatGPT Is Your Biggest Problem
-            </div>
-
-            <div class="crisis-comparison">
-                <div class="crisis-metric">
-                    <div class="crisis-metric-label">You on ChatGPT</div>
-                    <div class="crisis-metric-value">9%</div>
-                    <div style="font-size: 12px; color: #E74C3C; font-weight: 600; margin-top: 4px;">
-                        Invisible
-                    </div>
-                </div>
-
-                <div class="crisis-vs">VS</div>
-
-                <div class="crisis-metric">
-                    <div class="crisis-metric-label">Queries with Competitors</div>
-                    <div class="crisis-metric-value">33%</div>
-                    <div style="font-size: 12px; color: #27AE60; font-weight: 600; margin-top: 4px;">
-                        (on ChatGPT)
-                    </div>
-                </div>
-            </div>
-
-            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #E8B4B4;">
-                <p style="margin: 0; color: #4D2E3A; font-size: 15px; line-height: 1.7;">
-                    <strong>Why this matters:</strong> ChatGPT represents 73% of all AI assistant usage
-                    (100M+ weekly users). You're nearly invisible on the platform that matters most.
-                    One or more competitors appear in 33% of ChatGPT queries—24 points ahead of you.
-                </p>
-                <p style="margin: 12px 0 0 0; color: #4D2E3A; font-size: 15px; line-height: 1.7;">
-                    <strong>What it costs you:</strong> This gap alone represents <strong>$800-$1,300/month</strong>
-                    in lost traffic. That's <strong>$15K+ annually</strong> you're handing to competitors.
-                    At ~176 monthly missed impressions × $6 avg visitor value.
-                </p>
-            </div>
         </div>
         
 
             
-        <div class="comp-landscape">
-            <h3 style="margin: 0 0 8px 0; color: #4D2E3A; font-size: 20px;">Where You Stand</h3>
-            <p style="margin: 0 0 20px 0; color: #6B5660; font-size: 14px;">
+        <div style="margin-top: 64px;">
+            <h2>Who You're Reaching</h2>
+            <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 32px;">
+                <strong>What this shows:</strong> Different customer types search differently. A beginner asks "what's the best..."
+                while an expert asks "compare X vs Y for Z use case." This breakdown shows which audience segments find you
+                when they search, and where competitors are winning. Focus on personas where the gap is largest.
+            </p>
+        <table>
+            <tr>
+                <th>Persona</th>
+                <th>Tested</th>
+                <th>You</th>
+                <th>Any Competitor</th>
+                <th>Gap</th>
+            </tr>
+            
+            <tr>
+                <td><strong>Luxury Beauty Enthusiast</strong></td>
+                <td>374</td>
+                <td>21%</td>
+                <td>40%</td>
+                <td><span class="badge badge-weak">-19% ↓</span></td>
+            </tr>
+            
+            <tr>
+                <td><strong>Beauty Beginner (Aspirational)</strong></td>
+                <td>180</td>
+                <td>13%</td>
+                <td>28%</td>
+                <td><span class="badge badge-weak">-15% ↓</span></td>
+            </tr>
+            
+            <tr>
+                <td><strong>Professional Makeup Artist</strong></td>
+                <td>222</td>
+                <td>11%</td>
+                <td>36%</td>
+                <td><span class="badge badge-weak">-25% ↓</span></td>
+            </tr>
+            
+            <tr>
+                <td><strong>Specific Need Shopper</strong></td>
+                <td>186</td>
+                <td>6%</td>
+                <td>20%</td>
+                <td><span class="badge badge-weak">-13% ↓</span></td>
+            </tr>
+            
+        </table>
+
+        <div style="margin: 20px 0; padding: 10px 14px; background: #F8F8F7; border-left: 3px solid #A7868F; border-radius: 4px; font-size: 11px; color: #6B5660; line-height: 1.5;">
+            <strong>How personas are tested:</strong> Queries designed to match how different customer types search (e.g., professionals vs beginners). "Any Competitor" = % of queries where one or more competitors appeared. "Gap" shows the difference between competitor presence and your presence. Negative gaps mean you're winning with that persona.
+        </div>
+        </div>
+        
+
+            
+        <div style="margin-top: 64px;">
+            <h2>Competitive Landscape</h2>
+            <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 32px;">
+                <strong>What this shows:</strong> When AI responds to queries in your category, which brands get mentioned most?
+                This chart ranks you against your top competitors based on mention frequency. The gap between you and the leader
+                represents your growth opportunity.
+            </p>
+            <div class="comp-landscape">
+                <h3 style="margin: 0 0 8px 0; color: #4D2E3A; font-size: 20px;">Where You Stand</h3>
+                <p style="margin: 0 0 20px 0; color: #6B5660; font-size: 14px;">
                 Share of voice across all AI responses tested
             </p>
 
@@ -1519,138 +1379,417 @@
                 </p>
             </div>
         </div>
+        </div>
         
 
             
-        <h2>Top 3 Priorities</h2>
-        <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 24px;">
-            Start here. These are your highest-impact opportunities based on the analysis.
-        </p>
+        <div style="background: linear-gradient(135deg, #E8D7A0 0%, #D4C89F 100%); padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #C8BC8F;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <span style="font-size: 32px;">✨</span>
+                <h3 style="margin: 0; color: #4D2E3A; font-size: 20px; font-weight: 700;">
+                    Most Exciting: ChatGPT Opportunity
+                </h3>
+            </div>
 
-        <div style="background: white; border: 2px solid #E8E4E3; border-radius: 10px; padding: 32px; margin-bottom: 32px;">
+            <div style="display: flex; gap: 24px; margin: 20px 0; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 200px; background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 13px; font-weight: 600; color: #6B5660; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                        Your Current Rate
+                    </div>
+                    <div style="font-size: 48px; font-weight: 700; color: #4A4458; line-height: 1;">
+                        9%
+                    </div>
+                    <div style="font-size: 14px; color: #A7868F; margin-top: 4px; font-weight: 500;">
+                        on ChatGPT
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: center; min-width: 60px;">
+                    <div style="font-size: 24px; color: #4A4458; font-weight: 700;">→</div>
+                </div>
+
+                <div style="flex: 1; min-width: 200px; background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 13px; font-weight: 600; color: #6B5660; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                        Competitor Average
+                    </div>
+                    <div style="font-size: 48px; font-weight: 700; color: #4A4458; line-height: 1;">
+                        33%
+                    </div>
+                    <div style="font-size: 14px; color: #A7868F; margin-top: 4px; font-weight: 500;">
+                        First-mover opportunity
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.5); padding: 20px; border-radius: 8px; margin-top: 20px;">
+                <p style="margin: 0 0 16px 0; color: #4D2E3A; font-size: 15px; line-height: 1.7;">
+                    <strong>Why focus here first:</strong> ChatGPT represents 73% of all AI assistant usage
+                    (100M+ weekly users). The gap between your 9% visibility and competitors' 33%
+                    represents untapped potential on the platform that matters most.
+                </p>
+                <p style="margin: 0; color: #4D2E3A; font-size: 15px; line-height: 1.7;">
+                    <strong>The opportunity:</strong> This gap represents approximately <strong>$700/month</strong>
+                    in qualified traffic (conservative estimate). The infrastructure fixes take 2-4 weeks to implement,
+                    and improvements appear in ChatGPT responses within 1-2 weeks after that.
+                </p>
+            </div>
+
+            <div style="margin-top: 16px; padding: 12px; background: rgba(74,68,88,0.08); border-radius: 6px;">
+                <p style="margin: 0; font-size: 13px; color: #4D2E3A; line-height: 1.6;">
+                    <strong>Reality check:</strong> The industry is full of "grift" right now—inflated numbers and overnight promises.
+                    We use conservative estimates based on ~800 monthly queries × 73% ChatGPT usage × $5 visitor value.
+                    Real improvements take consistent work, not magic bullets.
+                </p>
+            </div>
+        </div>
         
-            <div style="margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid #E8E4E3;">
-                <div style="display: flex; align-items: start; gap: 16px;">
-                    <span style="font-size: 32px; flex-shrink: 0;">🥇</span>
-                    <div style="flex: 1;">
-                        <h3 style="margin: 0 0 8px 0; color: #4D2E3A; font-size: 18px;">Create 3-5 tutorial articles or videos targeting Luxury Beauty Enthusiast. Example topics your audience is searching for:</h3>
-                        <p style="margin: 0 0 12px 0; color: #6B5660; font-size: 15px; line-height: 1.6;">
-                            Pat McGrath Labs dominates 11 tutorial queries where you're absent. They're being featured prominently (7+ score) while you're invisible.
-                        </p>
-                        <div style="display: flex; gap: 16px; align-items: center;">
-                            <span style="background: #E8F5E9; color: #27AE60; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 600;">
-                                Close 4 gap queries (~17 monthly impressions)
-                            </span>
-                            <span style="color: #A78E8B; font-size: 13px;">
-                                Week 1-2
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid #E8E4E3;">
-                <div style="display: flex; align-items: start; gap: 16px;">
-                    <span style="font-size: 32px; flex-shrink: 0;">🥈</span>
-                    <div style="flex: 1;">
-                        <h3 style="margin: 0 0 8px 0; color: #4D2E3A; font-size: 18px;">Create FAQ pages answering common Beauty Beginner (Aspirational) questions. Real questions your audience is asking:</h3>
-                        <p style="margin: 0 0 12px 0; color: #6B5660; font-size: 15px; line-height: 1.6;">
-                            Tom Ford Beauty appears in 29 question-based queries where you're invisible. AI platforms prefer well-structured Q&A content.
-                        </p>
-                        <div style="display: flex; gap: 16px; align-items: center;">
-                            <span style="background: #E8F5E9; color: #27AE60; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 600;">
-                                Close 10 gap queries (~40 monthly impressions)
-                            </span>
-                            <span style="color: #A78E8B; font-size: 13px;">
-                                Week 2-3
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="margin-bottom: 0; padding-bottom: 0; border-bottom: none;">
-                <div style="display: flex; align-items: start; gap: 16px;">
-                    <span style="font-size: 32px; flex-shrink: 0;">🥉</span>
-                    <div style="flex: 1;">
-                        <h3 style="margin: 0 0 8px 0; color: #4D2E3A; font-size: 18px;">Build comparison articles/pages for your top competitors. Queries you're missing:</h3>
-                        <p style="margin: 0 0 12px 0; color: #6B5660; font-size: 15px; line-height: 1.6;">
-                            You're absent from 40 comparison queries. When users compare you to competitors, you need to control the narrative.
-                        </p>
-                        <div style="display: flex; gap: 16px; align-items: center;">
-                            <span style="background: #E8F5E9; color: #27AE60; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 600;">
-                                Close 18 gap queries (~72 monthly impressions)
-                            </span>
-                            <span style="color: #A78E8B; font-size: 13px;">
-                                Week 3-4
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
         </div>
 
-        <div style="text-align: center; margin-top: 24px;">
-            <p style="color: #A78E8B; font-size: 15px;">
-                👉 See the <strong>Action Plan & Recommendations</strong> tab for detailed implementation steps,
-                content gap analysis, and the full 90-day roadmap.
+        <div id="sentiment" class="tab-content">
+            
+        <div style="padding: 20px 0;">
+            <h2>How AI Describes You</h2>
+            <p style="color: #6B5660; font-size: 15px; line-height: 1.7; margin-bottom: 32px;">
+                This analyzes the actual language AI uses when mentioning Natasha Denona.
+                We examined 141 responses where you were mentioned and classified the tone based on the descriptive words and phrases used.
             </p>
+
+            <div style="background: linear-gradient(135deg, #10b98110 0%, #10b98120 100%); border: 2px solid #10b981; border-radius: 12px; padding: 32px; margin-bottom: 40px;">
+                <div style="text-align: center;">
+                    <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #4D2E3A; margin-bottom: 12px;">
+                        Overall Sentiment
+                    </div>
+                    <div style="font-size: 48px; font-weight: 700; color: #10b981; margin-bottom: 12px;">
+                        Positive
+                    </div>
+                    <p style="color: #4D2E3A; font-size: 15px; line-height: 1.7; margin: 0; max-width: 600px; margin: 0 auto;">
+                        AI describes Natasha Denona in positive terms in most mentions. This builds trust and authority.
+                    </p>
+                </div>
+            </div>
+
+            <h3>Sentiment Distribution</h3>
+            <p style="color: #6B5660; margin-bottom: 20px;">Based on 141 analyzed mentions:</p>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 48px;">
+                <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 8px; padding: 24px; text-align: center;">
+                    <div style="font-size: 40px; font-weight: 700; color: #10b981;">
+                        69%
+                    </div>
+                    <div style="font-size: 14px; color: #10b981; font-weight: 600; margin-top: 4px;">
+                        POSITIVE
+                    </div>
+                    <div style="font-size: 13px; color: #6B5660; margin-top: 8px;">
+                        97 mentions
+                    </div>
+                </div>
+
+                <div style="background: #fffbeb; border: 2px solid #f59e0b; border-radius: 8px; padding: 24px; text-align: center;">
+                    <div style="font-size: 40px; font-weight: 700; color: #f59e0b;">
+                        30%
+                    </div>
+                    <div style="font-size: 14px; color: #f59e0b; font-weight: 600; margin-top: 4px;">
+                        NEUTRAL
+                    </div>
+                    <div style="font-size: 13px; color: #6B5660; margin-top: 8px;">
+                        43 mentions
+                    </div>
+                </div>
+
+                <div style="background: #fef2f2; border: 2px solid #ef4444; border-radius: 8px; padding: 24px; text-align: center;">
+                    <div style="font-size: 40px; font-weight: 700; color: #ef4444;">
+                        1%
+                    </div>
+                    <div style="font-size: 14px; color: #ef4444; font-weight: 600; margin-top: 4px;">
+                        NEGATIVE
+                    </div>
+                    <div style="font-size: 13px; color: #6B5660; margin-top: 8px;">
+                        1 mentions
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="color: #10b981;">✓ Positive Mentions</h3>
+            <p style="color: #6B5660; margin-bottom: 20px;">Examples of how AI describes you favorably:</p>
+            
+                <div style="background: white; border-left: 4px solid #10b981; padding: 20px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 15px; color: #2D2D2D; line-height: 1.8; margin-bottom: 12px; font-family: Georgia, serif;">
+                        "The textures, which range from matte to shimmer to glitter, are all top-notch, and the packaging is undeniably luxurious.
+
+Another comparison could be the ..."
+                    </div>
+                    <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
+                        <strong style="color: #10b981;">ChatGPT</strong> • Query: <em>"Compare best luxury eyeshadow palette to Stila"</em>
+                    </div>
+                </div>
+                
+                <div style="background: white; border-left: 4px solid #10b981; padding: 20px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 15px; color: #2D2D2D; line-height: 1.8; margin-bottom: 12px; font-family: Georgia, serif;">
+                        "Here's a comparison between top luxury eyeshadow palettes and Stila:
+
+ Luxury Options vs."
+                    </div>
+                    <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
+                        <strong style="color: #10b981;">Claude</strong> • Query: <em>"Compare best luxury eyeshadow palette to Stila"</em>
+                    </div>
+                </div>
+                
+                <div style="background: white; border-left: 4px solid #10b981; padding: 20px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 15px; color: #2D2D2D; line-height: 1.8; margin-bottom: 12px; font-family: Georgia, serif;">
+                        "...- Color preferences
+
+Other luxury options to compare:
+- Charlotte Tilbury (great for glam looks)
+- Tom Ford (highly pigmented, bold colors)
+- Pat McGrath (innovative textures, editorial looks)
+- Natasha Denona (excellent blendability)
+
+Questions to help narrow it down:
+- What's your budget range?
+- Do you prefer neutral or colorful shades?
+- Are you looking for everyday wear or special occasions?
+- What's your experience level with eyeshadow?
+
+If you can share more details about what specific palette..."
+                    </div>
+                    <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
+                        <strong style="color: #10b981;">Claude</strong> • Query: <em>"What's better: best luxury eyeshadow palette or Bobbi Brown"</em>
+                    </div>
+                </div>
+                
+                <div style="background: white; border-left: 4px solid #10b981; padding: 20px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 15px; color: #2D2D2D; line-height: 1.8; margin-bottom: 12px; font-family: Georgia, serif;">
+                        "...Urban Decay Eyeshadow Primer Potion + any eyeshadow
+- MAC Paint Pots (cream-to-powder formula)
+- Stila Glitter & Glow liquid eyeshadows
+- Charlotte Tilbury Pillow Talk collection
+- Natasha Denona eyeshadows with primer
+
+ Tom Ford Beauty Performance:
+
+Pros:
+- Luxurious pigmentation
+- Beautiful color selection
+- Good blendability
+
+Cons:
+- Can crease on oily lids without primer
+- Higher price point
+- Some shades fade faster on oily skin
+
+ Key Tips for Oily Lids:
+
+1."
+                    </div>
+                    <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
+                        <strong style="color: #10b981;">Claude</strong> • Query: <em>"long lasting eyeshadow oily lids vs Tom Ford Beauty"</em>
+                    </div>
+                </div>
+                
+                <div style="background: white; border-left: 4px solid #10b981; padding: 20px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 15px; color: #2D2D2D; line-height: 1.8; margin-bottom: 12px; font-family: Georgia, serif;">
+                        "...eyeshadow quads)
+
+ Popular Cruelty-Free Luxury Alternatives
+- Charlotte Tilbury - Similar luxury feel, elegant packaging
+- Pat McGrath Labs - High-end artistry, innovative formulas
+- Natasha Denona - Professional quality, rich pigmentation
+- Huda Beauty - Trendy colors, good performance
+
+ Quality Comparison
+Tom Ford is known for:
+- Buttery, blendable textures
+- Sophisticated color palettes
+- Luxurious packaging
+
+Many cruelty-free brands match or exceed this quality while being eth..."
+                    </div>
+                    <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
+                        <strong style="color: #10b981;">Claude</strong> • Query: <em>"Differences between cruelty free luxury eyeshadow and Tom Ford Beauty"</em>
+                    </div>
+                </div>
+                <p style="color: #6B5660; font-size: 14px; margin-top: 12px; font-weight: 500;">+ 92 more positive mentions</p>
+
+            <h3 style="color: #f59e0b; margin-top: 48px;">→ Neutral Mentions</h3>
+            <p style="color: #6B5660; margin-bottom: 20px;">Factual mentions without strong positive or negative language:</p>
+            
+                <div style="background: white; border-left: 4px solid #f59e0b; padding: 20px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 15px; color: #2D2D2D; line-height: 1.8; margin-bottom: 12px; font-family: Georgia, serif;">
+                        "It includes 18 shades, with textures ranging from matte, pearl, and glitter finishes.
+
+5."
+                    </div>
+                    <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
+                        <strong style="color: #f59e0b;">ChatGPT</strong> • Query: <em>"Compare best luxury eyeshadow palette to Kat Von D"</em>
+                    </div>
+                </div>
+                
+                <div style="background: white; border-left: 4px solid #f59e0b; padding: 20px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 15px; color: #2D2D2D; line-height: 1.8; margin-bottom: 12px; font-family: Georgia, serif;">
+                        "...g
+- More expensive but often considered worth it
+
+Charlotte Tilbury ($53-75)
+- Excellent for everyday wearability
+- Sophisticated, wearable color schemes
+- Great for beginners to luxury makeup
+
+Natasha Denona ($65-239)
+- Exceptional blending and pigmentation
+- Wide range of finishes
+- Professional-quality formulas
+
+Tom Ford ($88-150)
+- Ultra-luxurious packaging
+- Rich, buttery textures
+- Sophisticated color palettes
+
+ Bottom Line:
+KVD offers great quality at a more accessible luxury price point...."
+                    </div>
+                    <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
+                        <strong style="color: #f59e0b;">Claude</strong> • Query: <em>"Compare best luxury eyeshadow palette to Kat Von D"</em>
+                    </div>
+                </div>
+                
+                <div style="background: white; border-left: 4px solid #f59e0b; padding: 20px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 15px; color: #2D2D2D; line-height: 1.8; margin-bottom: 12px; font-family: Georgia, serif;">
+                        "...Cons:
+- Much more expensive ($25-60+ per palette)
+- Less accessible (specialty stores, online only)
+- Can be intimidating for beginners
+
+Top Professional Brands:
+- Viseart, Pat McGrath Labs, Natasha Denona, Charlotte Tilbury, Makeup by Mario
+
+ ColourPop
+Pros:
+- Very affordable ($4-22 per palette)
+- Trendy, Instagram-worthy packaging
+- Good color selection and frequent new releases
+- Decent pigmentation for the price point
+- Easily accessible online
+- Cruelty-free
+
+Cons:
+- Inconsistent q..."
+                    </div>
+                    <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
+                        <strong style="color: #f59e0b;">Claude</strong> • Query: <em>"professional makeup artist eyeshadow vs ColourPop"</em>
+                    </div>
+                </div>
+                
+                <div style="background: white; border-left: 4px solid #f59e0b; padding: 20px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 15px; color: #2D2D2D; line-height: 1.8; margin-bottom: 12px; font-family: Georgia, serif;">
+                        "...(most versatile)
+- Colorful palettes - Brights, jewel tones
+- Smoky palettes - Grays, blacks, deep colors
+
+ Key Brands
+- High-end: Urban Decay, Anastasia Beverly Hills, Pat McGrath, Natasha Denona
+- Mid-range: Colourpop, Juvia's Place, BH Cosmetics
+- Drugstore: Milani, L'Oreal, Maybelline
+
+ Basic Application Tips
+1. Use primer for longevity
+2. Light colors to highlight, dark colors for depth
+3. Blend in windshield wiper motions
+4."
+                    </div>
+                    <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
+                        <strong style="color: #f59e0b;">Claude</strong> • Query: <em>"Can you explain professional makeup artist eyeshadow"</em>
+                    </div>
+                </div>
+                
+                <div style="background: white; border-left: 4px solid #f59e0b; padding: 20px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 15px; color: #2D2D2D; line-height: 1.8; margin-bottom: 12px; font-family: Georgia, serif;">
+                        "Here are a few:
+
+1."
+                    </div>
+                    <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
+                        <strong style="color: #f59e0b;">ChatGPT</strong> • Query: <em>"Compare best luxury eyeshadow palette to Stila"</em>
+                    </div>
+                </div>
+                <p style="color: #6B5660; font-size: 14px; margin-top: 12px; font-weight: 500;">+ 38 more neutral mentions</p>
+
+            <h3 style="color: #ef4444; margin-top: 48px;">✗ Negative Mentions</h3>
+            <p style="color: #6B5660; margin-bottom: 20px;">Mentions with critical or negative language:</p>
+            
+                <div style="background: white; border-left: 4px solid #ef4444; padding: 20px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 15px; color: #2D2D2D; line-height: 1.8; margin-bottom: 12px; font-family: Georgia, serif;">
+                        "...(not chalky or patchy)
+- Minimal fallout during application
+- Good color accuracy between pan and skin
+- Blends well without muddying
+
+ Popular High-Pigment Brands
+- Pat McGrath Labs
+- Natasha Denona
+- Huda Beauty
+- Urban Decay
+- Colourpop (budget-friendly)
+- Juvia's Place
+
+ Potential Drawbacks
+- Can be harder to blend if over-applied
+- May cause staining with very intense shades
+- Often more expensive than regular formulas
+- Requires more skill to use effectively
+
+The key is..."
+                    </div>
+                    <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
+                        <strong style="color: #ef4444;">Claude</strong> • Query: <em>"What should I know about most pigmented eyeshadow"</em>
+                    </div>
+                </div>
+                
+
+            <div style="background: #F8F8F7; padding: 24px; border-radius: 8px; margin-top: 48px;">
+                <h3 style="margin-top: 0;">What This Means</h3>
+                <p style="color: #4D2E3A; line-height: 1.7; margin: 0;">
+                    <strong>Why sentiment matters:</strong> AI language models are trained on existing content. If most mentions use positive, authoritative language,
+                    AI is more likely to recommend you. If mentions are neutral or negative, you need to create content that shifts the narrative.
+                </p>
+                <p style="color: #4D2E3A; line-height: 1.7; margin: 16px 0 0 0;">
+                    <strong>How to improve:</strong> Publish thought leadership, case studies, and educational content that positions you as an expert.
+                    Get featured in authoritative publications. Build a library of content that AI can reference when answering queries in your category.
+                </p>
+            </div>
         </div>
         
         </div>
 
         <div id="competitive-intel" class="tab-content">
             
-        <h2>What Competitors Are Doing (That You're Not)</h2>
-        <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 32px;">
-            The brands showing up in AI responses are doing specific things that you aren't. Here's what the data shows.
-        </p>
-
-        
-        <div style="background: linear-gradient(135deg, #4D2E3A 0%, #6B5660 100%); color: white; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
-            <h3 style="color: white; margin-top: 0; font-size: 24px; margin-bottom: 16px;">
-                🚨 Why AI Visibility Matters Now
-            </h3>
-            <div style="font-size: 18px; line-height: 1.8; margin-bottom: 20px;">
-                Brands invisible in AI responses are seeing <strong>40% drops in organic search traffic</strong> as users shift to AI for research.
-            </div>
-            <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; margin-top: 16px;">
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center;">
-                    <div>
-                        <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">53%</div>
-                        <div style="font-size: 13px; opacity: 0.9;">of B2B buyers now use AI for vendor research</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">68%</div>
-                        <div style="font-size: 13px; opacity: 0.9;">of consumers trust AI recommendations as much as search results</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">$0</div>
-                        <div style="font-size: 13px; opacity: 0.9;">cost per AI impression vs $2-5 per click on Google Ads</div>
-                    </div>
-                </div>
+        <div class="info-card">
+            <div class="info-card-title">What Competitors Are Doing (That You're Not)</div>
+            <div class="info-card-content">
+                <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 0;">
+                    The brands showing up in AI responses are doing specific things that you aren't. Here's what the data shows.
+                </p>
             </div>
         </div>
+
         
-        
-        
-        <h3>The Competitive Landscape</h3>
-        <p style="color: #6B5660; margin-bottom: 16px;">
-            Here's who AI mentions most often in your space, and what they're doing to earn that visibility:
-        </p>
-        
-        <table style="margin-bottom: 32px;">
-            <thead>
-                <tr>
-                    <th>Brand</th>
-                    <th style="text-align: center;">AI Visibility Rate</th>
-                    <th style="text-align: center;">Status</th>
-                    <th>What They're Doing</th>
-                </tr>
-            </thead>
-            <tbody>
-                
+        <div class="info-card">
+            <div class="info-card-title">The Competitive Landscape</div>
+            <div class="info-card-content">
+                <p style="color: #6B5660; margin-bottom: 16px;">
+                    Here's who AI mentions most often in your space, and what they're doing to earn that visibility:
+                </p>
+
+                <table style="margin-bottom: 0;">
+                    <thead>
+                        <tr>
+                            <th>Brand</th>
+                            <th style="text-align: center;">AI Visibility Rate</th>
+                            <th style="text-align: center;">Status</th>
+                            <th>What They're Doing</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
         <tr style="background: #FFF9E6; border: 2px solid #F59E0B;">
             <td style="font-weight: 700; color: #4D2E3A;">👉 Natasha Denona (You)</td>
             <td style="text-align: center; font-size: 20px; font-weight: 700; color: #4D2E3A;">
@@ -1660,7 +1799,7 @@
             <td style="font-size: 14px; color: #6B5660; font-style: italic;">See opportunities below</td>
         </tr>
         
-                
+                        
             <tr>
                 <td style="font-weight: 600;">Charlotte Tilbury</td>
                 <td style="text-align: center; font-size: 20px; font-weight: 700; color: #27AE60;">
@@ -1706,16 +1845,20 @@
                 <td style="font-size: 14px; color: #6B5660;">Product reviews & best-of listicles</td>
             </tr>
             
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         
+
         
-        
-        <h3>Your Top Opportunities</h3>
-        <p style="color: #6B5660; margin-bottom: 24px;">
-            Based on competitive analysis, these are the highest-impact areas where you can catch up to leaders in your space:
-        </p>
-        
+        <div class="info-card" style="margin-top: 32px;">
+            <div class="info-card-title">🎯 Your Top Opportunities</div>
+            <div class="info-card-content">
+                <p style="color: #6B5660; margin-bottom: 24px;">
+                    Based on competitive analysis, these are the highest-impact areas where you can catch up to leaders in your space:
+                </p>
+                
             <div style="background: #F7EBF0; border-left: 4px solid #A78E8B; padding: 24px; border-radius: 8px; margin-bottom: 24px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <h4 style="margin: 0; color: #4D2E3A; font-size: 18px;">1. Create Step-by-Step Tutorial Content</h4>
@@ -1788,130 +1931,65 @@
                 </div>
             </div>
             
-        
-        <div style="background: rgba(107, 86, 96, 0.1); padding: 20px; border-radius: 8px; margin-top: 32px; border-left: 3px solid #6B5660;">
-            <strong style="color: #4D2E3A;">📊 Want the detailed tactical plan?</strong>
-            <p style="margin: 8px 0 0 0; color: #6B5660; line-height: 1.6;">
-                This report shows you the strategic overview. DaSilva Consulting has a detailed, proprietary action plan 
-                with specific content briefs, technical SEO requirements, and distribution strategies for each opportunity.
-            </p>
-        </div>
-        
-        
+            </div>
         </div>
 
-        <div id="roi" class="tab-content">
+        <div class="accordion-group" style="margin-top: 24px;">
+            <button class="accordion-button" onclick="toggleAccordion(this)">
+                <span>📊 Want the Detailed Tactical Plan?</span>
+                <span class="accordion-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <p style="color: #6B5660; line-height: 1.6; margin: 16px 0;">
+                    This report shows you the strategic overview. DaSilva Consulting has a detailed, proprietary action plan
+                    with specific content briefs, technical SEO requirements, and distribution strategies for each opportunity.
+                </p>
+            </div>
+        </div>
+        
+
+        <div class="accordion-group" style="margin-top: 32px;">
             
-        <h2>💰 ROI Estimator</h2>
-        <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 32px;">
-            Estimated business impact of implementing the recommendations in this report.
-            These are conservative projections based on industry benchmarks and your current performance.
-        </p>
-
-        <div style="background: linear-gradient(135deg, #4D2E3A 0%, #A78E8B 100%); color: white; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
-            <h3 style="color: white; margin: 0 0 24px 0; font-size: 24px;">📈 Projected Impact (90 Days)</h3>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
-                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
-                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">AI Visibility Rate</div>
-                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 4px;">29-39%</div>
-                    <div style="font-size: 13px; opacity: 0.8;">Currently: 14.7%</div>
+        <button class="accordion-button" onclick="toggleAccordion(this)">
+            <span>🚨 Why AI Visibility Matters Now (Industry Data)</span>
+            <span class="accordion-icon">▼</span>
+        </button>
+        <div class="accordion-content">
+            <div style="background: linear-gradient(135deg, #4D2E3A 0%, #6B5660 100%); color: white; padding: 32px; border-radius: 12px; margin-top: 16px;">
+                <div style="font-size: 18px; line-height: 1.8; margin-bottom: 20px;">
+                    Brands invisible in AI responses are seeing <strong>40% drops in organic search traffic</strong> as users shift to AI for research.
                 </div>
-
-                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
-                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Monthly AI-Driven Traffic</div>
-                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 4px;">2,900-3,900</div>
-                    <div style="font-size: 13px; opacity: 0.8;">Currently: 1,465</div>
-                </div>
-
-                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
-                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Brand Impressions/Month</div>
-                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 4px;">29,000-39,000</div>
-                    <div style="font-size: 13px; opacity: 0.8;">Currently: 14,650</div>
-                </div>
-            </div>
-        </div>
-
-        <div style="background: #FFF4E6; padding: 16px 20px; border-left: 4px solid #F39C12; border-radius: 6px; margin-bottom: 24px;">
-            <strong style="color: #B77400;">⚠️ Important:</strong>
-            <span style="color: #6B5660; margin-left: 8px;">
-                These are <strong>projected estimates</strong>, not actual tracked revenue. To measure real AI-driven revenue,
-                connect Google Analytics to track traffic from AI sources (ChatGPT, Perplexity, Claude, etc.) and their conversion rates.
-            </span>
-        </div>
-
-        <div style="background: white; border: 2px solid #27AE60; border-radius: 10px; padding: 32px; margin-bottom: 32px;">
-            <h3 style="color: #27AE60; margin: 0 0 20px 0; font-size: 22px;">💵 Potential Revenue Impact (Conservative Projection)</h3>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
-                <div>
-                    <div style="font-size: 15px; color: #6B5660; margin-bottom: 12px; font-weight: 600;">Estimated Current Potential</div>
-                    <div style="font-size: 40px; color: #4D2E3A; font-weight: 700; margin-bottom: 8px;">$1,318<span style="font-size: 20px; color: #A78E8B;">/mo</span></div>
-                    <div style="font-size: 13px; color: #A78E8B;">
-                        If 1,465 monthly AI mentions converted at 2%
-                    </div>
-                </div>
-
-                <div>
-                    <div style="font-size: 15px; color: #6B5660; margin-bottom: 12px; font-weight: 600;">Projected Potential</div>
-                    <div style="font-size: 40px; color: #27AE60; font-weight: 700; margin-bottom: 8px;">$2,610-$3,510<span style="font-size: 20px; opacity: 0.8;">/mo</span></div>
-                    <div style="font-size: 13px; color: #A78E8B;">
-                        Potential monthly lift: <strong style="color: #27AE60;">$1,292-$2,192</strong>
+                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; margin-top: 16px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center;">
+                        <div>
+                            <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">53%</div>
+                            <div style="font-size: 13px; opacity: 0.9;">of B2B buyers now use AI for vendor research</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">68%</div>
+                            <div style="font-size: 13px; opacity: 0.9;">of consumers trust AI recommendations as much as search results</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">$0</div>
+                            <div style="font-size: 13px; opacity: 0.9;">cost per AI impression vs $2-5 per click on Google Ads</div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div style="margin-top: 24px; padding: 20px; background: #F8F8F7; border-radius: 8px;">
-                <div style="font-size: 14px; color: #4D2E3A; font-weight: 600; margin-bottom: 12px;">12-Month Potential Impact</div>
-                <div style="font-size: 28px; color: #27AE60; font-weight: 700;">
-                    $15,504 - $26,304 additional potential revenue
-                </div>
-                <div style="font-size: 13px; color: #6B5660; margin-top: 8px;">
-                    Based on steady improvement over 90 days, then maintaining new visibility level
-                </div>
-            </div>
         </div>
-
-        <div style="background: #E8F5E9; padding: 24px; border-radius: 8px; border-left: 4px solid #27AE60; margin-bottom: 32px;">
-            <h4 style="color: #27AE60; margin: 0 0 12px 0;">📊 How to Track Actual AI-Driven Revenue</h4>
-            <p style="margin: 0 0 12px 0; color: #2E7D32; line-height: 1.7;">
-                To measure real performance (not just projections), set up tracking in Google Analytics:
-            </p>
-            <ol style="margin: 0; padding-left: 20px; color: #2E7D32; line-height: 1.8;">
-                <li><strong>Tag AI traffic sources:</strong> Create UTM parameters for AI platforms (ChatGPT, Perplexity, Claude)</li>
-                <li><strong>Set up conversion tracking:</strong> Track purchases/leads from AI referrers</li>
-                <li><strong>Create custom reports:</strong> Filter by AI traffic to see actual conversion rates</li>
-                <li><strong>Monitor over time:</strong> Compare AI traffic before/after implementing recommendations</li>
-            </ol>
-            <p style="margin: 12px 0 0 0; color: #2E7D32; font-size: 14px; line-height: 1.7;">
-                <strong>Note:</strong> AI platforms often show as "direct" traffic or don't pass referrer data,
-                making actual attribution challenging. These projections provide a conservative baseline expectation.
-            </p>
-        </div>
-
-        <div style="background: #E3F2FD; padding: 24px; border-radius: 8px; border-left: 4px solid #1976D2;">
-            <h4 style="color: #1976D2; margin: 0 0 12px 0;">📌 Methodology & Assumptions</h4>
-            <ul style="margin: 0; padding-left: 20px; color: #1565C0; line-height: 1.8;">
-                <li><strong>Traffic Estimate:</strong> 100 AI-influenced visitors per 1% visibility rate (conservative)</li>
-                <li><strong>Conversion Rate:</strong> 2% (typical e-commerce rate for qualified traffic)</li>
-                <li><strong>Average Order Value:</strong> $45 (beauty industry benchmark)</li>
-                <li><strong>Improvement Timeline:</strong> 90 days for full implementation</li>
-                <li><strong>Visibility Gain:</strong> Based on implementing Top 10 recommendations</li>
-            </ul>
-
-            <p style="margin: 16px 0 0 0; color: #1565C0; font-size: 14px; line-height: 1.7;">
-                <strong>Note:</strong> These are conservative estimates. Actual results may vary based on implementation quality,
-                brand awareness, product pricing, and market conditions. AI visibility often compounds over time as more
-                content gets indexed and cited.
-            </p>
+        
         </div>
         
         </div>
 
         <div id="prompts" class="tab-content">
             
-        <h2>What AI Actually Said</h2>
-        <p style="margin-bottom: 24px;">See exactly what AI platforms say when asked about your space. Use this to understand competitor positioning and find content opportunities.</p>
+        <div class="info-card">
+            <div class="info-card-title">What AI Actually Said</div>
+            <div class="info-card-content">
+                <p style="margin-bottom: 0;">See exactly what AI platforms say when asked about your space. Use this to understand competitor positioning and find content opportunities.</p>
+            </div>
+        </div>
 
         
         <div style="background: linear-gradient(135deg, #E8D4DA 0%, #F0E0E5 100%); border-radius: 12px; padding: 32px; margin-bottom: 32px; border: 1px solid #C9A7B3;">
@@ -1944,23 +2022,42 @@
         </div>
         
 
-        <div style="background: #F8F8F7; padding: 16px; border-radius: 8px; margin-bottom: 24px; display: flex; gap: 24px; align-items: center; font-size: 13px;">
-            <div><strong>Row colors:</strong></div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width: 16px; height: 16px; background: #E8F5E8; border: 1px solid #ccc; border-radius: 2px;"></div>
-                <span>You win (7-10)</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width: 16px; height: 16px; background: #FFF8E8; border: 1px solid #ccc; border-radius: 2px;"></div>
-                <span>Mixed (4-6)</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width: 16px; height: 16px; background: #FFE8E8; border: 1px solid #ccc; border-radius: 2px;"></div>
-                <span>You lose (0)</span>
-            </div>
-            <div style="margin-left: auto; font-weight: 600; color: #6B5660;">
-                <mark style="background: #FFE8B1; padding: 2px 4px;">Your brand</mark>
-                <mark style="background: #D4E8F7; padding: 2px 4px;">Competitors</mark>
+        <div class="accordion-group" style="margin-bottom: 24px;">
+            <button class="accordion-button" onclick="toggleAccordion(this)">
+                <span>🎨 How to Read This Table</span>
+                <span class="accordion-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <div style="background: #F8F8F7; padding: 16px; border-radius: 8px; margin-top: 16px;">
+                    <div style="margin-bottom: 16px;">
+                        <strong style="color: #4D2E3A;">Row colors:</strong>
+                        <div style="display: flex; gap: 24px; margin-top: 12px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 20px; height: 20px; background: #E8F5E8; border: 1px solid #ccc; border-radius: 4px;"></div>
+                                <span>You win (7-10 prominence)</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 20px; height: 20px; background: #FFF8E8; border: 1px solid #ccc; border-radius: 4px;"></div>
+                                <span>Mixed (4-6 prominence)</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 20px; height: 20px; background: #FFE8E8; border: 1px solid #ccc; border-radius: 4px;"></div>
+                                <span>You lose (not mentioned)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <strong style="color: #4D2E3A;">Text highlighting:</strong>
+                        <div style="display: flex; gap: 16px; margin-top: 12px;">
+                            <div style="font-weight: 600; color: #6B5660;">
+                                <mark style="background: #FFE8B1; padding: 4px 8px; border-radius: 3px;">Your brand</mark>
+                            </div>
+                            <div style="font-weight: 600; color: #6B5660;">
+                                <mark style="background: #D4E8F7; padding: 4px 8px; border-radius: 3px;">Competitors</mark>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -40379,11 +40476,17 @@ Since hazel eyes are a blend of green, brown, and gold with potential flecks of 
             </div>
         </div>
         
-            <h3 style="margin-top: 48px;">✓ Where You're Being Mentioned</h3>
-            <p style="color: #6B5660; margin-bottom: 20px;">
-                These sources are citing your brand in AI responses. Maintain and strengthen these relationships.
-            </p>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 48px;">
+            <div class="accordion-group" style="margin-top: 48px;">
+                <button class="accordion-button" onclick="toggleAccordion(this)">
+                    <span>✓ Where You're Being Mentioned (6 sources)</span>
+                    <span class="accordion-icon">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <p style="color: #6B5660; margin: 16px 0;">
+                        These sources are citing your brand in AI responses. Maintain and strengthen these relationships.
+                    </p>
+                    
+            <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
                 <thead>
                     <tr style="background: #F3EFF2; border-bottom: 2px solid #D4C5CE;">
                         <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Source</th>
@@ -40439,11 +40542,20 @@ Since hazel eyes are a blend of green, brown, and gold with potential flecks of 
                 </tbody>
             </table>
             
-            <h3 style="margin-top: 48px;">⚠️ Sources You're Missing (Targeting Opportunities)</h3>
-            <p style="color: #6B5660; margin-bottom: 20px;">
-                These sources cite your competitors but not you. Reach out for features, reviews, or backlinks.
-            </p>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 32px;">
+                </div>
+            </div>
+            
+            <div class="accordion-group" style="margin-top: 32px;">
+                <button class="accordion-button" onclick="toggleAccordion(this)">
+                    <span>⚠️ Sources You're Missing - Targeting Opportunities (5 sources)</span>
+                    <span class="accordion-icon">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <p style="color: #6B5660; margin: 16px 0;">
+                        These sources cite your competitors but not you. Reach out for features, reviews, or backlinks.
+                    </p>
+                    
+            <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
                 <thead>
                     <tr style="background: #FFF4E6; border-bottom: 2px solid #F0C674;">
                         <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Source</th>
@@ -40563,6 +40675,9 @@ Since hazel eyes are a blend of green, brown, and gold with potential flecks of 
                 
                 </tbody>
             </table>
+            
+                </div>
+            </div>
             
             <div style="background: #F3EFF2; padding: 32px; border-radius: 8px; margin-top: 32px;">
                 <h3 style="color: #4D2E3A; margin-top: 0;">📊 Complete Source List</h3>

@@ -1,0 +1,76 @@
+{
+  "brand": {
+    "name": "Say I Do",
+    "aliases": [],
+    "description": "Wedding planning app for DIY couples. Core features include customizable wedding websites, digital invites/save the dates, guest list management, RSVP tracking, seating planner, and a custom checklist tied to the wedding date. Freemium model \u2014 free tier is fully functional, paid upgrades unlock premium features. 359,000+ couples worldwide. Based in Melbourne, Australia.",
+    "website": "https://sayi.do",
+    "business_goals": {
+      "revenue_targets": "$1,000,000 in revenue per month. Primary metric is free-to-paid conversion. Secondary goal is ranking on page 1 in the US for \"wedding website.\"",
+      "market_positioning": "The recommended free/affordable wedding website builder when couples ask for wedding planning tools, digital invitations, or alternatives to The Knot and Zola. Should appear in \"free wedding website,\" \"digital wedding invites,\" and \"wedding RSVP website\" queries globally, with particular focus on breaking into the US market.",
+      "target_metrics": [
+        "Free-to-paid conversions, US organic traffic and rankings, brand awareness (word of mouth is their strongest acquisition channel), PPC performance on wedding website and digital invitation terms."
+      ],
+      "freeform_notes": "Already ranking well in Australia, NZ, UK, Canada, and Ireland. US and Europe are active growth markets. One-off purchase model is a challenge (couples only get married once). Design and functionality gaps are the top reasons prospects don't convert. Word of mouth is the single strongest acquisition channel in this industry. Competitors to track: Riley & Grey, Bliss & Bone, The Knot, With Joy, Zola, Getting Married."
+    }
+  },
+  "competitors": {
+    "expected": [
+      {
+        "name": "The Knot",
+        "website": "theknot.com",
+        "category": "direct",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "Zola",
+        "website": "zola.com",
+        "category": "direct",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "With Joy",
+        "website": "withjoy.com",
+        "category": "direct",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "Riley & Grey",
+        "website": "rileyandgrey.com",
+        "category": "adjacent",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "Bliss & Bone",
+        "website": "blissandbone.com",
+        "category": "adjacent",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "Getting Married",
+        "website": "gettingmarried.co.uk",
+        "category": "adjacent",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "WeddingWire",
+        "website": "weddingwire.com",
+        "category": "adjacent",
+        "added_date": "2026-03-08",
+        "notes": ""
+      }
+    ],
+    "discovered": []
+  },
+  "metadata": {
+    "created_at": "2026-03-08T16:49:08.555241Z",
+    "last_modified": "2026-03-08T16:49:08.555351Z",
+    "schema_version": "2.0"
+  },
+  "legacy_settings": {}
+}

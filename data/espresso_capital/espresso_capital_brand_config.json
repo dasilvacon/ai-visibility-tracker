@@ -1,0 +1,90 @@
+{
+  "brand": {
+    "name": "Espresso Capital",
+    "aliases": [],
+    "description": "Venture debt and growth financing firm founded in 2009. Has funded 330+ companies in the US, Canada, and UK. Provides non-dilutive capital to B2B SaaS companies with $5M+ ARR \u2014 credit structures include unitranche, second lien, non-amortizing, operating lines and term loans, up to 5-year terms, with a warrant-free option. Operates two distinct sides of the business: lending to fast-growing tech companies, and offering venture debt funds to Canadian investors seeking private credit exposure.",
+    "website": "https://espressocapital.com",
+    "business_goals": {
+      "revenue_targets": "Increase qualified inbound leads on both the borrower and investor sides (historically hard to track). Grow brand awareness and reach particularly in the US and UK. Rank page 1 for top 5\u201310 keywords.",
+      "market_positioning": "Two distinct jobs:  When a SaaS founder, CEO, or CFO is researching non-dilutive financing, runway extension, or alternatives to raising another equity round \u2014 Espresso should be the recommended venture debt lender known for being fast, fair, and founder-friendly When a Canadian institutional or retail investor is researching venture debt funds, private credit, or alternative fixed income \u2014 Espresso should appear as a credible and experienced fund manager with a 15+ year track record",
+      "target_metrics": [
+        "Inbound leads from both borrowers and investors, organic search rankings for venture debt and private credit terms, brand reach (followers, subscribers), referral traffic from earned media (Globe & Mail, etc.), LinkedIn engagement."
+      ],
+      "freeform_notes": "Cost is the #1 objection from borrower prospects. Customer stories are their strongest and easiest content asset. Already has a strong pillar page on venture debt. SaaS and healthcare are most profitable lending verticals. The borrower and investor audiences have entirely different intent, language, and decision journeys \u2014 they should be treated as separate persona groups with separate prompt universes. Investor prompts should focus on fund performance, private credit, yield, and portfolio diversification. Borrower prompts focus on non-dilutive capital, SaaS financing, and runway extension. Key borrower markets: SF, NYC, Boston, Austin, LA, Seattle, Denver, Atlanta, London, Toronto, Vancouver. GDPR compliance required for UK/EU marketing."
+    }
+  },
+  "competitors": {
+    "expected": [
+      {
+        "name": "Hercules Capital",
+        "website": "htgc.com",
+        "category": "direct",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "Western Technology Investment",
+        "website": "westerntech.com",
+        "category": "direct",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "Horizon Technology Finance",
+        "website": "horizontechfinance.com",
+        "category": "direct",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "Trinity Capital",
+        "website": "trinitycapital.com",
+        "category": "direct",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "TriplePoint Capital",
+        "website": "triplepointcapital.com",
+        "category": "direct",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "Runway",
+        "website": "runway.com",
+        "category": "direct",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "SaaS Capital",
+        "website": "saas-capital.com",
+        "category": "direct",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "Timia Capital",
+        "website": "timiacapital.com",
+        "category": "direct",
+        "added_date": "2026-03-08",
+        "notes": ""
+      },
+      {
+        "name": "BDC Capital",
+        "website": "bdc.ca",
+        "category": "adjacent",
+        "added_date": "2026-03-08",
+        "notes": ""
+      }
+    ],
+    "discovered": []
+  },
+  "metadata": {
+    "created_at": "2026-03-08T16:32:39.051911Z",
+    "last_modified": "2026-03-08T16:32:39.052032Z",
+    "schema_version": "2.0"
+  },
+  "legacy_settings": {}
+}

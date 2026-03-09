@@ -114,10 +114,17 @@ class GCSClientSync:
                     # Registry goes directly in data/
                     destination = local_path / 'clients.json'
                 else:
-                    # Client files go in data/ (e.g., data/natasha_denona_keywords.csv)
-                    # Extract just the filename (not the slug subdirectory)
-                    filename = Path(relative_path).name
-                    destination = local_path / filename
+                    # Preserve directory structure for client files
+                    # GCS path: client-data/{slug}/{filename}
+                    # Check if it's a nested path (slug/filename) or flat (filename only)
+                    parts = relative_path.split('/')
+                    if len(parts) == 2:
+                        # Nested: client-data/slug/filename -> data/slug/filename
+                        client_slug, filename = parts
+                        destination = local_path / client_slug / filename
+                    else:
+                        # Flat: client-data/filename -> data/filename
+                        destination = local_path / relative_path
 
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 blob.download_to_filename(str(destination))
@@ -149,3 +156,370 @@ class GCSClientSync:
         files_ok = self.upload_client_files(client_slug, files)
         registry_ok = self.upload_registry()
         return files_ok and registry_ok
+
+    def upload_prompt_data(self) -> bool:
+        """
+        Upload prompt data files to GCS for persistence across deployments.
+
+        This includes:
+        - data/generated_prompts.csv (main prompt library)
+        - data/archived_prompts.csv (archived prompts)
+        - data/prompt_batches.json (batch metadata)
+        - data/prompt_generation/drafts/*.json (draft batches)
+        - data/prompt_generation/approved/*.csv (approved exports)
+
+        Returns:
+            True if successful, False otherwise
+        """
+        prompt_prefix = 'prompt-data/'
+
+        try:
+            uploaded_count = 0
+
+            # Upload main prompt files
+            main_files = [
+                'data/generated_prompts.csv',
+                'data/archived_prompts.csv',
+                'data/prompt_batches.json',
+            ]
+
+            for local_path in main_files:
+                local_file = Path(local_path)
+                if local_file.exists():
+                    gcs_path = f"{prompt_prefix}{local_file.name}"
+                    blob = self.bucket.blob(gcs_path)
+                    blob.upload_from_filename(str(local_file))
+                    print(f"✓ Uploaded {local_path} → gs://{self.bucket_name}/{gcs_path}")
+                    uploaded_count += 1
+
+            # Upload draft batches
+            drafts_dir = Path('data/prompt_generation/drafts')
+            if drafts_dir.exists():
+                for draft_file in drafts_dir.glob('*.json'):
+                    gcs_path = f"{prompt_prefix}drafts/{draft_file.name}"
+                    blob = self.bucket.blob(gcs_path)
+                    blob.upload_from_filename(str(draft_file))
+                    print(f"✓ Uploaded {draft_file} → gs://{self.bucket_name}/{gcs_path}")
+                    uploaded_count += 1
+
+            # Upload approved exports
+            approved_dir = Path('data/prompt_generation/approved')
+            if approved_dir.exists():
+                for approved_file in approved_dir.glob('*.csv'):
+                    gcs_path = f"{prompt_prefix}approved/{approved_file.name}"
+                    blob = self.bucket.blob(gcs_path)
+                    blob.upload_from_filename(str(approved_file))
+                    print(f"✓ Uploaded {approved_file} → gs://{self.bucket_name}/{gcs_path}")
+                    uploaded_count += 1
+
+            print(f"✓ Uploaded {uploaded_count} prompt data files to GCS")
+            return True
+
+        except Exception as e:
+            print(f"✗ Failed to upload prompt data: {e}")
+            return False
+
+    def download_prompt_data(self, local_dir: str = 'data') -> bool:
+        """
+        Download prompt data files from GCS.
+
+        Args:
+            local_dir: Base local directory
+
+        Returns:
+            True if successful, False otherwise
+        """
+        prompt_prefix = 'prompt-data/'
+
+        try:
+            local_path = Path(local_dir)
+
+            # List all blobs with prompt-data/ prefix
+            blobs = list(self.bucket.list_blobs(prefix=prompt_prefix))
+
+            if not blobs:
+                print("No prompt data found in GCS (this is OK for first run)")
+                return True
+
+            downloaded_count = 0
+            for blob in blobs:
+                # Skip directory markers
+                if blob.name.endswith('/'):
+                    continue
+
+                # Extract relative path after prompt-data/
+                relative_path = blob.name[len(prompt_prefix):]
+
+                # Determine destination
+                if relative_path.startswith('drafts/'):
+                    destination = local_path / 'prompt_generation' / relative_path
+                elif relative_path.startswith('approved/'):
+                    destination = local_path / 'prompt_generation' / relative_path
+                else:
+                    # Main files go directly in data/
+                    destination = local_path / relative_path
+
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                blob.download_to_filename(str(destination))
+                downloaded_count += 1
+                print(f"✓ Downloaded gs://{self.bucket_name}/{blob.name} → {destination}")
+
+            print(f"✓ Downloaded {downloaded_count} prompt data files from GCS")
+            return True
+
+        except Exception as e:
+            print(f"✗ Failed to download prompt data: {e}")
+            return False
+
+    def upload_test_results(self) -> bool:
+        """
+        Upload test results to GCS for persistence across deployments.
+
+        This includes:
+        - data/results/*.json (individual test results)
+        - data/results/results_summary.csv (summary CSV)
+        - data/results/monthly_scores.json (historical tracking)
+
+        Returns:
+            True if successful, False otherwise
+        """
+        results_prefix = 'test-results/'
+
+        try:
+            uploaded_count = 0
+            results_dir = Path('data/results')
+
+            if not results_dir.exists():
+                print("No test results directory found (this is OK for new setups)")
+                return True
+
+            # Upload results_summary.csv
+            summary_csv = results_dir / 'results_summary.csv'
+            if summary_csv.exists():
+                gcs_path = f"{results_prefix}results_summary.csv"
+                blob = self.bucket.blob(gcs_path)
+                blob.upload_from_filename(str(summary_csv))
+                print(f"✓ Uploaded {summary_csv} → gs://{self.bucket_name}/{gcs_path}")
+                uploaded_count += 1
+
+            # Upload monthly_scores.json
+            monthly_scores = results_dir / 'monthly_scores.json'
+            if monthly_scores.exists():
+                gcs_path = f"{results_prefix}monthly_scores.json"
+                blob = self.bucket.blob(gcs_path)
+                blob.upload_from_filename(str(monthly_scores))
+                print(f"✓ Uploaded {monthly_scores} → gs://{self.bucket_name}/{gcs_path}")
+                uploaded_count += 1
+
+            # Upload individual test result JSON files
+            for json_file in results_dir.glob('test_*.json'):
+                gcs_path = f"{results_prefix}tests/{json_file.name}"
+                blob = self.bucket.blob(gcs_path)
+                blob.upload_from_filename(str(json_file))
+                uploaded_count += 1
+
+            if uploaded_count > 0:
+                print(f"✓ Uploaded {uploaded_count} test result files to GCS")
+            else:
+                print("No test results to upload")
+
+            return True
+
+        except Exception as e:
+            print(f"✗ Failed to upload test results: {e}")
+            return False
+
+    def download_test_results(self, local_dir: str = 'data') -> bool:
+        """
+        Download test results from GCS.
+
+        Args:
+            local_dir: Base local directory
+
+        Returns:
+            True if successful, False otherwise
+        """
+        results_prefix = 'test-results/'
+
+        try:
+            local_path = Path(local_dir)
+            results_dir = local_path / 'results'
+            results_dir.mkdir(parents=True, exist_ok=True)
+
+            # List all blobs with test-results/ prefix
+            blobs = list(self.bucket.list_blobs(prefix=results_prefix))
+
+            if not blobs:
+                print("No test results found in GCS (this is OK for first run)")
+                return True
+
+            downloaded_count = 0
+            for blob in blobs:
+                # Skip directory markers
+                if blob.name.endswith('/'):
+                    continue
+
+                # Extract relative path after test-results/
+                relative_path = blob.name[len(results_prefix):]
+
+                # Determine destination
+                if relative_path.startswith('tests/'):
+                    # Individual test files go in data/results/
+                    filename = Path(relative_path).name
+                    destination = results_dir / filename
+                else:
+                    # Main files go directly in data/results/
+                    destination = results_dir / relative_path
+
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                blob.download_to_filename(str(destination))
+                downloaded_count += 1
+
+            if downloaded_count > 0:
+                print(f"✓ Downloaded {downloaded_count} test result files from GCS")
+            else:
+                print("No test results to download")
+
+            return True
+
+        except Exception as e:
+            print(f"✗ Failed to download test results: {e}")
+            return False
+
+    def upload_reports(self, client_name: str = None) -> bool:
+        """
+        Upload report files to GCS for persistence.
+
+        Args:
+            client_name: Optional client name to upload only that client's reports.
+                        If None, uploads all reports.
+
+        Returns:
+            True if successful, False otherwise
+        """
+        reports_prefix = 'reports/'
+
+        try:
+            uploaded_count = 0
+            reports_dir = Path('data/reports')
+
+            if not reports_dir.exists():
+                print("No reports directory found")
+                return True
+
+            # Get files to upload
+            if client_name:
+                client_slug = client_name.replace(' ', '_')
+                patterns = [
+                    f'*_{client_slug}.html',
+                    f'*_{client_slug}.pdf',
+                    f'*_{client_slug}.csv',
+                    f'*_{client_slug}.txt',
+                ]
+                files_to_upload = []
+                for pattern in patterns:
+                    files_to_upload.extend(reports_dir.glob(pattern))
+            else:
+                # Upload all report files
+                files_to_upload = list(reports_dir.glob('*.*'))
+                # Exclude hidden files
+                files_to_upload = [f for f in files_to_upload if not f.name.startswith('.')]
+
+            for report_file in files_to_upload:
+                gcs_path = f"{reports_prefix}{report_file.name}"
+                blob = self.bucket.blob(gcs_path)
+                blob.upload_from_filename(str(report_file))
+                print(f"✓ Uploaded {report_file} → gs://{self.bucket_name}/{gcs_path}")
+                uploaded_count += 1
+
+            if uploaded_count > 0:
+                print(f"✓ Uploaded {uploaded_count} report files to GCS")
+            else:
+                print("No reports to upload")
+
+            return True
+
+        except Exception as e:
+            print(f"✗ Failed to upload reports: {e}")
+            return False
+
+    def download_reports(self, local_dir: str = 'data') -> bool:
+        """
+        Download report files from GCS.
+
+        Args:
+            local_dir: Base local directory
+
+        Returns:
+            True if successful, False otherwise
+        """
+        reports_prefix = 'reports/'
+
+        try:
+            local_path = Path(local_dir)
+            reports_dir = local_path / 'reports'
+            reports_dir.mkdir(parents=True, exist_ok=True)
+
+            # List all blobs with reports/ prefix
+            blobs = list(self.bucket.list_blobs(prefix=reports_prefix))
+
+            if not blobs:
+                print("No reports found in GCS (this is OK for first run)")
+                return True
+
+            downloaded_count = 0
+            for blob in blobs:
+                # Skip directory markers
+                if blob.name.endswith('/'):
+                    continue
+
+                # Extract filename
+                filename = blob.name[len(reports_prefix):]
+                destination = reports_dir / filename
+
+                blob.download_to_filename(str(destination))
+                downloaded_count += 1
+                print(f"✓ Downloaded gs://{self.bucket_name}/{blob.name} → {destination}")
+
+            if downloaded_count > 0:
+                print(f"✓ Downloaded {downloaded_count} report files from GCS")
+
+            return True
+
+        except Exception as e:
+            print(f"✗ Failed to download reports: {e}")
+            return False
+
+    def sync_all_data(self) -> bool:
+        """
+        Upload ALL app data to GCS (convenience method for full sync).
+
+        Returns:
+            True if all syncs successful, False otherwise
+        """
+        print("=" * 50)
+        print("FULL DATA SYNC TO GCS")
+        print("=" * 50)
+
+        results = []
+
+        print("\n1. Syncing client registry...")
+        results.append(self.upload_registry())
+
+        print("\n2. Syncing prompt data...")
+        results.append(self.upload_prompt_data())
+
+        print("\n3. Syncing test results...")
+        results.append(self.upload_test_results())
+
+        print("\n4. Syncing reports...")
+        results.append(self.upload_reports())
+
+        print("\n" + "=" * 50)
+        if all(results):
+            print("ALL DATA SYNCED SUCCESSFULLY")
+        else:
+            print("SOME SYNCS FAILED - check errors above")
+        print("=" * 50)
+
+        return all(results)

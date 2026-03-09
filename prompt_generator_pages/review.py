@@ -12,7 +12,7 @@ sys.path.insert(0, 'src')
 
 
 def save_approval_statuses_to_drafts(client_name):
-    """Save current approval statuses back to draft files."""
+    """Save current approval statuses back to draft files and sync to GCS."""
     if 'approval_manager' not in st.session_state:
         return
 
@@ -53,6 +53,13 @@ def save_approval_statuses_to_drafts(client_name):
 
             except Exception as e:
                 st.error(f"Error saving approval statuses to {draft_file.name}: {str(e)}")
+
+    # Sync to GCS for persistence
+    try:
+        from src.client_manager.gcs_sync import GCSClientSync
+        GCSClientSync().upload_prompt_data()
+    except Exception:
+        pass  # Silent fail - GCS sync is nice-to-have
 
 
 def render():

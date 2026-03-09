@@ -64,6 +64,7 @@ class HTMLReportGenerator:
             composite_scorecard,
             head_to_head_results,
             citation_stats,
+            sentiment_analysis,
             source_analysis
         )
 
@@ -178,9 +179,10 @@ class HTMLReportGenerator:
     def _build_top_executive_summary(self, brand_name: str, visibility_summary: Dict[str, Any],
                                     competitive_analysis: Dict[str, Any],
                                     scored_results: List[Dict[str, Any]]) -> str:
-        """Build top-level executive summary - the TL;DR with DaSilva teaching voice."""
+        """Build executive summary - strategic, educational, no fear-mongering. DaSilva voice."""
 
         visibility_rate = visibility_summary.get('brand_visibility_rate', 0)
+        prominence = visibility_summary.get('average_prominence_score', 0)
         competitor_rate = visibility_summary.get('competitor_mention_rate', 0)
 
         # Find ChatGPT/OpenAI data
@@ -198,96 +200,88 @@ class HTMLReportGenerator:
                 platform_stats[platform]['competitor_mentions'] += 1
 
         chatgpt_rate = 0
-        chatgpt_comp_rate = 0
         for platform, stats in platform_stats.items():
             if 'OPENAI' in platform.upper() or 'CHATGPT' in platform.upper():
                 chatgpt_rate = (stats['mentions'] / stats['total'] * 100) if stats['total'] > 0 else 0
-                chatgpt_comp_rate = (stats['competitor_mentions'] / stats['total'] * 100) if stats['total'] > 0 else 0
                 break
 
         # Find top competitor
         competitors = competitive_analysis.get('top_competitors', [])
         top_comp = competitors[0] if competitors else {'name': 'Competitors', 'mention_rate': competitor_rate}
-        gap = top_comp['mention_rate'] - visibility_rate
 
-        # Calculate persona breakdown - find strongest and weakest
-        persona_stats = defaultdict(lambda: {'total': 0, 'mentions': 0})
-        for result in scored_results:
-            persona = result.get('metadata', {}).get('persona', 'Unknown')
-            visibility = result.get('visibility', {})
-            persona_stats[persona]['total'] += 1
-            if visibility.get('brand_mentioned'):
-                persona_stats[persona]['mentions'] += 1
-
-        persona_rates = {}
-        for persona, stats in persona_stats.items():
-            if stats['total'] > 0:
-                persona_rates[persona] = (stats['mentions'] / stats['total'] * 100)
-
-        strongest_persona = max(persona_rates.items(), key=lambda x: x[1]) if persona_rates else ('Unknown', 0)
-        weakest_persona = min(persona_rates.items(), key=lambda x: x[1]) if persona_rates else ('Unknown', 0)
-
-        # Calculate dollar impact (conservative estimate)
-        # Assume: 1000 monthly queries in category, avg visitor value $6, gap represents lost traffic
+        # Calculate dollar impact (single, consistent methodology)
         total_results = visibility_summary.get('total_prompts_tested', 362)
-        monthly_queries_estimate = total_results * 3  # Rough scaling factor
+        monthly_queries_estimate = total_results * 3  # Conservative scaling factor
         gap_percentage = competitor_rate - visibility_rate
         missed_visitors_monthly = (gap_percentage / 100) * monthly_queries_estimate
-        avg_visitor_value = 6  # Conservative industry average for beauty/cosmetics
-        monthly_cost_low = int(missed_visitors_monthly * (avg_visitor_value * 0.8) / 100) * 100  # Round to nearest $100
-        monthly_cost_high = int(missed_visitors_monthly * (avg_visitor_value * 1.3) / 100) * 100
+        avg_visitor_value = 6  # Industry average for beauty/cosmetics
+        monthly_cost_estimate = int(missed_visitors_monthly * avg_visitor_value / 100) * 100  # Round to $100
 
-        # Calculate 90-day target (50% of gap to competitors, not to 100%)
+        # Calculate 90-day target (close 50% of gap - realistic)
         target_visibility = min(visibility_rate + (competitor_rate - visibility_rate) * 0.5, 100)
 
-        return f"""
-        <!-- Hero Section -->
-        <div class="hero-card">
-            <h2 style="margin: 0 0 12px 0; font-size: 20px; color: #6B5660; font-weight: 600;">The Bottom Line</h2>
-            <p style="font-size: 24px; line-height: 1.5; margin: 0; color: #4D2E3A; font-weight: 600;">
-                You're at <strong style="font-size: 32px; color: #A7868F;">{visibility_rate:.0f}%</strong> visibility while competitors appear in <strong style="font-size: 32px; color: #E74C3C;">{competitor_rate:.0f}%</strong> of queries
-            </p>
+        # Strategic recommendation based on data
+        if chatgpt_rate < 20 and visibility_rate < 30:
+            primary_rec = f"Focus on ChatGPT first - it's 73% of AI users and you're at {chatgpt_rate:.0f}% there. Infrastructure fixes take 2-4 weeks."
+        elif visibility_rate >= 60:
+            primary_rec = f"You have strong visibility ({visibility_rate:.0f}%). Focus on improving prominence (currently {prominence:.1f}/10) to become the top recommendation."
+        else:
+            primary_rec = f"Most exciting is the untapped potential in AI visibility. You're at {visibility_rate:.0f}% while {top_comp['name']} is at {top_comp['mention_rate']:.0f}% - that gap represents your first-mover advantage."
 
-            <div class="hero-stat-grid">
-                <div class="hero-stat">
-                    <div class="hero-stat-value">{visibility_rate:.0f}%</div>
-                    <div class="hero-stat-label">Your Visibility</div>
-                    <div class="progress-bar-container" style="margin-top: 12px;">
-                        <div class="progress-bar {'green' if visibility_rate >= 60 else 'yellow' if visibility_rate >= 30 else 'red'}" style="width: {visibility_rate}%"></div>
-                    </div>
-                </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-value">${int(monthly_cost_high/1000)}K+</div>
-                    <div class="hero-stat-label">Monthly Cost of Gap</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-value">{target_visibility:.0f}%</div>
-                    <div class="hero-stat-label">90-Day Target</div>
-                </div>
+        return f"""
+        <h2 style="margin-top: 48px;">Executive Summary</h2>
+
+        <!-- The Business Impact -->
+        <div class="insight" style="background: linear-gradient(135deg, #4D2E3A15 0%, #4D2E3A25 100%); border-left: 4px solid #4D2E3A; padding: 32px; border-radius: 8px; margin: 32px 0;">
+            <p style="font-size: 18px; line-height: 1.7; margin: 0; color: #4D2E3A; font-weight: 500;">
+                {brand_name} is at <strong>{visibility_rate:.0f}%</strong> AI visibility while your top competitor ({top_comp['name']}) appears in <strong>{top_comp['mention_rate']:.0f}%</strong> of queries.
+                That gap represents approximately <strong>${monthly_cost_estimate/1000:.0f}K/month</strong> in missed qualified traffic
+                (~{int(missed_visitors_monthly)} monthly impressions from pre-qualified prospects).
+            </p>
+            <p style="font-size: 16px; line-height: 1.7; margin: 24px 0 0 0; color: #6B5660;">
+                <strong>Primary recommendation:</strong> {primary_rec}
+            </p>
+        </div>
+
+        <!-- Three Core Metrics -->
+        <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin: 40px 0;">
+            <div class="metric-card {'strong' if visibility_rate >= 60 else 'needs-work' if visibility_rate >= 30 else 'weak'}">
+                <div class="metric-label">Visibility Rate</div>
+                <div class="metric-value">{visibility_rate:.0f}%</div>
+                <div class="metric-status">{'Strong presence' if visibility_rate >= 60 else 'Room for growth' if visibility_rate >= 30 else 'First-mover opportunity'}</div>
+            </div>
+            <div class="metric-card {'strong' if prominence >= 7 else 'needs-work' if prominence >= 4 else 'weak'}">
+                <div class="metric-label">Prominence Score</div>
+                <div class="metric-value">{prominence:.1f}/10</div>
+                <div class="metric-status">{'Featured prominently' if prominence >= 7 else 'Mentioned as option' if prominence >= 4 else 'Brief mentions'}</div>
+            </div>
+            <div class="metric-card {'strong' if visibility_rate > top_comp['mention_rate'] else 'needs-work'}">
+                <div class="metric-label">vs {top_comp['name']}</div>
+                <div class="metric-value">{visibility_rate - top_comp['mention_rate']:+.0f}%</div>
+                <div class="metric-status">{'Leading' if visibility_rate > top_comp['mention_rate'] else f"{abs(visibility_rate - top_comp['mention_rate']):.0f}% gap to close"}</div>
             </div>
         </div>
 
-        <!-- Key Insights (Collapsible) -->
-        <div class="accordion-group">
+        <!-- What This Means (Educational, not fear-based) -->
+        <div class="accordion-group" style="margin-top: 32px;">
             <button class="accordion-button" onclick="toggleAccordion(this)">
-                <span>📊 What This Means For Your Business</span>
+                <span>💡 What This Means For Your Business</span>
                 <span class="accordion-icon">▼</span>
             </button>
             <div class="accordion-content">
-                <div class="info-card">
-                    <div class="info-card-title">🚨 Priority Alert: ChatGPT Gap</div>
+                <div class="info-card" style="background: #F0F7FF; border-left: 4px solid #3b82f6;">
+                    <div class="info-card-title" style="color: #1e40af;">Most Exciting: ChatGPT Opportunity</div>
                     <div class="info-card-content">
-                        <p>ChatGPT represents <strong>73% of all AI users</strong>. You're at <strong>{chatgpt_rate:.0f}%</strong> visibility there while competitors appear in <strong>{chatgpt_comp_rate:.0f}%</strong> of queries.</p>
-                        <p style="margin-top: 12px;"><strong>Estimated Impact:</strong> ${monthly_cost_low:,}-${monthly_cost_high:,}/month in lost traffic (~{int(missed_visitors_monthly)} monthly missed impressions)</p>
+                        <p>ChatGPT represents <strong>73% of all AI users</strong> - the largest single opportunity. You're currently at <strong>{chatgpt_rate:.0f}%</strong> visibility there.</p>
+                        <p style="margin-top: 12px;"><strong>First-mover advantage is real:</strong> Infrastructure fixes take 2-4 weeks to implement. Early adopters establish authority with AI assistants before competitors recognize this shift.</p>
                     </div>
                 </div>
 
-                <div class="info-card">
-                    <div class="info-card-title">🎯 Where You're Strongest & Weakest</div>
+                <div class="info-card" style="background: #F0FFF4; border-left: 4px solid #10b981; margin-top: 16px;">
+                    <div class="info-card-title" style="color: #065f46;">Quality Over Quantity</div>
                     <div class="info-card-content">
-                        <p><strong style="color: #27AE60;">✓ Best Performing:</strong> {strongest_persona[0]} ({strongest_persona[1]:.0f}% visibility)</p>
-                        <p style="margin-top: 8px;"><strong style="color: #E74C3C;">⚠️ Needs Work:</strong> {weakest_persona[0]} ({weakest_persona[1]:.0f}% visibility)</p>
-                        <p style="margin-top: 8px;"><strong>Top Competitor:</strong> {top_comp['name']} at {top_comp['mention_rate']:.0f}% vs your {visibility_rate:.0f}%</p>
+                        <p>AI-sourced traffic shows higher engagement despite lower volume. Prospects are <strong>pre-qualified through AI research</strong> - they've already asked intelligent questions and received recommendations.</p>
+                        <p style="margin-top: 12px;"><strong>Conservative estimate:</strong> ${monthly_cost_estimate:,}/month opportunity based on ${avg_visitor_value} average visitor value and 3x monthly scaling from test sample. Your actual opportunity depends on conversion rate and average order value.</p>
                     </div>
                 </div>
             </div>
@@ -297,16 +291,16 @@ class HTMLReportGenerator:
                 <span class="accordion-icon">▼</span>
             </button>
             <div class="accordion-content">
-                <p><strong>Visibility %:</strong> Times your brand appeared in {total_results} AI queries tested across 4 platforms (ChatGPT, Claude, Perplexity, Gemini)</p>
-                <p style="margin-top: 12px;"><strong>Revenue Impact:</strong> Based on industry average ${avg_visitor_value} visitor value and 3x monthly query scaling from test sample</p>
-                <p style="margin-top: 12px;"><strong>90-Day Target:</strong> Close 50% of the gap to competitors (realistic and achievable)</p>
-                <p style="margin-top: 12px; font-size: 13px; color: #6B5660;"><em>Note: Your actual opportunity may be higher or lower based on your conversion rate and average order value.</em></p>
+                <p><strong>Visibility %:</strong> Percentage of {total_results} queries where {brand_name} appeared in AI responses across ChatGPT, Claude, Perplexity, and Gemini.</p>
+                <p style="margin-top: 12px;"><strong>Prominence Score (0-10):</strong> How featured you are when mentioned. 8-10 = top recommendation with detail, 5-7 = listed as option, 1-4 = brief reference, 0 = not mentioned.</p>
+                <p style="margin-top: 12px;"><strong>Revenue Impact:</strong> Conservative estimate using industry average visitor value and 3x monthly query scaling. The industry is full of "grift" right now - we use realistic numbers, not inflated promises.</p>
+                <p style="margin-top: 12px;"><strong>90-Day Target ({target_visibility:.0f}%):</strong> Close 50% of the gap to competitors (realistic and achievable with proper infrastructure).</p>
             </div>
         </div>
         """
 
-    def _build_chatgpt_crisis_alert(self, brand_name: str, scored_results: List[Dict[str, Any]]) -> str:
-        """Build ChatGPT crisis callout - this is buried but critical."""
+    def _build_chatgpt_opportunity_section(self, brand_name: str, scored_results: List[Dict[str, Any]]) -> str:
+        """Build ChatGPT strategic opportunity section - educational, not fear-based. DaSilva voice."""
 
         # Extract ChatGPT data
         from collections import defaultdict
@@ -333,56 +327,78 @@ class HTMLReportGenerator:
                 chatgpt_found = True
                 break
 
-        # Only show alert if ChatGPT was tested and you're underperforming
+        # Only show if ChatGPT was tested and there's opportunity (you're underperforming)
         if not chatgpt_found or chatgpt_you >= chatgpt_comp:
             return ""
 
-        # Calculate ChatGPT-specific dollar impact
+        # Calculate opportunity with conservative estimate
         chatgpt_gap = chatgpt_comp - chatgpt_you
-        # ChatGPT = 73% of all AI queries, so scale accordingly
-        chatgpt_monthly_queries = 1000 * 0.73  # Assuming ~1000 monthly queries in category
-        chatgpt_missed_visitors = (chatgpt_gap / 100) * chatgpt_monthly_queries
-        avg_visitor_value = 6
-        chatgpt_monthly_cost_low = int(chatgpt_missed_visitors * (avg_visitor_value * 0.8) / 100) * 100
-        chatgpt_monthly_cost_high = int(chatgpt_missed_visitors * (avg_visitor_value * 1.3) / 100) * 100
-        chatgpt_annual_cost = chatgpt_monthly_cost_high * 12
+        # ChatGPT = 73% of all AI queries, conservative monthly query estimate
+        chatgpt_monthly_queries = 800 * 0.73  # Conservative: ~800 monthly queries in category
+        chatgpt_opportunity_visitors = (chatgpt_gap / 100) * chatgpt_monthly_queries
+        avg_visitor_value = 5  # Conservative visitor value
+        chatgpt_monthly_opportunity = int(chatgpt_opportunity_visitors * avg_visitor_value / 100) * 100
+
+        # Determine strategic framing
+        status_label = "First-mover opportunity" if chatgpt_you < 15 else "Growth opportunity"
 
         return f"""
-        <div class="crisis-alert">
-            <div class="crisis-alert-title">
-                ⚠️ PLATFORM ALERT: ChatGPT Is Your Biggest Problem
+        <div style="background: linear-gradient(135deg, #E8D7A0 0%, #D4C89F 100%); padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #C8BC8F;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <span style="font-size: 32px;">✨</span>
+                <h3 style="margin: 0; color: #4D2E3A; font-size: 20px; font-weight: 700;">
+                    Most Exciting: ChatGPT Opportunity
+                </h3>
             </div>
 
-            <div class="crisis-comparison">
-                <div class="crisis-metric">
-                    <div class="crisis-metric-label">You on ChatGPT</div>
-                    <div class="crisis-metric-value">{chatgpt_you:.0f}%</div>
-                    <div style="font-size: 12px; color: #E74C3C; font-weight: 600; margin-top: 4px;">
-                        {'Invisible' if chatgpt_you < 15 else 'Weak'}
+            <div style="display: flex; gap: 24px; margin: 20px 0; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 200px; background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 13px; font-weight: 600; color: #6B5660; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                        Your Current Rate
+                    </div>
+                    <div style="font-size: 48px; font-weight: 700; color: #4A4458; line-height: 1;">
+                        {chatgpt_you:.0f}%
+                    </div>
+                    <div style="font-size: 14px; color: #A7868F; margin-top: 4px; font-weight: 500;">
+                        on ChatGPT
                     </div>
                 </div>
 
-                <div class="crisis-vs">VS</div>
+                <div style="display: flex; align-items: center; justify-content: center; min-width: 60px;">
+                    <div style="font-size: 24px; color: #4A4458; font-weight: 700;">→</div>
+                </div>
 
-                <div class="crisis-metric">
-                    <div class="crisis-metric-label">Queries with Competitors</div>
-                    <div class="crisis-metric-value">{chatgpt_comp:.0f}%</div>
-                    <div style="font-size: 12px; color: #27AE60; font-weight: 600; margin-top: 4px;">
-                        (on ChatGPT)
+                <div style="flex: 1; min-width: 200px; background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 13px; font-weight: 600; color: #6B5660; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                        Competitor Average
+                    </div>
+                    <div style="font-size: 48px; font-weight: 700; color: #4A4458; line-height: 1;">
+                        {chatgpt_comp:.0f}%
+                    </div>
+                    <div style="font-size: 14px; color: #A7868F; margin-top: 4px; font-weight: 500;">
+                        {status_label}
                     </div>
                 </div>
             </div>
 
-            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #E8B4B4;">
-                <p style="margin: 0; color: #4D2E3A; font-size: 15px; line-height: 1.7;">
-                    <strong>Why this matters:</strong> ChatGPT represents 73% of all AI assistant usage
-                    (100M+ weekly users). You're nearly invisible on the platform that matters most.
-                    One or more competitors appear in {chatgpt_comp:.0f}% of ChatGPT queries—{chatgpt_comp - chatgpt_you:.0f} points ahead of you.
+            <div style="background: rgba(255,255,255,0.5); padding: 20px; border-radius: 8px; margin-top: 20px;">
+                <p style="margin: 0 0 16px 0; color: #4D2E3A; font-size: 15px; line-height: 1.7;">
+                    <strong>Why focus here first:</strong> ChatGPT represents 73% of all AI assistant usage
+                    (100M+ weekly users). The gap between your {chatgpt_you:.0f}% visibility and competitors' {chatgpt_comp:.0f}%
+                    represents untapped potential on the platform that matters most.
                 </p>
-                <p style="margin: 12px 0 0 0; color: #4D2E3A; font-size: 15px; line-height: 1.7;">
-                    <strong>What it costs you:</strong> This gap alone represents <strong>${chatgpt_monthly_cost_low:,}-${chatgpt_monthly_cost_high:,}/month</strong>
-                    in lost traffic. That's <strong>${int(chatgpt_annual_cost/1000)}K+ annually</strong> you're handing to competitors.
-                    At ~{int(chatgpt_missed_visitors)} monthly missed impressions × ${avg_visitor_value} avg visitor value.
+                <p style="margin: 0; color: #4D2E3A; font-size: 15px; line-height: 1.7;">
+                    <strong>The opportunity:</strong> This gap represents approximately <strong>${chatgpt_monthly_opportunity:,}/month</strong>
+                    in qualified traffic (conservative estimate). The infrastructure fixes take 2-4 weeks to implement,
+                    and improvements appear in ChatGPT responses within 1-2 weeks after that.
+                </p>
+            </div>
+
+            <div style="margin-top: 16px; padding: 12px; background: rgba(74,68,88,0.08); border-radius: 6px;">
+                <p style="margin: 0; font-size: 13px; color: #4D2E3A; line-height: 1.6;">
+                    <strong>Reality check:</strong> The industry is full of "grift" right now—inflated numbers and overnight promises.
+                    We use conservative estimates based on ~800 monthly queries × 73% ChatGPT usage × ${avg_visitor_value} visitor value.
+                    Real improvements take consistent work, not magic bullets.
                 </p>
             </div>
         </div>
@@ -435,9 +451,16 @@ class HTMLReportGenerator:
         gap = leader['rate'] - your_rate
 
         return f"""
-        <div class="comp-landscape">
-            <h3 style="margin: 0 0 8px 0; color: #4D2E3A; font-size: 20px;">Where You Stand</h3>
-            <p style="margin: 0 0 20px 0; color: #6B5660; font-size: 14px;">
+        <div style="margin-top: 64px;">
+            <h2>Competitive Landscape</h2>
+            <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 32px;">
+                <strong>What this shows:</strong> When AI responds to queries in your category, which brands get mentioned most?
+                This chart ranks you against your top competitors based on mention frequency. The gap between you and the leader
+                represents your growth opportunity.
+            </p>
+            <div class="comp-landscape">
+                <h3 style="margin: 0 0 8px 0; color: #4D2E3A; font-size: 20px;">Where You Stand</h3>
+                <p style="margin: 0 0 20px 0; color: #6B5660; font-size: 14px;">
                 Share of voice across all AI responses tested
             </p>
 
@@ -449,6 +472,7 @@ class HTMLReportGenerator:
                     at {leader['rate']:.0f}%. {'You are the leader.' if leader['is_you'] else f"You're {gap:.0f} points behind. That gap represents the difference between being a category leader and being in the middle of the pack."}
                 </p>
             </div>
+        </div>
         </div>
         """
 
@@ -871,6 +895,7 @@ class HTMLReportGenerator:
                    composite_scorecard: Dict[str, Any] = None,
                    head_to_head_results: Dict[str, Any] = None,
                    citation_stats: Dict[str, Any] = None,
+                   sentiment_analysis: Dict[str, Any] = None,
                    source_analysis: Dict[str, Any] = None) -> str:
         """Build complete HTML report with DaSilva branding."""
 
@@ -890,131 +915,172 @@ class HTMLReportGenerator:
             box-sizing: border-box;
         }}
 
+        /* DaSilva Color System */
+        :root {{
+            --dasilva-purple: #4A4458;
+            --dasilva-purple-dark: #3A3448;
+            --dasilva-purple-light: #6B5660;
+            --dasilva-cream: #E8D7A0;
+            --dasilva-cream-dark: #D4C89F;
+            --text-primary: #2D2D2D;
+            --text-secondary: #5A5A5A;
+            --bg-primary: #FEFEFE;
+            --bg-secondary: #F8F8F7;
+            --border-light: #E8E4E3;
+        }}
+
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+            font-size: 16px;
             line-height: 1.6;
-            color: #1C1C1C;
-            background: #F8F8F7;
-            padding: 32px;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            padding: 40px;
         }}
 
         .container {{
             max-width: 1200px;
             margin: 0 auto;
-            background: #FEFEFE;
-            padding: 64px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(28, 28, 28, 0.08);
+            background: var(--bg-primary);
+            padding: 80px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(74, 68, 88, 0.08);
         }}
 
         h1 {{
-            color: #4D2E3A;
-            margin-bottom: 12px;
-            font-size: 36px;
+            color: var(--dasilva-purple);
+            margin-bottom: 16px;
+            font-size: 42px;
             font-weight: 700;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
         }}
 
         h2 {{
-            color: #4D2E3A;
-            margin-top: 56px;
-            margin-bottom: 28px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #E8E4E3;
-            font-size: 24px;
+            color: var(--dasilva-purple);
+            margin-top: 64px;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--dasilva-cream);
+            font-size: 28px;
             font-weight: 600;
+            letter-spacing: -0.01em;
         }}
 
         h3 {{
-            color: #6B5660;
-            margin-top: 40px;
-            margin-bottom: 20px;
-            font-size: 18px;
+            color: var(--dasilva-purple-light);
+            margin-top: 48px;
+            margin-bottom: 24px;
+            font-size: 20px;
             font-weight: 600;
         }}
 
         .header {{
-            border-bottom: 1px solid #E8E4E3;
-            padding-bottom: 32px;
-            margin-bottom: 48px;
+            border-bottom: 3px solid var(--dasilva-cream);
+            padding-bottom: 40px;
+            margin-bottom: 56px;
+            background: linear-gradient(135deg, rgba(74, 68, 88, 0.02) 0%, rgba(232, 215, 160, 0.05) 100%);
+            padding: 40px;
+            margin: -40px -40px 56px -40px;
+            border-radius: 12px 12px 0 0;
         }}
 
         .brand-name {{
-            color: #4D2E3A;
-            font-size: 28px;
+            color: var(--dasilva-purple);
+            font-size: 32px;
             font-weight: 600;
-            margin-top: 12px;
-        }}
-
-        .timestamp {{
-            color: #A7868F;
-            font-size: 14px;
             margin-top: 16px;
         }}
 
-        .dasilva-credit {{
-            color: #A7868F;
+        .timestamp {{
+            color: var(--text-secondary);
             font-size: 14px;
-            margin-top: 6px;
+            margin-top: 20px;
+        }}
+
+        .dasilva-credit {{
+            color: var(--dasilva-purple-light);
+            font-size: 15px;
+            font-weight: 500;
+            margin-top: 8px;
         }}
 
         .metrics-grid {{
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin: 40px 0;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 48px 0;
         }}
 
         .metric-card {{
-            background: #FEFEFE;
-            border: 1px solid #E8E4E3;
-            padding: 32px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(28, 28, 28, 0.08);
-            transition: box-shadow 0.2s ease;
+            background: white;
+            border: 2px solid var(--border-light);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(74, 68, 88, 0.06);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }}
+
+        .metric-card::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--dasilva-purple) 0%, var(--dasilva-cream) 100%);
         }}
 
         .metric-card:hover {{
-            box-shadow: 0 4px 12px rgba(28, 28, 28, 0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(74, 68, 88, 0.12);
+            border-color: var(--dasilva-cream);
         }}
 
         .metric-card.strong {{
-            background: #D4E8D4;
-            border-color: #9FBC9F;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            border-color: #86efac;
         }}
 
-        .metric-card.strong .metric-value,
-        .metric-card.strong .metric-label,
-        .metric-card.strong .metric-status {{
-            color: #2D5F2D;
+        .metric-card.strong::before {{
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+        }}
+
+        .metric-card.strong .metric-value {{
+            color: #10b981;
         }}
 
         .metric-card.needs-work {{
-            background: #F7E8D4;
-            border-color: #D4B894;
+            background: linear-gradient(135deg, #ffffff 0%, #fefce8 100%);
+            border-color: var(--dasilva-cream);
         }}
 
-        .metric-card.needs-work .metric-value,
-        .metric-card.needs-work .metric-label,
-        .metric-card.needs-work .metric-status {{
-            color: #5A4A3A;
+        .metric-card.needs-work::before {{
+            background: linear-gradient(90deg, var(--dasilva-purple) 0%, var(--dasilva-cream) 100%);
+        }}
+
+        .metric-card.needs-work .metric-value {{
+            color: var(--dasilva-purple);
         }}
 
         .metric-card.weak {{
-            background: #F0D4D4;
-            border-color: #C9A7A7;
+            background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+            border-color: #fecaca;
         }}
 
-        .metric-card.weak .metric-value,
-        .metric-card.weak .metric-label,
-        .metric-card.weak .metric-status {{
-            color: #6B3A3A;
+        .metric-card.weak::before {{
+            background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+        }}
+
+        .metric-card.weak .metric-value {{
+            color: #ef4444;
         }}
 
         .metric-value {{
-            font-size: 48px;
+            font-size: 52px;
             font-weight: 700;
-            margin: 16px 0;
+            margin: 20px 0;
             line-height: 1;
         }}
 
@@ -1036,28 +1102,30 @@ class HTMLReportGenerator:
         table {{
             width: 100%;
             border-collapse: collapse;
-            margin: 32px 0;
-            background: #FEFEFE;
-            border: 1px solid #E8E4E3;
-            border-radius: 8px;
+            margin: 40px 0;
+            background: white;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(28, 28, 28, 0.08);
+            box-shadow: 0 2px 12px rgba(74, 68, 88, 0.06);
         }}
 
         th {{
-            background: #4D2E3A;
+            background: linear-gradient(135deg, var(--dasilva-purple) 0%, var(--dasilva-purple-dark) 100%);
             color: white;
-            padding: 16px 20px;
+            padding: 20px 24px;
             text-align: left;
             font-weight: 600;
-            font-size: 12px;
+            font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 1px;
         }}
 
         td {{
-            padding: 16px 20px;
-            border-bottom: 1px solid #E8E4E3;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary);
+            font-size: 15px;
         }}
 
         tr:last-child td {{
@@ -1065,7 +1133,7 @@ class HTMLReportGenerator:
         }}
 
         tr:hover {{
-            background: #F8F8F7;
+            background: rgba(74, 68, 88, 0.02);
         }}
 
         .badge {{
@@ -1170,38 +1238,44 @@ class HTMLReportGenerator:
 
         p {{
             margin: 16px 0;
-            color: #6B5660;
+            font-size: 15px;
+            color: #5A4850;
+            line-height: 1.7;
         }}
 
         /* Tabs */
         .tabs {{
             display: flex;
-            gap: 0;
-            margin-bottom: 40px;
-            border-bottom: 2px solid #E8E4E3;
+            gap: 8px;
+            margin-bottom: 48px;
+            border-bottom: 2px solid var(--border-light);
+            margin-top: 32px;
         }}
 
         .tab {{
-            padding: 16px 32px;
+            padding: 18px 36px;
             background: transparent;
             border: none;
-            color: #6B5660;
-            font-size: 16px;
-            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
             border-bottom: 3px solid transparent;
             margin-bottom: -2px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            position: relative;
         }}
 
         .tab:hover {{
-            color: #4D2E3A;
-            background: #F8F8F7;
+            color: var(--dasilva-purple);
+            background: rgba(74, 68, 88, 0.03);
         }}
 
         .tab.active {{
-            color: #4D2E3A;
-            border-bottom: 3px solid #A7868F;
+            color: var(--dasilva-purple);
+            border-bottom: 3px solid var(--dasilva-purple);
+            font-weight: 600;
+            background: linear-gradient(180deg, transparent 0%, rgba(74, 68, 88, 0.02) 100%);
         }}
 
         .tab-content {{
@@ -1479,58 +1553,6 @@ class HTMLReportGenerator:
             content: "→";
             position: absolute;
             left: 0;
-            font-weight: 700;
-            color: #A7868F;
-        }}
-
-        /* Crisis Alert Box */
-        .crisis-alert {{
-            background: #F7E8E8;
-            border: 2px solid #B85450;
-            border-radius: 8px;
-            padding: 28px;
-            margin: 32px 0;
-            box-shadow: 0 4px 12px rgba(184, 84, 80, 0.15);
-        }}
-
-        .crisis-alert-title {{
-            color: #8B3A3A;
-            font-size: 18px;
-            font-weight: 700;
-            margin: 0 0 16px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }}
-
-        .crisis-comparison {{
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 20px;
-            align-items: center;
-            margin: 20px 0;
-        }}
-
-        .crisis-metric {{
-            text-align: center;
-        }}
-
-        .crisis-metric-label {{
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #6B5660;
-            margin-bottom: 8px;
-        }}
-
-        .crisis-metric-value {{
-            font-size: 36px;
-            font-weight: 700;
-            color: #4D2E3A;
-        }}
-
-        .crisis-vs {{
-            font-size: 24px;
             font-weight: 700;
             color: #A7868F;
         }}
@@ -1927,39 +1949,31 @@ class HTMLReportGenerator:
         </div>
 
         <div class="tabs">
-            <button class="tab active" onclick="switchTab(event, 'overview')">Executive Summary</button>
-            <button class="tab" onclick="switchTab(event, 'competitive-intel')">What Competitors Are Doing</button>
-            <button class="tab" onclick="switchTab(event, 'roi')">ROI Estimator</button>
+            <button class="tab active" onclick="switchTab(event, 'overview')">Your Performance Overview</button>
+            <button class="tab" onclick="switchTab(event, 'sentiment')">How AI Describes You</button>
             <button class="tab" onclick="switchTab(event, 'prompts')">What AI Actually Said</button>
-            <button class="tab" onclick="switchTab(event, 'sources')">Sources & Citations</button>
+            <button class="tab" onclick="switchTab(event, 'sources')">Where AI Gets Its Information</button>
+            <button class="tab" onclick="switchTab(event, 'competitive-intel')">What Your Competitors Are Doing</button>
         </div>
 
         <div id="overview" class="tab-content active">
-            {self._build_composite_score_badge(composite_scorecard) if composite_scorecard else ''}
-
             {self._build_top_executive_summary(brand_name, visibility_summary, competitive_analysis, scored_results)}
-
-            {self._build_score_breakdown(composite_scorecard) if composite_scorecard else ''}
-
-            {self._build_executive_summary(brand_name, visibility_summary, competitive_analysis)}
-
-            {self._build_competitive_battlecard(head_to_head_results) if head_to_head_results else ''}
 
             {self._build_visibility_by_platform(scored_results)}
 
-            {self._build_chatgpt_crisis_alert(brand_name, scored_results)}
+            {self._build_visibility_by_persona(scored_results)}
 
             {self._build_competitive_landscape_visual(brand_name, visibility_summary, competitive_analysis)}
 
-            {self._build_brief_priorities(gap_analysis, action_plan)}
+            {self._build_chatgpt_opportunity_section(brand_name, scored_results)}
+        </div>
+
+        <div id="sentiment" class="tab-content">
+            {self._build_sentiment_analysis_tab(brand_name, scored_results)}
         </div>
 
         <div id="competitive-intel" class="tab-content">
             {self._build_competitive_intelligence_tab(brand_name, visibility_summary, competitive_analysis, gap_analysis, action_plan, head_to_head_results, scored_results)}
-        </div>
-
-        <div id="roi" class="tab-content">
-            {self._build_roi_estimator(visibility_summary, competitive_analysis)}
         </div>
 
         <div id="prompts" class="tab-content">
@@ -2096,106 +2110,6 @@ class HTMLReportGenerator:
 
         return html
 
-    def _build_executive_summary(self, brand_name: str,
-                                 visibility_summary: Dict[str, Any],
-                                 competitive_analysis: Dict[str, Any]) -> str:
-        """Build executive summary with DaSilva voice."""
-        visibility_rate = visibility_summary.get('brand_visibility_rate', 0)
-        prominence = visibility_summary.get('average_prominence_score', 0)
-        competitor_rate = visibility_summary.get('competitor_mention_rate', 0)
-        share_of_voice = competitive_analysis.get('brand_share_of_voice', 0)
-
-        # Determine card classes
-        visibility_class = 'strong' if visibility_rate >= 60 else 'needs-work' if visibility_rate >= 30 else 'weak'
-        prominence_class = 'strong' if prominence >= 7 else 'needs-work' if prominence >= 4 else 'weak'
-        sov_class = 'strong' if share_of_voice >= 50 else 'needs-work' if share_of_voice >= 30 else 'weak'
-        competitor_class = 'strong' if competitor_rate < 20 else 'needs-work' if competitor_rate < 50 else 'weak'
-
-        # Status messages
-        visibility_status = self._get_performance_label(visibility_rate)
-        prominence_status = self._get_prominence_label(prominence)
-
-        # Build insight
-        if visibility_rate < 20:
-            insight = f"{brand_name} isn't showing up in AI responses. That's the priority."
-        elif visibility_rate < 40:
-            insight = f"{brand_name} appears in some responses. Needs more coverage."
-        elif visibility_rate < 60:
-            insight = f"{brand_name} has decent visibility. Time to improve prominence."
-        else:
-            insight = f"{brand_name} has strong visibility. Focus on maintaining position."
-
-        return f"""
-        <h2>The Numbers</h2>
-
-        <div class="insight">
-            <div class="insight-title">What This Means</div>
-            {insight}
-        </div>
-
-        <div class="metrics-grid">
-            <div class="metric-card {visibility_class}">
-                <div class="metric-label">Visibility Rate</div>
-                <div class="metric-value">{visibility_rate:.0f}%</div>
-                <div class="metric-status">{visibility_status}</div>
-            </div>
-            <div class="metric-card {prominence_class}">
-                <div class="metric-label">Prominence Score</div>
-                <div class="metric-value">{prominence:.1f}/10</div>
-                <div class="metric-status">{prominence_status}</div>
-            </div>
-            <div class="metric-card {sov_class}">
-                <div class="metric-label">Share of Voice</div>
-                <div class="metric-value">{share_of_voice:.0f}%</div>
-                <div class="metric-status">vs competitors</div>
-            </div>
-            <div class="metric-card {competitor_class}">
-                <div class="metric-label">Competitor Rate</div>
-                <div class="metric-value">{competitor_rate:.0f}%</div>
-                <div class="metric-status">in same responses</div>
-            </div>
-        </div>
-
-        <div style="margin: 20px 0; padding: 10px 14px; background: #F8F8F7; border-left: 3px solid #A7868F; border-radius: 4px; font-size: 11px; color: #6B5660; line-height: 1.5;">
-            <strong>What these metrics mean:</strong> Visibility Rate = % of queries where you appeared. Prominence Score = how prominently featured (0-10 scale, based on position and detail). Share of Voice = your mentions vs total brand mentions. Competitor Rate = % of queries where any competitor appeared.
-        </div>
-
-        <h3>Prominence Breakdown</h3>
-        <p>Where {brand_name} ranks when mentioned:</p>
-        <table>
-            <tr>
-                <th>Level</th>
-                <th>Count</th>
-                <th>%</th>
-                <th>What This Means</th>
-            </tr>
-            <tr>
-                <td><span class="badge badge-strong">Featured (7-10)</span></td>
-                <td>{visibility_summary.get('high_prominence_count', 0)}</td>
-                <td>{visibility_summary.get('high_prominence_count', 0) / max(visibility_summary.get('total_prompts_tested', 1), 1) * 100:.1f}%</td>
-                <td>Top recommendation or detailed mention</td>
-            </tr>
-            <tr>
-                <td><span class="badge badge-needs-work">Mentioned (4-6)</span></td>
-                <td>{visibility_summary.get('medium_prominence_count', 0)}</td>
-                <td>{visibility_summary.get('medium_prominence_count', 0) / max(visibility_summary.get('total_prompts_tested', 1), 1) * 100:.1f}%</td>
-                <td>Listed as an option</td>
-            </tr>
-            <tr>
-                <td><span class="badge badge-weak">Brief (1-3)</span></td>
-                <td>{visibility_summary.get('low_prominence_count', 0)}</td>
-                <td>{visibility_summary.get('low_prominence_count', 0) / max(visibility_summary.get('total_prompts_tested', 1), 1) * 100:.1f}%</td>
-                <td>Passing reference only</td>
-            </tr>
-            <tr>
-                <td><span class="badge badge-not-showing">Not Mentioned (0)</span></td>
-                <td>{visibility_summary.get('no_mention_count', 0)}</td>
-                <td>{visibility_summary.get('no_mention_count', 0) / max(visibility_summary.get('total_prompts_tested', 1), 1) * 100:.1f}%</td>
-                <td>Invisible in response</td>
-            </tr>
-        </table>
-        """
-
     def _build_visibility_by_persona(self, scored_results: List[Dict[str, Any]]) -> str:
         """Build visibility by persona with simplified GAP column."""
         from collections import defaultdict
@@ -2241,8 +2155,13 @@ class HTMLReportGenerator:
             """
 
         return f"""
-        <h2>Performance by Audience</h2>
-        <p>How visible is your brand to different personas?</p>
+        <div style="margin-top: 64px;">
+            <h2>Who You're Reaching</h2>
+            <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 32px;">
+                <strong>What this shows:</strong> Different customer types search differently. A beginner asks "what's the best..."
+                while an expert asks "compare X vs Y for Z use case." This breakdown shows which audience segments find you
+                when they search, and where competitors are winning. Focus on personas where the gap is largest.
+            </p>
         <table>
             <tr>
                 <th>Persona</th>
@@ -2256,6 +2175,7 @@ class HTMLReportGenerator:
 
         <div style="margin: 20px 0; padding: 10px 14px; background: #F8F8F7; border-left: 3px solid #A7868F; border-radius: 4px; font-size: 11px; color: #6B5660; line-height: 1.5;">
             <strong>How personas are tested:</strong> Queries designed to match how different customer types search (e.g., professionals vs beginners). "Any Competitor" = % of queries where one or more competitors appeared. "Gap" shows the difference between competitor presence and your presence. Negative gaps mean you're winning with that persona.
+        </div>
         </div>
         """
 
@@ -2327,10 +2247,15 @@ class HTMLReportGenerator:
             row_count += 1
 
         return f"""
-        <div class="info-card" style="margin-top: 32px;">
-            <div class="info-card-title">🎯 Performance by Platform</div>
-            <div class="info-card-content">
-                <p style="margin-bottom: 20px;">See how you perform across ChatGPT, Claude, Perplexity, and Gemini</p>
+        <div style="margin-top: 64px;">
+            <h2>Platform Performance</h2>
+            <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 32px;">
+                <strong>What this shows:</strong> Each AI platform has different training data, algorithms, and user bases.
+                ChatGPT represents 73% of all AI users, so focus there first. This section breaks down your visibility
+                on each platform to help you prioritize where to invest your content efforts.
+            </p>
+            <div class="info-card">
+                <div class="info-card-content">
                 <table style="width: 100%;">
                     <thead>
                         <tr style="background: #F8F8F7;">
@@ -2345,10 +2270,10 @@ class HTMLReportGenerator:
                         {rows}
                     </tbody>
                 </table>
+                </div>
             </div>
-        </div>
 
-        <div class="accordion-group" style="margin-top: 16px;">
+            <div class="accordion-group" style="margin-top: 16px;">
             <button class="accordion-button" onclick="toggleAccordion(this)">
                 <span>❓ Why Platform Breakdown Matters</span>
                 <span class="accordion-icon">▼</span>
@@ -2360,6 +2285,7 @@ class HTMLReportGenerator:
                 <p style="margin-top: 8px;"><strong>Gemini (7% market share):</strong> Google integration, search overlap</p>
                 <p style="margin-top: 16px; font-size: 13px; color: #6B5660;"><em>Market share based on public usage data as of 2025. Each platform has different training data and may cite different sources.</em></p>
             </div>
+        </div>
         </div>
         """
 
@@ -3448,6 +3374,235 @@ class HTMLReportGenerator:
         </div>
         """
 
+    def _build_sentiment_analysis_tab(self, brand_name: str, scored_results: List[Dict[str, Any]]) -> str:
+        """Build comprehensive sentiment analysis tab showing how AI actually describes the brand."""
+
+        # Extract responses where brand is mentioned
+        brand_mentions = [r for r in scored_results if r.get('visibility', {}).get('brand_mentioned')]
+
+        if not brand_mentions:
+            return """
+            <div style="padding: 40px; text-align: center; color: #6B5660;">
+                <h2>How AI Describes You</h2>
+                <p>No brand mentions found in test results.</p>
+            </div>
+            """
+
+        # Analyze sentiment keywords in responses
+        positive_keywords = ['excellent', 'best', 'top', 'premium', 'high-quality', 'recommended', 'favorite',
+                            'amazing', 'exceptional', 'outstanding', 'superior', 'leading', 'innovative',
+                            'professional', 'luxurious', 'highly', 'perfect', 'great', 'love']
+
+        negative_keywords = ['expensive', 'pricey', 'limited', 'lacking', 'difficult', 'complicated',
+                            'poor', 'weak', 'disappointing', 'overpriced', 'inferior', 'cheap', 'bad']
+
+        # Categorize mentions by sentiment
+        positive_mentions = []
+        neutral_mentions = []
+        negative_mentions = []
+
+        for result in brand_mentions:
+            # Try both field names (response_text from scorer, response from other sources)
+            response_text = result.get('response_text', '') or result.get('response', '')
+            response_lower = response_text.lower()
+            brand_lower = brand_name.lower()
+
+            # Skip if brand not actually in response
+            if brand_lower not in response_lower:
+                continue
+
+            # Extract fuller context around brand mention (300 chars before and after)
+            brand_index = response_lower.find(brand_lower)
+            start = max(0, brand_index - 200)
+            end = min(len(response_text), brand_index + len(brand_name) + 300)
+
+            # Get the surrounding context
+            context = response_text[start:end].strip()
+
+            # Clean up markdown/formatting but keep structure
+            context = context.replace('**', '').replace('###', '').replace('##', '').strip()
+            # Keep single * for bullets but remove standalone ones
+
+            # Try to start at sentence boundary if possible
+            if start > 0:
+                # Look for sentence start (. or newline followed by capital letter)
+                sentences_before = context[:200].split('. ')
+                if len(sentences_before) > 1:
+                    context = '. '.join(sentences_before[1:])
+                else:
+                    context = '...' + context
+
+            # Try to end at sentence boundary
+            if end < len(response_text):
+                sentences = context.split('. ')
+                if len(sentences) > 1:
+                    context = '. '.join(sentences[:-1]) + '.'
+                else:
+                    context = context + '...'
+
+            # Determine sentiment based on keywords in the context
+            context_lower = context.lower()
+            has_positive = any(kw in context_lower for kw in positive_keywords)
+            has_negative = any(kw in context_lower for kw in negative_keywords)
+
+            # Get prompt text (could be 'prompt' or 'prompt_text')
+            prompt_text = result.get('prompt_text', '') or result.get('prompt', '')
+            prompt_display = prompt_text[:80] + '...' if len(prompt_text) > 80 else prompt_text
+
+            sample = {
+                'platform': result.get('platform', 'Unknown').replace('openai', 'ChatGPT').replace('anthropic', 'Claude').replace('perplexity', 'Perplexity').replace('gemini', 'Gemini'),
+                'quote': context,  # Show full context now
+                'prompt': prompt_display
+            }
+
+            if has_positive and not has_negative:
+                positive_mentions.append(sample)
+            elif has_negative and not has_positive:
+                negative_mentions.append(sample)
+            else:
+                neutral_mentions.append(sample)
+
+        # Calculate distribution
+        total_analyzed = len(positive_mentions) + len(neutral_mentions) + len(negative_mentions)
+
+        if total_analyzed == 0:
+            positive_pct = neutral_pct = negative_pct = 0
+        else:
+            positive_pct = (len(positive_mentions) / total_analyzed * 100)
+            neutral_pct = (len(neutral_mentions) / total_analyzed * 100)
+            negative_pct = (len(negative_mentions) / total_analyzed * 100)
+
+        # Build example quotes HTML
+        def build_quote_examples(mentions, color, title, max_show=5):
+            if not mentions:
+                return f'<p style="color: #A7868F; font-style: italic;">No {title.lower()} mentions identified</p>'
+
+            html = ""
+            for i, mention in enumerate(mentions[:max_show]):
+                quote_id = f"{title.lower().replace(' ', '_')}_{i}"
+                html += f"""
+                <div style="background: white; border-left: 4px solid {color}; padding: 20px; margin: 16px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 15px; color: #2D2D2D; line-height: 1.8; margin-bottom: 12px; font-family: Georgia, serif;">
+                        "{mention['quote']}"
+                    </div>
+                    <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
+                        <strong style="color: {color};">{mention['platform']}</strong> • Query: <em>"{mention['prompt']}"</em>
+                    </div>
+                </div>
+                """
+
+            if len(mentions) > max_show:
+                html += f'<p style="color: #6B5660; font-size: 14px; margin-top: 12px; font-weight: 500;">+ {len(mentions) - max_show} more {title.lower()} mentions</p>'
+
+            return html
+
+        positive_examples = build_quote_examples(positive_mentions, '#10b981', 'Positive')
+        neutral_examples = build_quote_examples(neutral_mentions, '#f59e0b', 'Neutral')
+        negative_examples = build_quote_examples(negative_mentions, '#ef4444', 'Negative')
+
+        # Overall sentiment determination
+        if positive_pct >= 50:
+            overall_status = "Positive"
+            overall_color = "#10b981"
+            overall_message = f"AI describes {brand_name} in positive terms in most mentions. This builds trust and authority."
+        elif negative_pct >= 30:
+            overall_status = "Needs Attention"
+            overall_color = "#ef4444"
+            overall_message = f"A significant portion of mentions include negative language. Focus on improving brand perception."
+        else:
+            overall_status = "Neutral"
+            overall_color = "#f59e0b"
+            overall_message = f"Most mentions are factual/neutral. Consider creating content that highlights unique value propositions."
+
+        return f"""
+        <div style="padding: 20px 0;">
+            <h2>How AI Describes You</h2>
+            <p style="color: #6B5660; font-size: 15px; line-height: 1.7; margin-bottom: 32px;">
+                This analyzes the actual language AI uses when mentioning {brand_name}.
+                We examined {len(brand_mentions)} responses where you were mentioned and classified the tone based on the descriptive words and phrases used.
+            </p>
+
+            <div style="background: linear-gradient(135deg, {overall_color}10 0%, {overall_color}20 100%); border: 2px solid {overall_color}; border-radius: 12px; padding: 32px; margin-bottom: 40px;">
+                <div style="text-align: center;">
+                    <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #4D2E3A; margin-bottom: 12px;">
+                        Overall Sentiment
+                    </div>
+                    <div style="font-size: 48px; font-weight: 700; color: {overall_color}; margin-bottom: 12px;">
+                        {overall_status}
+                    </div>
+                    <p style="color: #4D2E3A; font-size: 15px; line-height: 1.7; margin: 0; max-width: 600px; margin: 0 auto;">
+                        {overall_message}
+                    </p>
+                </div>
+            </div>
+
+            <h3>Sentiment Distribution</h3>
+            <p style="color: #6B5660; margin-bottom: 20px;">Based on {total_analyzed} analyzed mentions:</p>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 48px;">
+                <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 8px; padding: 24px; text-align: center;">
+                    <div style="font-size: 40px; font-weight: 700; color: #10b981;">
+                        {positive_pct:.0f}%
+                    </div>
+                    <div style="font-size: 14px; color: #10b981; font-weight: 600; margin-top: 4px;">
+                        POSITIVE
+                    </div>
+                    <div style="font-size: 13px; color: #6B5660; margin-top: 8px;">
+                        {len(positive_mentions)} mentions
+                    </div>
+                </div>
+
+                <div style="background: #fffbeb; border: 2px solid #f59e0b; border-radius: 8px; padding: 24px; text-align: center;">
+                    <div style="font-size: 40px; font-weight: 700; color: #f59e0b;">
+                        {neutral_pct:.0f}%
+                    </div>
+                    <div style="font-size: 14px; color: #f59e0b; font-weight: 600; margin-top: 4px;">
+                        NEUTRAL
+                    </div>
+                    <div style="font-size: 13px; color: #6B5660; margin-top: 8px;">
+                        {len(neutral_mentions)} mentions
+                    </div>
+                </div>
+
+                <div style="background: #fef2f2; border: 2px solid #ef4444; border-radius: 8px; padding: 24px; text-align: center;">
+                    <div style="font-size: 40px; font-weight: 700; color: #ef4444;">
+                        {negative_pct:.0f}%
+                    </div>
+                    <div style="font-size: 14px; color: #ef4444; font-weight: 600; margin-top: 4px;">
+                        NEGATIVE
+                    </div>
+                    <div style="font-size: 13px; color: #6B5660; margin-top: 8px;">
+                        {len(negative_mentions)} mentions
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="color: #10b981;">✓ Positive Mentions</h3>
+            <p style="color: #6B5660; margin-bottom: 20px;">Examples of how AI describes you favorably:</p>
+            {positive_examples}
+
+            <h3 style="color: #f59e0b; margin-top: 48px;">→ Neutral Mentions</h3>
+            <p style="color: #6B5660; margin-bottom: 20px;">Factual mentions without strong positive or negative language:</p>
+            {neutral_examples}
+
+            <h3 style="color: #ef4444; margin-top: 48px;">✗ Negative Mentions</h3>
+            <p style="color: #6B5660; margin-bottom: 20px;">Mentions with critical or negative language:</p>
+            {negative_examples}
+
+            <div style="background: #F8F8F7; padding: 24px; border-radius: 8px; margin-top: 48px;">
+                <h3 style="margin-top: 0;">What This Means</h3>
+                <p style="color: #4D2E3A; line-height: 1.7; margin: 0;">
+                    <strong>Why sentiment matters:</strong> AI language models are trained on existing content. If most mentions use positive, authoritative language,
+                    AI is more likely to recommend you. If mentions are neutral or negative, you need to create content that shifts the narrative.
+                </p>
+                <p style="color: #4D2E3A; line-height: 1.7; margin: 16px 0 0 0;">
+                    <strong>How to improve:</strong> Publish thought leadership, case studies, and educational content that positions you as an expert.
+                    Get featured in authoritative publications. Build a library of content that AI can reference when answering queries in your category.
+                </p>
+            </div>
+        </div>
+        """
+
     def _build_prompt_viewer(self, brand_name: str, scored_results: List[Dict[str, Any]]) -> str:
         """Build interactive prompt viewer with filters and insights."""
         import json
@@ -3773,36 +3928,34 @@ class HTMLReportGenerator:
         """
 
     def _build_composite_score_badge(self, composite_scorecard: Dict[str, Any]) -> str:
-        """Build composite score badge for header."""
+        """Build clean, premium score badge - no overlapping text."""
         if not composite_scorecard:
             return ""
 
         score = composite_scorecard.get('composite_score', 0)
         grade = composite_scorecard.get('letter_grade', 'C')
         label = composite_scorecard.get('grade_label', 'Fair')
-        description = composite_scorecard.get('grade_description', '')
-        color = composite_scorecard.get('grade_color', '#f59e0b')
 
+        # Clean design with status badge below
         return f"""
-        <div style="background: linear-gradient(135deg, {color}15 0%, {color}25 100%); border: 2px solid {color}; border-radius: 12px; padding: 32px; margin: 32px 0; text-align: center;">
-            <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #6B5660; margin-bottom: 16px;">
-                Overall AI Visibility Grade
-            </div>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
-                <div style="background: {color}; color: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 64px; font-weight: 700; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
-                    {grade}
+        <div style="background: white; border: 3px solid #E8D7A0; border-radius: 16px; padding: 48px; margin: 40px 0 48px 0; box-shadow: 0 4px 20px rgba(74, 68, 88, 0.08);">
+            <div style="text-align: center;">
+                <div style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: #6B5660; margin-bottom: 32px;">
+                    Overall AI Visibility Grade
                 </div>
-                <div style="text-align: left;">
-                    <div style="font-size: 48px; font-weight: 700; color: #4D2E3A; line-height: 1;">
-                        {score}<span style="font-size: 24px; color: #A7868F;">/100</span>
+                <div style="display: inline-flex; align-items: center; gap: 40px; margin-bottom: 24px;">
+                    <div style="background: linear-gradient(135deg, #4A4458 0%, #6B5660 100%); color: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 64px; font-weight: 700; box-shadow: 0 8px 24px rgba(74, 68, 88, 0.2);">
+                        {grade}
                     </div>
-                    <div style="font-size: 18px; font-weight: 600; color: #6B5660; margin-top: 8px;">
-                        {label}
+                    <div style="text-align: left;">
+                        <div style="font-size: 52px; font-weight: 700; color: #4A4458; line-height: 1; margin-bottom: 16px;">
+                            {score}<span style="font-size: 26px; color: #A7868F; font-weight: 500;">/100</span>
+                        </div>
+                        <div style="display: inline-block; background: linear-gradient(135deg, #4A4458 0%, #6B5660 100%); color: white; padding: 8px 20px; border-radius: 24px; font-size: 14px; font-weight: 600;">
+                            {label}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div style="margin-top: 24px; font-size: 15px; color: #6B5660; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
-                {description}
             </div>
         </div>
         """
@@ -4073,6 +4226,87 @@ class HTMLReportGenerator:
                 Winning these queries should be a top priority.
             </p>
             {''.join(loss_items)}
+        </div>
+        """
+
+    def _build_sentiment_analysis(self, sentiment_analysis: Dict[str, Any]) -> str:
+        """Build sentiment analysis showing how AI describes the brand."""
+        if not sentiment_analysis:
+            return ""
+
+        overall_score_data = sentiment_analysis.get('overall_score', {})
+        overall_score = overall_score_data.get('score', 0)
+        overall_grade = overall_score_data.get('grade', 'C')
+
+        brand_sentiment = sentiment_analysis.get('brand_sentiment', {})
+        key_strengths = sentiment_analysis.get('key_strengths', [])
+        key_weaknesses = sentiment_analysis.get('key_weaknesses', [])
+
+        # Determine color based on score
+        if overall_score >= 70:
+            score_color = '#10b981'
+            status = 'Positive'
+        elif overall_score >= 50:
+            score_color = '#f59e0b'
+            status = 'Neutral'
+        else:
+            score_color = '#ef4444'
+            status = 'Needs Attention'
+
+        # Build strengths list
+        strengths_html = ""
+        for strength in key_strengths[:5]:
+            strengths_html += f"""
+                <li style="margin: 8px 0; color: #4D2E3A; line-height: 1.6;">
+                    <strong style="color: #10b981;">✓</strong> {strength}
+                </li>
+            """
+
+        # Build weaknesses list
+        weaknesses_html = ""
+        for weakness in key_weaknesses[:5]:
+            weaknesses_html += f"""
+                <li style="margin: 8px 0; color: #4D2E3A; line-height: 1.6;">
+                    <strong style="color: #ef4444;">✗</strong> {weakness}
+                </li>
+            """
+
+        return f"""
+        <div style="margin: 48px 0;">
+            <h2>Sentiment Analysis</h2>
+            <p style="color: #6B5660; margin-bottom: 24px;">
+                How does AI describe your brand when it mentions you? This analyzes the language, tone, and descriptors AI uses.
+            </p>
+
+            <div style="background: linear-gradient(135deg, rgba(77, 46, 58, 0.05) 0%, rgba(77, 46, 58, 0.1) 100%); border: 2px solid #4D2E3A; border-radius: 12px; padding: 32px; margin-bottom: 32px;">
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #6B5660; margin-bottom: 8px;">
+                        Overall Sentiment Score
+                    </div>
+                    <div style="font-size: 56px; font-weight: 700; color: {score_color};">
+                        {overall_score:.0f}<span style="font-size: 28px; color: #A7868F;">/100</span>
+                    </div>
+                    <div style="font-size: 16px; font-weight: 600; color: {score_color}; margin-top: 8px;">
+                        Grade: {overall_grade} • {status}
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+                <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 8px; padding: 24px;">
+                    <h3 style="color: #10b981; margin-bottom: 16px; font-size: 18px;">Key Strengths</h3>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        {strengths_html if strengths_html else '<li style="color: #6B5660;">No specific strengths identified</li>'}
+                    </ul>
+                </div>
+
+                <div style="background: #fef2f2; border: 2px solid #ef4444; border-radius: 8px; padding: 24px;">
+                    <h3 style="color: #ef4444; margin-bottom: 16px; font-size: 18px;">Areas to Improve</h3>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        {weaknesses_html if weaknesses_html else '<li style="color: #6B5660;">No specific weaknesses identified</li>'}
+                    </ul>
+                </div>
+            </div>
         </div>
         """
 

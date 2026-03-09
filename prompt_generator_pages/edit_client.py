@@ -472,7 +472,16 @@ def render_edit_client(client_slug: str, client_name: str):
                         new_personas = json.loads(personas_json)
                         with open(personas_path, 'w') as f:
                             json.dump(new_personas, f, indent=2)
-                        st.success("✅ Personas updated!")
+
+                        # Sync to GCS
+                        try:
+                            from src.client_manager.gcs_sync import GCSClientSync
+                            gcs_sync = GCSClientSync()
+                            gcs_sync.upload_client_files(client_slug, {'personas': str(personas_path)})
+                            st.success("✅ Personas updated and synced to cloud!")
+                        except Exception:
+                            st.success("✅ Personas updated!")
+
                         st.rerun()
                     except json.JSONDecodeError as e:
                         st.error(f"Invalid JSON: {str(e)}")
@@ -499,7 +508,16 @@ def render_edit_client(client_slug: str, client_name: str):
                     try:
                         new_df = pd.read_csv(new_keywords_file)
                         new_df.to_csv(keywords_path, index=False)
-                        st.success("✅ Keywords updated!")
+
+                        # Sync to GCS
+                        try:
+                            from src.client_manager.gcs_sync import GCSClientSync
+                            gcs_sync = GCSClientSync()
+                            gcs_sync.upload_client_files(client_slug, {'keywords': str(keywords_path)})
+                            st.success("✅ Keywords updated and synced to cloud!")
+                        except Exception:
+                            st.success("✅ Keywords updated!")
+
                         st.rerun()
                     except Exception as e:
                         st.error(f"Error saving: {str(e)}")

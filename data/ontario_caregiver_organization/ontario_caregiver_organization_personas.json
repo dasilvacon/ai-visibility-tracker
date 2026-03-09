@@ -1,0 +1,39 @@
+{
+  "personas": [
+    {
+      "id": "persona_buyer",
+      "name": "Active Buyer",
+      "weight": 0.4,
+      "description": "Consumers actively researching and ready to purchase Ontario Caregiver Organization products",
+      "priority_topics": [
+        "product comparisons",
+        "reviews",
+        "pricing",
+        "best options"
+      ]
+    },
+    {
+      "id": "persona_researcher",
+      "name": "Information Seeker",
+      "weight": 0.35,
+      "description": "People learning about Ontario Caregiver Organization products and how to use them",
+      "priority_topics": [
+        "how to",
+        "guides",
+        "tutorials",
+        "tips"
+      ]
+    },
+    {
+      "id": "persona_explorer",
+      "name": "Brand Explorer",
+      "weight": 0.25,
+      "description": "Users discovering Ontario Caregiver Organization and comparing with alternatives",
+      "priority_topics": [
+        "brand information",
+        "alternatives",
+        "comparisons"
+      ]
+    }
+  ]
+}

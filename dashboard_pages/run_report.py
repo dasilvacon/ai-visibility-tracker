@@ -314,11 +314,21 @@ def render():
             st.caption("Create brand config")
 
     with check_col3:
-        # Check if API keys are configured
+        # Check if API keys are configured (either in config file OR environment variables)
         config_file = Path('config/config.json')
         has_api_keys = False
 
-        if config_file.exists():
+        # Check environment variables first (Cloud Run)
+        env_keys = [
+            os.getenv('OPENAI_API_KEY'),
+            os.getenv('ANTHROPIC_API_KEY'),
+            os.getenv('PERPLEXITY_API_KEY'),
+            os.getenv('GEMINI_API_KEY')
+        ]
+        has_api_keys = any(key and not key.startswith('YOUR_') for key in env_keys if key)
+
+        # If no env vars, check config file (local development)
+        if not has_api_keys and config_file.exists():
             try:
                 with open(config_file, 'r') as f:
                     config = json.load(f)
@@ -430,6 +440,19 @@ def render():
 
         if success:
             st.success("✅ Test completed successfully!")
+
+            # Sync results and reports to GCS for persistence
+            try:
+                from src.client_manager.gcs_sync import GCSClientSync
+                gcs_sync = GCSClientSync()
+
+                with st.spinner("☁️ Syncing data to cloud storage..."):
+                    gcs_sync.upload_test_results()
+                    gcs_sync.upload_reports(client_name)
+
+                st.success("☁️ Data synced to cloud storage")
+            except Exception as e:
+                st.warning(f"⚠️ Could not sync to cloud: {e}")
 
             st.balloons()
 

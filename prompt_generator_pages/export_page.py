@@ -13,6 +13,20 @@ import sys
 sys.path.insert(0, 'src')
 
 
+def sync_prompts_to_gcs():
+    """Sync prompt data to GCS after export for persistence."""
+    try:
+        from src.client_manager.gcs_sync import GCSClientSync
+        gcs_sync = GCSClientSync()
+        success = gcs_sync.upload_prompt_data()
+        if success:
+            st.success("☁️ Prompts synced to cloud storage")
+        return success
+    except Exception as e:
+        st.warning(f"⚠️ Could not sync to cloud: {e}")
+        return False
+
+
 def archive_exported_drafts(exported_prompts, client_name):
     """Archive draft files after prompts have been successfully exported."""
     draft_dir = Path('data/prompt_generation/drafts')
@@ -293,6 +307,9 @@ def render():
 
                         # Archive draft files for exported prompts
                         archive_exported_drafts(approved_prompts, client_name)
+
+                        # Sync to GCS for persistence
+                        sync_prompts_to_gcs()
                     else:
                         # File doesn't exist, create it
                         with open(main_csv, 'w', newline='') as f:
@@ -309,6 +326,9 @@ def render():
 
                         # Archive draft files for exported prompts
                         archive_exported_drafts(approved_prompts, client_name)
+
+                        # Sync to GCS for persistence
+                        sync_prompts_to_gcs()
 
                 elif export_mode == "Replace generated_prompts.csv":
                     if st.checkbox("⚠ I understand this will delete all existing prompts in generated_prompts.csv"):
@@ -328,6 +348,9 @@ def render():
 
                         # Archive draft files for exported prompts
                         archive_exported_drafts(approved_prompts, client_name)
+
+                        # Sync to GCS for persistence
+                        sync_prompts_to_gcs()
                     else:
                         st.warning("Please check the confirmation box to replace the file.")
 

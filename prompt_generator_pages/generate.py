@@ -572,7 +572,14 @@ def render():
             with open(draft_file, 'w') as f:
                 json.dump(session_data, f, indent=2, default=str)
 
-            st.success(f"✅ Prompts saved! You can review them anytime - they won't be lost.")
+            # Sync to GCS for persistence
+            try:
+                from src.client_manager.gcs_sync import GCSClientSync
+                gcs_sync = GCSClientSync()
+                gcs_sync.upload_prompt_data()
+                st.success(f"✅ Prompts saved and synced to cloud!")
+            except Exception:
+                st.success(f"✅ Prompts saved locally!")
 
             # Navigation hint
             st.info("👉 Go to **Review & Approve** to filter and approve prompts.")

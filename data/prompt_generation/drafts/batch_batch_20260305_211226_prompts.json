@@ -1,0 +1,2816 @@
+{
+  "batch_id": "batch_20260305_211226",
+  "batch_name": "Initial Baseline",
+  "client_name": "Clearevent",
+  "timestamp": "2026-03-05T21:12:27.340408",
+  "config": {
+    "total_prompts": 100,
+    "competitor_ratio": 0.3,
+    "ai_ratio": 0.7,
+    "deduplication_mode": "High Similarity (90%)",
+    "personas_file": "/Users/tiffanydasilva/Claude-Projects/ai-visibility-tracker/data/clearevent_personas.json",
+    "keywords_file": "/Users/tiffanydasilva/Claude-Projects/ai-visibility-tracker/data/clearevent_keywords.csv",
+    "client_name": "Clearevent",
+    "dedup_threshold": 0.9,
+    "enable_dedup": true
+  },
+  "prompts": [
+    {
+      "prompt_id": "gen_1772763146960_9171",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "event app or Stripe",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event app (vs Whova)",
+      "quality_score": {
+        "overall_score": 92.2,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 4
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146960_3735",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Should I choose event registration system or EventMobi",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: event registration system (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 95.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 8
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146960_8608",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Should I choose event software or Whova",
+      "expected_visibility_score": 8.5,
+      "notes": "Generated from keyword: event software (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 93.0,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146961_6945",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "What's the difference between corporate events management software and Formstack focused on event registration software for nonprofits",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: corporate events management software (vs Cvent)",
+      "quality_score": {
+        "overall_score": 94.8,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 17
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146961_1000",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "event booking software compared to Ticket Tailor focused on non profit event management software",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: event booking software (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 95.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 14
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146962_9882",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "event registration tool vs Monday.com",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: event registration tool (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 95.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 5
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146963_8474",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Trying to decide between corporate event management software and Eventbrite",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: corporate event management software (vs Cvent)",
+      "quality_score": {
+        "overall_score": 95.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 10
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146964_6040",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "How does event app software compare to Monday.com",
+      "expected_visibility_score": 6.0,
+      "notes": "Generated from keyword: event app software (vs Whova)",
+      "quality_score": {
+        "overall_score": 93.0,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 8
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146965_6268",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "How does conference registration system compare to GiveButter",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: conference registration system (vs Cvent)",
+      "quality_score": {
+        "overall_score": 93.0,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 8
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146966_9787",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Top event planning platform options",
+      "expected_visibility_score": 8.5,
+      "notes": "Generated from keyword: event planning platform",
+      "quality_score": {
+        "overall_score": 95.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 5
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146967_2089",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Trying to learn about event planning tools specifically for non profit event management software",
+      "expected_visibility_score": 8.5,
+      "notes": "Generated from keyword: event planning tools",
+      "quality_score": {
+        "overall_score": 95.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 14
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146968_4402",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Can someone explain events software",
+      "expected_visibility_score": 9.0,
+      "notes": "Generated from keyword: events software",
+      "quality_score": {
+        "overall_score": 84.0,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 70.0,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 5
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146969_2242",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "event registration system guide",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: event registration system",
+      "quality_score": {
+        "overall_score": 92.2,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 4
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146970_9546",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Looking for information on event management solution",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management solution",
+      "quality_score": {
+        "overall_score": 95.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146971_7669",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "What makes online registration software different from other options",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: online registration software",
+      "quality_score": {
+        "overall_score": 93.0,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 9
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146973_9111",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "What makes conference planning software different from other options",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: conference planning software",
+      "quality_score": {
+        "overall_score": 93.0,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 9
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146976_4503",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Best event management site specifically for event registration software for nonprofits",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management site",
+      "quality_score": {
+        "overall_score": 95.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 11
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146979_8157",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "event management software explained",
+      "expected_visibility_score": 9.0,
+      "notes": "Generated from keyword: event management software",
+      "quality_score": {
+        "overall_score": 89.8,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 4
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146980_6713",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Trying to learn about event management for nonprofits specifically for event registration software for nonprofits",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management for nonprofits",
+      "quality_score": {
+        "overall_score": 95.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 15
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146983_3028",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Looking for information on event booking software",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: event booking software",
+      "quality_score": {
+        "overall_score": 95.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146985_1930",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "What makes conference event management software different from other options",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: conference event management software",
+      "quality_score": {
+        "overall_score": 93.0,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 10
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146987_3104",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Can someone explain event management software for nonprofits",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: event management software for nonprofits",
+      "quality_score": {
+        "overall_score": 86.5,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 70.0,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 8
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146994_1137",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Can someone explain event management systems",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management systems",
+      "quality_score": {
+        "overall_score": 84.0,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 70.0,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 6
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146995_5816",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "event management solutions recommendations",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management solutions",
+      "quality_score": {
+        "overall_score": 92.2,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 4
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146997_7161",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Can someone explain mobile event apps",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: mobile event apps",
+      "quality_score": {
+        "overall_score": 84.0,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 70.0,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 6
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763146999_3962",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "I need to understand event management solution",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management solution",
+      "quality_score": {
+        "overall_score": 93.0,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147001_6932",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Best event check in software specifically for event software for nonprofits",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: event check in software",
+      "quality_score": {
+        "overall_score": 95.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 11
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147004_6158",
+      "persona": "Nonprofit Event Director",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Top sell event tickets online options",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: sell event tickets online",
+      "quality_score": {
+        "overall_score": 93.0,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 100.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 6
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147006_3356",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "How does event planner software compare to Smartsheet",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event planner software (vs Cvent)",
+      "quality_score": {
+        "overall_score": 84.5,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 40.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 8
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147008_3700",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Trying to decide between online event registration tools and GiveButter",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: online event registration tools (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 91.2,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 57.1
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 10
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147012_7301",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Differences between sell tickets online and Whova focused on event planning software",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: sell tickets online (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 92.6,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 71.4
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 12
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147015_4481",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Is online event ticketing system better than Monday.com",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: online event ticketing system (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 91.0,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 80.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 8
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147018_6309",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Should I choose event management app or ExpoPlatform specifically for event management platform",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management app (vs Whova)",
+      "quality_score": {
+        "overall_score": 91.7,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 61.5
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 13
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147023_1470",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Differences between trade show management and Formstack focused on event planning software",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: trade show management (vs Cvent)",
+      "quality_score": {
+        "overall_score": 91.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 60.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 12
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147028_5749",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Differences between event ticketing software and Ticketmaster",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: event ticketing software (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 92.4,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 69.2
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147031_8842",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Top software for event management options",
+      "expected_visibility_score": 9.0,
+      "notes": "Generated from keyword: software for event management",
+      "quality_score": {
+        "overall_score": 91.2,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 57.1
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 6
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147034_5932",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Trying to learn about software for event planners",
+      "expected_visibility_score": 8.0,
+      "notes": "Generated from keyword: software for event planners",
+      "quality_score": {
+        "overall_score": 89.7,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 41.7
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 8
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147037_7096",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "non profit event management software explained",
+      "expected_visibility_score": 8.0,
+      "notes": "Generated from keyword: non profit event management software",
+      "quality_score": {
+        "overall_score": 86.3,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 33.3
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 6
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147039_1304",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "I need to understand event registration platform",
+      "expected_visibility_score": 8.0,
+      "notes": "Generated from keyword: event registration platform",
+      "quality_score": {
+        "overall_score": 89.9,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 44.4
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147042_7954",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Looking for information on accept online payments focused on event management platform",
+      "expected_visibility_score": 8.0,
+      "notes": "Generated from keyword: accept online payments",
+      "quality_score": {
+        "overall_score": 90.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 50.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 12
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147046_2213",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "online ticketing software guide specifically for event planning software",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: online ticketing software",
+      "quality_score": {
+        "overall_score": 92.2,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 66.7
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 9
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147051_7585",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "I need to understand non profit event management software",
+      "expected_visibility_score": 8.0,
+      "notes": "Generated from keyword: non profit event management software",
+      "quality_score": {
+        "overall_score": 87.0,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 40.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 9
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147056_1982",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Best event registration tool",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: event registration tool",
+      "quality_score": {
+        "overall_score": 87.2,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 50.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 4
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147058_3715",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Can someone explain event app software specifically for event planning software",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: event app software",
+      "quality_score": {
+        "overall_score": 81.0,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 70.0,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 45.5
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 11
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147062_9172",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "I need to understand event software for nonprofits",
+      "expected_visibility_score": 8.0,
+      "notes": "Generated from keyword: event software for nonprofits",
+      "quality_score": {
+        "overall_score": 90.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 50.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 8
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147066_8373",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "event management solution guide focused on event management platform",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management solution",
+      "quality_score": {
+        "overall_score": 91.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 60.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 9
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147070_5075",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "event software explained",
+      "expected_visibility_score": 9.0,
+      "notes": "Generated from keyword: event software",
+      "quality_score": {
+        "overall_score": 79.8,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 60.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 25.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 3
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147072_2275",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Best best mobile event apps",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: best mobile event apps",
+      "quality_score": {
+        "overall_score": 86.2,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 57.1
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 5
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147074_2377",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "I need to understand event management for nonprofits specifically for corporate event management software",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management for nonprofits",
+      "quality_score": {
+        "overall_score": 90.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 50.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 14
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147081_2819",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "fundraising event software recommendations",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: fundraising event software",
+      "quality_score": {
+        "overall_score": 88.9,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 66.7
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 4
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147084_5172",
+      "persona": "Corporate Event Coordinator",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "event ticketing system recommendations",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: event ticketing system",
+      "quality_score": {
+        "overall_score": 88.9,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 66.7
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 4
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147088_1637",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "event registration system vs Square focused on sell event tickets online",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: event registration system (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 91.8,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 62.5
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 11
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147094_2845",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "sell tickets online or Stripe",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: sell tickets online (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 91.8,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 62.5
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 5
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147096_6097",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Should I choose event ticketing software or Acuity Scheduling",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: event ticketing software (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 87.0,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 40.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 9
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147101_7531",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "event manager software vs OneCause",
+      "expected_visibility_score": 8.5,
+      "notes": "Generated from keyword: event manager software (vs Cvent)",
+      "quality_score": {
+        "overall_score": 92.2,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 66.7
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 5
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147104_9346",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Should I choose event registration platform or Monday.com",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event registration platform (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 89.5,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 40.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 8
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147109_2260",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Is trade show management better than Smartsheet focused on event management software",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: trade show management (vs Cvent)",
+      "quality_score": {
+        "overall_score": 88.6,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 56.2
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 12
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147119_5095",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "event management software for nonprofits recommendations specifically for sell event tickets online",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: event management software for nonprofits",
+      "quality_score": {
+        "overall_score": 90.9,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 53.8
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 12
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147131_1695",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "I need to understand ticket management system",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: ticket management system",
+      "quality_score": {
+        "overall_score": 84.9,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 44.4
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147140_4885",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "event management software features recommendations",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management software features",
+      "quality_score": {
+        "overall_score": 88.0,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 50.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 5
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147145_4810",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Can someone explain corporate events management software",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: corporate events management software",
+      "quality_score": {
+        "overall_score": 79.4,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 70.0,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 28.6
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147150_8541",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Best event registration platform specifically for event management software",
+      "expected_visibility_score": 8.0,
+      "notes": "Generated from keyword: event registration platform",
+      "quality_score": {
+        "overall_score": 88.5,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 30.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 9
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147156_3402",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "online ticketing system guide focused on event registration system",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: online ticketing system",
+      "quality_score": {
+        "overall_score": 88.0,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 50.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 9
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147162_8673",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Trying to learn about event apps",
+      "expected_visibility_score": 8.5,
+      "notes": "Generated from keyword: event apps",
+      "quality_score": {
+        "overall_score": 84.9,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 44.4
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 6
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147165_6754",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Top event app software options",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: event app software",
+      "quality_score": {
+        "overall_score": 87.3,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 42.9
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 5
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147169_4761",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "educational",
+      "prompt_text": "What makes event budgeting different from other options",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: event budgeting",
+      "quality_score": {
+        "overall_score": 86.6,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 36.4
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 8
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147174_1193",
+      "persona": "Festival & Community Event Organizer",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "What makes event mobile app different from other options",
+      "expected_visibility_score": 8.0,
+      "notes": "Generated from keyword: event mobile app",
+      "quality_score": {
+        "overall_score": 87.2,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 41.7
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 9
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147181_6040",
+      "persona": "Conference Planner",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "What's the difference between event management tool and Stripe",
+      "expected_visibility_score": 8.0,
+      "notes": "Generated from keyword: event management tool (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 91.6,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 61.1
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 9
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147188_5945",
+      "persona": "Conference Planner",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Should I choose software for event planners or Stripe",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: software for event planners (vs Cvent)",
+      "quality_score": {
+        "overall_score": 89.5,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 40.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 9
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147194_5580",
+      "persona": "Conference Planner",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "What's the difference between best mobile event apps and Stripe",
+      "expected_visibility_score": 6.0,
+      "notes": "Generated from keyword: best mobile event apps (vs Whova)",
+      "quality_score": {
+        "overall_score": 91.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 60.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 10
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147201_3196",
+      "persona": "Conference Planner",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "ticket management software or Ticketmaster specifically for conference management software",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: ticket management software (vs Ticketmaster)",
+      "quality_score": {
+        "overall_score": 92.2,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 66.7
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 10
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147211_2865",
+      "persona": "Conference Planner",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Best event planning platform",
+      "expected_visibility_score": 8.5,
+      "notes": "Generated from keyword: event planning platform",
+      "quality_score": {
+        "overall_score": 89.8,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 50.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 4
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147215_4053",
+      "persona": "Conference Planner",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Best event management tools",
+      "expected_visibility_score": 8.5,
+      "notes": "Generated from keyword: event management tools",
+      "quality_score": {
+        "overall_score": 86.4,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 66.7
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 4
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147219_2383",
+      "persona": "Conference Planner",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "What makes event management solution different from other options",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management solution",
+      "quality_score": {
+        "overall_score": 85.7,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 80.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 27.3
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 9
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147227_3110",
+      "persona": "Conference Planner",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Looking for information on event planning tools",
+      "expected_visibility_score": 8.5,
+      "notes": "Generated from keyword: event planning tools",
+      "quality_score": {
+        "overall_score": 89.9,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 44.4
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147233_3669",
+      "persona": "Conference Planner",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Can someone explain event registration platform specifically for event check in software",
+      "expected_visibility_score": 8.0,
+      "notes": "Generated from keyword: event registration platform",
+      "quality_score": {
+        "overall_score": 81.1,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 70.0,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 46.2
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 12
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147242_8317",
+      "persona": "Conference Planner",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Best fundraising event software",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: fundraising event software",
+      "quality_score": {
+        "overall_score": 83.8,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 40.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 4
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147246_1442",
+      "persona": "Conference Planner",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "I need to understand event management website",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management website",
+      "quality_score": {
+        "overall_score": 83.0,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 25.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147251_2837",
+      "persona": "Conference Planner",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Trying to learn about event management systems",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: event management systems",
+      "quality_score": {
+        "overall_score": 84.2,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 37.5
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147257_1489",
+      "persona": "Small Team Event Manager",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Is event management solutions better than PayPal specifically for event registration tools",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: event management solutions (vs Cvent)",
+      "quality_score": {
+        "overall_score": 91.9,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 64.3
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 12
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147267_3941",
+      "persona": "Small Team Event Manager",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "Differences between online event registration software and ExpoPlatform",
+      "expected_visibility_score": 6.5,
+      "notes": "Generated from keyword: online event registration software (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 90.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 50.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 8
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147275_7521",
+      "persona": "Small Team Event Manager",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "event management software compared to Cvent",
+      "expected_visibility_score": 8.5,
+      "notes": "Generated from keyword: event management software (vs Eventbrite)",
+      "quality_score": {
+        "overall_score": 91.2,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 57.1
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 6
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147281_8526",
+      "persona": "Small Team Event Manager",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "Looking for information on software for event management",
+      "expected_visibility_score": 9.0,
+      "notes": "Generated from keyword: software for event management",
+      "quality_score": {
+        "overall_score": 88.0,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 25.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 8
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147287_8899",
+      "persona": "Small Team Event Manager",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "event planner software guide",
+      "expected_visibility_score": 8.0,
+      "notes": "Generated from keyword: event planner software",
+      "quality_score": {
+        "overall_score": 85.8,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 95.0,
+          "keyword_relevance": 90.0,
+          "diversity": 60.0
+        },
+        "issues": [],
+        "recommendations": [],
+        "word_count": 4
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147292_7611",
+      "persona": "Small Team Event Manager",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "What makes software for event planners different from other options",
+      "expected_visibility_score": 8.0,
+      "notes": "Generated from keyword: software for event planners",
+      "quality_score": {
+        "overall_score": 88.8,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 33.3
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 10
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147300_8505",
+      "persona": "Small Team Event Manager",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "I need to understand event ticket system",
+      "expected_visibility_score": 6.0,
+      "notes": "Generated from keyword: event ticket system",
+      "quality_score": {
+        "overall_score": 83.0,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 25.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147306_3540",
+      "persona": "Small Team Event Manager",
+      "category": "educational",
+      "intent_type": "informational",
+      "prompt_text": "I need to understand mobile event apps",
+      "expected_visibility_score": 7.5,
+      "notes": "Generated from keyword: mobile event apps",
+      "quality_score": {
+        "overall_score": 84.9,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 44.4
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147312_8814",
+      "persona": "Small Team Event Manager",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "I need to understand event payment processing",
+      "expected_visibility_score": 6.0,
+      "notes": "Generated from keyword: event payment processing",
+      "quality_score": {
+        "overall_score": 84.9,
+        "quality_level": "Good",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 70.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 44.4
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 7
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    },
+    {
+      "prompt_id": "gen_1772763147319_1463",
+      "persona": "Small Team Event Manager",
+      "category": "educational",
+      "intent_type": "transactional",
+      "prompt_text": "event registration software for nonprofits explained",
+      "expected_visibility_score": 7.0,
+      "notes": "Generated from keyword: event registration software for nonprofits",
+      "quality_score": {
+        "overall_score": 90.5,
+        "quality_level": "Excellent",
+        "dimension_scores": {
+          "naturalness": 100,
+          "clarity": 90.0,
+          "length": 100.0,
+          "keyword_relevance": 90.0,
+          "diversity": 50.0
+        },
+        "issues": [
+          "Very similar to existing prompts"
+        ],
+        "recommendations": [
+          "Try a different angle or phrasing to increase uniqueness"
+        ],
+        "word_count": 6
+      },
+      "batch_id": "batch_20260305_211226",
+      "batch_name": "Initial Baseline",
+      "date_added": "2026-03-05T21:12:26.959032",
+      "status": "active",
+      "approval_status": "pending"
+    }
+  ],
+  "stats": {
+    "total_generated": 89,
+    "by_persona": {
+      "nonprofit_event_director": 28,
+      "corporate_event_coordinator": 23,
+      "festival_organizer": 16,
+      "conference_planner": 12,
+      "small_team_event_manager": 10
+    },
+    "by_category": {
+      "educational": 89
+    },
+    "by_intent": {
+      "transactional": 48,
+      "informational": 40,
+      "educational": 1
+    },
+    "with_competitors": 29,
+    "duplicates_removed": 11,
+    "start_time": "2026-03-05 21:12:26.960041",
+    "end_time": "2026-03-05 21:12:27.325427",
+    "quality_stats": {
+      "total_prompts": 89,
+      "average_score": 89.6,
+      "min_score": 79.4,
+      "max_score": 95.5,
+      "quality_distribution": {
+        "Excellent": 46,
+        "Good": 43,
+        "Fair": 0,
+        "Poor": 0
+      },
+      "excellent_percentage": 51.7,
+      "dimension_averages": {
+        "naturalness": 97.6,
+        "clarity": 83.6,
+        "length": 99.3,
+        "keyword_relevance": 90.0,
+        "diversity": 65.3
+      }
+    }
+  },
+  "approval_statuses": {
+    "gen_1772763146960_9171": "pending",
+    "gen_1772763146960_3735": "pending",
+    "gen_1772763146960_8608": "pending",
+    "gen_1772763146961_6945": "pending",
+    "gen_1772763146961_1000": "pending",
+    "gen_1772763146962_9882": "pending",
+    "gen_1772763146963_8474": "pending",
+    "gen_1772763146964_6040": "pending",
+    "gen_1772763146965_6268": "pending",
+    "gen_1772763146966_9787": "pending",
+    "gen_1772763146967_2089": "pending",
+    "gen_1772763146968_4402": "pending",
+    "gen_1772763146969_2242": "pending",
+    "gen_1772763146970_9546": "pending",
+    "gen_1772763146971_7669": "pending",
+    "gen_1772763146973_9111": "pending",
+    "gen_1772763146976_4503": "pending",
+    "gen_1772763146979_8157": "pending",
+    "gen_1772763146980_6713": "pending",
+    "gen_1772763146983_3028": "pending",
+    "gen_1772763146985_1930": "pending",
+    "gen_1772763146987_3104": "pending",
+    "gen_1772763146994_1137": "pending",
+    "gen_1772763146995_5816": "pending",
+    "gen_1772763146997_7161": "pending",
+    "gen_1772763146999_3962": "pending",
+    "gen_1772763147001_6932": "pending",
+    "gen_1772763147004_6158": "pending",
+    "gen_1772763147006_3356": "pending",
+    "gen_1772763147008_3700": "pending",
+    "gen_1772763147012_7301": "pending",
+    "gen_1772763147015_4481": "pending",
+    "gen_1772763147018_6309": "pending",
+    "gen_1772763147023_1470": "pending",
+    "gen_1772763147028_5749": "pending",
+    "gen_1772763147031_8842": "pending",
+    "gen_1772763147034_5932": "pending",
+    "gen_1772763147037_7096": "pending",
+    "gen_1772763147039_1304": "pending",
+    "gen_1772763147042_7954": "pending",
+    "gen_1772763147046_2213": "pending",
+    "gen_1772763147051_7585": "pending",
+    "gen_1772763147056_1982": "pending",
+    "gen_1772763147058_3715": "pending",
+    "gen_1772763147062_9172": "pending",
+    "gen_1772763147066_8373": "pending",
+    "gen_1772763147070_5075": "pending",
+    "gen_1772763147072_2275": "pending",
+    "gen_1772763147074_2377": "pending",
+    "gen_1772763147081_2819": "pending",
+    "gen_1772763147084_5172": "pending",
+    "gen_1772763147088_1637": "pending",
+    "gen_1772763147094_2845": "pending",
+    "gen_1772763147096_6097": "pending",
+    "gen_1772763147101_7531": "pending",
+    "gen_1772763147104_9346": "pending",
+    "gen_1772763147109_2260": "pending",
+    "gen_1772763147119_5095": "pending",
+    "gen_1772763147131_1695": "pending",
+    "gen_1772763147140_4885": "pending",
+    "gen_1772763147145_4810": "pending",
+    "gen_1772763147150_8541": "pending",
+    "gen_1772763147156_3402": "pending",
+    "gen_1772763147162_8673": "pending",
+    "gen_1772763147165_6754": "pending",
+    "gen_1772763147169_4761": "pending",
+    "gen_1772763147174_1193": "pending",
+    "gen_1772763147181_6040": "pending",
+    "gen_1772763147188_5945": "pending",
+    "gen_1772763147194_5580": "pending",
+    "gen_1772763147201_3196": "pending",
+    "gen_1772763147211_2865": "pending",
+    "gen_1772763147215_4053": "pending",
+    "gen_1772763147219_2383": "pending",
+    "gen_1772763147227_3110": "pending",
+    "gen_1772763147233_3669": "pending",
+    "gen_1772763147242_8317": "pending",
+    "gen_1772763147246_1442": "pending",
+    "gen_1772763147251_2837": "pending",
+    "gen_1772763147257_1489": "pending",
+    "gen_1772763147267_3941": "pending",
+    "gen_1772763147275_7521": "pending",
+    "gen_1772763147281_8526": "pending",
+    "gen_1772763147287_8899": "pending",
+    "gen_1772763147292_7611": "pending",
+    "gen_1772763147300_8505": "pending",
+    "gen_1772763147306_3540": "pending",
+    "gen_1772763147312_8814": "pending",
+    "gen_1772763147319_1463": "pending"
+  }
+}

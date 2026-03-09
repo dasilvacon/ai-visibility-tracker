@@ -104,18 +104,10 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     fi
 fi
 
-# Check for git credentials
-echo ""
-echo -e "${YELLOW}⚠ Important: Git credentials are required for client data persistence${NC}"
-echo "  These secrets should exist in Google Secret Manager:"
-echo "  - github-token (Personal Access Token with repo access)"
-echo "  - git-user-name (Your name for git commits)"
-echo "  - git-user-email (Your email for git commits)"
-echo ""
-
 # Deploy to Cloud Run
 echo ""
 echo -e "${BLUE}→ Deploying to Cloud Run...${NC}"
+echo "  Data persistence: Google Cloud Storage (GCS)"
 gcloud run deploy ${SERVICE_NAME} \
     --image ${IMAGE_NAME} \
     --platform managed \
@@ -127,9 +119,6 @@ gcloud run deploy ${SERVICE_NAME} \
     --min-instances 0 \
     --max-instances 10 \
     --set-secrets="/app/.streamlit/secrets.toml=streamlit-secrets:latest" \
-    --set-secrets="GITHUB_TOKEN=github-token:latest" \
-    --set-env-vars="GIT_USER_NAME=Tiffany DaSilva" \
-    --set-env-vars="GIT_USER_EMAIL=tiffany@dasilvaconsulting.com" \
     --port 8080
 
 echo ""
@@ -146,7 +135,7 @@ echo -e "${BLUE}${SERVICE_URL}${NC}"
 echo ""
 echo -e "${YELLOW}Next steps:${NC}"
 echo "  1. Visit the URL above to access your dashboard"
-echo "  2. Upload reports to GCS: python upload_reports_to_gcs.py --all"
+echo "  2. All data automatically syncs to Google Cloud Storage"
 echo "  3. Share the URL with your clients"
 echo ""
 echo -e "${YELLOW}Custom domain (optional):${NC}"
