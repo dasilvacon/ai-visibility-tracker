@@ -715,17 +715,34 @@ def display_html_report():
 
     # If admin and no brand selected, show brand selector
     if st.session_state.get('role') == 'admin' and st.session_state.brand_name is None:
-        # Get clients from clients.json registry
+        # Get clients from GCS registry first, then fall back to local file
         available_brands = []
-        clients_file = Path('data/clients.json')
-        if clients_file.exists():
+        clients_data = None
+
+        # Try GCS first (source of truth for deployed app)
+        if use_gcs:
             try:
-                with open(clients_file, 'r') as f:
-                    clients_data = json.load(f)
-                    for client in clients_data.get('clients', []):
-                        available_brands.append(client['name'])
+                blob = gcs.bucket.blob('client-data/clients.json')
+                if blob.exists():
+                    content = blob.download_as_text()
+                    clients_data = json.loads(content)
             except Exception:
                 pass
+
+        # Fall back to local file
+        if clients_data is None:
+            clients_file = Path('data/clients.json')
+            if clients_file.exists():
+                try:
+                    with open(clients_file, 'r') as f:
+                        clients_data = json.load(f)
+                except Exception:
+                    pass
+
+        # Extract client names
+        if clients_data:
+            for client in clients_data.get('clients', []):
+                available_brands.append(client['name'])
 
         available_brands = sorted(set(available_brands))
 
