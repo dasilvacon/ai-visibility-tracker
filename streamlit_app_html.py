@@ -715,21 +715,29 @@ def display_html_report():
 
     # If admin and no brand selected, show brand selector
     if st.session_state.get('role') == 'admin' and st.session_state.brand_name is None:
-        if use_gcs:
-            # Get brands from GCS
-            try:
-                available_brands = gcs.get_all_clients()
-            except Exception as e:
-                st.error(f"Error loading brands from cloud storage: {e}")
-                available_brands = []
-        else:
-            # Get brands from local files
-            reports_dir = Path('data/reports')
-            if reports_dir.exists():
-                html_reports = list(reports_dir.glob('visibility_report_*.html'))
-                available_brands = [f.stem.replace('visibility_report_', '').replace('_', ' ') for f in html_reports]
-            else:
-                available_brands = []
+        # Get clients from local data folders (clients with brand_config files)
+        available_brands = []
+        data_dir = Path('data')
+        if data_dir.exists():
+            for client_folder in data_dir.iterdir():
+                if client_folder.is_dir() and not client_folder.name.startswith('.'):
+                    # Check if folder contains a brand_config.json file
+                    brand_configs = list(client_folder.glob('*_brand_config.json'))
+                    if brand_configs:
+                        # Convert folder name to display name
+                        client_name = client_folder.name.replace('_', ' ').title()
+                        available_brands.append(client_name)
+
+            # Also check for legacy flat files (e.g., natasha_denona_brand_config.json in data/)
+            for config_file in data_dir.glob('*_brand_config.json'):
+                if config_file.is_file():
+                    # Extract client name from filename
+                    name_part = config_file.stem.replace('_brand_config', '').replace('_no_web', '')
+                    client_name = name_part.replace('_', ' ').title()
+                    if client_name not in available_brands:
+                        available_brands.append(client_name)
+
+        available_brands = sorted(set(available_brands))
 
         if available_brands:
             st.markdown("""
