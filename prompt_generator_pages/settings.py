@@ -17,77 +17,62 @@ ACCENT = '#4A4458'
 
 
 def detect_clients():
-    """Auto-detect clients from data directory."""
-    import os
-    import sys
+    """Load clients from the client registry (not file scanning).
 
-    # Try to get the correct data directory
-    # First, try relative to current file
-    current_file = Path(__file__).parent.parent
-    data_dir = current_file / 'data'
-
-    # If that doesn't work, try relative to cwd
-    if not data_dir.exists():
-        data_dir = Path('data')
-
-    # Debug: Check if data directory exists
-    if not data_dir.exists():
-        import streamlit as st
-        st.error(f"❌ Data directory not found at: {data_dir.absolute()}")
-        st.info(f"📂 Current working directory: {os.getcwd()}")
-        st.info(f"📂 Script location: {Path(__file__).parent.parent}")
-        st.info(f"📂 Tried paths: {current_file / 'data'}, {Path('data').absolute()}")
-        return {}
+    This reads from data/clients.json which is synced from GCS on startup.
+    """
+    from src.client_manager import ClientRegistry
 
     clients = {}
 
-    # Debug: List all files in data directory
-    all_personas = list(data_dir.glob('*_personas.json'))
-    if not all_personas:
-        import streamlit as st
-        st.warning(f"⚠️ No *_personas.json files found in {data_dir.absolute()}")
-        all_files = list(data_dir.glob('*'))
-        if all_files:
-            st.info(f"Files in data directory: {[f.name for f in all_files[:10]]}")
+    try:
+        registry = ClientRegistry()
+        all_clients = registry.get_all_clients()
 
-    # Find all personas files
-    for personas_file in data_dir.glob('*_personas.json'):
-        # Extract client name from filename (e.g., "natasha_denona_personas.json" -> "Natasha Denona")
-        client_slug = personas_file.stem.replace('_personas', '')
-        client_name = client_slug.replace('_', ' ').title()
+        for client in all_clients:
+            client_slug = client['slug']
+            client_name = client['name']
+            files = client.get('files', {})
 
-        # Look for matching keywords file
-        keywords_file = data_dir / f"{client_slug}_keywords.csv"
+            personas_file = files.get('personas', '')
+            keywords_file = files.get('keywords', '')
 
-        if keywords_file.exists():
             # Count personas
-            try:
-                with open(personas_file, 'r') as f:
-                    personas_data = json.load(f)
-                    if isinstance(personas_data, dict) and 'personas' in personas_data:
-                        persona_count = len(personas_data['personas'])
-                    elif isinstance(personas_data, list):
-                        persona_count = len(personas_data)
-                    else:
-                        persona_count = 1
-            except:
-                persona_count = 0
+            persona_count = 0
+            if personas_file and Path(personas_file).exists():
+                try:
+                    with open(personas_file, 'r') as f:
+                        personas_data = json.load(f)
+                        if isinstance(personas_data, dict) and 'personas' in personas_data:
+                            persona_count = len(personas_data['personas'])
+                        elif isinstance(personas_data, list):
+                            persona_count = len(personas_data)
+                        else:
+                            persona_count = 1
+                except:
+                    persona_count = 0
 
             # Count keywords
-            try:
-                df = pd.read_csv(keywords_file)
-                keyword_count = len(df)
-            except:
-                keyword_count = 0
+            keyword_count = 0
+            if keywords_file and Path(keywords_file).exists():
+                try:
+                    df = pd.read_csv(keywords_file)
+                    keyword_count = len(df)
+                except:
+                    keyword_count = 0
 
             clients[client_slug] = {
                 'name': client_name,
                 'slug': client_slug,
-                'personas_file': str(personas_file),
-                'keywords_file': str(keywords_file),
+                'personas_file': personas_file,
+                'keywords_file': keywords_file,
                 'persona_count': persona_count,
                 'keyword_count': keyword_count
             }
+
+    except Exception as e:
+        import streamlit as st
+        st.error(f"❌ Error loading clients from registry: {e}")
 
     return clients
 
