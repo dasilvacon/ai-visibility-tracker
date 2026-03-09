@@ -715,27 +715,17 @@ def display_html_report():
 
     # If admin and no brand selected, show brand selector
     if st.session_state.get('role') == 'admin' and st.session_state.brand_name is None:
-        # Get clients from local data folders (clients with brand_config files)
+        # Get clients from clients.json registry
         available_brands = []
-        data_dir = Path('data')
-        if data_dir.exists():
-            for client_folder in data_dir.iterdir():
-                if client_folder.is_dir() and not client_folder.name.startswith('.'):
-                    # Check if folder contains a brand_config.json file
-                    brand_configs = list(client_folder.glob('*_brand_config.json'))
-                    if brand_configs:
-                        # Convert folder name to display name
-                        client_name = client_folder.name.replace('_', ' ').title()
-                        available_brands.append(client_name)
-
-            # Also check for legacy flat files (e.g., natasha_denona_brand_config.json in data/)
-            for config_file in data_dir.glob('*_brand_config.json'):
-                if config_file.is_file():
-                    # Extract client name from filename
-                    name_part = config_file.stem.replace('_brand_config', '').replace('_no_web', '')
-                    client_name = name_part.replace('_', ' ').title()
-                    if client_name not in available_brands:
-                        available_brands.append(client_name)
+        clients_file = Path('data/clients.json')
+        if clients_file.exists():
+            try:
+                with open(clients_file, 'r') as f:
+                    clients_data = json.load(f)
+                    for client in clients_data.get('clients', []):
+                        available_brands.append(client['name'])
+            except Exception:
+                pass
 
         available_brands = sorted(set(available_brands))
 

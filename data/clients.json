@@ -10,7 +10,40 @@
       },
       "created_at": "2026-02-10T15:16:53.249352",
       "updated_at": "2026-02-10T15:16:53.249354"
+    },
+    {
+      "name": "Ontario Caregiver Organization",
+      "slug": "ontario_caregiver_organization",
+      "files": {
+        "keywords": "data/ontario_caregiver_organization/ontario_caregiver_organization_keywords.csv",
+        "personas": "data/ontario_caregiver_organization/ontario_caregiver_organization_personas.json",
+        "brand_config": "data/ontario_caregiver_organization/ontario_caregiver_organization_brand_config.json"
+      },
+      "created_at": "2026-03-08T15:42:00.000000",
+      "updated_at": "2026-03-08T15:42:00.000000"
+    },
+    {
+      "name": "Espresso Capital",
+      "slug": "espresso_capital",
+      "files": {
+        "keywords": "data/espresso_capital/espresso_capital_keywords.csv",
+        "personas": "data/espresso_capital/espresso_capital_personas.json",
+        "brand_config": "data/espresso_capital/espresso_capital_brand_config.json"
+      },
+      "created_at": "2026-03-08T21:31:00.000000",
+      "updated_at": "2026-03-08T21:31:00.000000"
+    },
+    {
+      "name": "Say I Do",
+      "slug": "say_i_do",
+      "files": {
+        "keywords": "data/say_i_do/say_i_do_keywords.csv",
+        "personas": "data/say_i_do/say_i_do_personas.json",
+        "brand_config": "data/say_i_do/say_i_do_brand_config.json"
+      },
+      "created_at": "2026-03-08T15:42:00.000000",
+      "updated_at": "2026-03-08T15:42:00.000000"
     }
   ],
-  "last_updated": "2026-03-05T21:30:00.000000"
+  "last_updated": "2026-03-09T08:00:00.000000"
 }
