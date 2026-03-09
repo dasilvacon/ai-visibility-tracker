@@ -416,28 +416,27 @@ def render():
                             }
                         )
 
-                        # Auto-commit client data to git
+                        # Sync client data to GCS for persistence
                         try:
-                            import subprocess
-                            import os
-                            # Determine git working directory (works both locally and in Docker)
-                            git_cwd = '/app' if os.path.exists('/app') and os.path.isdir('/app/.git') else Path.cwd()
+                            from src.client_manager.gcs_sync import GCSClientSync
 
-                            # Add all client files
-                            subprocess.run(['git', 'add', str(keywords_path), str(personas_path), 'data/clients.json'], check=False, cwd=git_cwd)
+                            gcs_sync = GCSClientSync()
+                            gcs_success = gcs_sync.sync_client_to_gcs(
+                                client_slug=client_slug,
+                                files={
+                                    'keywords': str(keywords_path),
+                                    'personas': str(personas_path)
+                                }
+                            )
 
-                            # Commit
-                            commit_msg = f"Add new client (manual): {new_client_name}"
-                            subprocess.run(['git', 'commit', '-m', commit_msg], check=False, cwd=git_cwd)
-
-                            # Push to origin main explicitly
-                            subprocess.run(['git', 'push', 'origin', 'main'], check=False, cwd=git_cwd)
-
-                            st.success(f"✅ {new_client_name} added and saved to GitHub!")
+                            if gcs_success:
+                                st.success(f"✅ {new_client_name} added and saved to cloud storage!")
+                            else:
+                                st.success(f"✅ {new_client_name} added successfully!")
+                                st.warning("⚠️ Cloud backup may have failed. Check logs.")
                         except Exception as e:
-                            # If git fails, still show success but warn about manual commit needed
                             st.success(f"✅ {new_client_name} added successfully!")
-                            st.warning(f"⚠️ Could not auto-commit to git. Please commit manually or use the 'Commit All Client Data' button.")
+                            st.info("💡 Files saved locally and will sync on next restart.")
 
                         st.balloons()
 
