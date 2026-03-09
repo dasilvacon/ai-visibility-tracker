@@ -92,55 +92,14 @@ class PromptBuilder:
         ]
     }
 
-    # Persona-specific context patterns
-    PERSONA_CONTEXTS = {
-        'Luxury Beauty Enthusiast': [
-            "Looking for high-end {keyword} with {quality}",
-            "Is {keyword} worth the investment",
-            "Want luxury {keyword} that {benefit}",
-            "Interested in premium {keyword}",
-        ],
-        'Professional Makeup Artist': [
-            "Working makeup artist looking for {keyword} that {performance}",
-            "Best {keyword} for bridal work",
-            "Professional-grade {keyword} recommendations",
-            "Need {keyword} that lasts 12+ hours for clients",
-        ],
-        'Specific Need Shopper': [
-            "I have {problem} and {keyword} always {fails}, what works",
-            "Best {keyword} for {specific_need}",
-            "{keyword} that actually works on {condition}",
-            "My {problem} means most {keyword} fails, need better options",
-        ],
-        'Beauty Beginner': [
-            "New to luxury makeup, is {keyword} beginner-friendly",
-            "First high-end palette, which {keyword} is easiest to use",
-            "Best {keyword} for someone just learning",
-            "Learning makeup, is {keyword} good for beginners",
-        ],
-    }
-
-    # Pain points and specific needs by category
-    PAIN_POINTS = {
-        'oily skin': ['creasing', 'fading by noon', 'sliding off'],
-        'hooded eyes': ['disappearing', 'transferring to crease', 'not visible'],
-        'mature skin': ['settling in lines', 'emphasizing texture', 'looking cakey'],
-        'sensitive skin': ['irritation', 'redness', 'burning'],
-    }
-
-    SPECIFIC_NEEDS = [
-        'oily lids', 'hooded eyes', 'mature skin', 'deep skin tones',
-        'pale skin', 'sensitive eyes', 'contact lenses'
-    ]
-
-    QUALITIES = [
-        'excellent pigmentation', 'smooth blending', 'zero fallout',
-        'long wear', 'buildable coverage', 'true color payoff'
-    ]
-
-    PERFORMANCE_REQS = [
-        'lasts 12+ hours', 'no creasing', 'stays vibrant',
-        'photographs well', 'blends easily', 'minimal fallout'
+    # Generic persona-based prompt templates (industry-agnostic)
+    # These templates work by incorporating persona descriptions and priority topics
+    PERSONA_PROMPT_PATTERNS = [
+        "Looking for {keyword} that {persona_context}",
+        "Need {keyword} recommendations for {persona_context}",
+        "What's the best {keyword} for {persona_context}",
+        "Is {keyword} good for {persona_context}",
+        "{keyword} options for {persona_context}",
     ]
 
     def __init__(self, use_natural_language: bool = True):
@@ -200,56 +159,49 @@ class PromptBuilder:
         template = random.choice(templates)
         return template.format(keyword=keyword, competitor=competitor)
 
-    def build_persona_prompt(self, keyword: str, persona_context: str, intent_type: str) -> str:
+    def build_persona_prompt(self, keyword: str, persona_data: Optional[Dict[str, Any]], intent_type: str) -> str:
         """
         Build a prompt that incorporates persona context naturally.
 
         Args:
             keyword: The keyword or topic
-            persona_context: Context about the persona
+            persona_data: Dictionary with persona information (name, description, priority_topics)
+                         If None or empty, falls back to basic prompts
             intent_type: The intent type
 
         Returns:
             Generated prompt with persona context
         """
-        # Try to use persona-specific templates 30% of the time
-        if random.random() < 0.3:
-            persona_templates = self.PERSONA_CONTEXTS.get(persona_context, [])
-            if persona_templates:
-                template = random.choice(persona_templates)
+        # If no persona data provided, use basic prompt
+        if not persona_data:
+            return self.build_basic_prompt(keyword, intent_type)
 
-                # Fill in placeholders
-                filled = template.replace('{keyword}', keyword)
+        persona_name = persona_data.get('name', '')
+        persona_description = persona_data.get('description', '')
+        priority_topics = persona_data.get('priority_topics', [])
 
-                # Add contextual details
-                if '{quality}' in filled:
-                    filled = filled.replace('{quality}', random.choice(self.QUALITIES))
-                if '{performance}' in filled:
-                    filled = filled.replace('{performance}', random.choice(self.PERFORMANCE_REQS))
-                if '{benefit}' in filled:
-                    benefits = ['lasts all day', 'blends perfectly', 'looks natural']
-                    filled = filled.replace('{benefit}', random.choice(benefits))
-                if '{problem}' in filled:
-                    problems = ['oily lids', 'hooded eyes', 'mature skin', 'deep skin tone']
-                    filled = filled.replace('{problem}', random.choice(problems))
-                if '{specific_need}' in filled:
-                    filled = filled.replace('{specific_need}', random.choice(self.SPECIFIC_NEEDS))
-                if '{fails}' in filled:
-                    fails = ['creases', 'fades', 'disappears', 'transfers']
-                    filled = filled.replace('{fails}', random.choice(fails))
-                if '{condition}' in filled:
-                    filled = filled.replace('{condition}', random.choice(self.SPECIFIC_NEEDS))
+        # Use persona-enriched templates 30% of the time
+        if random.random() < 0.3 and persona_description:
+            template = random.choice(self.PERSONA_PROMPT_PATTERNS)
 
-                return filled
+            # Extract a concise context from the description
+            # Take the first clause or sentence for brevity
+            context = persona_description.split(',')[0].lower()
+            if context.startswith('people ') or context.startswith('consumers ') or context.startswith('users '):
+                context = context.split(' ', 1)[1]  # Remove "people/consumers/users"
+
+            prompt = template.format(keyword=keyword, persona_context=context)
+            return prompt
 
         # Otherwise build a standard prompt
         base_prompt = self.build_basic_prompt(keyword, intent_type)
 
-        # Add natural persona framing occasionally (30% of the time)
-        if random.random() < 0.3:
+        # Add natural persona framing occasionally (20% of the time)
+        # Only if persona name is descriptive (not just "Active Buyer" etc.)
+        if random.random() < 0.2 and persona_name and len(persona_name.split()) <= 4:
             persona_frames = [
-                f"I'm a {persona_context.lower()}, {base_prompt.lower()}",
-                f"{base_prompt} - I'm {persona_context.lower()}",
+                f"I'm {persona_description.split(',')[0].lower()}, {base_prompt.lower()}",
+                f"{base_prompt} for {persona_description.split(',')[0].lower()}",
             ]
             return random.choice(persona_frames)
 
