@@ -84,17 +84,15 @@ echo "  This may take 3-5 minutes..."
 gcloud builds submit --tag ${IMAGE_NAME}
 echo -e "${GREEN}✓ Image built successfully${NC}"
 
-# Check if secrets are configured
+# Check if secrets are configured (non-interactive - assumes secrets exist)
 echo ""
-echo -e "${YELLOW}⚠ Important: Make sure you've created a Secret Manager secret with your credentials${NC}"
-echo "  Run: gcloud secrets create streamlit-secrets --data-file=.streamlit/secrets.toml"
-echo ""
-read -p "Have you created the secret? (y/n) " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+echo -e "${BLUE}→ Checking secrets configuration...${NC}"
+if gcloud secrets describe streamlit-secrets &>/dev/null; then
+    echo -e "${GREEN}✓ Secret 'streamlit-secrets' exists${NC}"
+else
     echo -e "${YELLOW}→ Creating secret from .streamlit/secrets.toml...${NC}"
     if [ -f ".streamlit/secrets.toml" ]; then
-        gcloud secrets create streamlit-secrets --data-file=.streamlit/secrets.toml || \
+        gcloud secrets create streamlit-secrets --data-file=.streamlit/secrets.toml 2>/dev/null || \
         gcloud secrets versions add streamlit-secrets --data-file=.streamlit/secrets.toml
         echo -e "${GREEN}✓ Secret created${NC}"
     else
@@ -115,6 +113,7 @@ gcloud run deploy ${SERVICE_NAME} \
     --allow-unauthenticated \
     --memory 2Gi \
     --cpu 2 \
+    --cpu-boost \
     --timeout 300 \
     --min-instances 0 \
     --max-instances 10 \
