@@ -178,13 +178,28 @@ class GCSManager:
         Returns:
             File content as bytes
         """
-        client_slug = client_name.replace(' ', '_')
-        blob_path = f"{client_slug}/{filename}"
+        client_slug = client_name.replace(' ', '_').lower()
 
+        # Try per-client reports path first (new structure)
+        blob_path = f"reports/{client_slug}/{filename}"
+        blob = self.bucket.blob(blob_path)
+
+        if blob.exists():
+            return blob.download_as_bytes()
+
+        # Fallback to old flat reports/ structure
+        blob_path = f"reports/{filename}"
+        blob = self.bucket.blob(blob_path)
+
+        if blob.exists():
+            return blob.download_as_bytes()
+
+        # Fallback to client_slug/ prefix (legacy structure)
+        blob_path = f"{client_slug}/{filename}"
         blob = self.bucket.blob(blob_path)
 
         if not blob.exists():
-            raise FileNotFoundError(f"File not found in GCS: {blob_path}")
+            raise FileNotFoundError(f"File not found in GCS: reports/{client_slug}/{filename}")
 
         return blob.download_as_bytes()
 
@@ -198,21 +213,41 @@ class GCSManager:
         Returns:
             List of report metadata dicts
         """
-        client_slug = client_name.replace(' ', '_')
-        prefix = f"{client_slug}/"
-
-        blobs = self.bucket.list_blobs(prefix=prefix)
-
+        client_slug = client_name.replace(' ', '_').lower()
         reports = []
+
+        # Check per-client reports path first (new structure)
+        prefix = f'reports/{client_slug}/'
+        blobs = self.bucket.list_blobs(prefix=prefix)
         for blob in blobs:
-            if '/history/' not in blob.name:  # Only current reports, not history
-                reports.append({
-                    'name': blob.name.split('/')[-1],
-                    'path': blob.name,
-                    'size': blob.size,
-                    'updated': blob.updated,
-                    'content_type': blob.content_type
-                })
+            if blob.name.endswith('/'):
+                continue
+            filename = blob.name.split('/')[-1]
+            reports.append({
+                'name': filename,
+                'path': blob.name,
+                'size': blob.size,
+                'updated': blob.updated,
+                'content_type': blob.content_type
+            })
+
+        # Also check old flat reports/ structure for legacy files
+        blobs = self.bucket.list_blobs(prefix='reports/')
+        for blob in blobs:
+            if blob.name.endswith('/'):
+                continue
+            filename = blob.name.split('/')[-1]
+            # Check if this report belongs to this client and not in a subdirectory
+            if client_slug in filename.lower() and blob.name.count('/') == 1:
+                # Avoid duplicates
+                if not any(r['name'] == filename for r in reports):
+                    reports.append({
+                        'name': filename,
+                        'path': blob.name,
+                        'size': blob.size,
+                        'updated': blob.updated,
+                        'content_type': blob.content_type
+                    })
 
         return reports
 
@@ -227,9 +262,22 @@ class GCSManager:
         Returns:
             True if file exists, False otherwise
         """
-        client_slug = client_name.replace(' ', '_')
-        blob_path = f"{client_slug}/{filename}"
+        client_slug = client_name.replace(' ', '_').lower()
 
+        # Check per-client reports path first (new structure)
+        blob_path = f"reports/{client_slug}/{filename}"
+        blob = self.bucket.blob(blob_path)
+        if blob.exists():
+            return True
+
+        # Fallback to old flat reports/ structure
+        blob_path = f"reports/{filename}"
+        blob = self.bucket.blob(blob_path)
+        if blob.exists():
+            return True
+
+        # Fallback to client_slug/ prefix (legacy structure)
+        blob_path = f"{client_slug}/{filename}"
         blob = self.bucket.blob(blob_path)
         return blob.exists()
 

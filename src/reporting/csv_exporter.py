@@ -62,7 +62,7 @@ class CSVExporter:
 
             for source in all_sources:
                 # Determine priority based on opportunity score
-                opp_score = source['opportunity_score']
+                opp_score = source.get('opportunity_score', 0)
                 if opp_score >= 60:
                     priority = 'HIGH'
                 elif opp_score >= 40:
@@ -71,7 +71,7 @@ class CSVExporter:
                     priority = 'LOW'
 
                 # Determine recommended action
-                source_name_lower = source['source'].lower()
+                source_name_lower = source.get('source', '').lower()
                 if 'reddit' in source_name_lower:
                     action = 'Increase Reddit presence - answer questions, engage authentically'
                 elif 'youtube' in source_name_lower or 'channel' in source_name_lower:
@@ -84,18 +84,18 @@ class CSVExporter:
                     action = 'Reach out for backlink opportunities and product features'
 
                 writer.writerow({
-                    'Source': source['source'],
+                    'Source': source.get('source', ''),
                     'Domain': source.get('domain', ''),
-                    'Total Appearances': source['total_appearances'],
-                    'Your Brand Mentions': source['mentions_your_brand'],
-                    'Your Brand %': f"{source['brand_mention_rate']}%",
+                    'Total Appearances': source.get('total_appearances', 0),
+                    'Your Brand Mentions': source.get('mentions_your_brand', 0),
+                    'Your Brand %': f"{source.get('brand_mention_rate', 0)}%",
                     'Top Competitor': source.get('top_competitor', ''),
-                    'Competitor Mentions': source['competitor_count'],
-                    'Competitor %': f"{source['competitor_rate']}%",
-                    'Should Target': 'YES' if source['should_target'] else 'No',
-                    'Priority': priority if source['should_target'] else 'N/A',
+                    'Competitor Mentions': source.get('competitor_count', 0),
+                    'Competitor %': f"{source.get('competitor_rate', 0)}%",
+                    'Should Target': 'YES' if source.get('should_target', False) else 'No',
+                    'Priority': priority if source.get('should_target', False) else 'N/A',
                     'Opportunity Score': f"{opp_score:.0f}",
-                    'Recommended Action': action if source['should_target'] else 'Maintain current relationship',
+                    'Recommended Action': action if source.get('should_target', False) else 'Maintain current relationship',
                     'Example URLs': '; '.join(source.get('example_urls', []))
                 })
 
@@ -319,7 +319,7 @@ class CSVExporter:
 
         # Get prioritized audiences from gap analysis
         prioritized = gap_analysis.get('prioritized_audiences', [])
-        audience_lookup = {a['target']: a for a in prioritized}
+        audience_lookup = {a['persona']: a for a in prioritized}
 
         with open(csv_path, 'w', newline='', encoding='utf-8') as f:
             fieldnames = [

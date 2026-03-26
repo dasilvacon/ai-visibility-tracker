@@ -38,33 +38,114 @@ from reporting.pdf_exporter import PDFExporter
 class VisibilityTracker:
     """Main orchestrator for visibility tracking."""
 
-    def __init__(self, config_path: str):
+    def __init__(self, config_path: str, brand_config_path: str = None):
         """
         Initialize the visibility tracker.
 
         Args:
             config_path: Path to configuration file
+            brand_config_path: Path to brand config file (for per-client isolation)
         """
         self.config = self._load_config(config_path)
         self.clients = {}
         self._initialize_clients()
 
-        # Initialize components
-        results_dir = self.config.get('output', {}).get('results_directory', 'data/results')
+        # Extract client_slug from brand_config if provided
+        self.client_slug = None
+        if brand_config_path and os.path.exists(brand_config_path):
+            try:
+                with open(brand_config_path, 'r') as f:
+                    brand_config = json.load(f)
+                brand_name = brand_config.get('brand', {}).get('name', '')
+                self.client_slug = brand_name.lower().replace(' ', '_')
+                print(f"✓ Client identified: {self.client_slug}")
+            except Exception as e:
+                print(f"⚠️ Could not extract client from brand config: {e}")
+
+        # Initialize components with per-client isolation
         reports_dir = self.config.get('output', {}).get('reports_directory', 'data/reports')
 
-        self.results_tracker = ResultsTracker(results_dir)
-        self.report_generator = ReportGenerator(reports_dir)
+        if self.client_slug:
+            # Per-client isolated paths
+            self.results_tracker = ResultsTracker(client_slug=self.client_slug)
+            self.reports_dir = os.path.join(reports_dir, self.client_slug)
+        else:
+            # Fallback to legacy shared path (for backwards compatibility)
+            results_dir = self.config.get('output', {}).get('results_directory', 'data/results')
+            self.results_tracker = ResultsTracker(client_slug='_legacy', base_dir=results_dir)
+            self.reports_dir = reports_dir
+
+        os.makedirs(self.reports_dir, exist_ok=True)
+        self.report_generator = ReportGenerator(self.reports_dir)
 
     def _load_config(self, config_path: str) -> Dict[str, Any]:
-        """Load configuration from JSON file."""
-        if not os.path.exists(config_path):
-            print(f"Error: Config file not found at {config_path}")
-            print("Please copy config/config.template.json to config/config.json and add your API keys.")
-            sys.exit(1)
+        """Load configuration from JSON file or Streamlit secrets."""
+        # Try loading from config file first
+        if os.path.exists(config_path):
+            with open(config_path, 'r') as f:
+                return json.load(f)
 
-        with open(config_path, 'r') as f:
-            return json.load(f)
+        # Fallback to Streamlit secrets (for Cloud Run deployment)
+        try:
+            import streamlit as st
+            api_keys = dict(st.secrets.get('api_keys', {}))
+            if api_keys:
+                print("✓ Loading config from Streamlit secrets")
+                return {
+                    'api_keys': api_keys,
+                    'models': {
+                        'openai': 'gpt-4',
+                        'anthropic': 'claude-sonnet-4-20250514',
+                        'perplexity': 'sonar',
+                        'gemini': 'gemini-2.5-flash'
+                    },
+                    'testing': {
+                        'default_temperature': 0.7,
+                        'max_tokens': 1000,
+                        'timeout_seconds': 30
+                    },
+                    'output': {
+                        'results_directory': 'data/results',
+                        'reports_directory': 'data/reports'
+                    }
+                }
+        except Exception as e:
+            print(f"Could not load Streamlit secrets: {e}")
+
+        # Fallback to environment variables (for subprocess calls from dashboard)
+        api_keys = {
+            'openai': os.getenv('OPENAI_API_KEY', ''),
+            'anthropic': os.getenv('ANTHROPIC_API_KEY', ''),
+            'perplexity': os.getenv('PERPLEXITY_API_KEY', ''),
+            'gemini': os.getenv('GEMINI_API_KEY', '')
+        }
+        # Filter out empty values
+        api_keys = {k: v for k, v in api_keys.items() if v}
+
+        if api_keys:
+            print("✓ Loading config from environment variables")
+            return {
+                'api_keys': api_keys,
+                'models': {
+                    'openai': 'gpt-4',
+                    'anthropic': 'claude-sonnet-4-20250514',
+                    'perplexity': 'sonar',
+                    'gemini': 'gemini-2.5-flash'
+                },
+                'testing': {
+                    'default_temperature': 0.7,
+                    'max_tokens': 1000,
+                    'timeout_seconds': 30
+                },
+                'output': {
+                    'results_directory': 'data/results',
+                    'reports_directory': 'data/reports'
+                }
+            }
+
+        print(f"Error: Config file not found at {config_path}")
+        print("Please copy config/config.template.json to config/config.json and add your API keys.")
+        sys.exit(1)
 
     def _initialize_clients(self) -> None:
         """Initialize API clients for available platforms."""
@@ -341,9 +422,18 @@ class VisibilityTracker:
 
         if not full_results:
             print("Error: No detailed results found.")
+            print(f"  Results dir: {self.results_tracker.results_dir}")
+            print(f"  Summary results loaded: {len(results)}")
             return {}
 
         print(f"Analyzing {len(full_results)} test results...")
+
+        # Debug: Show sample of what we're analyzing
+        if full_results:
+            sample = full_results[0]
+            print(f"  Sample prompt: {sample.get('prompt_text', 'N/A')[:60]}...")
+            response_preview = sample.get('response_text', '')[:100] if sample.get('response_text') else 'NO RESPONSE'
+            print(f"  Sample response: {response_preview}...")
 
         # Initialize analyzers
         scorer = VisibilityScorer(
@@ -450,7 +540,7 @@ class VisibilityTracker:
 
         # Save analysis report
         analysis_report_path = os.path.join(
-            self.config.get('output', {}).get('reports_directory', 'data/reports'),
+            self.reports_dir,
             f'visibility_analysis_{brand_name.replace(" ", "_")}.txt'
         )
 
@@ -525,9 +615,7 @@ class VisibilityTracker:
 
         # Generate HTML report
         print("7. Generating HTML report with competitive features...")
-        html_generator = HTMLReportGenerator(
-            self.config.get('output', {}).get('reports_directory', 'data/reports')
-        )
+        html_generator = HTMLReportGenerator(self.reports_dir)
 
         html_report_path = html_generator.generate_report(
             brand_name=brand_name,
@@ -1005,12 +1093,11 @@ class VisibilityTracker:
         Returns:
             Dictionary mapping export type to file path
         """
-        reports_dir = self.config.get('output', {}).get('reports_directory', 'data/reports')
         exports = {}
 
-        # Initialize exporters
-        csv_exporter = CSVExporter(reports_dir)
-        pdf_exporter = PDFExporter(reports_dir)
+        # Initialize exporters with per-client reports directory
+        csv_exporter = CSVExporter(self.reports_dir)
+        pdf_exporter = PDFExporter(self.reports_dir)
 
         # 1. Source List CSV (for PR team)
         try:
@@ -1143,8 +1230,8 @@ def main():
 
     args = parser.parse_args()
 
-    # Initialize tracker
-    tracker = VisibilityTracker(args.config)
+    # Initialize tracker with brand config for per-client isolation
+    tracker = VisibilityTracker(args.config, brand_config_path=args.brand_config)
 
     if args.generate_prompts or args.full_pipeline:
         # Generate prompts
@@ -1170,7 +1257,7 @@ def main():
                 if args.analyze:
                     tracker.analyze_results(args.brand_config)
 
-    elif args.analyze and not args.generate_prompts:
+    elif args.analyze and not args.generate_prompts and not args.prompts:
         # Standalone analysis of existing results
         tracker.analyze_results(args.brand_config)
 

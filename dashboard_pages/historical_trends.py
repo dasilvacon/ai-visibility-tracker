@@ -44,15 +44,16 @@ def render():
     </div>
     """, unsafe_allow_html=True)
 
-    # Initialize historical tracker
-    tracker = HistoricalTracker()
-
     # Get active client from session state
     client_name = st.session_state.get('brand_name')
 
     if not client_name:
         st.warning("⚠️ No client selected. Please select a client from the Dashboard page.")
         return
+
+    # Initialize historical tracker with per-client isolation
+    client_slug = client_name.replace(' ', '_').lower()
+    tracker = HistoricalTracker(client_slug=client_slug)
 
     # Get historical data
     history = tracker.get_client_history(client_name)

@@ -174,35 +174,45 @@ def show(brand_name: str, data: dict):
     # Download section
     st.subheader("📥 Download Reports")
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     brand_slug = brand_name.replace(' ', '_')
+    client_slug = brand_name.replace(' ', '_').lower()
+
+    # Per-client report paths
+    pdf_path = f'data/reports/{client_slug}/executive_summary_{brand_slug}.pdf'
 
     with col1:
+        pdf_loaded = False
+        # Try per-client path first
         try:
-            with open(f'data/reports/executive_summary_{brand_slug}.pdf', 'rb') as f:
+            with open(pdf_path, 'rb') as f:
                 st.download_button(
                     "📄 Executive Summary (PDF)",
                     data=f,
                     file_name=f"executive_summary_{brand_slug}.pdf",
                     mime="application/pdf"
                 )
+                pdf_loaded = True
         except FileNotFoundError:
-            st.info("PDF not available")
+            pass
+
+        # Fallback to GCS if local file not found
+        if not pdf_loaded:
+            try:
+                from src.storage.gcs_manager import GCSManager
+                gcs = GCSManager()
+                pdf_content = gcs.get_report_content(brand_name, f"executive_summary_{brand_slug}.pdf")
+                st.download_button(
+                    "📄 Executive Summary (PDF)",
+                    data=pdf_content,
+                    file_name=f"executive_summary_{brand_slug}.pdf",
+                    mime="application/pdf"
+                )
+            except Exception:
+                st.info("PDF not available")
 
     with col2:
-        try:
-            with open(f'data/reports/visibility_report_{brand_slug}.html', 'r') as f:
-                st.download_button(
-                    "🌐 Full HTML Report",
-                    data=f,
-                    file_name=f"visibility_report_{brand_slug}.html",
-                    mime="text/html"
-                )
-        except FileNotFoundError:
-            st.info("HTML report not available")
-
-    with col3:
         if data.get('raw_data') is not None:
             csv = data['raw_data'].to_csv(index=False)
             st.download_button(

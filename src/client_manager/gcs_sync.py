@@ -271,26 +271,33 @@ class GCSClientSync:
             print(f"✗ Failed to download prompt data: {e}")
             return False
 
-    def upload_test_results(self) -> bool:
+    def upload_test_results(self, client_slug: str = None) -> bool:
         """
         Upload test results to GCS for persistence across deployments.
 
         This includes:
-        - data/results/*.json (individual test results)
-        - data/results/results_summary.csv (summary CSV)
-        - data/results/monthly_scores.json (historical tracking)
+        - data/results/{client_slug}/*.json (individual test results)
+        - data/results/{client_slug}/results_summary.csv (summary CSV)
+        - data/results/{client_slug}/monthly_scores.json (historical tracking)
+
+        Args:
+            client_slug: Client identifier for per-client isolation
 
         Returns:
             True if successful, False otherwise
         """
-        results_prefix = 'test-results/'
+        if not client_slug:
+            print("⚠️ No client_slug provided to upload_test_results")
+            return False
+
+        results_prefix = f'test-results/{client_slug}/'
 
         try:
             uploaded_count = 0
-            results_dir = Path('data/results')
+            results_dir = Path(f'data/results/{client_slug}')
 
             if not results_dir.exists():
-                print("No test results directory found (this is OK for new setups)")
+                print(f"No test results directory found for {client_slug} (this is OK for new setups)")
                 return True
 
             # Upload results_summary.csv
@@ -319,66 +326,98 @@ class GCSClientSync:
                 uploaded_count += 1
 
             if uploaded_count > 0:
-                print(f"✓ Uploaded {uploaded_count} test result files to GCS")
+                print(f"✓ Uploaded {uploaded_count} test result files to GCS for {client_slug}")
             else:
-                print("No test results to upload")
+                print(f"No test results to upload for {client_slug}")
 
             return True
 
         except Exception as e:
-            print(f"✗ Failed to upload test results: {e}")
+            print(f"✗ Failed to upload test results for {client_slug}: {e}")
             return False
 
-    def download_test_results(self, local_dir: str = 'data') -> bool:
+    def download_test_results(self, client_slug: str = None, local_dir: str = 'data') -> bool:
         """
-        Download test results from GCS.
+        Download test results from GCS for a specific client.
 
         Args:
+            client_slug: Client identifier for per-client isolation (if None, downloads all)
             local_dir: Base local directory
 
         Returns:
             True if successful, False otherwise
         """
-        results_prefix = 'test-results/'
-
         try:
             local_path = Path(local_dir)
-            results_dir = local_path / 'results'
-            results_dir.mkdir(parents=True, exist_ok=True)
-
-            # List all blobs with test-results/ prefix
-            blobs = list(self.bucket.list_blobs(prefix=results_prefix))
-
-            if not blobs:
-                print("No test results found in GCS (this is OK for first run)")
-                return True
-
             downloaded_count = 0
-            for blob in blobs:
-                # Skip directory markers
-                if blob.name.endswith('/'):
-                    continue
 
-                # Extract relative path after test-results/
-                relative_path = blob.name[len(results_prefix):]
+            if client_slug:
+                # Download for specific client
+                results_prefix = f'test-results/{client_slug}/'
+                results_dir = local_path / 'results' / client_slug
+                results_dir.mkdir(parents=True, exist_ok=True)
 
-                # Determine destination
-                if relative_path.startswith('tests/'):
-                    # Individual test files go in data/results/
-                    filename = Path(relative_path).name
-                    destination = results_dir / filename
-                else:
-                    # Main files go directly in data/results/
-                    destination = results_dir / relative_path
+                blobs = list(self.bucket.list_blobs(prefix=results_prefix))
 
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                blob.download_to_filename(str(destination))
-                downloaded_count += 1
+                if not blobs:
+                    print(f"No test results found in GCS for {client_slug} (this is OK for first run)")
+                    return True
 
-            if downloaded_count > 0:
-                print(f"✓ Downloaded {downloaded_count} test result files from GCS")
+                for blob in blobs:
+                    if blob.name.endswith('/'):
+                        continue
+
+                    relative_path = blob.name[len(results_prefix):]
+
+                    if relative_path.startswith('tests/'):
+                        filename = Path(relative_path).name
+                        destination = results_dir / filename
+                    else:
+                        destination = results_dir / relative_path
+
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                    blob.download_to_filename(str(destination))
+                    downloaded_count += 1
+
+                if downloaded_count > 0:
+                    print(f"✓ Downloaded {downloaded_count} test result files for {client_slug}")
+
             else:
-                print("No test results to download")
+                # Download for all clients
+                results_prefix = 'test-results/'
+                blobs = list(self.bucket.list_blobs(prefix=results_prefix))
+
+                if not blobs:
+                    print("No test results found in GCS (this is OK for first run)")
+                    return True
+
+                for blob in blobs:
+                    if blob.name.endswith('/'):
+                        continue
+
+                    # Parse: test-results/{client_slug}/...
+                    relative_path = blob.name[len(results_prefix):]
+                    parts = relative_path.split('/', 1)
+                    if len(parts) < 2:
+                        continue
+
+                    blob_client_slug = parts[0]
+                    file_path = parts[1]
+
+                    results_dir = local_path / 'results' / blob_client_slug
+
+                    if file_path.startswith('tests/'):
+                        filename = Path(file_path).name
+                        destination = results_dir / filename
+                    else:
+                        destination = results_dir / file_path
+
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                    blob.download_to_filename(str(destination))
+                    downloaded_count += 1
+
+                if downloaded_count > 0:
+                    print(f"✓ Downloaded {downloaded_count} test result files from GCS")
 
             return True
 
@@ -386,44 +425,33 @@ class GCSClientSync:
             print(f"✗ Failed to download test results: {e}")
             return False
 
-    def upload_reports(self, client_name: str = None) -> bool:
+    def upload_reports(self, client_slug: str = None) -> bool:
         """
-        Upload report files to GCS for persistence.
+        Upload report files to GCS for persistence with per-client isolation.
 
         Args:
-            client_name: Optional client name to upload only that client's reports.
-                        If None, uploads all reports.
+            client_slug: Client identifier for per-client isolation
 
         Returns:
             True if successful, False otherwise
         """
-        reports_prefix = 'reports/'
+        if not client_slug:
+            print("⚠️ No client_slug provided to upload_reports")
+            return False
+
+        reports_prefix = f'reports/{client_slug}/'
 
         try:
             uploaded_count = 0
-            reports_dir = Path('data/reports')
+            reports_dir = Path(f'data/reports/{client_slug}')
 
             if not reports_dir.exists():
-                print("No reports directory found")
+                print(f"No reports directory found for {client_slug}")
                 return True
 
-            # Get files to upload
-            if client_name:
-                client_slug = client_name.replace(' ', '_')
-                patterns = [
-                    f'*_{client_slug}.html',
-                    f'*_{client_slug}.pdf',
-                    f'*_{client_slug}.csv',
-                    f'*_{client_slug}.txt',
-                ]
-                files_to_upload = []
-                for pattern in patterns:
-                    files_to_upload.extend(reports_dir.glob(pattern))
-            else:
-                # Upload all report files
-                files_to_upload = list(reports_dir.glob('*.*'))
-                # Exclude hidden files
-                files_to_upload = [f for f in files_to_upload if not f.name.startswith('.')]
+            # Upload all report files in the client's directory
+            files_to_upload = list(reports_dir.glob('*.*'))
+            files_to_upload = [f for f in files_to_upload if not f.name.startswith('.')]
 
             for report_file in files_to_upload:
                 gcs_path = f"{reports_prefix}{report_file.name}"
@@ -433,56 +461,89 @@ class GCSClientSync:
                 uploaded_count += 1
 
             if uploaded_count > 0:
-                print(f"✓ Uploaded {uploaded_count} report files to GCS")
+                print(f"✓ Uploaded {uploaded_count} report files to GCS for {client_slug}")
             else:
-                print("No reports to upload")
+                print(f"No reports to upload for {client_slug}")
 
             return True
 
         except Exception as e:
-            print(f"✗ Failed to upload reports: {e}")
+            print(f"✗ Failed to upload reports for {client_slug}: {e}")
             return False
 
-    def download_reports(self, local_dir: str = 'data') -> bool:
+    def download_reports(self, client_slug: str = None, local_dir: str = 'data') -> bool:
         """
-        Download report files from GCS.
+        Download report files from GCS with per-client isolation.
 
         Args:
+            client_slug: Client identifier for per-client isolation (if None, downloads all)
             local_dir: Base local directory
 
         Returns:
             True if successful, False otherwise
         """
-        reports_prefix = 'reports/'
-
         try:
             local_path = Path(local_dir)
-            reports_dir = local_path / 'reports'
-            reports_dir.mkdir(parents=True, exist_ok=True)
-
-            # List all blobs with reports/ prefix
-            blobs = list(self.bucket.list_blobs(prefix=reports_prefix))
-
-            if not blobs:
-                print("No reports found in GCS (this is OK for first run)")
-                return True
-
             downloaded_count = 0
-            for blob in blobs:
-                # Skip directory markers
-                if blob.name.endswith('/'):
-                    continue
 
-                # Extract filename
-                filename = blob.name[len(reports_prefix):]
-                destination = reports_dir / filename
+            if client_slug:
+                # Download for specific client
+                reports_prefix = f'reports/{client_slug}/'
+                reports_dir = local_path / 'reports' / client_slug
+                reports_dir.mkdir(parents=True, exist_ok=True)
 
-                blob.download_to_filename(str(destination))
-                downloaded_count += 1
-                print(f"✓ Downloaded gs://{self.bucket_name}/{blob.name} → {destination}")
+                blobs = list(self.bucket.list_blobs(prefix=reports_prefix))
 
-            if downloaded_count > 0:
-                print(f"✓ Downloaded {downloaded_count} report files from GCS")
+                if not blobs:
+                    print(f"No reports found in GCS for {client_slug} (this is OK for first run)")
+                    return True
+
+                for blob in blobs:
+                    if blob.name.endswith('/'):
+                        continue
+
+                    filename = blob.name[len(reports_prefix):]
+                    destination = reports_dir / filename
+
+                    blob.download_to_filename(str(destination))
+                    downloaded_count += 1
+                    print(f"✓ Downloaded gs://{self.bucket_name}/{blob.name} → {destination}")
+
+                if downloaded_count > 0:
+                    print(f"✓ Downloaded {downloaded_count} report files for {client_slug}")
+
+            else:
+                # Download for all clients
+                reports_prefix = 'reports/'
+                blobs = list(self.bucket.list_blobs(prefix=reports_prefix))
+
+                if not blobs:
+                    print("No reports found in GCS (this is OK for first run)")
+                    return True
+
+                for blob in blobs:
+                    if blob.name.endswith('/'):
+                        continue
+
+                    # Parse: reports/{client_slug}/filename
+                    relative_path = blob.name[len(reports_prefix):]
+                    parts = relative_path.split('/', 1)
+                    if len(parts) < 2:
+                        continue
+
+                    blob_client_slug = parts[0]
+                    filename = parts[1]
+
+                    reports_dir = local_path / 'reports' / blob_client_slug
+                    reports_dir.mkdir(parents=True, exist_ok=True)
+                    destination = reports_dir / filename
+
+                    blob.download_to_filename(str(destination))
+                    downloaded_count += 1
+                    print(f"✓ Downloaded gs://{self.bucket_name}/{blob.name} → {destination}")
+
+                if downloaded_count > 0:
+                    print(f"✓ Downloaded {downloaded_count} report files from GCS")
 
             return True
 

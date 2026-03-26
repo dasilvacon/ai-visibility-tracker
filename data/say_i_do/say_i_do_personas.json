@@ -1,39 +1,39 @@
 {
   "personas": [
     {
-      "id": "persona_buyer",
-      "name": "Active Buyer",
-      "weight": 0.4,
-      "description": "Consumers actively researching and ready to purchase Say I Do products",
-      "priority_topics": [
-        "product comparisons",
-        "reviews",
-        "pricing",
-        "best options"
-      ]
+      "id": "persona_1",
+      "name": "The Comparison Shopper",
+      "weight": 0.30,
+      "description": "Recently engaged couples actively evaluating wedding website platforms. They're comparing Say I Do against The Knot, Zola, WithJoy, and others — reading reviews, checking feature lists, and researching pricing tiers to find the best fit.",
+      "priority_topics": ["wedding website comparisons", "platform reviews", "competitor pricing", "feature comparisons", "the knot alternatives", "zola vs say i do", "withjoy reviews", "free wedding website tools"]
     },
     {
-      "id": "persona_researcher",
-      "name": "Information Seeker",
-      "weight": 0.35,
-      "description": "People learning about Say I Do products and how to use them",
-      "priority_topics": [
-        "how to",
-        "guides",
-        "tutorials",
-        "tips"
-      ]
-    },
-    {
-      "id": "persona_explorer",
-      "name": "Brand Explorer",
+      "id": "persona_2",
+      "name": "The Digital Invites Planner",
       "weight": 0.25,
-      "description": "Users discovering Say I Do and comparing with alternatives",
-      "priority_topics": [
-        "brand information",
-        "alternatives",
-        "comparisons"
-      ]
+      "description": "Couples focused on the invitations and save-the-dates side of wedding planning. They're exploring digital vs. print options, looking for design inspiration, and figuring out etiquette around online invitations. Say I Do's digital invitation features are their entry point.",
+      "priority_topics": ["digital wedding invitations", "save the date cards", "online invitation maker", "wedding invitation etiquette", "photo wedding invitations", "electronic invitations", "invitation design", "save the date tips"]
+    },
+    {
+      "id": "persona_3",
+      "name": "The First-Time Planner",
+      "weight": 0.20,
+      "description": "Overwhelmed couples early in their wedding planning journey who need guidance and how-tos. They're searching for tips, checklists, and best practices — often not yet committed to a platform but looking for one that can walk them through the process.",
+      "priority_topics": ["wedding planning tips", "wedding planning on a budget", "best wedding app", "wedding checklist", "wedding timeline", "how early to send invitations", "wedding planning platform", "wedding transportation tips"]
+    },
+    {
+      "id": "persona_4",
+      "name": "The Guest Experience Optimizer",
+      "weight": 0.15,
+      "description": "Couples who are past the big-picture planning and now focused on the guest-facing details — managing RSVPs, tracking dietary requirements, organizing seating, and making it easy for guests to share photos. They value tools that make the experience seamless for everyone.",
+      "priority_topics": ["online rsvp", "guest list management", "dietary requirement options", "wedding photo sharing", "rsvp app", "seating planner", "guest communication", "wedding registry"]
+    },
+    {
+      "id": "persona_5",
+      "name": "The Non-Traditional Couple",
+      "weight": 0.10,
+      "description": "Couples who aren't following the conventional wedding playbook. They're exploring alternatives to traditional ceremonies, elopements, or unconventional formats — and are drawn to platforms flexible enough to support their vision without imposing a cookie-cutter template.",
+      "priority_topics": ["alternatives to traditional wedding", "non-traditional ceremony", "elopement planning", "alternative wedding ideas", "unconventional wedding", "intimate wedding", "casual wedding", "destination wedding alternatives"]
     }
   ]
 }

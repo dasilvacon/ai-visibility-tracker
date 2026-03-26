@@ -1,7 +1,13 @@
 {
   "brand": {
     "name": "Ontario Caregiver Organization",
-    "aliases": [],
+    "aliases": [
+      "OCO",
+      "Ontario Caregiver",
+      "ontariocaregiver.ca",
+      "Ontario Caregiver Coalition",
+      "Ontario caregivers"
+    ],
     "description": "Provincial nonprofit improving the lives of Ontario's 4.2 million unpaid caregivers through free programs (helpline, peer support, coaching, SCALE mental health program) and working with health-system partners on caregiver inclusion practices.",
     "website": "https://ontariocaregiver.ca/",
     "business_goals": {

@@ -12,15 +12,17 @@ from datetime import datetime
 class ResultsTracker:
     """Tracks and logs visibility test results."""
 
-    def __init__(self, results_dir: str):
+    def __init__(self, client_slug: str, base_dir: str = "data/results"):
         """
-        Initialize the results tracker.
+        Initialize the results tracker with per-client isolation.
 
         Args:
-            results_dir: Directory to store results
+            client_slug: Client identifier (e.g., 'ontario_caregiver_organization')
+            base_dir: Base directory for results (default: data/results)
         """
-        self.results_dir = results_dir
-        os.makedirs(results_dir, exist_ok=True)
+        self.client_slug = client_slug
+        self.results_dir = os.path.join(base_dir, client_slug)
+        os.makedirs(self.results_dir, exist_ok=True)
 
         self.csv_fieldnames = [
             'test_id',

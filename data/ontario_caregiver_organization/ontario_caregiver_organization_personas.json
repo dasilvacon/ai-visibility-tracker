@@ -1,38 +1,139 @@
 {
   "personas": [
     {
-      "id": "persona_buyer",
-      "name": "Active Buyer",
-      "weight": 0.4,
-      "description": "Consumers actively researching and ready to purchase Ontario Caregiver Organization products",
+      "id": "adult_child_50plus",
+      "name": "Adult Child Caregiver (50+)",
+      "weight": 0.18,
+      "description": "Adult child of aging parent, triggered by hospital discharge or diagnosis",
+      "caregiving_role": "Adult child of aging parent",
+      "key_trigger": "Hospital discharge / diagnosis",
+      "priority_program": "Helpline + Coaching",
+      "top_barrier": "Doesn't know OCO exists",
       "priority_topics": [
-        "product comparisons",
-        "reviews",
-        "pricing",
-        "best options"
+        "hospital discharge planning",
+        "caring for aging parents",
+        "caregiver support helpline",
+        "caregiver coaching",
+        "navigating healthcare system"
       ]
     },
     {
-      "id": "persona_researcher",
-      "name": "Information Seeker",
-      "weight": 0.35,
-      "description": "People learning about Ontario Caregiver Organization products and how to use them",
+      "id": "adult_child_under50",
+      "name": "Adult Child Caregiver (Under 50)",
+      "weight": 0.15,
+      "description": "Sandwich generation adult child dealing with parent's progressive decline",
+      "caregiving_role": "Sandwich generation adult child",
+      "key_trigger": "Parent's progressive decline",
+      "priority_program": "Peer Support + SCALE",
+      "top_barrier": "Time / skepticism of soft support",
       "priority_topics": [
-        "how to",
-        "guides",
-        "tutorials",
-        "tips"
+        "sandwich generation support",
+        "balancing work and caregiving",
+        "caregiver peer support",
+        "caregiver mental health",
+        "progressive illness care"
       ]
     },
     {
-      "id": "persona_explorer",
-      "name": "Brand Explorer",
-      "weight": 0.25,
-      "description": "Users discovering Ontario Caregiver Organization and comparing with alternatives",
+      "id": "spousal_caregiver",
+      "name": "Spousal Caregiver",
+      "weight": 0.15,
+      "description": "Spousal caregiver experiencing gradual role intensification",
+      "caregiving_role": "Spousal caregiver",
+      "key_trigger": "Gradual role intensification",
+      "priority_program": "Peer Mentorship + Support Groups",
+      "top_barrier": "Doesn't identify as caregiver",
       "priority_topics": [
-        "brand information",
-        "alternatives",
-        "comparisons"
+        "caring for spouse",
+        "caregiver identity",
+        "caregiver burnout",
+        "peer mentorship",
+        "caregiver support groups"
+      ]
+    },
+    {
+      "id": "parent_complex_needs",
+      "name": "Parent of Child w/ Complex Needs",
+      "weight": 0.12,
+      "description": "Parent of child with complex needs, triggered by diagnosis or transition milestone",
+      "caregiving_role": "Parent of child with complex needs",
+      "key_trigger": "Diagnosis or transition milestone",
+      "priority_program": "Specialized Group + Toolkits",
+      "top_barrier": "Sees OCO as elder-care focused",
+      "priority_topics": [
+        "special needs parenting",
+        "transition planning",
+        "complex care coordination",
+        "caregiver resources",
+        "respite options"
+      ]
+    },
+    {
+      "id": "mental_health_caregiver",
+      "name": "Mental Health Caregiver",
+      "weight": 0.12,
+      "description": "Mental health caregiver triggered by loved one's crisis episode",
+      "caregiving_role": "Mental health caregiver",
+      "key_trigger": "Loved one's crisis episode",
+      "priority_program": "SCALE + Peer Support",
+      "top_barrier": "Stigma / privacy concerns",
+      "priority_topics": [
+        "mental health caregiving",
+        "supporting someone with mental illness",
+        "caregiver stress",
+        "SCALE program",
+        "confidential support"
+      ]
+    },
+    {
+      "id": "young_caregiver",
+      "name": "Young Caregiver (Under 26)",
+      "weight": 0.10,
+      "description": "Young carer caring for parent or grandparent during family crisis",
+      "caregiving_role": "Young carer (parent/grandparent)",
+      "key_trigger": "Family crisis / growing responsibility",
+      "priority_program": "Young Carer Group + Helpline",
+      "top_barrier": "Self-identification / visibility",
+      "priority_topics": [
+        "young carer support",
+        "teen caregiver",
+        "student caregiving",
+        "young adult caregiver",
+        "family responsibilities"
+      ]
+    },
+    {
+      "id": "healthcare_provider",
+      "name": "Healthcare Provider",
+      "weight": 0.09,
+      "description": "Healthcare provider dealing with staff burnout and caregiver communications",
+      "caregiving_role": "Healthcare provider",
+      "key_trigger": "Staff burnout / poor caregiver comms",
+      "priority_program": "ECP Hub + Learning Collaborative",
+      "top_barrier": "Organizational buy-in",
+      "priority_topics": [
+        "caregiver inclusion in healthcare",
+        "essential care partner",
+        "hospital caregiver policy",
+        "healthcare staff training",
+        "caregiver communication"
+      ]
+    },
+    {
+      "id": "employer_hr",
+      "name": "Employer / HR Leader",
+      "weight": 0.09,
+      "description": "HR/Employer seeing staff caregiving impact on work",
+      "caregiving_role": "HR/Employer",
+      "key_trigger": "Staff caregiving impact on work",
+      "priority_program": "Employer Toolkit + Webinars",
+      "top_barrier": "Doesn't know where to start",
+      "priority_topics": [
+        "caregiver-friendly workplace",
+        "employee caregiver support",
+        "workplace flexibility",
+        "caregiver leave policy",
+        "HR caregiver resources"
       ]
     }
   ]

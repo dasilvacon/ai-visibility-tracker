@@ -32,7 +32,8 @@ def get_last_test_date(client_name: str) -> Optional[datetime]:
     Returns:
         datetime of last test, or None if no tests have been run
     """
-    tracker = HistoricalTracker()
+    client_slug = client_name.replace(' ', '_').lower()
+    tracker = HistoricalTracker(client_slug=client_slug)
     history = tracker.get_client_history(client_name)
 
     if not history:
@@ -72,9 +73,61 @@ def can_run_test(client_name: str) -> tuple[bool, str]:
     return False, f"Tests are run monthly. Last test was {days_since_last_test} days ago. Next test available in {days_remaining} days ({next_date.strftime('%B %d, %Y')})."
 
 
+def get_approved_prompts_from_gcs(client_name: str) -> Optional[str]:
+    """
+    Download the latest approved prompts CSV from GCS for a client.
+
+    Args:
+        client_name: Name of the client
+
+    Returns:
+        Path to downloaded prompts file, or None if not found
+    """
+    try:
+        from google.cloud import storage
+
+        bucket_name = 'ai-visibility-reports-dasilva'
+        client = storage.Client()
+        bucket = client.bucket(bucket_name)
+
+        # Format client name for matching (replace spaces with underscores)
+        client_slug = client_name.replace(' ', '_')
+
+        # List blobs in prompt-data/approved/ matching this client
+        prefix = 'prompt-data/approved/'
+        blobs = list(bucket.list_blobs(prefix=prefix))
+
+        # Filter for this client's approved prompts
+        matching_blobs = [
+            blob for blob in blobs
+            if client_slug in blob.name and blob.name.endswith('.csv')
+        ]
+
+        if not matching_blobs:
+            print(f"No approved prompts found in GCS for {client_name}")
+            return None
+
+        # Sort by name (includes timestamp) to get the latest
+        matching_blobs.sort(key=lambda b: b.name, reverse=True)
+        latest_blob = matching_blobs[0]
+
+        # Download to temp file
+        temp_path = Path(f'data/temp_approved_{client_slug}.csv')
+        temp_path.parent.mkdir(parents=True, exist_ok=True)
+        latest_blob.download_to_filename(str(temp_path))
+
+        print(f"✓ Downloaded approved prompts from GCS: {latest_blob.name}")
+        return str(temp_path)
+
+    except Exception as e:
+        print(f"Could not fetch approved prompts from GCS: {e}")
+        return None
+
+
 def get_client_prompts_file(client_name: str) -> Optional[str]:
     """
     Find the prompts CSV file for a client.
+    Priority: 1) GCS approved prompts, 2) local client file, 3) generated_prompts.csv
 
     Args:
         client_name: Name of the client
@@ -82,7 +135,19 @@ def get_client_prompts_file(client_name: str) -> Optional[str]:
     Returns:
         Path to prompts file, or None if not found
     """
-    # Check data/generated_prompts.csv
+    # First, try to get approved prompts from GCS (source of truth)
+    gcs_prompts = get_approved_prompts_from_gcs(client_name)
+    if gcs_prompts:
+        return gcs_prompts
+
+    client_slug = client_name.replace(' ', '_').lower()
+
+    # Fallback: Check for client-specific prompts file in client subdirectory
+    client_prompts_file = Path(f'data/{client_slug}/{client_slug}_prompts.csv')
+    if client_prompts_file.exists():
+        return str(client_prompts_file)
+
+    # Fallback: Check main generated_prompts.csv
     prompts_file = Path('data/generated_prompts.csv')
 
     if not prompts_file.exists():
@@ -92,10 +157,22 @@ def get_client_prompts_file(client_name: str) -> Optional[str]:
     try:
         with open(prompts_file, 'r') as f:
             reader = csv.DictReader(f)
-            for row in reader:
-                if row.get('client_name') == client_name:
-                    # Found at least one prompt for this client
-                    return str(prompts_file)
+            fieldnames = reader.fieldnames or []
+
+            # If file has client_name column, check for matching client
+            if 'client_name' in fieldnames:
+                for row in reader:
+                    if row.get('client_name') == client_name:
+                        # Found at least one prompt for this client
+                        return str(prompts_file)
+            else:
+                # Legacy format without client_name column
+                # Check if there are any prompts at all
+                for row in reader:
+                    if row.get('prompt_text'):
+                        # Has prompts but no client_name - return file
+                        # (user needs to re-export with client_name)
+                        return str(prompts_file)
     except Exception:
         pass
 
@@ -112,13 +189,29 @@ def get_brand_config_file(client_name: str) -> Optional[str]:
     Returns:
         Path to brand config file, or None if not found
     """
-    # Convert client name to filename format (spaces to underscores, lowercase)
+    # First try to get the exact path from ClientRegistry (source of truth)
+    try:
+        from src.client_manager import ClientRegistry
+        registry = ClientRegistry()
+        client = registry.get_client(client_name)
+        if client:
+            brand_config_path = client.get('files', {}).get('brand_config')
+            if brand_config_path and Path(brand_config_path).exists():
+                return brand_config_path
+    except Exception:
+        pass
+
+    # Fallback: Convert client name to filename format and try common paths
     client_slug = client_name.replace(' ', '_')
 
-    # Check for brand config files
+    # Check for brand config files in various locations
     possible_paths = [
+        # Client subdirectory (new structure)
+        Path(f'data/{client_slug.lower()}/{client_slug.lower()}_brand_config.json'),
+        # Root data directory (legacy structure)
         Path(f'data/{client_slug}_brand_config.json'),
         Path(f'data/{client_slug.lower()}_brand_config.json'),
+        # Brand configs directory
         Path(f'data/brand_configs/{client_slug}_brand_config.json'),
     ]
 
@@ -144,17 +237,202 @@ def count_client_prompts(prompts_file: str, client_name: str) -> int:
         count = 0
         with open(prompts_file, 'r') as f:
             reader = csv.DictReader(f)
+            fieldnames = reader.fieldnames or []
+
             for row in reader:
-                if row.get('client_name') == client_name:
-                    count += 1
+                # If file has client_name column, filter by client
+                if 'client_name' in fieldnames:
+                    if row.get('client_name') == client_name:
+                        count += 1
+                else:
+                    # Legacy format - count all prompts
+                    if row.get('prompt_text'):
+                        count += 1
         return count
     except Exception:
         return 0
 
 
+def get_test_status_files(client_name: str) -> tuple:
+    """Get paths for test status files."""
+    client_slug = client_name.replace(' ', '_')
+    log_file = Path(f'data/reports/test_run_{client_slug}.log')
+    pid_file = Path(f'data/reports/test_run_{client_slug}.pid')
+    status_file = Path(f'data/reports/test_run_{client_slug}.status')
+    return log_file, pid_file, status_file
+
+
+def is_test_running(client_name: str) -> bool:
+    """Check if a test is currently running for this client."""
+    _, pid_file, status_file = get_test_status_files(client_name)
+
+    if not pid_file.exists():
+        return False
+
+    try:
+        pid = int(pid_file.read_text().strip())
+        # Check if process is still running
+        os.kill(pid, 0)  # Signal 0 just checks if process exists
+        return True
+    except (ProcessLookupError, ValueError, FileNotFoundError):
+        # Process not running - clean up pid file
+        if pid_file.exists():
+            pid_file.unlink()
+        return False
+
+
+def get_test_progress(client_name: str) -> dict:
+    """Get current test progress from log file."""
+    log_file, pid_file, status_file = get_test_status_files(client_name)
+
+    result = {
+        'running': is_test_running(client_name),
+        'log_lines': [],
+        'completed': False,
+        'success': None,
+        'prompts_done': 0,
+        'total_prompts': 0
+    }
+
+    # Check if test completed
+    if status_file.exists():
+        status = status_file.read_text().strip()
+        result['completed'] = True
+        result['success'] = (status == 'success')
+
+    # Read log file
+    if log_file.exists():
+        try:
+            with open(log_file, 'r') as f:
+                lines = f.readlines()
+                result['log_lines'] = [line.rstrip() for line in lines[-30:]]  # Last 30 lines
+
+                # Parse progress from log
+                for line in lines:
+                    if 'Testing prompt:' in line and '[' in line:
+                        # Parse "[X/Y] Testing prompt:"
+                        try:
+                            progress = line.split('[')[1].split(']')[0]
+                            current, total = progress.split('/')
+                            result['prompts_done'] = int(current)
+                            result['total_prompts'] = int(total)
+                        except:
+                            pass
+        except Exception:
+            pass
+
+    return result
+
+
+def run_reanalysis(client_name: str, brand_config: str) -> bool:
+    """
+    Re-analyze existing test results without re-running AI queries.
+
+    This discovers new competitors from saved AI responses and regenerates reports.
+
+    Args:
+        client_name: Name of the client
+        brand_config: Path to brand config JSON file
+
+    Returns:
+        True if re-analysis started successfully, False otherwise
+    """
+    try:
+        # Check if test already running
+        if is_test_running(client_name):
+            st.warning("⚠️ A test is already running for this client. Please wait for it to complete.")
+            return False
+
+        # Get status file paths
+        log_file, pid_file, status_file = get_test_status_files(client_name)
+
+        # Clean up old status files
+        for f in [log_file, pid_file, status_file]:
+            if f.exists():
+                f.unlink()
+
+        # Ensure reports directory exists
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+
+        client_slug = client_name.replace(' ', '_')
+
+        # Set working directory to project root
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        parent_dir = os.path.dirname(script_dir)
+
+        # Build command - just analyze, no prompts (uses existing results)
+        main_cmd = f"python main.py --analyze --brand-config {brand_config}"
+        client_slug_escaped = client_slug.replace("'", "'\\''").lower()
+        wrapper_cmd = f'''
+cd {parent_dir}
+{main_cmd}
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ]; then
+    echo "success" > {status_file}
+    echo ">>> Uploading results and reports to GCS..."
+    python3 -c "
+from src.client_manager.gcs_sync import GCSClientSync
+try:
+    gcs_sync = GCSClientSync()
+    client_slug = '{client_slug_escaped}'
+    print(f'Uploading reports for {{client_slug}}...')
+    gcs_sync.upload_reports(client_slug)
+    print('GCS upload complete!')
+except Exception as e:
+    print(f'GCS upload failed: {{e}}')
+"
+else
+    echo "failed" > {status_file}
+fi
+exit $EXIT_CODE
+'''
+
+        # Pass API keys as environment variables (needed for any API calls during analysis)
+        env = os.environ.copy()
+        try:
+            api_keys = st.secrets.get('api_keys', {})
+            if api_keys.get('openai'):
+                env['OPENAI_API_KEY'] = api_keys['openai']
+            if api_keys.get('anthropic'):
+                env['ANTHROPIC_API_KEY'] = api_keys['anthropic']
+            if api_keys.get('perplexity'):
+                env['PERPLEXITY_API_KEY'] = api_keys['perplexity']
+            if api_keys.get('gemini'):
+                env['GEMINI_API_KEY'] = api_keys['gemini']
+        except Exception:
+            pass
+
+        # Open log file for output
+        with open(log_file, 'w') as log:
+            log.write(f"=== Re-analysis started at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===\n")
+            log.write(f"Client: {client_name}\n")
+            log.write(f"Mode: Re-analyze existing results (no new AI queries)\n")
+            log.write(f"{'='*60}\n\n")
+            log.flush()
+
+            # Start detached background process
+            process = subprocess.Popen(
+                ['bash', '-c', wrapper_cmd],
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                env=env,
+                cwd=parent_dir,
+                start_new_session=True
+            )
+
+        # Save PID for status checking
+        pid_file.write_text(str(process.pid))
+
+        return True
+
+    except Exception as e:
+        st.error(f"Error starting re-analysis: {str(e)}")
+        return False
+
+
 def run_visibility_test(client_name: str, prompts_file: str, brand_config: str) -> bool:
     """
-    Run visibility test for a client using CLI.
+    Start visibility test for a client as a background process.
 
     Args:
         client_name: Name of the client
@@ -162,18 +440,46 @@ def run_visibility_test(client_name: str, prompts_file: str, brand_config: str) 
         brand_config: Path to brand config JSON file
 
     Returns:
-        True if successful, False otherwise
+        True if test started successfully, False otherwise
     """
     try:
+        # Check if test already running
+        if is_test_running(client_name):
+            st.warning("⚠️ A test is already running for this client. Please wait for it to complete.")
+            return False
+
+        # Get status file paths
+        log_file, pid_file, status_file = get_test_status_files(client_name)
+
+        # Clean up old status files
+        for f in [log_file, pid_file, status_file]:
+            if f.exists():
+                f.unlink()
+
+        # Ensure reports directory exists
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+
         # Create a temporary filtered prompts file for this client
-        temp_prompts = Path(f'data/temp_{client_name.replace(" ", "_")}_prompts.csv')
+        client_slug = client_name.replace(' ', '_')
+        temp_prompts = Path(f'data/temp_{client_slug}_prompts.csv')
 
         # Filter prompts for this client
         with open(prompts_file, 'r') as f_in:
             reader = csv.DictReader(f_in)
-            fieldnames = reader.fieldnames
+            fieldnames = reader.fieldnames or []
+            all_rows = list(reader)
 
-            rows = [row for row in reader if row.get('client_name') == client_name]
+            # Check if file has client_name column
+            if 'client_name' in fieldnames:
+                # Filter by client_name
+                rows = [row for row in all_rows if row.get('client_name') == client_name]
+            else:
+                st.error(f"⚠️ Prompts file missing 'client_name' column. Please regenerate and export prompts for {client_name}.")
+                return False
+
+        if not rows:
+            st.error(f"⚠️ No prompts found for {client_name}. Please generate and export prompts first.")
+            return False
 
         # Write filtered prompts
         with open(temp_prompts, 'w', newline='') as f_out:
@@ -181,45 +487,86 @@ def run_visibility_test(client_name: str, prompts_file: str, brand_config: str) 
             writer.writeheader()
             writer.writerows(rows)
 
-        # Run main.py with the filtered prompts
-        cmd = [
-            'python',
-            'main.py',
-            '--prompts', str(temp_prompts),
-            '--analyze',
-            '--brand-config', brand_config
-        ]
+        # Set working directory to project root
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        parent_dir = os.path.dirname(script_dir)
 
-        # Run the command and capture output
-        process = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            bufsize=1
-        )
+        # Build command with wrapper script to handle completion status
+        # We use bash -c to run the command and write status on completion
+        # IMPORTANT: The wrapper script MUST upload to GCS before exiting
+        # because Cloud Run containers are ephemeral and data is lost otherwise
+        main_cmd = f"python main.py --prompts {temp_prompts} --analyze --brand-config {brand_config}"
+        client_slug_escaped = client_slug.replace("'", "'\\''").lower()
+        wrapper_cmd = f'''
+cd {parent_dir}
+{main_cmd}
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ]; then
+    echo "success" > {status_file}
+    echo ">>> Uploading results and reports to GCS..."
+    # Upload to GCS immediately - critical for Cloud Run persistence
+    # Uses per-client isolation: test-results/{client_slug}/ and reports/{client_slug}/
+    python3 -c "
+from src.client_manager.gcs_sync import GCSClientSync
+try:
+    gcs_sync = GCSClientSync()
+    client_slug = '{client_slug_escaped}'
+    print(f'Uploading test results for {{client_slug}}...')
+    gcs_sync.upload_test_results(client_slug)
+    print(f'Uploading reports for {{client_slug}}...')
+    gcs_sync.upload_reports(client_slug)
+    print('GCS upload complete!')
+except Exception as e:
+    print(f'GCS upload failed: {{e}}')
+"
+else
+    echo "failed" > {status_file}
+fi
+# Clean up temp prompts file
+rm -f {temp_prompts}
+exit $EXIT_CODE
+'''
 
-        # Stream output in real-time
-        output_container = st.empty()
-        output_lines = []
+        # Pass API keys as environment variables
+        env = os.environ.copy()
+        try:
+            api_keys = st.secrets.get('api_keys', {})
+            if api_keys.get('openai'):
+                env['OPENAI_API_KEY'] = api_keys['openai']
+            if api_keys.get('anthropic'):
+                env['ANTHROPIC_API_KEY'] = api_keys['anthropic']
+            if api_keys.get('perplexity'):
+                env['PERPLEXITY_API_KEY'] = api_keys['perplexity']
+            if api_keys.get('gemini'):
+                env['GEMINI_API_KEY'] = api_keys['gemini']
+        except Exception:
+            pass
 
-        for line in iter(process.stdout.readline, ''):
-            if line:
-                output_lines.append(line.rstrip())
-                # Show last 20 lines
-                display_lines = output_lines[-20:]
-                output_container.code('\n'.join(display_lines))
+        # Open log file for output
+        with open(log_file, 'w') as log:
+            log.write(f"=== Test started at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===\n")
+            log.write(f"Client: {client_name}\n")
+            log.write(f"Prompts: {len(rows)}\n")
+            log.write(f"{'='*60}\n\n")
+            log.flush()
 
-        process.wait()
+            # Start detached background process
+            process = subprocess.Popen(
+                ['bash', '-c', wrapper_cmd],
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                env=env,
+                cwd=parent_dir,
+                start_new_session=True  # Detach from parent process
+            )
 
-        # Clean up temp file
-        if temp_prompts.exists():
-            temp_prompts.unlink()
+        # Save PID for status checking
+        pid_file.write_text(str(process.pid))
 
-        return process.returncode == 0
+        return True  # Test started successfully
 
     except Exception as e:
-        st.error(f"Error running visibility test: {str(e)}")
+        st.error(f"Error starting visibility test: {str(e)}")
         return False
 
 
@@ -314,20 +661,32 @@ def render():
             st.caption("Create brand config")
 
     with check_col3:
-        # Check if API keys are configured (either in config file OR environment variables)
+        # Check if API keys are configured (Streamlit secrets, env vars, or config file)
         config_file = Path('config/config.json')
         has_api_keys = False
 
-        # Check environment variables first (Cloud Run)
-        env_keys = [
-            os.getenv('OPENAI_API_KEY'),
-            os.getenv('ANTHROPIC_API_KEY'),
-            os.getenv('PERPLEXITY_API_KEY'),
-            os.getenv('GEMINI_API_KEY')
-        ]
-        has_api_keys = any(key and not key.startswith('YOUR_') for key in env_keys if key)
+        # Check Streamlit secrets first (Cloud Run deployment)
+        try:
+            api_keys_section = st.secrets.get('api_keys', {})
+            if api_keys_section:
+                has_api_keys = any(
+                    key and not str(key).startswith('YOUR_')
+                    for key in api_keys_section.values()
+                )
+        except Exception:
+            pass
 
-        # If no env vars, check config file (local development)
+        # Check environment variables (Cloud Run alternative)
+        if not has_api_keys:
+            env_keys = [
+                os.getenv('OPENAI_API_KEY'),
+                os.getenv('ANTHROPIC_API_KEY'),
+                os.getenv('PERPLEXITY_API_KEY'),
+                os.getenv('GEMINI_API_KEY')
+            ]
+            has_api_keys = any(key and not key.startswith('YOUR_') for key in env_keys if key)
+
+        # Check config file (local development)
         if not has_api_keys and config_file.exists():
             try:
                 with open(config_file, 'r') as f:
@@ -403,52 +762,61 @@ def render():
 
     st.markdown("---")
 
-    # Run test section
-    st.markdown("### 🚀 Run Test")
+    # Check if a test is currently running
+    test_running = is_test_running(client_name)
+    progress = get_test_progress(client_name)
 
-    st.info(f"""
-    **What will happen:**
-    1. Load {count_client_prompts(prompts_file, client_name)} prompts for {client_name}
-    2. Test each prompt across available AI platforms (OpenAI, Anthropic, etc.)
-    3. Analyze brand visibility and competitor mentions
-    4. Generate HTML report, PDF summary, and CSV exports
-    5. Update historical tracking data
+    if test_running:
+        # Show running test status
+        st.markdown("### 🏃 Test In Progress")
 
-    **Estimated time:** 5-15 minutes depending on prompt count
-    """)
+        st.info(f"""
+        **Test is running in the background!**
 
-    if st.button("▶️ Start Visibility Test", type="primary", use_container_width=True):
-        st.markdown("---")
-        st.markdown("### 📊 Test Progress")
+        You can close this browser tab - the test will continue running on the server.
+        Refresh this page to check progress.
+        """)
 
-        with st.spinner("Initializing test..."):
-            time.sleep(1)
+        # Show progress
+        if progress['total_prompts'] > 0:
+            pct = int((progress['prompts_done'] / progress['total_prompts']) * 100)
+            st.progress(pct / 100)
+            st.caption(f"Progress: {progress['prompts_done']}/{progress['total_prompts']} prompts ({pct}%)")
+        else:
+            st.progress(0)
+            st.caption("Initializing...")
 
-        st.info("🏃 Running visibility tests... This may take several minutes.")
+        # Show recent log output
+        st.markdown("**Recent Output:**")
+        if progress['log_lines']:
+            st.code('\n'.join(progress['log_lines'][-15:]))
+        else:
+            st.caption("Waiting for output...")
 
-        # Create progress section
-        progress_bar = st.progress(0)
-        status_text = st.empty()
+        # Refresh button
+        if st.button("🔄 Refresh Status", use_container_width=True):
+            st.rerun()
 
-        status_text.text("Starting test execution...")
-        progress_bar.progress(10)
+        # Auto-refresh every 10 seconds
+        time.sleep(10)
+        st.rerun()
 
-        # Run the test
-        success = run_visibility_test(client_name, prompts_file, brand_config)
+    elif progress['completed']:
+        # Test just completed
+        st.markdown("### 📊 Test Completed")
 
-        progress_bar.progress(100)
-
-        if success:
+        if progress['success']:
             st.success("✅ Test completed successfully!")
 
             # Sync results and reports to GCS for persistence
             try:
                 from src.client_manager.gcs_sync import GCSClientSync
                 gcs_sync = GCSClientSync()
+                client_slug = client_name.replace(' ', '_').lower()
 
                 with st.spinner("☁️ Syncing data to cloud storage..."):
-                    gcs_sync.upload_test_results()
-                    gcs_sync.upload_reports(client_name)
+                    gcs_sync.upload_test_results(client_slug)
+                    gcs_sync.upload_reports(client_slug)
 
                 st.success("☁️ Data synced to cloud storage")
             except Exception as e:
@@ -467,6 +835,11 @@ def render():
             - Download exports (CSV, PDF) for your team
             """)
 
+            # Show final log output
+            with st.expander("📋 Full Test Log"):
+                if progress['log_lines']:
+                    st.code('\n'.join(progress['log_lines']))
+
             # Add button to go to dashboard
             col1, col2 = st.columns(2)
 
@@ -479,15 +852,92 @@ def render():
                 if st.button("📈 View Historical Trends", use_container_width=True):
                     st.session_state.page = 'Historical Trends'
                     st.rerun()
-        else:
-            st.error("""
-            ❌ Test failed. Please check the output above for error details.
 
+            # Option to run another test
+            if st.button("🔄 Clear & Run New Test"):
+                # Clear status files
+                log_file, pid_file, status_file = get_test_status_files(client_name)
+                for f in [status_file]:
+                    if f.exists():
+                        f.unlink()
+                st.rerun()
+        else:
+            st.error("❌ Test failed.")
+
+            # Show log output for debugging
+            st.markdown("**Error Log:**")
+            if progress['log_lines']:
+                st.code('\n'.join(progress['log_lines']))
+
+            st.markdown("""
             **Common issues:**
             - API key invalid or rate limited
             - Network connectivity problems
             - Invalid brand configuration
             """)
+
+            # Option to retry
+            if st.button("🔄 Clear & Retry"):
+                log_file, pid_file, status_file = get_test_status_files(client_name)
+                for f in [log_file, pid_file, status_file]:
+                    if f.exists():
+                        f.unlink()
+                st.rerun()
+
+    else:
+        # No test running - show start button
+        st.markdown("### 🚀 Run Test")
+
+        st.info(f"""
+        **What will happen:**
+        1. Load {count_client_prompts(prompts_file, client_name)} prompts for {client_name}
+        2. Test each prompt across available AI platforms (OpenAI, Anthropic, etc.)
+        3. Analyze brand visibility and competitor mentions
+        4. Generate HTML report, PDF summary, and CSV exports
+        5. Update historical tracking data
+
+        **Estimated time:** 30-60 minutes for full test (runs in background)
+
+        **Important:** The test runs on the server - you can close this tab and come back later!
+        """)
+
+        if st.button("▶️ Start Visibility Test", type="primary", use_container_width=True):
+            with st.spinner("Starting test..."):
+                success = run_visibility_test(client_name, prompts_file, brand_config)
+
+            if success:
+                st.success("✅ Test started! Refreshing to show progress...")
+                time.sleep(2)
+                st.rerun()
+            else:
+                st.error("❌ Failed to start test. Check error messages above.")
+
+        # Re-analyze section
+        st.markdown("---")
+        st.markdown("### 🔄 Re-Analyze Existing Results")
+
+        st.info("""
+        **Re-analyze without new AI queries:**
+
+        This option re-processes your existing test results to:
+        - **Discover new competitors** mentioned in AI responses
+        - **Regenerate reports** with updated analysis
+        - **Update competitor tracking** without spending API credits
+
+        Use this if you've updated your competitor list or want to find competitors
+        that weren't being tracked when the original test ran.
+        """)
+
+        if st.button("🔄 Re-Analyze Results", use_container_width=True):
+            with st.spinner("Starting re-analysis..."):
+                success = run_reanalysis(client_name, brand_config)
+
+            if success:
+                st.success("✅ Re-analysis started! Refreshing to show progress...")
+                time.sleep(2)
+                st.rerun()
+            else:
+                st.error("❌ Failed to start re-analysis. Check error messages above.")
 
     st.markdown("---")
 

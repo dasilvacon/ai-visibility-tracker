@@ -240,6 +240,7 @@ class CompetitorAnalyzer:
                                    listed_competitors: List[str]) -> Dict[str, Any]:
         """
         Find every brand mentioned in responses, not just listed competitors.
+        Uses industry-agnostic patterns to detect brand names.
 
         Args:
             scored_results: List of results with visibility scores
@@ -252,37 +253,130 @@ class CompetitorAnalyzer:
         listed_competitor_set = set(c.lower() for c in listed_competitors)
         brand_name_lower = self.brand_name.lower()
 
-        # Common beauty/makeup brand patterns
-        beauty_brand_patterns = [
-            r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})\s+(?:Beauty|Cosmetics|Makeup|Labs?)\b',
-            r'\b(?:Urban Decay|MAC|NARS|Fenty Beauty|Rare Beauty|Ilia|Glossier|Milk Makeup)\b',
-            r'\b(?:Bobbi Brown|Laura Mercier|Hourglass|Benefit|Too Faced|Tarte|Smashbox)\b',
-            r'\b(?:Maybelline|L\'Or[eé]al|NYX|e\.l\.f\.|ColourPop|Revlon|CoverGirl)\b',
-            r'\b(?:Dior|Chanel|YSL|Givenchy|Guerlain|Lancome|Armani)\b',
-            r'\b(?:Estee Lauder|Clinique|MAC|Bobbi Brown)\b',
-        ]
+        # Also add brand aliases to skip list
+        brand_aliases_lower = set()
+        for word in brand_name_lower.split():
+            if len(word) > 2:
+                brand_aliases_lower.add(word)
+
+        # Common words to exclude (not brand names)
+        common_words = {
+            # Generic words
+            'the', 'and', 'for', 'with', 'your', 'this', 'that', 'they', 'their',
+            'what', 'when', 'where', 'which', 'who', 'how', 'why', 'can', 'will',
+            'should', 'would', 'could', 'have', 'has', 'had', 'been', 'being',
+            'some', 'most', 'many', 'much', 'more', 'other', 'another', 'each',
+            'every', 'both', 'all', 'any', 'few', 'several', 'such', 'only',
+            # Common nouns often capitalized
+            'company', 'brand', 'service', 'product', 'platform', 'website',
+            'organization', 'business', 'solution', 'option', 'alternative',
+            'provider', 'tool', 'app', 'application', 'software', 'system',
+            # Action words
+            'offers', 'provides', 'includes', 'features', 'supports', 'enables',
+            'helps', 'allows', 'makes', 'creates', 'delivers', 'gives',
+            # Adjectives
+            'best', 'top', 'great', 'good', 'new', 'free', 'easy', 'simple',
+            'popular', 'leading', 'major', 'main', 'key', 'primary', 'first',
+            # Time/location
+            'today', 'here', 'there', 'now', 'then', 'often', 'always', 'never',
+            # Articles and prepositions
+            'also', 'just', 'like', 'about', 'into', 'over', 'after', 'before',
+            # Common sentence starters
+            'however', 'therefore', 'additionally', 'furthermore', 'moreover',
+            'meanwhile', 'finally', 'overall', 'generally', 'typically',
+            # Generic category words (often appear capitalized in lists)
+            'services', 'products', 'options', 'features', 'benefits', 'tools',
+            'resources', 'solutions', 'alternatives', 'providers', 'platforms',
+        }
 
         for result in scored_results:
-            response_text = result.get('response', '')
+            response_text = result.get('response', '') or result.get('response_text', '')
             if not response_text:
                 continue
 
-            # Try pattern matching for brand names
-            for pattern in beauty_brand_patterns:
-                matches = re.finditer(pattern, response_text, re.IGNORECASE)
-                for match in matches:
-                    brand = match.group(0).strip()
+            # PATTERN 1: Capitalized multi-word phrases (2-4 words)
+            # Matches things like "The Knot", "Home Instead", "Ontario Caregiver Organization"
+            multi_word_pattern = r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})\b'
+            matches = re.findall(multi_word_pattern, response_text)
+            for match in matches:
+                brand = match.strip()
+                brand_lower = brand.lower()
+
+                # Skip if common phrase or already tracked
+                words = brand_lower.split()
+                if any(w in common_words for w in words):
+                    continue
+                if brand_lower == brand_name_lower or brand_lower in listed_competitor_set:
+                    continue
+                if brand_lower in brand_aliases_lower:
+                    continue
+
+                all_brands[brand] += 1
+
+            # PATTERN 2: Single capitalized words that look like brand names
+            # (followed by context clues like "offers", "provides", ".com", etc.)
+            brand_context_pattern = r'\b([A-Z][a-z]{2,})\b(?:\s+(?:offers|provides|is|has|allows|lets|helps|enables|\.com|website|platform|app))'
+            matches = re.findall(brand_context_pattern, response_text)
+            for match in matches:
+                brand = match.strip()
+                brand_lower = brand.lower()
+
+                if brand_lower in common_words:
+                    continue
+                if brand_lower == brand_name_lower or brand_lower in listed_competitor_set:
+                    continue
+                if brand_lower in brand_aliases_lower:
+                    continue
+                if len(brand) < 3:
+                    continue
+
+                all_brands[brand] += 1
+
+            # PATTERN 3: Names in list contexts
+            # "options include X, Y, and Z" or "such as X, Y, Z" or "like X, Y, and Z"
+            list_pattern = r'(?:such as|like|including|options include|consider|try|check out|look at)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?(?:\s*,\s*[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)*(?:\s*,?\s*(?:and|or)\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)?)'
+            matches = re.findall(list_pattern, response_text, re.IGNORECASE)
+            for match in matches:
+                # Split by comma, "and", "or"
+                items = re.split(r'\s*,\s*|\s+and\s+|\s+or\s+', match)
+                for item in items:
+                    brand = item.strip()
                     brand_lower = brand.lower()
 
-                    # Skip if it's the main brand or already in competitors
-                    if brand_lower == brand_name_lower:
+                    if brand_lower in common_words:
                         continue
-                    if brand_lower in listed_competitor_set:
+                    if brand_lower == brand_name_lower or brand_lower in listed_competitor_set:
+                        continue
+                    if brand_lower in brand_aliases_lower:
+                        continue
+                    if len(brand) < 2:
+                        continue
+                    # Must start with capital
+                    if not brand[0].isupper():
                         continue
 
                     all_brands[brand] += 1
 
-            # Also check visibility data for competitors already found
+            # PATTERN 4: Domains/URLs mentioned
+            # Extract brand names from URLs like "theknot.com" or "withjoy.com"
+            url_pattern = r'(?:https?://)?(?:www\.)?([a-z]+)\.(?:com|org|net|io|co)\b'
+            matches = re.findall(url_pattern, response_text, re.IGNORECASE)
+            for match in matches:
+                brand = match.strip().title()  # Convert to title case
+                brand_lower = brand.lower()
+
+                if brand_lower in common_words:
+                    continue
+                if brand_lower == brand_name_lower or brand_lower in listed_competitor_set:
+                    continue
+                if brand_lower in brand_aliases_lower:
+                    continue
+                if len(brand) < 3:
+                    continue
+
+                all_brands[brand] += 1
+
+            # Also check visibility data for competitors already found by scorer
             visibility = result.get('visibility', {})
             competitors = visibility.get('competitors_mentioned', [])
             for comp in competitors:
@@ -296,9 +390,13 @@ class CompetitorAnalyzer:
         # Sort by frequency
         sorted_brands = sorted(all_brands.items(), key=lambda x: x[1], reverse=True)
 
-        # Calculate mention rates
+        # Filter out low-quality matches and calculate mention rates
         unlisted_brands = []
         for brand, count in sorted_brands:
+            # Skip if only mentioned once (likely noise)
+            if count < 2:
+                continue
+
             mention_rate = (count / total_responses * 100) if total_responses > 0 else 0
             unlisted_brands.append({
                 'name': brand,
@@ -329,5 +427,5 @@ class CompetitorAnalyzer:
             'recommendations': [
                 b for b in unlisted_brands if b['should_track']
             ][:5],  # Top 5 recommendations
-            'for_brand_config': for_brand_config[:15]  # NEW: Ready for brand_config.json
+            'for_brand_config': for_brand_config[:15]  # Ready for brand_config.json
         }

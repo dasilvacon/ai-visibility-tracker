@@ -16,15 +16,18 @@ from typing import Dict, Any, List, Optional
 class HistoricalTracker:
     """Tracks visibility metrics over time for monthly comparison."""
 
-    def __init__(self, history_file: str = "data/results/monthly_scores.json"):
+    def __init__(self, client_slug: str, base_dir: str = "data/results"):
         """
-        Initialize the historical tracker.
+        Initialize the historical tracker with per-client isolation.
 
         Args:
-            history_file: Path to JSON file storing monthly scores
+            client_slug: Client identifier (e.g., 'ontario_caregiver_organization')
+            base_dir: Base directory for results (default: data/results)
         """
-        self.history_file = Path(history_file)
-        self.history_file.parent.mkdir(parents=True, exist_ok=True)
+        self.client_slug = client_slug
+        client_dir = Path(base_dir) / client_slug
+        client_dir.mkdir(parents=True, exist_ok=True)
+        self.history_file = client_dir / "monthly_scores.json"
 
         # Create file if it doesn't exist
         if not self.history_file.exists():

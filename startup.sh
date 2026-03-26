@@ -6,6 +6,17 @@ set +e
 
 echo "🚀 Starting AI Visibility Dashboard..."
 
+# Write Streamlit secrets from environment variable (Cloud Run)
+if [ -n "$STREAMLIT_SECRETS" ]; then
+    echo "🔐 Writing Streamlit secrets from environment..."
+    mkdir -p .streamlit
+    echo "$STREAMLIT_SECRETS" > .streamlit/secrets.toml
+    chmod 600 .streamlit/secrets.toml
+    echo "✓ Secrets file created"
+else
+    echo "⚠️  No STREAMLIT_SECRETS env var found (OK for local development)"
+fi
+
 # Download client data from Google Cloud Storage
 echo "📥 Syncing client data from Google Cloud Storage..."
 python3 -c "
