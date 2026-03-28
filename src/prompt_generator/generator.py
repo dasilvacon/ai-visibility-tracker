@@ -24,7 +24,9 @@ class PromptGenerator:
                  use_ai_generation: bool = True,
                  deduplicator: Optional[PromptDeduplicator] = None,
                  enable_deduplication: bool = True,
-                 enable_quality_scoring: bool = True):
+                 enable_quality_scoring: bool = True,
+                 brand_config: Optional[Dict[str, Any]] = None,
+                 quality_floor: float = 60.0):
         """
         Initialize the prompt generator.
 
@@ -36,10 +38,17 @@ class PromptGenerator:
             deduplicator: Optional custom deduplicator instance
             enable_deduplication: Whether to enable deduplication during generation
             enable_quality_scoring: Whether to enable quality scoring for prompts
+            brand_config: Brand configuration dict (loaded from brand_config.json)
+            quality_floor: Minimum quality score (0-100) — prompts below this are rejected
         """
         self.persona_manager = PersonaManager(personas_file)
         self.keyword_processor = KeywordProcessor(keywords_file)
-        self.prompt_builder = PromptBuilder(use_natural_language=True)
+        self.brand_config = brand_config or {}
+        self.quality_floor = quality_floor
+        self.prompt_builder = PromptBuilder(
+            use_natural_language=True,
+            brand_config=self.brand_config
+        )
         self.api_client = api_client
         self.use_ai_generation = use_ai_generation and api_client is not None
 
@@ -68,6 +77,7 @@ class PromptGenerator:
             'by_intent': {},
             'with_competitors': 0,
             'duplicates_removed': 0,
+            'quality_rejected': 0,
             'start_time': None,
             'end_time': None,
             'quality_stats': {}
@@ -139,12 +149,17 @@ class PromptGenerator:
             if duplicates > 0:
                 dup_rate = (duplicates / (len(self.generated_prompts) + duplicates)) * 100
                 print(f"  Deduplication rate: {dup_rate:.1f}%")
+
+        quality_rejected = self.generation_stats.get('quality_rejected', 0)
+        if quality_rejected > 0:
+            print(f"✓ Quality rejected (below {self.quality_floor}): {quality_rejected}")
+
         return self.generated_prompts
 
     def _generate_for_persona(self, persona_id: str, count: int,
                              competitor_ratio: float) -> List[Dict[str, Any]]:
         """
-        Generate prompts for a specific persona.
+        Generate prompts for a specific persona with quality floor rejection and retries.
 
         Args:
             persona_id: The persona ID
@@ -162,20 +177,24 @@ class PromptGenerator:
         competitor_count = int(count * competitor_ratio)
         competitor_keywords = self.keyword_processor.get_keywords_with_competitors()
 
-        for i in range(count):
-            # Decide if this prompt should include a competitor
-            include_competitor = i < competitor_count and competitor_keywords
+        # Allow retries — try up to 2x the target count to hit the quality floor
+        max_attempts = count * 2
+        attempts = 0
+        accepted = 0
 
-            # Select a keyword
-            if priority_topics and random.random() < 0.6:
-                # 60% of time use priority topics
+        while accepted < count and attempts < max_attempts:
+            # Decide if this prompt should include a competitor
+            include_competitor = accepted < competitor_count and competitor_keywords
+
+            # Select a keyword — 75% from priority topics (up from 60%)
+            if priority_topics and random.random() < 0.75:
                 topic = random.choice(priority_topics)
                 keywords = self.keyword_processor.select_keywords_for_topic(topic, 5)
             else:
-                # 40% of time use random keywords
                 keywords = self.keyword_processor.get_random_keywords(5)
 
             if not keywords:
+                attempts += 1
                 continue
 
             keyword_data = random.choice(keywords)
@@ -186,32 +205,45 @@ class PromptGenerator:
                 keyword_data,
                 include_competitor
             )
+            attempts += 1
 
-            if prompt_data:
-                # Check for duplicates if deduplication is enabled
-                is_duplicate = False
-                if self.enable_deduplication and self.deduplicator:
-                    dup_result = self.deduplicator.check_duplicate(prompt_data['prompt_text'])
-                    is_duplicate = dup_result['is_duplicate']
-                    if is_duplicate:
-                        self.generation_stats['duplicates_removed'] += 1
+            if not prompt_data:
+                continue
 
-                if not is_duplicate:
-                    prompts.append(prompt_data)
+            # Check for duplicates
+            is_duplicate = False
+            if self.enable_deduplication and self.deduplicator:
+                dup_result = self.deduplicator.check_duplicate(prompt_data['prompt_text'])
+                is_duplicate = dup_result['is_duplicate']
+                if is_duplicate:
+                    self.generation_stats['duplicates_removed'] += 1
+                    continue
 
-                    # Update stats
-                    category = prompt_data['category']
-                    intent = prompt_data['intent_type']
+            # Quality floor check — reject bad prompts
+            if self.enable_quality_scoring and self.quality_scorer and self.quality_floor > 0:
+                quality = prompt_data.get('quality_score', {})
+                overall = quality.get('overall_score', 0) if quality else 0
+                if overall < self.quality_floor:
+                    self.generation_stats['quality_rejected'] += 1
+                    continue
 
-                    self.generation_stats['by_persona'][persona_id] = \
-                        self.generation_stats['by_persona'].get(persona_id, 0) + 1
-                    self.generation_stats['by_category'][category] = \
-                        self.generation_stats['by_category'].get(category, 0) + 1
-                    self.generation_stats['by_intent'][intent] = \
-                        self.generation_stats['by_intent'].get(intent, 0) + 1
+            # Accepted — add to results
+            prompts.append(prompt_data)
+            accepted += 1
 
-                    if include_competitor:
-                        self.generation_stats['with_competitors'] += 1
+            # Update stats
+            category = prompt_data['category']
+            intent = prompt_data['intent_type']
+
+            self.generation_stats['by_persona'][persona_id] = \
+                self.generation_stats['by_persona'].get(persona_id, 0) + 1
+            self.generation_stats['by_category'][category] = \
+                self.generation_stats['by_category'].get(category, 0) + 1
+            self.generation_stats['by_intent'][intent] = \
+                self.generation_stats['by_intent'].get(intent, 0) + 1
+
+            if include_competitor:
+                self.generation_stats['with_competitors'] += 1
 
         return prompts
 
@@ -232,11 +264,11 @@ class PromptGenerator:
         keyword = keyword_data['keyword']
         intent_type = keyword_data['intent_type']
 
-        # Use AI generation if available and enabled
-        if self.use_ai_generation and random.random() < 0.7:  # Use AI 70% of the time
+        # Use AI generation 80% of the time (up from 70%) — templates as fallback
+        if self.use_ai_generation and random.random() < 0.8:
             prompt_text = self._generate_with_ai(persona, keyword, intent_type, include_competitor)
         else:
-            # Fall back to template-based generation
+            # Fall back to template-based generation (persona-driven)
             prompt_text = self._generate_with_templates(persona, keyword, intent_type, include_competitor)
 
         if not prompt_text:
@@ -270,11 +302,12 @@ class PromptGenerator:
             # Collect existing prompt texts for diversity scoring
             existing_texts = [p['prompt_text'] for p in self.generated_prompts]
 
-            # Build context for scoring
+            # Build context for scoring — include priority_topics for relevance
             score_context = {
                 'keyword': keyword,
                 'intent_type': intent_type,
-                'persona': persona['name']
+                'persona': persona['name'],
+                'priority_topics': persona.get('priority_topics', [])
             }
 
             quality_score = self.quality_scorer.score_prompt(
@@ -289,7 +322,7 @@ class PromptGenerator:
     def _generate_with_templates(self, persona: Dict[str, Any], keyword: str,
                                  intent_type: str, include_competitor: bool) -> str:
         """
-        Generate prompt using templates (fallback method).
+        Generate prompt using persona-driven templates (fallback method).
 
         Args:
             persona: Persona dictionary
@@ -300,30 +333,84 @@ class PromptGenerator:
         Returns:
             Generated prompt text
         """
+        competitor = ''
         if include_competitor:
             competitors = self.keyword_processor.get_all_competitors()
             if competitors:
                 competitor = random.choice(competitors)
-                prompt = self.prompt_builder.build_comparison_prompt(keyword, competitor)
-            else:
-                prompt = self.prompt_builder.build_basic_prompt(keyword, intent_type)
-        else:
-            prompt = self.prompt_builder.build_basic_prompt(keyword, intent_type)
 
-        # Naturalize the prompt
+        # Use the persona-driven builder (80% persona, 20% direct internally)
+        prompt = self.prompt_builder.build_persona_prompt(
+            keyword=keyword,
+            persona_data=persona,
+            intent_type=intent_type,
+            include_competitor=include_competitor,
+            competitor=competitor
+        )
+
+        # Naturalize
         prompt = self.prompt_builder.naturalize_prompt(prompt)
 
-        # Occasionally add context from priority topics
-        priority_topics = persona.get('priority_topics', [])
-        if priority_topics:
-            prompt = self.prompt_builder.add_context_details(prompt, priority_topics)
-
         return prompt
+
+    def _build_brand_context(self) -> str:
+        """Build industry context string from brand_config for AI prompts."""
+        brand = self.brand_config.get('brand', {})
+        brand_name = brand.get('name', '')
+        description = brand.get('description', '')
+        goals = brand.get('business_goals', {})
+        positioning = goals.get('market_positioning', '')
+        freeform = goals.get('freeform_notes', '')
+
+        # Get competitor names
+        competitors_section = self.brand_config.get('competitors', {})
+        if isinstance(competitors_section, dict):
+            competitor_names = [c.get('name', '') for c in competitors_section.get('expected', [])]
+        elif isinstance(competitors_section, list):
+            competitor_names = competitors_section
+        else:
+            competitor_names = []
+
+        parts = []
+        if brand_name:
+            parts.append(f"Brand: {brand_name}")
+        if description:
+            parts.append(f"Industry: {description}")
+        if positioning:
+            parts.append(f"Positioning: {positioning}")
+        if competitor_names:
+            parts.append(f"Competitors: {', '.join(competitor_names[:5])}")
+        if freeform:
+            parts.append(f"Notes: {freeform[:200]}")
+
+        return '\n'.join(parts)
+
+    def _build_persona_context(self, persona: Dict[str, Any]) -> str:
+        """Build rich persona context string using all available fields."""
+        parts = [f"Persona: {persona.get('name', 'Unknown')}"]
+        parts.append(f"Description: {persona.get('description', '')}")
+
+        # Use rich persona fields when available (OCO-style personas)
+        if persona.get('caregiving_role'):
+            parts.append(f"Role: {persona['caregiving_role']}")
+        if persona.get('key_trigger'):
+            parts.append(f"Trigger: {persona['key_trigger']}")
+        if persona.get('priority_program'):
+            parts.append(f"Key program: {persona['priority_program']}")
+        if persona.get('top_barrier'):
+            parts.append(f"Barrier: {persona['top_barrier']}")
+        if persona.get('priority_topics'):
+            parts.append(f"Topics: {', '.join(persona['priority_topics'][:5])}")
+
+        return '\n'.join(parts)
 
     def _generate_with_ai(self, persona: Dict[str, Any], keyword: str,
                          intent_type: str, include_competitor: bool) -> Optional[str]:
         """
-        Generate prompt using AI API for more natural variations.
+        Generate prompt using AI API with full brand and persona context.
+
+        Uses brand_config for industry-aware examples and persona fields
+        for deeply personalized queries. No hardcoded industry examples.
 
         Args:
             persona: Persona dictionary
@@ -337,54 +424,66 @@ class PromptGenerator:
         if not self.api_client:
             return None
 
-        # Build context for the AI
+        # Build competitor context
         competitor_context = ""
         if include_competitor:
             competitors = self.keyword_processor.get_all_competitors()
             if competitors:
                 competitor = random.choice(competitors)
-                competitor_context = f" Include a natural comparison or mention of '{competitor}'."
+                competitor_context = f"\nInclude a natural comparison or mention of '{competitor}'."
 
-        system_prompt = f"""Generate a clean, direct search query that someone would type into a search engine or AI assistant.
+        # Build rich context from brand config and persona
+        brand_context = self._build_brand_context()
+        persona_context = self._build_persona_context(persona)
 
-Persona: {persona['name']}
-Description: {persona['description']}
+        # Vary the prompt structure to avoid repetitive output
+        style = random.choice(['search_query', 'ai_assistant_question', 'voice_search'])
+        style_instructions = {
+            'search_query': "Generate a clean search query someone would type into Google.",
+            'ai_assistant_question': "Generate a question someone would ask ChatGPT, Claude, or Perplexity.",
+            'voice_search': "Generate a natural spoken question someone would ask a voice assistant."
+        }
+
+        system_prompt = f"""{style_instructions[style]}
+
+--- BRAND CONTEXT ---
+{brand_context}
+
+--- PERSONA ---
+{persona_context}
+
+--- QUERY DETAILS ---
 Keyword/Topic: {keyword}
 Intent: {intent_type}
 {competitor_context}
 
-Requirements:
-- Make it direct and to-the-point, like actual search queries
+--- CRITICAL REQUIREMENTS ---
+- Sound like a REAL PERSON searching, NOT a marketer describing a persona
+- NEVER include persona labels like "as an adult child caregiver" or "for HR leaders"
+- Real people say "my mom just got out of hospital what do I do" not "hospital discharge planning resources for adult child caregiver"
 - NO greetings (no "Hi", "Hey", "Hello")
-- NO pleasantries (no "Thanks!", "Appreciate any help!", "Any advice?")
-- NO conversational filler (no "Can anyone help?", "Quick question:", "I was wondering")
-- Vary the structure - not all queries should be questions
-- Keep it concise (1-2 sentences max)
-- Make it specific to the persona's needs
-
-Good examples:
-- "Compare best luxury eyeshadow palette to Charlotte Tilbury"
-- "How to apply eyeshadow for beginners"
-- "Long lasting eyeshadow for oily lids vs Urban Decay"
-
-Bad examples:
-- "Hi, Compare best luxury eyeshadow palette to Charlotte Tilbury Thanks!"
-- "Can anyone help? What's better: eyeshadow or MAC? Any advice?"
-- "Quick question: How to apply eyeshadow for beginners Appreciate any help!"
+- NO pleasantries (no "Thanks!", "Appreciate any help!")
+- NO conversational filler (no "Can anyone help?", "Quick question:")
+- Vary structure — mix questions, statements, and comparison formats
+- Keep it concise (1-2 sentences max, 5-20 words ideal)
+- The persona's situation should shape the LANGUAGE and ANGLE of the query
+- Use the keyword naturally — don't just repeat it verbatim
+- Think: what would this person ACTUALLY type into Google or ask ChatGPT?
 
 Return ONLY the clean query text, nothing else."""
 
         try:
-            # Use the API client to generate
             result = self.api_client.send_prompt(system_prompt, temperature=0.9, max_tokens=100)
 
             if result['success']:
                 generated_text = result['response_text'].strip()
                 # Clean up any quotes or extra formatting
                 generated_text = generated_text.strip('"\'').strip()
+                # Remove any leading/trailing quotation marks the AI might add
+                if generated_text.startswith('"') and generated_text.endswith('"'):
+                    generated_text = generated_text[1:-1].strip()
                 return generated_text
             else:
-                # Fall back to template
                 return self._generate_with_templates(persona, keyword, intent_type, include_competitor)
 
         except Exception as e:

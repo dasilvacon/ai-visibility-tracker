@@ -291,11 +291,13 @@ def render():
                             if st.button(f"Activate {client['name']}", key=f"activate_{client['slug']}", use_container_width=True):
                                 st.session_state.active_client = client['slug']
 
-                                # Update generation config
+                                # Update generation config (include brand_config)
+                                brand_config_file = str(Path(client['personas_file']).parent / f"{client['slug']}_brand_config.json") if client.get('personas_file') else None
                                 st.session_state.generation_config.update({
                                     'personas_file': client['personas_file'],
                                     'keywords_file': client['keywords_file'],
-                                    'client_name': client['name']
+                                    'client_name': client['name'],
+                                    'brand_config_file': brand_config_file
                                 })
 
                                 st.success(f"✅ {client['name']} is now active!")
@@ -442,10 +444,12 @@ def render():
 
                         # Auto-activate the new client
                         st.session_state.active_client = client_slug
+                        brand_config_path = str(Path(personas_path).parent / f"{client_slug}_brand_config.json")
                         st.session_state.generation_config.update({
                             'personas_file': str(personas_path),
                             'keywords_file': str(keywords_path),
-                            'client_name': new_client_name
+                            'client_name': new_client_name,
+                            'brand_config_file': brand_config_path
                         })
 
                         st.info("🔄 Refreshing to show new client...")

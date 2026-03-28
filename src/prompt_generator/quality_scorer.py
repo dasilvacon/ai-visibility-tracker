@@ -290,18 +290,22 @@ class PromptQualityScorer:
             elif intent == 'review' and any(w in text_lower for w in ['review', 'worth', 'quality']):
                 score += 10
 
-        # Check persona alignment (if provided)
+        # Check persona alignment (if provided) — generic, works for any industry
         if 'persona' in context:
             persona = context['persona'].lower()
-            # Professional MUA: look for professional language
-            if 'professional' in persona and any(w in text_lower for w in ['professional', 'client', 'work', 'performance']):
+            # Extract meaningful words from persona name (skip filler words)
+            skip_words = {'the', 'a', 'an', 'of', 'for', 'and', 'or', 'with', 'in', 'on', 'to'}
+            persona_words = [w for w in persona.split() if w not in skip_words and len(w) > 2]
+            # Check if any persona-identifying word appears in the prompt
+            if any(pw in text_lower for pw in persona_words):
                 score += 10
-            # Beginner: look for beginner language
-            elif 'beginner' in persona and any(w in text_lower for w in ['beginner', 'learn', 'new to', 'first']):
-                score += 10
-            # Luxury: look for luxury indicators
-            elif 'luxury' in persona and any(w in text_lower for w in ['luxury', 'high-end', 'premium', 'investment']):
-                score += 10
+            # Also check priority_topics if provided in context
+            elif 'priority_topics' in context:
+                topics = context['priority_topics'] if isinstance(context['priority_topics'], list) else []
+                for topic in topics[:3]:
+                    if topic.lower() in text_lower:
+                        score += 8
+                        break
 
         return max(0, min(100, score))
 

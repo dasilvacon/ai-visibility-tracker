@@ -326,7 +326,18 @@ def render():
         else:
             deduplicator = None
 
-        # Initialize generator with quality scoring enabled
+        # Load brand config if available
+        brand_config = {}
+        brand_config_file = st.session_state.generation_config.get('brand_config_file')
+        if brand_config_file and Path(brand_config_file).exists():
+            try:
+                import json
+                with open(brand_config_file, 'r') as f:
+                    brand_config = json.load(f)
+            except Exception:
+                pass
+
+        # Initialize generator with quality scoring and brand context
         generator = PromptGenerator(
             personas_file=personas_file,
             keywords_file=keywords_file,
@@ -334,7 +345,9 @@ def render():
             use_ai_generation=False,  # Disable AI for now
             deduplicator=deduplicator,
             enable_deduplication=enable_dedup,
-            enable_quality_scoring=True  # Enable quality scoring
+            enable_quality_scoring=True,
+            brand_config=brand_config,
+            quality_floor=60.0
         )
 
         # Progress tracking

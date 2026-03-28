@@ -52,13 +52,14 @@ class VisibilityTracker:
         self.clients = {}
         self._initialize_clients()
 
-        # Extract client_slug from brand_config if provided
+        # Extract client_slug and brand_config if provided
         self.client_slug = None
+        self.brand_config = {}
         if brand_config_path and os.path.exists(brand_config_path):
             try:
                 with open(brand_config_path, 'r') as f:
-                    brand_config = json.load(f)
-                brand_name = brand_config.get('brand', {}).get('name', '')
+                    self.brand_config = json.load(f)
+                brand_name = self.brand_config.get('brand', {}).get('name', '')
                 self.client_slug = brand_name.lower().replace(' ', '_')
                 print(f"✓ Client identified: {self.client_slug}")
             except Exception as e:
@@ -362,12 +363,14 @@ class VisibilityTracker:
                 print("Warning: No API client available, using template-based generation")
                 use_ai = False
 
-        # Initialize generator
+        # Initialize generator with brand context and quality floor
         generator = PromptGenerator(
             personas_file=personas_file,
             keywords_file=keywords_file,
             api_client=api_client,
-            use_ai_generation=use_ai
+            use_ai_generation=use_ai,
+            brand_config=self.brand_config,
+            quality_floor=60.0
         )
 
         # Generate prompts

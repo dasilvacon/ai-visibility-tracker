@@ -124,7 +124,8 @@ if 'generation_config' not in st.session_state:
         'deduplication_mode': 'high_similarity',
         'personas_file': None,
         'keywords_file': None,
-        'client_name': None
+        'client_name': None,
+        'brand_config_file': None
     }
 
 # ============================================
