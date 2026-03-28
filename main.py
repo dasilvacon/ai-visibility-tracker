@@ -523,6 +523,20 @@ class VisibilityTracker:
         gap_analysis['prioritized_audiences'] = prioritized_audiences
         gap_analysis['prioritized_content_gaps'] = prioritized_content_gaps
 
+        # Save historical tracking data
+        if self.client_slug:
+            try:
+                from src.tracking.historical_tracker import HistoricalTracker
+                hist_tracker = HistoricalTracker(client_slug=self.client_slug)
+                hist_tracker.save_monthly_scores(
+                    client_name=brand_name,
+                    visibility_summary=visibility_summary,
+                    platform_results=None  # Platform breakdown not available in main.py
+                )
+                print("✓ Historical tracking data saved")
+            except Exception as e:
+                print(f"⚠️  Could not save historical data: {str(e)}")
+
         # Print summary
         print("\n" + "="*60)
         print("ANALYSIS COMPLETE")
