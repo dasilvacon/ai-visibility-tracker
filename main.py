@@ -18,6 +18,8 @@ from api_clients.openai_client import OpenAIClient
 from api_clients.anthropic_client import AnthropicClient
 from api_clients.perplexity_client import PerplexityClient
 from api_clients.gemini_client import GeminiClient
+from api_clients.serpapi_client import SerpAPIClient
+from api_clients.copilot_client import CopilotClient
 from database.prompts_db import PromptsDatabase
 from tracking.results_tracker import ResultsTracker
 from reporting.report_generator import ReportGenerator
@@ -97,7 +99,9 @@ class VisibilityTracker:
                         'openai': 'gpt-4',
                         'anthropic': 'claude-sonnet-4-20250514',
                         'perplexity': 'sonar',
-                        'gemini': 'gemini-2.5-flash'
+                        'gemini': 'gemini-2.5-flash',
+                        'serpapi': 'google_ai_overview',
+                        'copilot': 'gpt-4'
                     },
                     'testing': {
                         'default_temperature': 0.7,
@@ -117,7 +121,9 @@ class VisibilityTracker:
             'openai': os.getenv('OPENAI_API_KEY', ''),
             'anthropic': os.getenv('ANTHROPIC_API_KEY', ''),
             'perplexity': os.getenv('PERPLEXITY_API_KEY', ''),
-            'gemini': os.getenv('GEMINI_API_KEY', '')
+            'gemini': os.getenv('GEMINI_API_KEY', ''),
+            'serpapi': os.getenv('SERPAPI_API_KEY', ''),
+            'copilot': os.getenv('AZURE_OPENAI_API_KEY', '')
         }
         # Filter out empty values
         api_keys = {k: v for k, v in api_keys.items() if v}
@@ -130,7 +136,9 @@ class VisibilityTracker:
                     'openai': 'gpt-4',
                     'anthropic': 'claude-sonnet-4-20250514',
                     'perplexity': 'sonar',
-                    'gemini': 'gemini-2.5-flash'
+                    'gemini': 'gemini-2.5-flash',
+                    'serpapi': 'google_ai_overview',
+                    'copilot': 'gpt-4'
                 },
                 'testing': {
                     'default_temperature': 0.7,
@@ -199,6 +207,32 @@ class VisibilityTracker:
                 print("✓ Gemini client initialized")
             except Exception as e:
                 print(f"✗ Failed to initialize Gemini client: {e}")
+
+        # Google AI Overviews (via SerpAPI)
+        serpapi_key = api_keys.get('serpapi') or os.getenv('SERPAPI_API_KEY', '')
+        if serpapi_key and not serpapi_key.startswith('YOUR_'):
+            try:
+                self.clients['google_ai_overview'] = SerpAPIClient(
+                    api_key=serpapi_key,
+                    model='google_ai_overview',
+                    config=self.config
+                )
+                print("✓ Google AI Overviews client initialized (via SerpAPI)")
+            except Exception as e:
+                print(f"✗ Failed to initialize SerpAPI client: {e}")
+
+        # Microsoft Copilot (via Azure OpenAI)
+        copilot_key = api_keys.get('copilot') or api_keys.get('azure_openai') or os.getenv('AZURE_OPENAI_API_KEY', '')
+        if copilot_key and not copilot_key.startswith('YOUR_'):
+            try:
+                self.clients['copilot'] = CopilotClient(
+                    api_key=copilot_key,
+                    model=models.get('copilot', 'gpt-4'),
+                    config=self.config
+                )
+                print("✓ Microsoft Copilot client initialized")
+            except Exception as e:
+                print(f"✗ Failed to initialize Copilot client: {e}")
 
         if not self.clients:
             print("Error: No API clients could be initialized. Please check your config.json")

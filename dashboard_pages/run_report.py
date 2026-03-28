@@ -399,6 +399,12 @@ exit $EXIT_CODE
                 env['PERPLEXITY_API_KEY'] = api_keys['perplexity']
             if api_keys.get('gemini'):
                 env['GEMINI_API_KEY'] = api_keys['gemini']
+            if api_keys.get('serpapi'):
+                env['SERPAPI_API_KEY'] = api_keys['serpapi']
+            if api_keys.get('copilot') or api_keys.get('azure_openai'):
+                env['AZURE_OPENAI_API_KEY'] = api_keys.get('copilot', api_keys.get('azure_openai', ''))
+            if api_keys.get('azure_openai_endpoint'):
+                env['AZURE_OPENAI_ENDPOINT'] = api_keys['azure_openai_endpoint']
         except Exception:
             pass
 
@@ -539,6 +545,12 @@ exit $EXIT_CODE
                 env['PERPLEXITY_API_KEY'] = api_keys['perplexity']
             if api_keys.get('gemini'):
                 env['GEMINI_API_KEY'] = api_keys['gemini']
+            if api_keys.get('serpapi'):
+                env['SERPAPI_API_KEY'] = api_keys['serpapi']
+            if api_keys.get('copilot') or api_keys.get('azure_openai'):
+                env['AZURE_OPENAI_API_KEY'] = api_keys.get('copilot', api_keys.get('azure_openai', ''))
+            if api_keys.get('azure_openai_endpoint'):
+                env['AZURE_OPENAI_ENDPOINT'] = api_keys['azure_openai_endpoint']
         except Exception:
             pass
 
@@ -682,7 +694,9 @@ def render():
                 os.getenv('OPENAI_API_KEY'),
                 os.getenv('ANTHROPIC_API_KEY'),
                 os.getenv('PERPLEXITY_API_KEY'),
-                os.getenv('GEMINI_API_KEY')
+                os.getenv('GEMINI_API_KEY'),
+                os.getenv('SERPAPI_API_KEY'),
+                os.getenv('AZURE_OPENAI_API_KEY')
             ]
             has_api_keys = any(key and not key.startswith('YOUR_') for key in env_keys if key)
 

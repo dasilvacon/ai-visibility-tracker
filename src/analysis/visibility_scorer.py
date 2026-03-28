@@ -446,11 +446,50 @@ class VisibilityScorer:
 
         for result in results:
             response_text = result.get('response_text', '')
-            if not response_text:
+            metadata = result.get('metadata', {})
+            platform = result.get('platform', '')
+
+            # Handle Google AI Overview special cases
+            if platform == 'google_ai_overview':
+                if not metadata.get('has_ai_overview', False):
+                    # No AI Overview shown for this query — valid data point
+                    result_with_score = result.copy()
+                    result_with_score['visibility'] = {
+                        'brand_mentioned': False,
+                        'brand_mention_count': 0,
+                        'brand_positions': [],
+                        'prominence_score': 0,
+                        'citation_position': None,
+                        'competitors_mentioned': [],
+                        'competitor_details': {},
+                        'total_competitors_mentioned': 0,
+                        'context_snippets': None,
+                        'response_length': 0,
+                        'brand_density': 0,
+                        'sources': [],
+                        'source_count': 0,
+                        'ai_overview_absent': True
+                    }
+                    scored_results.append(result_with_score)
+                    continue
+                elif not response_text:
+                    continue
+
+            elif not response_text:
                 continue
 
             # Score this response
             visibility_score = self.score_response(response_text, result)
+
+            # For AI Overviews, enrich sources from SerpAPI references
+            if platform == 'google_ai_overview' and metadata.get('references'):
+                ai_overview_sources = self._extract_ai_overview_sources(metadata['references'])
+                visibility_score['sources'].extend(ai_overview_sources)
+                visibility_score['source_count'] = len(visibility_score['sources'])
+                # Check if any reference directly cites a brand domain
+                visibility_score['ai_overview_brand_cited'] = any(
+                    s.get('brand_in_context', False) for s in ai_overview_sources
+                )
 
             # Add visibility data to result
             result_with_score = result.copy()
@@ -459,6 +498,51 @@ class VisibilityScorer:
             scored_results.append(result_with_score)
 
         return scored_results
+
+    def _extract_ai_overview_sources(self, references: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Convert SerpAPI AI Overview references into our source format.
+
+        Args:
+            references: List of reference dicts from SerpAPI metadata
+
+        Returns:
+            List of source dicts in our standard format
+        """
+        sources = []
+        for ref in references:
+            domain = ref.get('domain', '')
+            link = ref.get('link', '')
+            title = ref.get('title', '')
+            snippet = ref.get('snippet', '')
+
+            # Check if brand appears in reference title or snippet
+            brand_in_context = False
+            for pattern in self.brand_patterns:
+                if pattern.search(title) or pattern.search(snippet):
+                    brand_in_context = True
+                    break
+
+            # Check which competitors appear in reference
+            competitors_in_context = []
+            for comp_name, patterns in self.competitor_patterns.items():
+                for pattern in patterns:
+                    if pattern.search(title) or pattern.search(snippet):
+                        competitors_in_context.append(comp_name)
+                        break
+
+            sources.append({
+                'type': 'ai_overview_reference',
+                'domain': domain,
+                'full_url': link,
+                'source_name': title or domain,
+                'context_snippet': snippet[:200] if snippet else '',
+                'brand_in_context': brand_in_context,
+                'competitors_in_context': competitors_in_context,
+                'position_in_response': 0.0  # References are top-level, no position
+            })
+
+        return sources
 
     def get_visibility_summary(self, scored_results: List[Dict[str, Any]]) -> Dict[str, Any]:
         """

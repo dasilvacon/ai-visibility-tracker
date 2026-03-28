@@ -500,7 +500,7 @@ class HTMLReportGenerator:
 
     def _build_competitive_landscape_visual(self, brand_name: str, visibility_summary: Dict[str, Any],
                                            competitive_analysis: Dict[str, Any]) -> str:
-        """Build visual bar chart of competitive landscape."""
+        """Build visual horizontal bar chart of competitive landscape."""
 
         competitors = competitive_analysis.get('top_competitors', [])
         your_rate = visibility_summary.get('brand_visibility_rate', 0)
@@ -509,7 +509,7 @@ class HTMLReportGenerator:
             return ""
 
         # Build list with all brands (you + competitors), then sort by rate descending
-        all_brands_list = [{'brand': f'YOUR BRAND ({brand_name})', 'rate': your_rate, 'is_you': True}]
+        all_brands_list = [{'brand': f'{brand_name}', 'rate': your_rate, 'is_you': True}]
 
         for comp in competitors[:6]:  # Top 6 competitors
             all_brands_list.append({'brand': comp['name'], 'rate': comp['mention_rate'], 'is_you': False})
@@ -519,25 +519,22 @@ class HTMLReportGenerator:
 
         # Calculate max rate for proper bar scaling
         max_rate = max(brand['rate'] for brand in brands_with_you)
-        scale_factor = 90 / max_rate if max_rate > 0 else 1  # Scale to 90% max width
+        scale_factor = 100 / max_rate if max_rate > 0 else 1
 
-        # Build bars
+        # Build horizontal bars
         bars_html = ""
         for brand_data in brands_with_you:
-            label_class = "you" if brand_data['is_you'] else ""
-            fill_class = "you" if brand_data['is_you'] else ""
-            arrow = " ◀ YOU ARE HERE" if brand_data['is_you'] else ""
-            bar_width = brand_data['rate'] * scale_factor
+            fill_class = "yours" if brand_data['is_you'] else "competitor"
+            bar_width = min(brand_data['rate'] * scale_factor, 100)  # Cap at 100%
 
             bars_html += f"""
-            <div class="comp-bar-row">
-                <div class="comp-bar-label {label_class}">{brand_data['brand']}</div>
-                <div class="comp-bar-track">
-                    <div class="comp-bar-fill {fill_class}" style="width: {bar_width:.1f}%">
-                        {brand_data['rate']:.0f}%
+            <div class="competitive-bar-row">
+                <div class="competitive-bar-label">{brand_data['brand']}</div>
+                <div class="competitive-bar-track">
+                    <div class="competitive-bar-fill {fill_class}" style="width: {bar_width:.1f}%">
+                        {brand_data['rate']:.1f}%
                     </div>
                 </div>
-                {f'<span class="comp-arrow">{arrow}</span>' if brand_data['is_you'] else ''}
             </div>
             """
 
@@ -545,28 +542,25 @@ class HTMLReportGenerator:
         gap = leader['rate'] - your_rate
 
         return f"""
-        <div style="margin-top: 64px;">
+        <div style="margin-top: 72px;">
             <h2>Competitive Landscape</h2>
-            <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 32px;">
+            <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.65; margin-bottom: 32px;">
                 <strong>What this shows:</strong> When AI responds to queries in your category, which brands get mentioned most?
                 This chart ranks you against your top competitors based on mention frequency. The gap between you and the leader
                 represents your growth opportunity.
             </p>
-            <div class="comp-landscape">
-                <h3 style="margin: 0 0 8px 0; color: #4D2E3A; font-size: 20px;">Where You Stand</h3>
-                <p style="margin: 0 0 20px 0; color: #6B5660; font-size: 14px;">
-                Share of voice across all AI responses tested
-            </p>
+            <div class="competitive-bar-container">
+                <h3 style="margin: 0 0 16px 0; color: #2D2D2D; font-size: 18px; font-weight: 600;">Share of Voice Across All AI Responses</h3>
 
-            {bars_html}
+                {bars_html}
+            </div>
 
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #E8E4E3;">
-                <p style="margin: 0; font-size: 14px; color: #6B5660; line-height: 1.7;">
-                    <strong style="color: #4D2E3A;">The Reality:</strong> {leader['brand']} leads the category
-                    at {leader['rate']:.0f}%. {'You are the leader.' if leader['is_you'] else f"You're {gap:.0f} points behind. That gap represents the difference between being a category leader and being in the middle of the pack."}
+            <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #E8E4E3;">
+                <p style="margin: 0; font-size: 14px; color: #374151; line-height: 1.65;">
+                    <strong style="color: #2D2D2D;">The Reality:</strong> {leader['brand']} leads the category
+                    at {leader['rate']:.1f}%. {'You are the leader.' if leader['is_you'] else f"You're {gap:.1f} points behind. That gap represents the difference between being a category leader and being in the middle of the pack."}
                 </p>
             </div>
-        </div>
         </div>
         """
 
@@ -1012,6 +1006,7 @@ class HTMLReportGenerator:
 
         /* DaSilva Color System */
         :root {{
+            /* Existing DaSilva colors - keep */
             --dasilva-purple: #4A4458;
             --dasilva-purple-dark: #3A3448;
             --dasilva-purple-light: #6B5660;
@@ -1022,6 +1017,24 @@ class HTMLReportGenerator:
             --bg-primary: #FEFEFE;
             --bg-secondary: #F8F8F7;
             --border-light: #E8E4E3;
+
+            /* New neutrals for modern look */
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+
+            /* Status colors */
+            --green: #10B981;
+            --amber: #F59E0B;
+            --red: #EF4444;
+            --blue: #3B82F6;
         }}
 
         body {{
@@ -1030,33 +1043,33 @@ class HTMLReportGenerator:
             line-height: 1.6;
             color: var(--text-primary);
             background: var(--bg-secondary);
-            padding: 40px;
+            padding: 24px;
         }}
 
         .container {{
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: var(--bg-primary);
-            padding: 80px;
+            padding: 48px 56px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(74, 68, 88, 0.08);
         }}
 
         h1 {{
-            color: var(--dasilva-purple);
+            color: #2D2D2D;
             margin-bottom: 16px;
-            font-size: 42px;
+            font-size: 28px;
             font-weight: 700;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.02em;
         }}
 
         h2 {{
-            color: var(--dasilva-purple);
-            margin-top: 64px;
-            margin-bottom: 32px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--dasilva-cream);
-            font-size: 28px;
+            color: #2D2D2D;
+            margin-top: 72px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #E8E4E3;
+            font-size: 24px;
             font-weight: 600;
             letter-spacing: -0.01em;
         }}
@@ -1070,128 +1083,103 @@ class HTMLReportGenerator:
         }}
 
         .header {{
-            border-bottom: 3px solid var(--dasilva-cream);
-            padding-bottom: 40px;
-            margin-bottom: 56px;
-            background: linear-gradient(135deg, rgba(74, 68, 88, 0.02) 0%, rgba(232, 215, 160, 0.05) 100%);
-            padding: 40px;
-            margin: -40px -40px 56px -40px;
-            border-radius: 12px 12px 0 0;
+            padding: 32px 0;
+            margin-bottom: 32px;
+            border-bottom: 1px solid #E8E4E3;
+            background: transparent;
         }}
 
         .brand-name {{
             color: var(--dasilva-purple);
-            font-size: 32px;
-            font-weight: 600;
-            margin-top: 16px;
+            font-size: 20px;
+            font-weight: 500;
+            margin-top: 4px;
         }}
 
         .timestamp {{
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-top: 20px;
+            color: #9CA3AF;
+            font-size: 13px;
+            margin-top: 8px;
         }}
 
         .dasilva-credit {{
-            color: var(--dasilva-purple-light);
-            font-size: 15px;
+            color: #6B5660;
+            font-size: 13px;
             font-weight: 500;
-            margin-top: 8px;
+            margin-top: 4px;
         }}
 
         .metrics-grid {{
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin: 48px 0;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin: 32px 0 48px 0;
         }}
 
         .metric-card {{
             background: white;
-            border: 2px solid var(--border-light);
-            padding: 40px;
+            border: 1px solid #E8E4E3;
+            padding: 24px;
             border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(74, 68, 88, 0.06);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }}
 
-        .metric-card::before {{
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--dasilva-purple) 0%, var(--dasilva-cream) 100%);
-        }}
-
         .metric-card:hover {{
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(74, 68, 88, 0.12);
-            border-color: var(--dasilva-cream);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border-color: #D1D5DB;
         }}
 
         .metric-card.strong {{
-            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
-            border-color: #86efac;
-        }}
-
-        .metric-card.strong::before {{
-            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            background: white;
+            border-color: #E8E4E3;
         }}
 
         .metric-card.strong .metric-value {{
-            color: #10b981;
+            color: #2D2D2D;
         }}
 
         .metric-card.needs-work {{
-            background: linear-gradient(135deg, #ffffff 0%, #fefce8 100%);
-            border-color: var(--dasilva-cream);
-        }}
-
-        .metric-card.needs-work::before {{
-            background: linear-gradient(90deg, var(--dasilva-purple) 0%, var(--dasilva-cream) 100%);
+            background: white;
+            border-color: #E8E4E3;
         }}
 
         .metric-card.needs-work .metric-value {{
-            color: var(--dasilva-purple);
+            color: #2D2D2D;
         }}
 
         .metric-card.weak {{
-            background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
-            border-color: #fecaca;
-        }}
-
-        .metric-card.weak::before {{
-            background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+            background: white;
+            border-color: #E8E4E3;
         }}
 
         .metric-card.weak .metric-value {{
-            color: #ef4444;
+            color: #2D2D2D;
         }}
 
         .metric-value {{
-            font-size: 52px;
+            font-size: 36px;
             font-weight: 700;
-            margin: 20px 0;
+            margin: 12px 0;
             line-height: 1;
+            color: #2D2D2D;
         }}
 
         .metric-label {{
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            opacity: 0.85;
+            letter-spacing: 0.5px;
+            color: #6B5660;
         }}
 
         .metric-status {{
-            font-size: 14px;
-            margin-top: 12px;
+            font-size: 12px;
+            margin-top: 8px;
             font-weight: 500;
-            opacity: 0.9;
+            color: #6B7280;
         }}
 
         table {{
@@ -1206,14 +1194,15 @@ class HTMLReportGenerator:
         }}
 
         th {{
-            background: linear-gradient(135deg, var(--dasilva-purple) 0%, var(--dasilva-purple-dark) 100%);
-            color: white;
-            padding: 20px 24px;
+            background: #F9FAFB;
+            color: #374151;
+            padding: 14px 20px;
             text-align: left;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #E5E7EB;
         }}
 
         td {{
@@ -1333,44 +1322,44 @@ class HTMLReportGenerator:
 
         p {{
             margin: 16px 0;
-            font-size: 15px;
+            font-size: 14px;
             color: #5A4850;
-            line-height: 1.7;
+            line-height: 1.65;
         }}
 
         /* Tabs */
         .tabs {{
             display: flex;
-            gap: 8px;
-            margin-bottom: 48px;
-            border-bottom: 2px solid var(--border-light);
-            margin-top: 32px;
+            gap: 4px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #E8E4E3;
+            margin-top: 24px;
+            overflow-x: auto;
         }}
 
         .tab {{
-            padding: 18px 36px;
+            padding: 12px 24px;
             background: transparent;
             border: none;
-            color: var(--text-secondary);
-            font-size: 15px;
+            color: #6B5660;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            border-bottom: 3px solid transparent;
-            margin-bottom: -2px;
-            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
             position: relative;
+            white-space: nowrap;
         }}
 
         .tab:hover {{
-            color: var(--dasilva-purple);
+            color: #4A4458;
             background: rgba(74, 68, 88, 0.03);
         }}
 
         .tab.active {{
-            color: var(--dasilva-purple);
-            border-bottom: 3px solid var(--dasilva-purple);
+            color: #4A4458;
+            border-bottom: 2px solid #4A4458;
             font-weight: 600;
-            background: linear-gradient(180deg, transparent 0%, rgba(74, 68, 88, 0.02) 100%);
         }}
 
         .tab-content {{
@@ -1379,6 +1368,119 @@ class HTMLReportGenerator:
 
         .tab-content.active {{
             display: block;
+        }}
+
+        /* Competitive Landscape Horizontal Bars - DESIGN 5 */
+        .competitive-bar-container {{
+            margin: 24px 0;
+        }}
+
+        .competitive-bar-row {{
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }}
+
+        .competitive-bar-label {{
+            width: 180px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2D2D2D;
+            flex-shrink: 0;
+            text-align: right;
+            padding-right: 16px;
+        }}
+
+        .competitive-bar-track {{
+            flex: 1;
+            height: 32px;
+            background: #F3F4F6;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }}
+
+        .competitive-bar-fill {{
+            height: 100%;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 12px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            min-width: 48px;
+        }}
+
+        .competitive-bar-fill.yours {{
+            background: #4A4458;
+        }}
+
+        .competitive-bar-fill.competitor {{
+            background: #9CA3AF;
+        }}
+
+        /* Platform Grid - DESIGN 4 */
+        .platform-grid {{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 32px 0;
+        }}
+
+        .platform-card {{
+            background: white;
+            border: 1px solid #E8E4E3;
+            border-radius: 10px;
+            padding: 20px;
+        }}
+
+        .platform-card-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }}
+
+        .platform-card-name {{
+            font-weight: 600;
+            font-size: 15px;
+            color: #2D2D2D;
+        }}
+
+        .platform-card-context {{
+            font-size: 12px;
+            color: #9CA3AF;
+        }}
+
+        .platform-card-value {{
+            font-size: 32px;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 12px;
+        }}
+
+        .platform-progress-track {{
+            height: 6px;
+            background: #F0F0F0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }}
+
+        .platform-progress-bar {{
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }}
+
+        .platform-card-footer {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #6B7280;
         }}
 
         /* Filters */
@@ -1819,30 +1921,29 @@ class HTMLReportGenerator:
         }}
 
         .accordion-button {{
-            width: 100%;
-            padding: 16px 20px;
-            background: #F8F8F7;
+            background: #FAFAFA;
             border: 1px solid #E8E4E3;
             border-radius: 8px;
+            padding: 16px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
             cursor: pointer;
+            width: 100%;
+            text-align: left;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 14px;
-            font-weight: 600;
-            color: #6B5660;
+            margin-bottom: 8px;
             transition: all 0.2s ease;
-            text-align: left;
         }}
 
         .accordion-button:hover {{
-            background: #F3EFF2;
-            color: #4D2E3A;
+            background: #F3F4F6;
         }}
 
         .accordion-button.active {{
-            background: #4D2E3A;
-            color: white;
+            background: #F3F4F6;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }}
@@ -1857,19 +1958,13 @@ class HTMLReportGenerator:
         }}
 
         .accordion-content {{
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            background: white;
+            padding: 20px;
             border: 1px solid #E8E4E3;
             border-top: none;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-        }}
-
-        .accordion-content.active {{
-            max-height: 2000px;
-            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            margin-top: -9px;
+            margin-bottom: 16px;
+            background: white;
         }}
 
         /* Hero Stats Card */
@@ -1969,18 +2064,17 @@ class HTMLReportGenerator:
 
         /* Info Cards */
         .info-card {{
-            background: white;
+            background: #FAFAFA;
             border: 1px solid #E8E4E3;
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 24px;
             margin: 16px 0;
-            box-shadow: 0 2px 8px rgba(28, 28, 28, 0.04);
         }}
 
         .info-card-title {{
             font-size: 16px;
             font-weight: 700;
-            color: #4D2E3A;
+            color: #2D2D2D;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
@@ -1990,7 +2084,7 @@ class HTMLReportGenerator:
         .info-card-content {{
             font-size: 14px;
             line-height: 1.6;
-            color: #6B5660;
+            color: #374151;
         }}
 
     </style>
@@ -2297,84 +2391,69 @@ class HTMLReportGenerator:
             'anthropic': ('Claude (Anthropic)', '15% of AI users — growing in professional use'),
             'perplexity': ('Perplexity', '~5% — research-focused with direct citations'),
             'gemini': ('Gemini (Google)', '~7% — integrated into Google Search'),
-            'deepseek': ('DeepSeek', 'Growing technical audience, strong in Asia'),
-            'grok': ('Grok (X.AI)', 'Integrated with X/Twitter feed')
+            'google_ai_overview': ('Google AI Overviews', 'Massive passive reach — shown to all Google searchers automatically'),
+            'copilot': ('Microsoft Copilot', 'Enterprise integration — built into Microsoft 365, Bing, and Edge')
         }
 
-        rows = ""
-        row_count = 0
+        # Build platform cards instead of table rows
+        cards_html = ""
         for platform, stats in sorted(platform_stats.items(), key=lambda x: x[1]['mentions'] / max(x[1]['total'], 1), reverse=True):
             mention_rate = (stats['mentions'] / stats['total'] * 100) if stats['total'] > 0 else 0
             avg_prominence = sum(stats['avg_prominence']) / len(stats['avg_prominence']) if stats['avg_prominence'] else 0
 
-            badge_class = 'badge-strong' if mention_rate >= 60 else 'badge-needs-work' if mention_rate >= 30 else 'badge-weak'
             status = self._get_performance_label(mention_rate)
 
             # Get friendly name and context
             platform_lower = platform.lower()
             platform_display, platform_context = platform_mapping.get(platform_lower, (platform.upper(), ''))
 
-            # Add crisis emoji for ChatGPT if underperforming
-            crisis_emoji = ""
-            if platform_lower == 'openai' and mention_rate < 20:
-                crisis_emoji = " 🚨"
-
             # Progress bar color
-            bar_color = 'green' if mention_rate >= 60 else 'yellow' if mention_rate >= 30 else 'red'
+            if mention_rate >= 60:
+                bar_color = '#10b981'  # green
+            elif mention_rate >= 30:
+                bar_color = '#f59e0b'  # amber
+            else:
+                bar_color = '#ef4444'  # red
 
-            rows += f"""
-            <tr>
-                <td>
-                    <strong>{platform_display}{crisis_emoji}</strong><br>
-                    <span style="font-size: 12px; color: #6B5660; font-weight: normal;">{platform_context}</span>
-                </td>
-                <td style="text-align: center;">{stats['total']}</td>
-                <td style="text-align: center;"><strong>{stats['mentions']}</strong></td>
-                <td>
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div class="progress-bar-container" style="flex: 1;">
-                            <div class="progress-bar {bar_color}" style="width: {mention_rate}%"></div>
-                        </div>
-                        <span style="font-weight: 600; min-width: 45px;">{mention_rate:.0f}%</span>
+            # Add crisis emoji for ChatGPT if underperforming
+            crisis_indicator = " 🚨" if platform_lower == 'openai' and mention_rate < 20 else ""
+
+            cards_html += f"""
+            <div class="platform-card">
+                <div class="platform-card-header">
+                    <div>
+                        <div class="platform-card-name">{platform_display}{crisis_indicator}</div>
+                        <div class="platform-card-context">{platform_context}</div>
                     </div>
-                </td>
-                <td style="text-align: center;">{status}</td>
-            </tr>
+                </div>
+                <div class="platform-card-value">{mention_rate:.1f}%</div>
+                <div class="platform-progress-track">
+                    <div class="platform-progress-bar" style="width: {mention_rate}%; background: {bar_color};"></div>
+                </div>
+                <div class="platform-card-footer">
+                    <span>{stats['mentions']} of {stats['total']} mentions</span>
+                    <span style="background: {'#D4E8D4' if mention_rate >= 60 else '#F7E8D4' if mention_rate >= 30 else '#F0D4D4'}; padding: 2px 8px; border-radius: 10px; font-size: 12px; color: {'#2D5F2D' if mention_rate >= 60 else '#5A4A3A' if mention_rate >= 30 else '#6B3A3A'};">{status}</span>
+                </div>
+            </div>
             """
-            row_count += 1
 
         return f"""
-        <div style="margin-top: 64px;">
+        <div style="margin-top: 72px;">
             <h2>Platform Performance</h2>
-            <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 32px;">
+            <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.65; margin-bottom: 32px;">
                 <strong>What this shows:</strong> Each AI platform has different training data, algorithms, and user bases.
                 ChatGPT represents 73% of all AI users, so focus there first. This section breaks down your visibility
                 on each platform to help you prioritize where to invest your content efforts.
             </p>
-            <div class="info-card">
-                <div class="info-card-content">
-                <table style="width: 100%;">
-                    <thead>
-                        <tr style="background: #F8F8F7;">
-                            <th style="text-align: left;">Platform</th>
-                            <th style="text-align: center;">Tests Run</th>
-                            <th style="text-align: center;">Mentions</th>
-                            <th style="text-align: left;">Visibility Rate</th>
-                            <th style="text-align: center;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows}
-                    </tbody>
-                </table>
-                </div>
+            <div class="platform-grid">
+                {cards_html}
             </div>
 
-            <p style="font-size: 13px; color: #6B5660; margin-top: 16px;">
+            <p style="font-size: 13px; color: #6B5660; margin-top: 24px;">
                 Platform usage data based on <a href="https://www.similarweb.com/corp/reports/the-2026-generative-ai-brand-visibility-index/" target="_blank" style="color: #4A4458;">SimilarWeb's 2026 AI Visibility Index</a>. Each platform uses different training data and retrieval methods, which is why visibility varies across platforms.
             </p>
 
-            <div class="accordion-group" style="margin-top: 16px;">
+            <div class="accordion-group" style="margin-top: 24px;">
             <button class="accordion-button" onclick="toggleAccordion(this)">
                 <span>❓ Why Platform Breakdown Matters</span>
                 <span class="accordion-icon">▼</span>
@@ -3739,8 +3818,8 @@ class HTMLReportGenerator:
                 'openai': 'ChatGPT (OpenAI)',
                 'anthropic': 'Claude (Anthropic)',
                 'perplexity': 'Perplexity',
-                'deepseek': 'DeepSeek',
-                'grok': 'Grok (X.AI)'
+                'google_ai_overview': 'Google AI Overviews',
+                'copilot': 'Microsoft Copilot'
             }
             platform = platform_mapping.get(platform_raw.lower(), platform_raw.upper())
 

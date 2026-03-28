@@ -1,0 +1,460 @@
+PLATFORM EXPANSION SPEC — Google AI Overviews + Microsoft Copilot
+==================================================================
+
+Read CLAUDE.md first. Work on the dev branch.
+This adds two new AI platforms to the tracker: Google AI Overviews (via SerpAPI)
+and Microsoft Copilot. It also removes DeepSeek and Grok, which are excluded
+for security and privacy reasons.
+
+There are 8 changes across 7 files. Do them in order.
+
+
+=== CHANGE 1: Create SerpAPI Client for Google AI Overviews (NEW FILE) ===
+
+File: src/api_clients/serpapi_client.py (NEW)
+
+Create a new API client that inherits from BaseAPIClient. This client queries
+Google via SerpAPI and extracts the AI Overview (the AI-generated summary box
+that appears at the top of some Google search results).
+
+How SerpAPI works for AI Overviews:
+- Endpoint: https://serpapi.com/search
+- Use engine=google with any search query
+- The response JSON may contain an "ai_overview" key
+- ai_overview contains:
+  - "text_blocks": list of {type, snippet, list, ...} — the AI-generated text
+  - "references": list of {title, link, snippet, source, ...} — cited sources
+- Sometimes AI Overviews require a second request using a "page_token"
+  (valid for ~4 minutes). The first response will contain
+  ai_overview.page_token if a follow-up is needed.
+- SerpAPI also has a dedicated endpoint: engine=google_ai_overview
+  which takes the page_token and returns the full AI Overview content.
+
+IMPLEMENTATION:
+
+class SerpAPIClient(BaseAPIClient):
+    """SerpAPI client for Google AI Overviews."""
+
+    def _get_platform_name(self) -> str:
+        return 'google_ai_overview'
+
+    def send_prompt(self, prompt, temperature=None, max_tokens=None):
+        """
+        Send a search query to Google via SerpAPI and extract AI Overview.
+
+        Note: temperature and max_tokens are ignored — Google AI Overviews
+        are not controllable. These params exist for BaseAPIClient compatibility.
+        """
+        import requests
+
+        # Step 1: Search Google via SerpAPI
+        params = {
+            'engine': 'google',
+            'q': prompt,
+            'api_key': self.api_key,
+            'gl': self.config.get('serpapi', {}).get('country', 'ca'),
+            'hl': self.config.get('serpapi', {}).get('language', 'en'),
+            'num': 10
+        }
+
+        try:
+            response = requests.get('https://serpapi.com/search', params=params, timeout=30)
+            response.raise_for_status()
+            data = response.json()
+        except Exception as e:
+            return {
+                'response_text': '',
+                'success': False,
+                'error': f'SerpAPI request failed: {str(e)}',
+                'metadata': {}
+            }
+
+        # Step 2: Extract AI Overview
+        ai_overview = data.get('ai_overview')
+
+        if not ai_overview:
+            # No AI Overview for this query — that's valid data (not an error)
+            return {
+                'response_text': '',
+                'success': True,
+                'error': None,
+                'metadata': {
+                    'has_ai_overview': False,
+                    'organic_results_count': len(data.get('organic_results', [])),
+                    'search_id': data.get('search_metadata', {}).get('id'),
+                    'references': []
+                }
+            }
+
+        # Step 3: Handle page_token if AI Overview needs a follow-up request
+        page_token = ai_overview.get('page_token')
+        if page_token and not ai_overview.get('text_blocks'):
+            try:
+                token_params = {
+                    'engine': 'google_ai_overview',
+                    'page_token': page_token,
+                    'api_key': self.api_key
+                }
+                token_response = requests.get(
+                    'https://serpapi.com/search',
+                    params=token_params,
+                    timeout=30
+                )
+                token_response.raise_for_status()
+                token_data = token_response.json()
+                ai_overview = token_data.get('ai_overview', ai_overview)
+            except Exception as e:
+                # Fall back to whatever we got in the first response
+                pass
+
+        # Step 4: Build response text from text_blocks
+        text_parts = []
+        for block in ai_overview.get('text_blocks', []):
+            if block.get('snippet'):
+                text_parts.append(block['snippet'])
+            if block.get('list'):
+                for item in block['list']:
+                    text_parts.append(f"- {item}")
+
+        response_text = '\n'.join(text_parts)
+
+        # Step 5: Extract references (these become sources in our system)
+        references = []
+        for ref in ai_overview.get('references', []):
+            references.append({
+                'title': ref.get('title', ''),
+                'link': ref.get('link', ''),
+                'snippet': ref.get('snippet', ''),
+                'source': ref.get('source', ''),
+                'domain': self._extract_domain(ref.get('link', ''))
+            })
+
+        return {
+            'response_text': response_text,
+            'success': True,
+            'error': None,
+            'metadata': {
+                'has_ai_overview': True,
+                'references': references,
+                'reference_count': len(references),
+                'text_block_count': len(ai_overview.get('text_blocks', [])),
+                'organic_results_count': len(data.get('organic_results', [])),
+                'search_id': data.get('search_metadata', {}).get('id'),
+                'used_page_token': page_token is not None
+            }
+        }
+
+    @staticmethod
+    def _extract_domain(url):
+        """Extract domain from a URL."""
+        try:
+            from urllib.parse import urlparse
+            parsed = urlparse(url)
+            return parsed.netloc.replace('www.', '')
+        except Exception:
+            return ''
+
+IMPORTANT NOTES:
+- The `model` parameter in __init__ is unused for SerpAPI (there's no model choice).
+  Pass 'google_ai_overview' as the model string for consistency.
+- The prompt text from our prompts CSV may be conversational (e.g., "What are
+  the best caregiver support services in Ontario?"). SerpAPI handles this fine —
+  Google search accepts natural language queries.
+- Country/language defaults to Canada (gl=ca, hl=en) but should be configurable
+  per client via config or brand_config.
+- Each SerpAPI call costs 1 search credit. The page_token follow-up is a second
+  credit. Budget accordingly but do not limit — Tiffany has confirmed she doesn't
+  mind paying for searches.
+
+INSTALL: Add google-search-results to requirements.txt (SerpAPI's official
+Python package). However, the implementation above uses raw requests instead
+for simplicity and fewer dependencies. Either approach works.
+
+
+=== CHANGE 2: Create Microsoft Copilot Client (NEW FILE) ===
+
+File: src/api_clients/copilot_client.py (NEW)
+
+Create a new API client for Microsoft Copilot. Copilot uses the Azure OpenAI
+API under the hood, so this client is very similar to the OpenAI client but
+points to Azure endpoints.
+
+IMPLEMENTATION:
+
+class CopilotClient(BaseAPIClient):
+    """Microsoft Copilot API client via Azure OpenAI."""
+
+    def _get_platform_name(self) -> str:
+        return 'copilot'
+
+    def send_prompt(self, prompt, temperature=None, max_tokens=None):
+        """
+        Send a prompt to Microsoft Copilot via Azure OpenAI endpoint.
+        """
+        try:
+            from openai import AzureOpenAI
+
+            # Azure OpenAI requires endpoint and deployment name
+            azure_endpoint = self.config.get('azure', {}).get(
+                'endpoint', os.getenv('AZURE_OPENAI_ENDPOINT', '')
+            )
+            api_version = self.config.get('azure', {}).get(
+                'api_version', '2024-06-01'
+            )
+
+            client = AzureOpenAI(
+                api_key=self.api_key,
+                api_version=api_version,
+                azure_endpoint=azure_endpoint
+            )
+
+            temperature = temperature or self.config.get('testing', {}).get('default_temperature', 0.7)
+            max_tokens = max_tokens or self.config.get('testing', {}).get('max_tokens', 1000)
+            timeout = self.config.get('testing', {}).get('timeout_seconds', 30)
+
+            response = client.chat.completions.create(
+                model=self.model,  # This is the Azure deployment name
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=temperature,
+                max_tokens=max_tokens,
+                timeout=timeout
+            )
+
+            return {
+                'response_text': response.choices[0].message.content,
+                'success': True,
+                'error': None,
+                'metadata': {
+                    'tokens_used': response.usage.total_tokens if response.usage else None,
+                    'prompt_tokens': response.usage.prompt_tokens if response.usage else None,
+                    'completion_tokens': response.usage.completion_tokens if response.usage else None,
+                    'finish_reason': response.choices[0].finish_reason,
+                    'temperature': temperature,
+                    'max_tokens': max_tokens
+                }
+            }
+
+        except Exception as e:
+            return {
+                'response_text': '',
+                'success': False,
+                'error': str(e),
+                'metadata': {}
+            }
+
+NOTE ON COPILOT ACCESS: Microsoft Copilot's API access requires either:
+- Azure OpenAI Service subscription (recommended)
+- Or a future direct Copilot API if Microsoft releases one
+
+If Tiffany doesn't have Azure OpenAI access yet, the client will gracefully
+skip initialization (same as other clients when API key is missing).
+This is a forward-looking integration — the client is ready when the key is.
+
+
+=== CHANGE 3: Register New Clients in main.py ===
+
+File: main.py
+
+Add imports and initialization for both new clients.
+
+ADD imports at the top (after the existing client imports):
+  from api_clients.serpapi_client import SerpAPIClient
+  from api_clients.copilot_client import CopilotClient
+
+ADD to _initialize_clients() method, after the Gemini block:
+
+    # Google AI Overviews (via SerpAPI)
+    serpapi_key = api_keys.get('serpapi') or os.getenv('SERPAPI_API_KEY', '')
+    if serpapi_key and not serpapi_key.startswith('YOUR_'):
+        try:
+            self.clients['google_ai_overview'] = SerpAPIClient(
+                api_key=serpapi_key,
+                model='google_ai_overview',
+                config=self.config
+            )
+            print("✓ Google AI Overviews client initialized (via SerpAPI)")
+        except Exception as e:
+            print(f"✗ Failed to initialize SerpAPI client: {e}")
+
+    # Microsoft Copilot (via Azure OpenAI)
+    copilot_key = api_keys.get('copilot') or api_keys.get('azure_openai') or os.getenv('AZURE_OPENAI_API_KEY', '')
+    if copilot_key and not copilot_key.startswith('YOUR_'):
+        try:
+            self.clients['copilot'] = CopilotClient(
+                api_key=copilot_key,
+                model=models.get('copilot', 'gpt-4'),
+                config=self.config
+            )
+            print("✓ Microsoft Copilot client initialized")
+        except Exception as e:
+            print(f"✗ Failed to initialize Copilot client: {e}")
+
+ADD to the Streamlit secrets fallback config (the 'models' dict):
+    'serpapi': 'google_ai_overview',
+    'copilot': 'gpt-4'
+
+ADD to the env var fallback section:
+    'serpapi': os.getenv('SERPAPI_API_KEY', ''),
+    'copilot': os.getenv('AZURE_OPENAI_API_KEY', ''),
+
+
+=== CHANGE 4: Pass SerpAPI Key Through Dashboard (run_report.py) ===
+
+File: dashboard_pages/run_report.py
+
+In BOTH places where API keys are passed as environment variables to the
+subprocess (around lines 390-401 and 530-541), add:
+
+    if api_keys.get('serpapi'):
+        env['SERPAPI_API_KEY'] = api_keys['serpapi']
+    if api_keys.get('copilot') or api_keys.get('azure_openai'):
+        env['AZURE_OPENAI_API_KEY'] = api_keys.get('copilot', api_keys.get('azure_openai', ''))
+    if api_keys.get('azure_openai_endpoint'):
+        env['AZURE_OPENAI_ENDPOINT'] = api_keys['azure_openai_endpoint']
+
+Also update the has_api_keys environment variable check (around line 680-685):
+    Add os.getenv('SERPAPI_API_KEY') and os.getenv('AZURE_OPENAI_API_KEY')
+    to the env_keys list.
+
+
+=== CHANGE 5: Add SerpAPI Key to Streamlit Secrets ===
+
+File: (instructions for Tiffany, not a code change)
+
+Add the SerpAPI key to Google Cloud Secret Manager under streamlit-secrets:
+
+[api_keys]
+openai = "..."
+anthropic = "..."
+perplexity = "..."
+gemini = "..."
+serpapi = "YOUR_SERPAPI_KEY_HERE"
+# copilot = ""  # Add when Azure OpenAI access is available
+
+The SerpAPI key can be found at: https://serpapi.com/manage-api-key
+Tiffany has already signed up for SerpAPI.
+
+
+=== CHANGE 6: Update Platform Mapping Everywhere ===
+
+File: src/reporting/html_report_generator.py
+
+There are TWO platform_mapping dicts in this file. Update BOTH.
+
+MAPPING 1 (around line 2295, in _build_visibility_by_platform):
+
+REMOVE these entries:
+    'deepseek': ('DeepSeek', 'Growing technical audience, strong in Asia'),
+    'grok': ('Grok (X.AI)', 'Integrated with X/Twitter feed')
+
+ADD these entries:
+    'google_ai_overview': ('Google AI Overviews', 'Massive passive reach — shown to all Google searchers automatically'),
+    'copilot': ('Microsoft Copilot', 'Enterprise integration — built into Microsoft 365, Bing, and Edge'),
+
+The full updated mapping should be:
+platform_mapping = {
+    'openai': ('ChatGPT (OpenAI)', '73% of AI users — largest discovery platform'),
+    'anthropic': ('Claude (Anthropic)', '15% of AI users — growing in professional use'),
+    'perplexity': ('Perplexity', '~5% — research-focused with direct citations'),
+    'gemini': ('Gemini (Google)', '~7% — integrated into Google Search'),
+    'google_ai_overview': ('Google AI Overviews', 'Massive passive reach — shown to all Google searchers automatically'),
+    'copilot': ('Microsoft Copilot', 'Enterprise integration — built into Microsoft 365, Bing, and Edge'),
+}
+
+MAPPING 2 (around line 3738, in _build_platform_metric_card or similar):
+
+REMOVE: 'deepseek' and 'grok' entries
+ADD: 'google_ai_overview': 'Google AI Overviews' and 'copilot': 'Microsoft Copilot'
+
+
+=== CHANGE 7: Handle AI Overview-Specific Data in Visibility Scorer ===
+
+File: src/analysis/visibility_scorer.py
+
+Google AI Overviews return data differently from chat-based AI platforms:
+- Response text is assembled from text_blocks (not a conversation)
+- References come as structured metadata, not inline URLs
+- There's a binary signal: has_ai_overview (True/False)
+
+ADD special handling in score_response() for the google_ai_overview platform:
+
+1. If platform == 'google_ai_overview' and metadata.has_ai_overview is False:
+   - This means Google did NOT show an AI Overview for this query
+   - Set visibility score to 0 (brand was not mentioned because there was nothing)
+   - Set a metadata flag: 'ai_overview_absent': True
+   - This is important data: it tells us which queries DON'T trigger AI Overviews
+
+2. If platform == 'google_ai_overview' and metadata.has_ai_overview is True:
+   - Process response_text normally through the existing scoring pipeline
+   - ADDITIONALLY, process the references from metadata:
+     - For each reference, check if any reference.domain matches brand_domains
+     - If so, increment citation count — this is a DIRECT citation from Google
+     - Google AI Overview citations are extremely high-value signals
+
+3. In extract_sources(), if the result has metadata.references (from SerpAPI):
+   - Create source entries from the references list instead of (or in addition to)
+     parsing URLs from the response text
+   - Each reference becomes a source with type='ai_overview_reference',
+     domain from the reference, full_url from reference.link
+   - This gives much more accurate source tracking than regex parsing
+
+
+=== CHANGE 8: Update Platform Priority Order in Config ===
+
+File: config/config.template.json (and any hardcoded platform lists)
+
+The recommended platform testing order should be:
+1. openai (ChatGPT) — largest user base
+2. google_ai_overview — largest passive reach
+3. perplexity — research-focused, high-quality citations
+4. gemini — Google's dedicated AI
+5. anthropic (Claude) — growing professional use
+6. copilot — enterprise market
+
+This order determines which platforms are tested first if there are rate
+limits or budget constraints. All platforms should be tested by default.
+
+Also update any hardcoded platform lists in:
+- dashboard_pages/overview.py (if platform list exists)
+- dashboard_pages/sources.py (if platform filtering exists)
+- src/reporting/html_report_generator.py (chart ordering)
+
+Remove all references to 'deepseek' and 'grok' from the entire codebase.
+
+
+=== TESTING NOTES ===
+
+After all changes:
+1. The app should start without errors even with NO SerpAPI key configured
+   (the client just won't initialize — same pattern as other platforms)
+2. With a valid SerpAPI key, querying should return AI Overview data
+3. Results with has_ai_overview: False should be clearly shown in the report
+   (this is useful data, not an error)
+4. The word "deepseek" and "grok" should not appear anywhere in the codebase
+5. All platform_mapping references should include the new platforms
+6. The visibility scorer should handle google_ai_overview results correctly
+
+=== MANUAL TESTING STEPS ===
+
+To test SerpAPI locally:
+  import requests
+  params = {
+      'engine': 'google',
+      'q': 'best caregiver support services ontario',
+      'api_key': 'YOUR_KEY',
+      'gl': 'ca',
+      'hl': 'en'
+  }
+  r = requests.get('https://serpapi.com/search', params=params)
+  data = r.json()
+  print('Has AI Overview:', 'ai_overview' in data)
+  if 'ai_overview' in data:
+      print('Text blocks:', len(data['ai_overview'].get('text_blocks', [])))
+      print('References:', len(data['ai_overview'].get('references', [])))
+
+
+=== COMMIT ===
+
+Commit all changes with a clear message when done. Use the dev branch.
