@@ -222,3 +222,23 @@ class HistoricalTracker:
         """
         history = self.get_client_history(client_name)
         return sorted(history.keys())
+
+    def delete_month(self, client_name: str, month: str) -> bool:
+        """
+        Delete a specific month's data.
+
+        Args:
+            client_name: Name of the client
+            month: Month string (YYYY-MM) to delete
+
+        Returns:
+            True if deleted, False if not found
+        """
+        history = self._load_history()
+        client_slug = client_name.lower().replace(' ', '_')
+        if client_slug in history and month in history[client_slug]:
+            del history[client_slug][month]
+            with open(self.history_file, 'w') as f:
+                json.dump(history, f, indent=2)
+            return True
+        return False
