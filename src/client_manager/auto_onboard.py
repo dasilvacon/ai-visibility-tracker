@@ -682,12 +682,14 @@ class ClientAutoOnboarder:
         Returns:
             Summary dict with file paths and stats
         """
-        output_path = Path(output_dir)
-        output_path.mkdir(parents=True, exist_ok=True)
-
         # Generate client slug from brand name
         client_slug = self.brand_name.lower().replace(" ", "_")
         client_slug = re.sub(r"[^a-z0-9_]", "", client_slug)
+
+        # Save into client-specific subdirectory: data/{slug}/
+        # This matches the GCS download path so files survive container restarts
+        output_path = Path(output_dir) / client_slug
+        output_path.mkdir(parents=True, exist_ok=True)
 
         summary = {
             "client_name": self.brand_name,

@@ -787,6 +787,7 @@ def _create_client():
         st.session_state.generation_config.update({
             'personas_file': summary['files'].get('personas', ''),
             'keywords_file': summary['files'].get('keywords', ''),
+            'brand_config_file': summary['files'].get('brand_config', ''),
             'client_name': client_name
         })
 
@@ -1112,6 +1113,7 @@ def _render_existing_clients():
                     st.session_state.generation_config.update({
                         'personas_file': files.get('personas', ''),
                         'keywords_file': files.get('keywords', ''),
+                        'brand_config_file': files.get('brand_config', ''),
                         'client_name': name
                     })
                     st.rerun()
