@@ -268,3 +268,12 @@ def render():
                     st.markdown("**By Platform:**")
                     for platform, data in month_data['by_platform'].items():
                         st.write(f"- **{platform.title()}:** {data['visibility']}% visibility, #{int(data['prominence'])} prominence, {data['share_of_voice']}% SOV")
+
+                # Delete button
+                st.markdown("---")
+                if st.button(f"🗑️ Delete This Test Run", key=f"delete_{month}"):
+                    if tracker.delete_month(client_name, month):
+                        st.success(f"Deleted {month} data.")
+                        st.rerun()
+                    else:
+                        st.error("Could not delete.")
