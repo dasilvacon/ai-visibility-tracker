@@ -151,6 +151,17 @@ def _render_input_step():
             key="qs_desc_input"
         )
 
+    # Optional: paste strategy questionnaire answers
+    with st.expander("Paste strategy questionnaire answers (optional)"):
+        st.caption("Paste the client's full questionnaire responses below. The system will automatically extract target audiences, business goals, topics, and competitors.")
+        questionnaire_raw = st.text_area(
+            "Strategy questionnaire answers",
+            value=st.session_state.get('qs_questionnaire_raw', ''),
+            placeholder="Paste the full questionnaire here — any format works.\n\nExample:\nTarget audience: Adult child caregivers over 50, spousal caregivers, healthcare providers\nMain goals: Increase awareness of support programs, drive helpline calls\nKey topics: caregiver burnout, respite care, navigating the healthcare system\nCompetitors: Caregiver Action Network, AARP Caregiving",
+            height=200,
+            key="qs_questionnaire_input"
+        )
+
     # Check Ahrefs availability
     ahrefs = AhrefsClient()
     ahrefs_available = ahrefs.is_configured
@@ -185,6 +196,7 @@ def _render_input_step():
             st.session_state.qs_domain = clean_domain
             st.session_state.qs_country = country
             st.session_state.qs_description = description
+            st.session_state.qs_questionnaire_raw = questionnaire_raw
             st.session_state.qs_source = 'ahrefs'
 
             with st.spinner(f"Pulling keywords and competitors for {clean_domain}..."):
@@ -203,17 +215,44 @@ def _render_input_step():
 
 def _fetch_ahrefs_data(ahrefs: AhrefsClient, domain: str, country: str):
     """Fetch keywords and competitors from Ahrefs API."""
+    errors = []
+
     # Pull keywords
     kw_result = ahrefs.get_organic_keywords(domain, country=country, limit=200, min_volume=10)
     if kw_result.get('error'):
-        st.warning(f"Keywords: {kw_result['error']}")
+        errors.append(f"Keywords: {kw_result['error']}")
     keywords = kw_result.get('keywords', [])
+
+    # If very few keywords in selected country, also try US for more coverage
+    if len(keywords) < 20 and country.lower() not in ('us', 'global'):
+        us_result = ahrefs.get_organic_keywords(domain, country='us', limit=200, min_volume=10)
+        if not us_result.get('error'):
+            us_keywords = us_result.get('keywords', [])
+            # Merge, avoiding duplicates
+            existing_kws = {kw.get('keyword', '').lower() for kw in keywords}
+            for kw in us_keywords:
+                if kw.get('keyword', '').lower() not in existing_kws:
+                    keywords.append(kw)
+                    existing_kws.add(kw.get('keyword', '').lower())
+            if us_keywords:
+                errors.append(f"Note: Also pulled US keywords for better coverage ({len(us_keywords)} additional)")
 
     # Pull competitors (10 per Tiffany's spec)
     comp_result = ahrefs.get_organic_competitors(domain, country=country, limit=10)
     if comp_result.get('error'):
-        st.warning(f"Competitors: {comp_result['error']}")
+        errors.append(f"Competitors: {comp_result['error']}")
     competitors = comp_result.get('competitors', [])
+
+    # If no competitors in selected country, try US
+    if not competitors and country.lower() not in ('us', 'global'):
+        us_comp_result = ahrefs.get_organic_competitors(domain, country='us', limit=10)
+        if not us_comp_result.get('error'):
+            competitors = us_comp_result.get('competitors', [])
+            if competitors:
+                errors.append("Note: Competitors pulled from US data (none found in selected country)")
+
+    # Store any errors/notes so they persist after rerun
+    st.session_state.qs_fetch_notes = errors
 
     # Run through auto-onboarder filtering
     onboarder = ClientAutoOnboarder(
@@ -224,10 +263,13 @@ def _fetch_ahrefs_data(ahrefs: AhrefsClient, domain: str, country: str):
     onboarder.ingest_ahrefs_keywords(keywords)
     onboarder.ingest_ahrefs_competitors(competitors)
 
-    if st.session_state.qs_description:
-        onboarder.ingest_questionnaire({
-            'business_description': st.session_state.qs_description
-        })
+    # Parse questionnaire if provided
+    questionnaire = _parse_questionnaire(
+        st.session_state.get('qs_questionnaire_raw', ''),
+        st.session_state.get('qs_description', '')
+    )
+    if questionnaire:
+        onboarder.ingest_questionnaire(questionnaire)
 
     filtered = onboarder.filter_keywords()
     personas = onboarder.generate_personas()
@@ -306,10 +348,13 @@ def _render_csv_upload(client_name, domain, country, description):
                 )
                 onboarder.ingest_ahrefs_keywords(keywords_data)
 
-                if description:
-                    onboarder.ingest_questionnaire({
-                        'business_description': description
-                    })
+                # Parse questionnaire if provided
+                csv_questionnaire = _parse_questionnaire(
+                    st.session_state.get('qs_questionnaire_raw', ''),
+                    description
+                )
+                if csv_questionnaire:
+                    onboarder.ingest_questionnaire(csv_questionnaire)
 
                 filtered = onboarder.filter_keywords()
                 personas = onboarder.generate_personas()
@@ -346,6 +391,14 @@ def _render_review_step():
         {len(competitors)} competitors &middot; {len(personas)} personas</span>
     </div>
     """, unsafe_allow_html=True)
+
+    # Show any fetch notes/errors from the pull
+    fetch_notes = st.session_state.get('qs_fetch_notes', [])
+    for note in fetch_notes:
+        if note.startswith("Note:"):
+            st.info(note)
+        else:
+            st.warning(note)
 
     # Back button
     if st.button("< Back to setup", key="qs_back"):
@@ -721,6 +774,169 @@ def _reset_quick_setup():
 
 
 # --- Helper functions ---
+
+def _parse_questionnaire(raw_text: str, description: str = '') -> dict:
+    """
+    Parse raw strategy questionnaire text into structured data.
+
+    Handles any format — the questionnaire could be Q&A pairs, bullet points,
+    freeform paragraphs, or anything else. Extracts:
+    - business_description
+    - target_audiences (list)
+    - important_topics (list)
+    - competitors_manual (list)
+    - key_features (list)
+    - differentiators (list)
+    - customer_questions (list)
+    """
+    if not raw_text.strip() and not description:
+        return {}
+
+    result = {}
+    if description:
+        result['business_description'] = description
+
+    raw = raw_text.strip()
+    if not raw:
+        return result
+
+    # Normalize: lowercase version for pattern matching, original for extraction
+    raw_lower = raw.lower()
+
+    # --- Extract target audiences ---
+    audiences = _extract_section(raw, [
+        r'target\s*audience[s]?', r'who\s*(?:are|is)\s*(?:your|the|their)\s*(?:target|ideal|primary)',
+        r'audience[s]?', r'customer\s*segment[s]?', r'persona[s]?',
+        r'who\s*(?:do|does|would)\s*(?:you|they)\s*serve',
+        r'who\s*(?:are|is)\s*(?:you|they)\s*trying\s*to\s*reach',
+    ])
+    if audiences:
+        result['target_audiences'] = audiences
+
+    # --- Extract topics / services / focus areas ---
+    topics = _extract_section(raw, [
+        r'(?:key|priority|important|main|core)\s*topic[s]?',
+        r'(?:key|main|core)\s*service[s]?',
+        r'(?:key|main|core)\s*offering[s]?',
+        r'what\s*(?:do|does)\s*(?:you|they)\s*(?:offer|provide|do)',
+        r'focus\s*area[s]?', r'program[s]?',
+        r'what\s*(?:topic|subject|area)[s]?',
+    ])
+    if topics:
+        result['important_topics'] = topics
+
+    # --- Extract competitors ---
+    competitors = _extract_section(raw, [
+        r'competitor[s]?', r'competing\s*(?:brand|company|org)',
+        r'who\s*(?:do|does)\s*(?:you|they)\s*compete\s*with',
+        r'alternative[s]?', r'similar\s*(?:brand|company|org|business)',
+    ])
+    if competitors:
+        result['competitors_manual'] = competitors
+
+    # --- Extract differentiators ---
+    diffs = _extract_section(raw, [
+        r'differentiator[s]?', r'what\s*(?:make|set)[s]?\s*(?:you|them)\s*(?:different|unique|apart)',
+        r'unique\s*(?:value|selling|advantage)', r'(?:key|main)\s*(?:strength|advantage)[s]?',
+        r'why\s*(?:should|would)\s*(?:someone|people|clients)\s*choose',
+    ])
+    if diffs:
+        result['differentiators'] = diffs
+
+    # --- Extract customer questions ---
+    questions = _extract_section(raw, [
+        r'(?:common|frequent|typical)\s*question[s]?',
+        r'what\s*(?:do|does)\s*(?:people|customer|client)[s]?\s*(?:ask|want to know)',
+        r'FAQ', r'question[s]?\s*(?:you|they)\s*(?:get|hear|receive)',
+    ])
+    if questions:
+        result['customer_questions'] = questions
+
+    # --- Extract key features ---
+    features = _extract_section(raw, [
+        r'(?:key|main|core)\s*feature[s]?',
+        r'product[s]?\s*(?:or|and|/)\s*service[s]?',
+    ])
+    if features:
+        result['key_features'] = features
+
+    # If we got nothing structured but have raw text, use it as business description
+    if not result.get('target_audiences') and not result.get('important_topics'):
+        # Fall back: just store the whole thing as business description
+        if not result.get('business_description'):
+            result['business_description'] = raw[:500]
+
+    return result
+
+
+def _extract_section(raw_text: str, patterns: list) -> list:
+    """
+    Extract a list of items from raw text by finding a section header
+    that matches one of the patterns, then parsing the content after it.
+
+    Handles formats like:
+    - "Target audience: X, Y, Z"
+    - "Target audience:\n- X\n- Y\n- Z"
+    - "Q: Who is your target audience?\nA: X, Y, and Z"
+    - "1. Target audiences\n  - X\n  - Y"
+    """
+    import re
+
+    for pattern in patterns:
+        # Try to find the section header
+        match = re.search(
+            rf'(?:^|\n)\s*(?:\d+[\.\)]\s*)?(?:Q:\s*)?{pattern}\s*[:\?\-—]*\s*(?:A:\s*)?\n?(.*?)(?=\n\s*(?:\d+[\.\)]\s*)?(?:Q:\s*)?[A-Z][a-z]{{3,}}.*?[:\?]|\Z)',
+            raw_text,
+            re.IGNORECASE | re.DOTALL
+        )
+        if match:
+            content = match.group(1).strip()
+            if not content:
+                continue
+
+            items = _parse_list_items(content)
+            if items:
+                return items
+
+    return []
+
+
+def _parse_list_items(text: str) -> list:
+    """
+    Parse a block of text into individual list items.
+    Handles bullet points, numbered lists, comma-separated, newline-separated.
+    """
+    import re
+
+    # First try: bullet points or numbered items
+    bullets = re.findall(r'(?:^|\n)\s*(?:[-•*●◦▪]|\d+[\.\)])\s*(.+)', text)
+    if bullets:
+        return [b.strip().rstrip(',;') for b in bullets if b.strip() and len(b.strip()) > 2]
+
+    # Second try: newline-separated (if multiple lines)
+    lines = [l.strip().rstrip(',;') for l in text.split('\n') if l.strip() and len(l.strip()) > 2]
+    if len(lines) > 1:
+        return lines
+
+    # Third try: comma or semicolon separated
+    if ',' in text or ';' in text:
+        items = re.split(r'[,;]', text)
+        # Handle "X, Y, and Z" pattern
+        cleaned = []
+        for item in items:
+            item = item.strip()
+            item = re.sub(r'^(?:and|or)\s+', '', item).strip()
+            if item and len(item) > 2:
+                cleaned.append(item)
+        if cleaned:
+            return cleaned
+
+    # Single item
+    if text.strip() and len(text.strip()) > 2:
+        return [text.strip()]
+
+    return []
+
 
 def _infer_intent(kw_data: dict) -> str:
     """Infer intent from keyword data."""

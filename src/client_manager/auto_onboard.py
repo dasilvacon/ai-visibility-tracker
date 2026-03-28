@@ -499,62 +499,106 @@ class ClientAutoOnboarder:
         return personas
 
     def _personas_from_keywords(self) -> List[Dict[str, Any]]:
-        """Create personas by clustering keywords."""
-        # Simple clustering: group by common words
-        keyword_clusters = defaultdict(list)
+        """Create personas based on intent distribution across keywords.
+
+        Instead of clustering by keyword words (which produces garbage like
+        'The Ukraine Focused User'), this creates universal intent-based
+        personas weighted by the actual keyword data.
+        """
+        # Count keywords and volume by intent
+        intent_buckets = {
+            "informational": {"keywords": [], "volume": 0},
+            "commercial": {"keywords": [], "volume": 0},
+            "transactional": {"keywords": [], "volume": 0},
+        }
 
         for kw_data in self.filtered_keywords:
-            keyword = kw_data.get("keyword", "")
-            words = keyword.lower().split()
+            volume = kw_data.get("volume", 0)
 
-            # Use the second word (after common stopwords) as cluster key
-            cluster_key = None
-            for word in words:
-                if len(word) > 3 and word not in {"the", "and", "for", "with"}:
-                    cluster_key = word
-                    break
+            if kw_data.get("is_transactional"):
+                intent_buckets["transactional"]["keywords"].append(kw_data)
+                intent_buckets["transactional"]["volume"] += volume
+            if kw_data.get("is_commercial"):
+                intent_buckets["commercial"]["keywords"].append(kw_data)
+                intent_buckets["commercial"]["volume"] += volume
+            if kw_data.get("is_informational"):
+                intent_buckets["informational"]["keywords"].append(kw_data)
+                intent_buckets["informational"]["volume"] += volume
 
-            if cluster_key:
-                keyword_clusters[cluster_key].append(kw_data)
+            # If no intent flags, classify by pattern
+            if not any(kw_data.get(f"is_{t}") for t in ["informational", "commercial", "transactional", "navigational"]):
+                intent = self.classify_intent(kw_data.get("keyword", ""))
+                if intent in ("how_to", "informational", "problem_solving"):
+                    intent_buckets["informational"]["keywords"].append(kw_data)
+                    intent_buckets["informational"]["volume"] += volume
+                elif intent in ("recommendation", "comparison", "review"):
+                    intent_buckets["commercial"]["keywords"].append(kw_data)
+                    intent_buckets["commercial"]["volume"] += volume
+                else:
+                    intent_buckets["commercial"]["keywords"].append(kw_data)
+                    intent_buckets["commercial"]["volume"] += volume
 
-        # Sort clusters by total volume
-        sorted_clusters = sorted(
-            keyword_clusters.items(),
-            key=lambda x: sum(k.get("volume", 0) for k in x[1]),
-            reverse=True
-        )
+        # Define persona templates — these work for any business
+        persona_templates = [
+            {
+                "intent": "informational",
+                "name": "Information Seeker",
+                "description": f"People researching topics related to {self.brand_name}. They're looking for answers, guides, and educational content.",
+            },
+            {
+                "intent": "commercial",
+                "name": "Comparison Shopper",
+                "description": f"People evaluating {self.brand_name} against alternatives. They want reviews, comparisons, and recommendations.",
+            },
+            {
+                "intent": "transactional",
+                "name": "Ready Buyer",
+                "description": f"People ready to purchase from or engage with {self.brand_name}. They're searching for specific products or services.",
+            },
+        ]
 
-        # Create personas from top clusters (up to 6)
+        # Build personas from templates, weighted by actual keyword volume
         personas = []
-        num_personas = min(len(sorted_clusters), 6)
-        total_volume = sum(
-            sum(k.get("volume", 0) for k in cluster[1])
-            for cluster in sorted_clusters[:num_personas]
-        )
+        total_volume = sum(b["volume"] for b in intent_buckets.values())
+        if total_volume == 0:
+            total_volume = 1  # avoid division by zero
 
-        for i, (cluster_key, cluster_keywords) in enumerate(sorted_clusters[:num_personas]):
-            cluster_volume = sum(k.get("volume", 0) for k in cluster_keywords)
-            weight = cluster_volume / total_volume if total_volume > 0 else 1.0 / num_personas
+        for i, template in enumerate(persona_templates):
+            bucket = intent_buckets.get(template["intent"], {"keywords": [], "volume": 0})
+            if not bucket["keywords"]:
+                continue  # skip empty intent buckets
 
-            # Extract priority topics from keywords
+            weight = bucket["volume"] / total_volume
+            # Extract top topics from this bucket's keywords
             priority_topics = list(set(
-                " ".join(k.get("keyword", "").split()[:3])
-                for k in cluster_keywords[:3]
+                kw.get("keyword", "") for kw in bucket["keywords"][:5]
             ))
 
-            persona_id = f"persona_{i+1}"
             personas.append({
-                "id": persona_id,
-                "name": f"The {cluster_key.title()} Focused User",
-                "weight": weight,
-                "description": f"Users primarily interested in {cluster_key}-related topics and solutions.",
+                "id": f"persona_{i + 1}",
+                "name": template["name"],
+                "weight": round(weight, 2),
+                "description": template["description"],
                 "priority_topics": priority_topics,
             })
 
-        # Normalize weights to sum to 1.0
-        total_weight = sum(p.get("weight", 0) for p in personas)
-        for persona in personas:
-            persona["weight"] = round(persona["weight"] / total_weight, 2) if total_weight > 0 else 1.0 / len(personas)
+        # Normalize weights
+        total_weight = sum(p["weight"] for p in personas)
+        if total_weight > 0:
+            for persona in personas:
+                persona["weight"] = round(persona["weight"] / total_weight, 2)
+
+        # If we ended up with nothing (unlikely), create a default
+        if not personas:
+            personas = [
+                {
+                    "id": "persona_1",
+                    "name": "General User",
+                    "weight": 1.0,
+                    "description": f"Users searching for information about {self.brand_name}",
+                    "priority_topics": [kw.get("keyword", "") for kw in self.filtered_keywords[:5]],
+                }
+            ]
 
         return personas
 
