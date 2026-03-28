@@ -5,6 +5,7 @@ Creates export formats for different stakeholders.
 
 import csv
 import os
+from datetime import datetime
 from typing import Dict, List, Any
 from collections import defaultdict
 
@@ -22,6 +23,12 @@ class CSVExporter:
         self.reports_dir = reports_dir
         os.makedirs(reports_dir, exist_ok=True)
 
+    def _versioned_filename(self, prefix: str, brand_name: str, extension: str = 'csv') -> str:
+        """Generate a versioned filename with YYYY-MM timestamp."""
+        month_stamp = datetime.now().strftime('%Y-%m')
+        safe_brand = brand_name.replace(' ', '_')
+        return f'{prefix}_{safe_brand}_{month_stamp}.{extension}'
+
     def export_sources(self, source_analysis: Dict[str, Any], brand_name: str) -> str:
         """
         Export source list CSV for PR/outreach team.
@@ -33,7 +40,7 @@ class CSVExporter:
         Returns:
             Path to exported CSV
         """
-        csv_path = os.path.join(self.reports_dir, f'sources_{brand_name.replace(" ", "_")}.csv')
+        csv_path = os.path.join(self.reports_dir, self._versioned_filename('sources', brand_name))
 
         all_sources = source_analysis.get('all_sources', [])
 
@@ -112,7 +119,7 @@ class CSVExporter:
         Returns:
             Path to exported CSV
         """
-        csv_path = os.path.join(self.reports_dir, f'raw_data_{brand_name.replace(" ", "_")}.csv')
+        csv_path = os.path.join(self.reports_dir, self._versioned_filename('raw_data', brand_name))
 
         with open(csv_path, 'w', newline='', encoding='utf-8') as f:
             fieldnames = [
@@ -167,7 +174,7 @@ class CSVExporter:
         Returns:
             Path to exported CSV
         """
-        csv_path = os.path.join(self.reports_dir, f'action_plan_{brand_name.replace(" ", "_")}.csv')
+        csv_path = os.path.join(self.reports_dir, self._versioned_filename('action_plan', brand_name))
 
         opportunities = gap_analysis.get('priority_opportunities', [])
 
@@ -236,7 +243,7 @@ class CSVExporter:
         Returns:
             Path to exported CSV
         """
-        csv_path = os.path.join(self.reports_dir, f'competitors_{brand_name.replace(" ", "_")}.csv')
+        csv_path = os.path.join(self.reports_dir, self._versioned_filename('competitors', brand_name))
 
         # Build category lookup from discovered brands
         category_lookup = {}
@@ -317,7 +324,7 @@ class CSVExporter:
         Returns:
             Path to exported CSV
         """
-        csv_path = os.path.join(self.reports_dir, f'discovered_brands_{brand_name.replace(" ", "_")}.csv')
+        csv_path = os.path.join(self.reports_dir, self._versioned_filename('discovered_brands', brand_name))
 
         unlisted = discovered_brands.get('unlisted_brands', [])
 
@@ -381,7 +388,7 @@ class CSVExporter:
         Returns:
             Path to exported CSV
         """
-        csv_path = os.path.join(self.reports_dir, f'personas_{brand_name.replace(" ", "_")}.csv')
+        csv_path = os.path.join(self.reports_dir, self._versioned_filename('personas', brand_name))
 
         # Calculate persona statistics
         persona_stats = defaultdict(lambda: {'mentions': 0, 'total': 0, 'missed_prompts': []})

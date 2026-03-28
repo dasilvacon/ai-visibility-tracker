@@ -62,10 +62,7 @@ def render():
         st.info(f"""
         📅 **No historical data yet for {client_name}**
 
-        Historical tracking starts automatically when you run tests via CLI:
-        ```bash
-        python main.py --client "{client_name}" --prompts your_prompts.csv
-        ```
+        Historical tracking starts automatically when you run a test from the **Run Report** page.
 
         Run tests monthly to build up your trend data!
         """)
