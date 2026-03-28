@@ -604,14 +604,37 @@ def _render_keywords_review(keywords):
 
 
 def _render_competitors_review(competitors):
-    """Render competitor checklist."""
+    """Render competitor checklist with manual add."""
 
-    if not competitors:
-        st.info("No competitors found. You can add them manually below.")
-    else:
-        st.caption("Uncheck any competitors that aren't relevant. These will be used for comparison prompts.")
+    # Manual add — always show prominently at the top
+    st.markdown("**Add competitors** (one domain per line):")
+    manual_comp = st.text_area(
+        "Competitor domains",
+        placeholder="511tactical.com\nvertx.com\nhltactical.com\ncondoroutdoor.com\nfirsttactical.com",
+        key="qs_manual_comp",
+        label_visibility="collapsed"
+    )
+    if st.button("Add", key="qs_add_manual_comp"):
+        if manual_comp:
+            for line in manual_comp.strip().split('\n'):
+                domain = _clean_domain(line.strip())
+                if domain and domain not in st.session_state.qs_competitors_selected:
+                    st.session_state.qs_competitors_data.append({
+                        'domain': domain,
+                        'competitor_domain': domain,
+                        'keywords_common': 0,
+                        'keywords_exclusive': 0,
+                        'traffic': 0,
+                    })
+                    st.session_state.qs_competitors_selected[domain] = True
+            st.rerun()
+
+    # Show existing competitors
+    if competitors:
+        st.markdown("---")
+        st.caption("Uncheck any that aren't relevant:")
         for i, comp in enumerate(competitors):
-            domain = comp.get('domain', '')
+            domain = comp.get('domain', comp.get('competitor_domain', ''))
             common_kw = comp.get('keywords_common', 0)
             traffic = comp.get('traffic', 0)
             is_selected = st.session_state.qs_competitors_selected.get(domain, True)
@@ -626,28 +649,10 @@ def _render_competitors_review(competitors):
                 if new_val != is_selected:
                     st.session_state.qs_competitors_selected[domain] = new_val
             with col_info:
-                st.caption(f"{common_kw:,} shared keywords · {traffic:,} est. traffic")
-
-    # Manual add
-    with st.expander("Add competitors manually"):
-        manual_comp = st.text_area(
-            "One domain per line",
-            placeholder="competitor1.com\ncompetitor2.ca",
-            key="qs_manual_comp"
-        )
-        if st.button("Add competitors", key="qs_add_manual_comp"):
-            if manual_comp:
-                for line in manual_comp.strip().split('\n'):
-                    domain = _clean_domain(line.strip())
-                    if domain and domain not in st.session_state.qs_competitors_selected:
-                        st.session_state.qs_competitors_data.append({
-                            'domain': domain,
-                            'keywords_common': 0,
-                            'keywords_exclusive': 0,
-                            'traffic': 0,
-                        })
-                        st.session_state.qs_competitors_selected[domain] = True
-                st.rerun()
+                if common_kw:
+                    st.caption(f"{common_kw:,} shared keywords · {traffic:,} est. traffic")
+    elif not manual_comp:
+        st.info("No competitors pulled from Ahrefs. Add your competitors above — these are used for comparison prompts.")
 
 
 def _render_personas_review(personas):
