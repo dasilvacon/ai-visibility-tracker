@@ -1,13 +1,17 @@
 """
-Prompt builder for creating natural query variations.
+Prompt builder for creating natural AI query variations.
 
-KEY DESIGN PRINCIPLE: Prompts must sound like REAL PEOPLE searching,
-NOT like a marketer describing a persona. A caregiver doesn't type
-"Adult child of aging parent looking for respite care" — they type
-"my mom just got out of hospital and I don't know what to do."
+KEY DESIGN PRINCIPLE: Prompts must sound like REAL PEOPLE asking AI engines
+(ChatGPT, Perplexity, Gemini), NOT like Google search queries or marketer
+speak. People ask AI conversational questions, not keyword strings.
 
-Persona influence works by shaping the SITUATION and LANGUAGE,
-not by inserting persona labels into the query text.
+Good: "What are the best Ukrainian clothing brands that ship to Canada?"
+Bad:  "ukraine shirt services Ontario"
+Bad:  "who qualifies for tryzub necklace"
+
+Templates are INDUSTRY-AGNOSTIC — they work for any client (e-commerce,
+services, nonprofits, B2B). Client-specific context comes from brand_config
+and persona data, never hardcoded.
 """
 
 import random
@@ -15,139 +19,138 @@ from typing import Dict, List, Any, Optional
 
 
 class PromptBuilder:
-    """Builds natural prompt variations that sound like real humans searching."""
+    """Builds natural AI-style prompt variations for any industry."""
 
-    # ── STYLE 1: Direct Search Query (20%) ──────────────────────────
-    # Clean keyword-focused queries with no persona context
+    # ── STYLE 1: Direct AI Questions (30%) ────────────────────────────
+    # Clean, conversational questions people ask AI engines
     DIRECT_TEMPLATES = {
         'informational': [
-            "Best {keyword}",
-            "{keyword} guide",
-            "{keyword} explained",
-            "Top {keyword} options",
-            "{keyword} recommendations",
+            "What is {keyword}",
+            "Tell me about {keyword}",
+            "What should I know about {keyword}",
+            "Can you explain {keyword}",
+            "What are the best {keyword}",
+        ],
+        'commercial': [
+            "Best {keyword} to buy",
+            "Top rated {keyword}",
+            "What {keyword} do you recommend",
+            "Most popular {keyword}",
+            "Where to buy {keyword}",
+        ],
+        'transactional': [
+            "Where can I buy {keyword}",
+            "Best place to order {keyword}",
+            "Where to get {keyword} online",
+            "{keyword} for sale",
+            "Buy {keyword} online",
+        ],
+        'comparison': [
+            "{keyword} vs {competitor}",
+            "How does {keyword} compare to {competitor}",
+            "Should I choose {keyword} or {competitor}",
+            "What's the difference between {keyword} and {competitor}",
         ],
         'how_to': [
             "How to {keyword}",
-            "{keyword} tutorial",
-            "{keyword} step by step",
             "Best way to {keyword}",
-        ],
-        'comparison': [
-            "{keyword} vs {competitor}",
-            "{keyword} compared to {competitor}",
-            "{keyword} or {competitor}",
-            "Differences between {keyword} and {competitor}",
-        ],
-        'problem_solving': [
-            "{keyword} solution",
-            "Fix {keyword}",
-            "{keyword} not working",
-            "Solve {keyword}",
+            "How do I {keyword}",
+            "Step by step guide to {keyword}",
         ],
         'recommendation': [
-            "Best {keyword}",
-            "Top {keyword}",
-            "{keyword} recommendations",
-            "Which {keyword} to choose",
+            "What {keyword} do you recommend",
+            "Best {keyword} right now",
+            "Top {keyword} options",
+            "Which {keyword} should I get",
         ],
         'review': [
-            "{keyword} review",
-            "{keyword} worth it",
-            "Is {keyword} good",
-            "{keyword} quality",
-        ]
+            "Is {keyword} worth it",
+            "Honest review of {keyword}",
+            "{keyword} pros and cons",
+            "What do people think about {keyword}",
+        ],
     }
 
-    # ── STYLE 2: Situational (80%) ──────────────────────────────────
-    # These sound like real people in real situations searching.
-    # The persona shapes WHICH templates are selected, but the
-    # persona label never appears in the output text.
-    #
-    # Placeholder fields:
-    #   {keyword}      = the SEO keyword
-    #   {situation}    = natural language description of their situation
-    #   {need}         = what they're looking for
-    #   {topic}        = a priority topic from the persona
-
-    SITUATIONAL_TEMPLATES = {
+    # ── STYLE 2: Conversational AI Prompts (50%) ─────────────────────
+    # These sound like how people actually talk to ChatGPT/Perplexity.
+    # No hardcoded locations or industries — uses {context} from brand config.
+    CONVERSATIONAL_TEMPLATES = {
         'informational': [
-            "{keyword} in Ontario",
-            "what is {keyword}",
-            "{keyword} near me",
-            "free {keyword}",
-            "{keyword} programs Ontario",
-            "where to find {keyword}",
-            "{keyword} options in my area",
-            "how does {keyword} work",
-            "what {keyword} is available",
-            "{keyword} services Ontario",
-            "who qualifies for {keyword}",
-            "information about {keyword}",
+            "What are the best options for {keyword}",
+            "I'm looking for information about {keyword}",
+            "Can you help me understand {keyword}",
+            "What do I need to know about {keyword}",
+            "I want to learn more about {keyword}",
+            "Tell me about the best {keyword} available",
+            "What makes a good {keyword}",
+            "I'm researching {keyword} — what should I know",
+        ],
+        'commercial': [
+            "I'm looking to buy {keyword} — what do you recommend",
+            "What are the best {keyword} brands",
+            "Where should I buy {keyword}",
+            "I want to find high quality {keyword}",
+            "What's the best {keyword} for the money",
+            "Can you recommend good {keyword}",
+            "I need {keyword} — what are my options",
+            "Who makes the best {keyword}",
+        ],
+        'transactional': [
+            "I want to buy {keyword} — where should I go",
+            "Best online stores for {keyword}",
+            "Where can I order {keyword} right now",
+            "I need to find {keyword} to purchase",
+            "What's the best website to buy {keyword}",
+            "Looking to order {keyword} online",
+        ],
+        'comparison': [
+            "How does {keyword} compare to {competitor}",
+            "Is {keyword} better than {competitor}",
+            "I'm deciding between {keyword} and {competitor}",
+            "{keyword} or {competitor} — which should I pick",
+            "Compare {keyword} and {competitor} for me",
         ],
         'how_to': [
-            "how to get {keyword}",
-            "how to find {keyword} near me",
-            "how to access {keyword} in Ontario",
-            "how to apply for {keyword}",
-            "how do I get {keyword}",
-            "where can I get {keyword}",
-            "steps to get {keyword}",
-            "how to start {keyword}",
-        ],
-        'comparison': [
-            "{keyword} vs {competitor}",
-            "is {keyword} or {competitor} better",
-            "{keyword} compared to {competitor}",
-            "should I use {keyword} or {competitor}",
-            "what's the difference between {keyword} and {competitor}",
-        ],
-        'problem_solving': [
+            "How do I {keyword}",
+            "What's the best way to {keyword}",
+            "Can you walk me through how to {keyword}",
             "I need help with {keyword}",
-            "{keyword} not available what do I do",
-            "can't find {keyword} in my area",
-            "struggling with {keyword}",
-            "{keyword} waitlist alternatives",
-            "I don't know where to start with {keyword}",
+            "What's the process for {keyword}",
         ],
         'recommendation': [
-            "best {keyword} in Ontario",
-            "recommended {keyword} near me",
-            "top {keyword} programs",
-            "good {keyword} options",
-            "what {keyword} should I use",
+            "What would you recommend for {keyword}",
+            "I need a good {keyword} — any suggestions",
+            "What's the best {keyword} you'd recommend",
+            "Help me find the right {keyword}",
+            "What {keyword} would work best",
         ],
         'review': [
-            "is {keyword} worth it",
-            "does {keyword} actually help",
-            "{keyword} reviews",
-            "has anyone tried {keyword}",
-            "what's {keyword} like",
-        ]
+            "Is {keyword} actually good",
+            "What's the real deal with {keyword}",
+            "Has anyone had a good experience with {keyword}",
+            "What are people saying about {keyword}",
+            "Is {keyword} worth the money",
+        ],
     }
 
-    # ── STYLE 3: First-Person Situation (for when we have rich persona data) ──
-    # These incorporate the persona's SITUATION naturally, without labels.
-    # Used when the persona has key_trigger, top_barrier, etc.
-    FIRST_PERSON_TEMPLATES = [
-        # Trigger-driven (something just happened)
-        "{situation} and I need {keyword}",
-        "{situation} where can I find {keyword}",
-        "{situation} what are my options for {keyword}",
-        "just found out {situation} need help with {keyword}",
-        "{situation} looking for {keyword}",
+    # ── STYLE 3: Persona-Driven Situation Prompts (20%) ──────────────
+    # These use the persona description to add context. The persona
+    # description is used directly (not hardcoded trigger maps), making
+    # this work for ANY industry.
+    PERSONA_TEMPLATES = [
+        # Situation-driven
+        "I'm {persona_context} and I need {keyword}",
+        "As someone who {persona_context}, what {keyword} would you recommend",
+        "I'm {persona_context} — where can I find {keyword}",
+        "I need {keyword} because I'm {persona_context}",
+        "What {keyword} would work for someone who is {persona_context}",
 
-        # Barrier-driven (they're stuck on something)
-        "I don't know {barrier_phrase} for {keyword}",
-        "can't figure out {keyword} {barrier_phrase}",
-        "where do you even start with {keyword}",
-        "is there {keyword} that {removes_barrier}",
-
-        # Need-driven (they need a specific thing)
+        # Need-driven (generic, works for any industry)
         "I need {keyword} but don't know where to start",
-        "looking for {keyword} that's actually helpful",
-        "does anyone know about {keyword}",
-        "where to find good {keyword}",
+        "Looking for {keyword} that's actually good quality",
+        "Can you help me find {keyword}",
+        "What's the best {keyword} for my situation",
+        "I've been looking for {keyword} — what do you suggest",
     ]
 
     def __init__(self, use_natural_language: bool = True,
@@ -162,147 +165,44 @@ class PromptBuilder:
         self.use_natural_language = use_natural_language
         self.brand_config = brand_config or {}
 
-    def _get_natural_situation(self, persona: Dict[str, Any]) -> Dict[str, str]:
+    def _get_persona_context(self, persona: Dict[str, Any]) -> str:
         """
-        Convert persona fields into natural language fragments that
-        sound like real people, NOT like marketer labels.
-
-        Returns dict with: situation, barrier_phrase, removes_barrier, need
+        Extract a short, natural context phrase from persona data.
+        Works with ANY persona structure — uses description, role,
+        key_trigger, etc. Returns a phrase like "looking for Ukrainian
+        clothing" or "a caregiver for my aging parent."
         """
-        trigger = persona.get('key_trigger', '')
-        barrier = persona.get('top_barrier', '')
-        description = persona.get('description', '')
-        role = persona.get('caregiving_role', '')
+        # Try description first (most universal field)
+        desc = persona.get('description', '')
+        if desc:
+            # Take first sentence or first 60 chars
+            desc = desc.split('.')[0].strip()
+            if len(desc) > 60:
+                desc = desc[:60].rsplit(' ', 1)[0]
+            return desc.lower()
 
-        # Convert clinical trigger labels into natural language
-        trigger_map = {
-            'Hospital discharge / diagnosis': random.choice([
-                'my parent just got out of the hospital',
-                'my mom was just diagnosed',
-                'dad just got discharged',
-                'parent just came home from hospital',
-            ]),
-            "Parent's progressive decline": random.choice([
-                'my parent is getting worse',
-                "my mom's condition is getting worse",
-                'my parent needs more and more help',
-                "dad can't do things on his own anymore",
-            ]),
-            'Gradual role intensification': random.choice([
-                'I feel like I do everything for my spouse now',
-                'caring for my husband is taking over my life',
-                'my wife needs constant care now',
-            ]),
-            'Diagnosis or transition milestone': random.choice([
-                'my child was just diagnosed',
-                'my kid is transitioning to adult services',
-                'we just got a diagnosis for my child',
-            ]),
-            "Loved one's crisis episode": random.choice([
-                'my family member just had a mental health crisis',
-                'someone I love had a breakdown',
-                'my sibling was just hospitalized for mental health',
-            ]),
-            'Family crisis / growing responsibility': random.choice([
-                'I have to take care of my parent and I am still in school',
-                'I am young and caring for a family member',
-                'I am a teenager looking after my mom',
-            ]),
-            'Staff burnout / poor caregiver comms': random.choice([
-                'our staff is burning out dealing with patient families',
-                'we need better communication with caregivers',
-                'our hospital needs caregiver inclusion training',
-            ]),
-            'Staff caregiving impact on work': random.choice([
-                'employees are missing work to care for family',
-                'staff are struggling with caregiving responsibilities',
-                'we need a caregiver-friendly workplace policy',
-            ]),
-        }
+        # Fall back to role/name
+        role = persona.get('caregiving_role', '') or persona.get('role', '')
+        if role:
+            return role.lower()
 
-        # Convert barrier labels into natural language
-        barrier_map = {
-            "Doesn't know OCO exists": random.choice([
-                'where to even look',
-                'what organizations can help',
-                'who to call',
-            ]),
-            'Time / skepticism of soft support': random.choice([
-                'if support groups actually help',
-                'where to find time for this',
-                'if peer support is worth it',
-            ]),
-            "Doesn't identify as caregiver": random.choice([
-                'if what I am doing counts as caregiving',
-                'whether I am actually a caregiver',
-                'if there is help for people like me',
-            ]),
-            'Sees OCO as elder-care focused': random.choice([
-                'where to find help for my child',
-                'if there is support for parents of special needs kids',
-                'programs that are not just for seniors',
-            ]),
-            'Stigma / privacy concerns': random.choice([
-                'how to get help without anyone knowing',
-                'if there is confidential support',
-                'where to get private help',
-            ]),
-            'Self-identification / visibility': random.choice([
-                'if there is help for young people like me',
-                'where young people caring for family can get support',
-                'if anyone else my age is dealing with this',
-            ]),
-            'Organizational buy-in': random.choice([
-                'how to convince leadership',
-                'how to get management on board',
-                'how to build the case for this',
-            ]),
-            "Doesn't know where to start": random.choice([
-                'where to even begin',
-                'how to start supporting caregivers at work',
-                'what the first step is',
-            ]),
-        }
+        name = persona.get('name', '')
+        if name:
+            return f"a {name.lower()}"
 
-        # Get natural situation text
-        situation = trigger_map.get(trigger, '')
-        if not situation and description:
-            # Fallback: use a generic situational phrase
-            situation = random.choice([
-                'I am dealing with a lot right now',
-                'our family is going through something difficult',
-                'I need help but I am not sure what kind',
-            ])
-
-        barrier_phrase = barrier_map.get(barrier, 'where to start')
-
-        # "removes_barrier" is the positive flip
-        removes_barrier = random.choice([
-            'is easy to access',
-            'is actually free',
-            'is confidential',
-            'does not have a long waitlist',
-            'works for my schedule',
-        ])
-
-        return {
-            'situation': situation,
-            'barrier_phrase': barrier_phrase,
-            'removes_barrier': removes_barrier,
-        }
+        return "looking for help"
 
     def build_basic_prompt(self, keyword: str, intent_type: str) -> str:
         """Build a basic prompt (no persona context). Used as fallback."""
-        if intent_type == 'comparison':
-            intent_type = 'informational'
-
-        templates = self.DIRECT_TEMPLATES.get(intent_type, self.DIRECT_TEMPLATES['informational'])
+        # Map intent types that don't have direct templates
+        intent_key = self._map_intent(intent_type)
+        templates = self.DIRECT_TEMPLATES.get(intent_key, self.DIRECT_TEMPLATES['informational'])
         template = random.choice(templates)
         return template.format(keyword=keyword)
 
     def build_comparison_prompt(self, keyword: str, competitor: str) -> str:
         """Build a comparison prompt with a competitor."""
-        templates = self.DIRECT_TEMPLATES['comparison'] + self.SITUATIONAL_TEMPLATES['comparison']
+        templates = self.DIRECT_TEMPLATES['comparison'] + self.CONVERSATIONAL_TEMPLATES['comparison']
         template = random.choice(templates)
         return template.format(keyword=keyword, competitor=competitor)
 
@@ -310,60 +210,74 @@ class PromptBuilder:
                             intent_type: str, include_competitor: bool = False,
                             competitor: str = '') -> str:
         """
-        Build a prompt that sounds like a REAL PERSON searching.
+        Build a prompt that sounds like a REAL PERSON asking an AI engine.
 
-        The persona shapes which templates are used and provides
-        situational context, but the persona LABEL never appears
-        in the output text.
+        The persona shapes the situational context but the persona LABEL
+        never appears in the output text.
 
-        80% situational/first-person, 20% direct keyword queries.
+        50% conversational, 30% direct, 20% persona-driven situation.
         """
         if not persona_data:
             return self.build_basic_prompt(keyword, intent_type)
 
         # Comparison prompts
         if include_competitor and competitor:
-            templates = self.SITUATIONAL_TEMPLATES.get('comparison', self.DIRECT_TEMPLATES['comparison'])
+            templates = self.CONVERSATIONAL_TEMPLATES.get('comparison', self.DIRECT_TEMPLATES['comparison'])
             template = random.choice(templates)
             return template.format(keyword=keyword, competitor=competitor)
 
-        # ── 80% human-sounding, 20% direct ──
-        use_human = random.random() < 0.80
+        intent_key = self._map_intent(intent_type)
+        roll = random.random()
 
-        if not use_human:
+        if roll < 0.30:
+            # 30% direct AI questions
             return self.build_basic_prompt(keyword, intent_type)
 
-        # Decide between situational templates and first-person templates
-        has_rich_data = persona_data.get('key_trigger') or persona_data.get('top_barrier')
-
-        if has_rich_data and random.random() < 0.40:
-            # 40% of human prompts use first-person situation templates
-            natural = self._get_natural_situation(persona_data)
-            template = random.choice(self.FIRST_PERSON_TEMPLATES)
-            try:
-                prompt = template.format(keyword=keyword, **natural)
-            except KeyError:
-                prompt = f"I need help with {keyword}"
-        else:
-            # 60% of human prompts use situational templates
-            templates = self.SITUATIONAL_TEMPLATES.get(
-                intent_type, self.SITUATIONAL_TEMPLATES['informational']
+        elif roll < 0.80:
+            # 50% conversational AI prompts
+            templates = self.CONVERSATIONAL_TEMPLATES.get(
+                intent_key, self.CONVERSATIONAL_TEMPLATES['informational']
             )
             template = random.choice(templates)
             prompt = template.format(keyword=keyword)
 
-        # Inject a priority topic naturally (20% of time)
+        else:
+            # 20% persona-driven situation prompts
+            context = self._get_persona_context(persona_data)
+            template = random.choice(self.PERSONA_TEMPLATES)
+            try:
+                prompt = template.format(keyword=keyword, persona_context=context)
+            except KeyError:
+                prompt = f"Can you help me find {keyword}"
+
+        # Inject a priority topic naturally (15% of time)
         topics = persona_data.get('priority_topics', [])
-        if topics and random.random() < 0.20:
+        if topics and random.random() < 0.15:
             topic = random.choice(topics)
             suffixes = [
+                f", specifically for {topic}",
+                f" — especially related to {topic}",
                 f" for {topic}",
-                f" especially {topic}",
-                f" related to {topic}",
             ]
             prompt += random.choice(suffixes)
 
         return prompt
+
+    def _map_intent(self, intent_type: str) -> str:
+        """Map various intent type strings to our template keys."""
+        mapping = {
+            'informational': 'informational',
+            'commercial': 'commercial',
+            'transactional': 'transactional',
+            'comparison': 'comparison',
+            'how_to': 'how_to',
+            'recommendation': 'recommendation',
+            'review': 'review',
+            # Common aliases
+            'problem_solving': 'how_to',
+            'navigational': 'informational',
+        }
+        return mapping.get(intent_type, 'informational')
 
     def naturalize_prompt(self, prompt: str) -> str:
         """Clean up a prompt. No filler, no greetings."""
@@ -373,12 +287,12 @@ class PromptBuilder:
 
     def add_context_details(self, prompt: str, topics: List[str]) -> str:
         """Occasionally add context details from priority topics."""
-        if random.random() > 0.20 or not topics:
+        if random.random() > 0.15 or not topics:
             return prompt
 
         topic = random.choice(topics)
         context_formats = [
-            f"{prompt} for {topic}",
+            f"{prompt}, specifically for {topic}",
             f"{prompt} related to {topic}",
         ]
         result = random.choice(context_formats)
@@ -411,6 +325,8 @@ class PromptBuilder:
         """Map intent type to category for the prompts database."""
         category_mapping = {
             'informational': 'educational',
+            'commercial': 'business',
+            'transactional': 'business',
             'how_to': 'technical',
             'comparison': 'business',
             'problem_solving': 'technical',
@@ -422,7 +338,10 @@ class PromptBuilder:
     def generate_variations(self, base_keyword: str, count: int = 3) -> List[str]:
         """Generate multiple variations of a base keyword/topic."""
         variations = [base_keyword]
-        question_words = ["how to", "what is", "why", "when to", "where to find"]
-        for qword in question_words[:count-1]:
-            variations.append(f"{qword} {base_keyword}")
+        question_starters = [
+            "what is the best", "how to find", "where to get",
+            "can you recommend", "what are the top",
+        ]
+        for starter in question_starters[:count-1]:
+            variations.append(f"{starter} {base_keyword}")
         return variations[:count]
