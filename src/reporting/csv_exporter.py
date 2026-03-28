@@ -222,7 +222,8 @@ class CSVExporter:
 
     def export_competitors(self, competitive_analysis: Dict[str, Any],
                           visibility_summary: Dict[str, Any],
-                          brand_name: str) -> str:
+                          brand_name: str,
+                          discovered_brands: Dict[str, Any] = None) -> str:
         """
         Export competitor comparison CSV.
 
@@ -230,15 +231,26 @@ class CSVExporter:
             competitive_analysis: Competitive analysis data
             visibility_summary: Visibility summary with brand data
             brand_name: Brand name
+            discovered_brands: Optional discovered brands data with categories
 
         Returns:
             Path to exported CSV
         """
         csv_path = os.path.join(self.reports_dir, f'competitors_{brand_name.replace(" ", "_")}.csv')
 
+        # Build category lookup from discovered brands
+        category_lookup = {}
+        if discovered_brands:
+            for brand_data in discovered_brands.get('unlisted_brands', []):
+                category_lookup[brand_data['name'].lower()] = {
+                    'category': brand_data.get('category', 'uncategorized'),
+                    'confidence': brand_data.get('category_confidence', 0)
+                }
+
         with open(csv_path, 'w', newline='', encoding='utf-8') as f:
             fieldnames = [
                 'Brand Name',
+                'Category',
                 'Mention Rate %',
                 'Total Mentions',
                 'Appears Without You',
@@ -253,6 +265,7 @@ class CSVExporter:
             your_rate = visibility_summary.get('brand_visibility_rate', 0)
             writer.writerow({
                 'Brand Name': brand_name,
+                'Category': 'Your Brand',
                 'Mention Rate %': f"{your_rate:.1f}%",
                 'Total Mentions': visibility_summary.get('brand_mentions', 0),
                 'Appears Without You': 'N/A',
@@ -273,13 +286,83 @@ class CSVExporter:
                 else:
                     status = 'Competitor'
 
+                # Look up category
+                cat_info = category_lookup.get(comp['name'].lower(), {})
+                category = cat_info.get('category', 'tracked_competitor')
+
+                # Format category for display
+                category_display = category.replace('_', ' ').title()
+
                 writer.writerow({
                     'Brand Name': comp['name'],
+                    'Category': category_display,
                     'Mention Rate %': f"{comp['mention_rate']:.1f}%",
                     'Total Mentions': comp['mentions'],
                     'Appears Without You': comp.get('appears_without_you', 'N/A'),
                     'Gap vs Your Brand': f"{gap:+.1f}%",
                     'Status': status
+                })
+
+        return csv_path
+
+    def export_discovered_brands(self, discovered_brands: Dict[str, Any],
+                                 brand_name: str) -> str:
+        """
+        Export discovered brands with categories CSV.
+
+        Args:
+            discovered_brands: Discovered brands data with category info
+            brand_name: Brand name
+
+        Returns:
+            Path to exported CSV
+        """
+        csv_path = os.path.join(self.reports_dir, f'discovered_brands_{brand_name.replace(" ", "_")}.csv')
+
+        unlisted = discovered_brands.get('unlisted_brands', [])
+
+        with open(csv_path, 'w', newline='', encoding='utf-8') as f:
+            fieldnames = [
+                'Brand Name',
+                'Category',
+                'Category Confidence',
+                'Mentions',
+                'Mention Rate %',
+                'Recommended Action',
+                'Should Track'
+            ]
+
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+
+            for brand_data in unlisted:
+                category = brand_data.get('category', 'uncategorized')
+                category_display = category.replace('_', ' ').title()
+
+                # Determine recommended action based on category
+                if category == 'direct_competitor':
+                    action = 'Add to tracked competitors - direct competitor'
+                elif category == 'retailer':
+                    action = 'Consider partnership/distribution opportunity'
+                elif category == 'media':
+                    action = 'PR/outreach target for coverage'
+                elif category == 'government':
+                    action = 'Reference for compliance/funding info'
+                elif category == 'resource':
+                    action = 'Potential backlink/listing opportunity'
+                elif category == 'adjacent':
+                    action = 'Monitor for market overlap'
+                else:
+                    action = 'Review and categorize manually'
+
+                writer.writerow({
+                    'Brand Name': brand_data['name'],
+                    'Category': category_display,
+                    'Category Confidence': f"{brand_data.get('category_confidence', 0):.0%}",
+                    'Mentions': brand_data['mentions'],
+                    'Mention Rate %': f"{brand_data['mention_rate']:.1f}%",
+                    'Recommended Action': action,
+                    'Should Track': 'YES' if brand_data.get('should_track', False) else 'No'
                 })
 
         return csv_path

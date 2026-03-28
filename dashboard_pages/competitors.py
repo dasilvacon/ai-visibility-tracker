@@ -7,7 +7,7 @@ import plotly.express as px
 import json
 import os
 from pathlib import Path
-from collections import Counter
+from collections import Counter, defaultdict
 
 # Brand colors
 DEEP_PLUM = '#402E3A'
@@ -79,6 +79,116 @@ def extract_all_mentioned_brands(raw_data: pd.DataFrame, tracked_competitors: li
         brands_df = brands_df.sort_values('Mentions', ascending=False).reset_index(drop=True)
 
     return brands_df
+
+
+# Category display configuration
+CATEGORY_CONFIG = {
+    'direct_competitor': {'label': 'Direct Competitors', 'emoji': '🎯', 'color': '#E74C3C'},
+    'retailer': {'label': 'Retailers / Channels', 'emoji': '🛒', 'color': '#3498DB'},
+    'media': {'label': 'Media / Publications', 'emoji': '📰', 'color': '#9B59B6'},
+    'resource': {'label': 'Resources / Directories', 'emoji': '📚', 'color': '#1ABC9C'},
+    'government': {'label': 'Government / Institutional', 'emoji': '🏛️', 'color': '#34495E'},
+    'adjacent': {'label': 'Adjacent Services', 'emoji': '🔗', 'color': '#F39C12'},
+    'uncategorized': {'label': 'Uncategorized', 'emoji': '❓', 'color': '#95A5A6'}
+}
+
+CATEGORY_OPTIONS = [
+    'direct_competitor', 'retailer', 'media', 'resource',
+    'government', 'adjacent', 'uncategorized'
+]
+
+
+def categorize_brands_from_raw_data(raw_data: pd.DataFrame, brand_name: str,
+                                     category_overrides: dict = None) -> dict:
+    """
+    Analyze raw data to categorize all discovered brands.
+
+    Args:
+        raw_data: DataFrame with response data
+        brand_name: Your brand name
+        category_overrides: Manual category assignments
+
+    Returns:
+        Dictionary with brands organized by category
+    """
+    if raw_data is None or 'Response Text' not in raw_data.columns:
+        return {}
+
+    if category_overrides is None:
+        category_overrides = {}
+
+    # Import categorization logic
+    try:
+        from src.analysis.competitor_analyzer import CompetitorAnalyzer
+        analyzer = CompetitorAnalyzer(brand_name)
+    except ImportError:
+        return {}
+
+    # Collect all mentioned brands and their contexts
+    brand_mentions = defaultdict(lambda: {'count': 0, 'contexts': []})
+
+    for _, row in raw_data.iterrows():
+        competitors_str = row.get('Competitors Mentioned', '')
+        response_text = row.get('Response Text', '')
+
+        if pd.isna(competitors_str) or not competitors_str:
+            continue
+
+        competitors = [c.strip() for c in str(competitors_str).split(',') if c.strip()]
+        for comp in competitors:
+            if comp.lower() != brand_name.lower():
+                brand_mentions[comp]['count'] += 1
+                if response_text and len(brand_mentions[comp]['contexts']) < 5:
+                    brand_mentions[comp]['contexts'].append(str(response_text))
+
+    # Categorize each brand
+    categorized = defaultdict(list)
+    total_responses = len(raw_data)
+
+    for brand, data in brand_mentions.items():
+        combined_context = ' '.join(data['contexts'])
+        result = analyzer.categorize_brand(brand, combined_context, category_overrides)
+
+        mention_rate = (data['count'] / total_responses * 100) if total_responses > 0 else 0
+
+        brand_info = {
+            'name': brand,
+            'mentions': data['count'],
+            'mention_rate': round(mention_rate, 1),
+            'confidence': result['confidence'],
+            'source': result.get('source', 'unknown')
+        }
+
+        categorized[result['category']].append(brand_info)
+
+    # Sort brands within each category by mentions
+    for cat in categorized:
+        categorized[cat].sort(key=lambda x: x['mentions'], reverse=True)
+
+    return dict(categorized)
+
+
+def save_category_override(brand_config_path: str, brand_to_update: str, new_category: str):
+    """Save a category override to brand_config.json."""
+    try:
+        with open(brand_config_path, 'r') as f:
+            config = json.load(f)
+
+        if 'competitors' not in config:
+            config['competitors'] = {}
+
+        if 'category_overrides' not in config['competitors']:
+            config['competitors']['category_overrides'] = {}
+
+        config['competitors']['category_overrides'][brand_to_update] = new_category
+
+        with open(brand_config_path, 'w') as f:
+            json.dump(config, f, indent=2)
+
+        return True
+    except Exception as e:
+        st.error(f"Failed to save override: {e}")
+        return False
 
 
 def show(brand_name: str, data: dict):
@@ -214,7 +324,7 @@ def show(brand_name: str, data: dict):
                 yaxis=dict(showgrid=False),
                 plot_bgcolor='white',
                 paper_bgcolor='white'
-            ))
+            )
 
             st.plotly_chart(fig, use_container_width=True)
 
@@ -430,6 +540,184 @@ def show(brand_name: str, data: dict):
 
     else:
         st.info("Run a report to see all brands mentioned in AI responses.")
+
+    st.markdown("---")
+
+    # === WHO'S IN THE ROOM SECTION ===
+    st.subheader("🏠 Who's In The Room")
+
+    st.info("""
+    **Brand Landscape Categorization** — Understand what TYPE of entities are appearing in AI responses.
+    Direct competitors, retailers, media outlets, government bodies, and more - each requires a different strategy.
+    """)
+
+    # Load category overrides from brand_config
+    category_overrides = {}
+    if brand_config_data:
+        category_overrides = brand_config_data.get('competitors', {}).get('category_overrides', {})
+
+    # Categorize brands from raw data
+    categorized_brands = categorize_brands_from_raw_data(
+        data.get('raw_data'),
+        brand_name,
+        category_overrides
+    )
+
+    if categorized_brands:
+        # Calculate category totals for the chart
+        category_totals = {}
+        for cat, brands in categorized_brands.items():
+            total_mentions = sum(b['mentions'] for b in brands)
+            category_totals[cat] = {
+                'brand_count': len(brands),
+                'total_mentions': total_mentions,
+                'avg_mention_rate': sum(b['mention_rate'] for b in brands) / len(brands) if brands else 0
+            }
+
+        # Create grouped bar chart showing mentions by category
+        st.markdown("### Category Breakdown")
+
+        # Sort categories by total mentions
+        sorted_cats = sorted(category_totals.items(), key=lambda x: x[1]['total_mentions'], reverse=True)
+
+        cat_names = []
+        cat_mentions = []
+        cat_colors = []
+        cat_labels = []
+
+        for cat, stats in sorted_cats:
+            config = CATEGORY_CONFIG.get(cat, CATEGORY_CONFIG['uncategorized'])
+            cat_names.append(cat)
+            cat_mentions.append(stats['total_mentions'])
+            cat_colors.append(config['color'])
+            cat_labels.append(f"{config['emoji']} {config['label']}")
+
+        fig_cats = go.Figure()
+        fig_cats.add_trace(go.Bar(
+            x=cat_labels,
+            y=cat_mentions,
+            marker_color=cat_colors,
+            text=[f"{m} mentions" for m in cat_mentions],
+            textposition='outside',
+            hovertemplate='<b>%{x}</b><br>Total Mentions: %{y}<extra></extra>'
+        ))
+
+        fig_cats.update_layout(
+            title="AI Response Landscape by Entity Type",
+            xaxis_title="Category",
+            yaxis_title="Total Mentions",
+            height=400,
+            showlegend=False,
+            plot_bgcolor='white',
+            paper_bgcolor='white',
+            font=dict(color=CHARCOAL),
+            xaxis_tickangle=-30
+        )
+
+        st.plotly_chart(fig_cats, use_container_width=True)
+
+        # Brand count summary
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Total Brands Discovered", sum(s['brand_count'] for s in category_totals.values()))
+        with col2:
+            st.metric("Categories Active", len([c for c in category_totals if category_totals[c]['brand_count'] > 0]))
+        with col3:
+            uncategorized_count = category_totals.get('uncategorized', {}).get('brand_count', 0)
+            st.metric("Need Manual Review", uncategorized_count)
+
+        st.markdown("---")
+
+        # Collapsible cards per category
+        st.markdown("### Brands by Category")
+
+        for cat, stats in sorted_cats:
+            config = CATEGORY_CONFIG.get(cat, CATEGORY_CONFIG['uncategorized'])
+            brands_in_cat = categorized_brands.get(cat, [])
+
+            if not brands_in_cat:
+                continue
+
+            with st.expander(f"{config['emoji']} **{config['label']}** ({stats['brand_count']} brands, {stats['total_mentions']} total mentions)"):
+                # Strategy tip for this category
+                if cat == 'direct_competitor':
+                    st.warning("**Strategy:** Track these closely. They're competing for the same audience.")
+                elif cat == 'retailer':
+                    st.info("**Strategy:** Potential distribution partners. Consider outreach for product placement.")
+                elif cat == 'media':
+                    st.info("**Strategy:** PR targets. Reach out for coverage, reviews, and mentions.")
+                elif cat == 'government':
+                    st.success("**Strategy:** Reference sources. Ensure your content aligns with official guidance.")
+                elif cat == 'resource':
+                    st.info("**Strategy:** Listing opportunities. Get your brand added to these directories.")
+                elif cat == 'adjacent':
+                    st.info("**Strategy:** Partnership potential. Related but not directly competing.")
+                else:
+                    st.warning("**Strategy:** Review and categorize these brands manually.")
+
+                # Display each brand with category override option
+                for brand_info in brands_in_cat:
+                    col1, col2, col3 = st.columns([3, 1, 2])
+
+                    with col1:
+                        confidence_str = f"({brand_info['confidence']:.0%} confidence)" if brand_info['confidence'] > 0 else ""
+                        st.markdown(f"**{brand_info['name']}** — {brand_info['mentions']} mentions ({brand_info['mention_rate']:.1f}%) {confidence_str}")
+
+                    with col2:
+                        st.caption(f"Source: {brand_info['source']}")
+
+                    with col3:
+                        # Dropdown to change category
+                        current_idx = CATEGORY_OPTIONS.index(cat) if cat in CATEGORY_OPTIONS else len(CATEGORY_OPTIONS) - 1
+                        new_cat = st.selectbox(
+                            "Change category",
+                            options=CATEGORY_OPTIONS,
+                            index=current_idx,
+                            key=f"cat_override_{brand_info['name']}_{cat}",
+                            format_func=lambda x: CATEGORY_CONFIG.get(x, {}).get('label', x.replace('_', ' ').title()),
+                            label_visibility="collapsed"
+                        )
+
+                        # If category changed, show save button
+                        if new_cat != cat:
+                            if st.button("Save", key=f"save_cat_{brand_info['name']}_{cat}"):
+                                if save_category_override(brand_config_path, brand_info['name'], new_cat):
+                                    st.success(f"Saved! {brand_info['name']} → {new_cat}")
+                                    st.rerun()
+
+                    st.markdown("---")
+
+        # Export section for categorized data
+        st.markdown("### Export Categorized Data")
+
+        # Prepare export data
+        export_rows = []
+        for cat, brands in categorized_brands.items():
+            config = CATEGORY_CONFIG.get(cat, CATEGORY_CONFIG['uncategorized'])
+            for brand_info in brands:
+                export_rows.append({
+                    'Brand Name': brand_info['name'],
+                    'Category': config['label'],
+                    'Mentions': brand_info['mentions'],
+                    'Mention Rate %': f"{brand_info['mention_rate']:.1f}%",
+                    'Confidence': f"{brand_info['confidence']:.0%}",
+                    'Source': brand_info['source']
+                })
+
+        if export_rows:
+            export_df = pd.DataFrame(export_rows)
+            export_df = export_df.sort_values('Mentions', ascending=False)
+
+            csv_export = export_df.to_csv(index=False)
+            st.download_button(
+                "📥 Download Categorized Brands (CSV)",
+                data=csv_export,
+                file_name=f"categorized_brands_{brand_name.replace(' ', '_')}.csv",
+                mime="text/csv"
+            )
+
+    else:
+        st.info("Run a report to see brand categorization analysis.")
 
     st.markdown("---")
 
