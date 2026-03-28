@@ -207,10 +207,19 @@ def _render_input_step():
                 st.rerun()
             else:
                 st.error("No data returned from Ahrefs. Check the domain and try again, or upload a CSV below.")
+                # Show debug info so we can see what went wrong
+                fetch_notes = st.session_state.get('qs_fetch_notes', [])
+                if fetch_notes:
+                    for note in fetch_notes:
+                        if 'error' in note.lower() or 'Error' in note:
+                            st.warning(note)
+                        else:
+                            st.info(note)
 
-    # CSV fallback — always show as an option
-    with st.expander("Upload Ahrefs CSV export instead" if ahrefs_available else "Upload keyword data (CSV)"):
-        _render_csv_upload(client_name, domain, country, description)
+    # CSV upload — show directly (not hidden in expander)
+    st.markdown("---")
+    st.markdown("**Or upload an Ahrefs keyword export CSV:**")
+    _render_csv_upload(client_name, domain, country, description)
 
 
 def _fetch_ahrefs_data(ahrefs: AhrefsClient, domain: str, country: str):
@@ -228,7 +237,7 @@ def _fetch_ahrefs_data(ahrefs: AhrefsClient, domain: str, country: str):
         selected = country.strip().upper() if country and country.lower() != 'global' else ''
 
         # Always pull US first — largest keyword database
-        us_result = ahrefs.get_organic_keywords(domain, country='US', limit=500, min_volume=10)
+        us_result = ahrefs.get_organic_keywords(domain, country='US', limit=300, min_volume=10)
         if us_result.get('error'):
             errors.append(f"Keywords (US): {us_result['error']}")
         else:
@@ -240,7 +249,7 @@ def _fetch_ahrefs_data(ahrefs: AhrefsClient, domain: str, country: str):
 
         # Also pull selected country if different from US
         if selected and selected != 'US':
-            local_result = ahrefs.get_organic_keywords(domain, country=selected, limit=500, min_volume=10)
+            local_result = ahrefs.get_organic_keywords(domain, country=selected, limit=200, min_volume=10)
             if local_result.get('error'):
                 errors.append(f"Keywords ({selected}): {local_result['error']}")
             else:
@@ -312,9 +321,9 @@ def _fetch_ahrefs_data(ahrefs: AhrefsClient, domain: str, country: str):
 
 
 def _render_csv_upload(client_name, domain, country, description):
-    """Render the CSV upload fallback."""
+    """Render the CSV upload option — works with Ahrefs exports and generic CSVs."""
     uploaded_file = st.file_uploader(
-        "Upload Ahrefs keyword export or any CSV with keywords",
+        "Upload Ahrefs keyword export (or any CSV with keywords)",
         type=['csv'],
         key="qs_csv_upload"
     )
@@ -326,36 +335,68 @@ def _render_csv_upload(client_name, domain, country, description):
                 st.error("CSV is empty.")
                 return
 
-            # Auto-detect keyword column
+            # Auto-detect columns
             keyword_col = _detect_keyword_column(df)
             volume_col = _detect_volume_column(df)
+            cols_lower = {c.lower(): c for c in df.columns}
 
-            # Convert to Ahrefs-like format for the onboarder
-            keywords_data = []
+            # Detect Ahrefs-specific columns for intent + traffic
+            traffic_col = cols_lower.get('current organic traffic', cols_lower.get('sum_traffic'))
+            info_col = cols_lower.get('informational')
+            comm_col = cols_lower.get('commercial')
+            trans_col = cols_lower.get('transactional')
+            nav_col = cols_lower.get('navigational')
+            kd_col = cols_lower.get('kd', cols_lower.get('keyword_difficulty'))
+            pos_col = cols_lower.get('current position', cols_lower.get('best_position'))
+
+            def _bool_val(row, col):
+                if not col:
+                    return False
+                v = row.get(col, False)
+                if isinstance(v, bool):
+                    return v
+                return str(v).lower() in ('true', '1', 'yes')
+
+            def _int_val(row, col, default=0):
+                if not col:
+                    return default
+                try:
+                    return int(float(row.get(col, default)))
+                except (ValueError, TypeError):
+                    return default
+
+            # Deduplicate across countries — keep version with highest volume
+            best_by_keyword = {}
+            total_rows = 0
             for _, row in df.iterrows():
-                kw = str(row[keyword_col]).strip()
+                kw = str(row[keyword_col]).strip().lower()
                 if not kw or kw == 'nan':
                     continue
-                vol = 0
-                if volume_col:
-                    try:
-                        vol = int(float(row[volume_col]))
-                    except (ValueError, TypeError):
-                        vol = 0
+                total_rows += 1
+                vol = _int_val(row, volume_col) if volume_col else 0
+                traffic = _int_val(row, traffic_col)
 
-                keywords_data.append({
-                    'keyword': kw,
+                existing = best_by_keyword.get(kw)
+                if existing and existing['volume'] >= vol:
+                    continue
+
+                best_by_keyword[kw] = {
+                    'keyword': str(row[keyword_col]).strip(),
                     'volume': vol,
-                    'sum_traffic': vol,
-                    'best_position': 0,
-                    'keyword_difficulty': 0,
-                    'is_informational': False,
-                    'is_commercial': False,
-                    'is_transactional': False,
-                    'is_navigational': False,
-                })
+                    'sum_traffic': traffic or vol,
+                    'best_position': _int_val(row, pos_col),
+                    'keyword_difficulty': _int_val(row, kd_col),
+                    'is_informational': _bool_val(row, info_col),
+                    'is_commercial': _bool_val(row, comm_col),
+                    'is_transactional': _bool_val(row, trans_col),
+                    'is_navigational': _bool_val(row, nav_col),
+                }
 
-            st.success(f"Found {len(keywords_data)} keywords from CSV")
+            keywords_data = list(best_by_keyword.values())
+            keywords_data.sort(key=lambda x: x['volume'], reverse=True)
+
+            dedup_note = f" (deduplicated from {total_rows} rows across countries)" if total_rows > len(keywords_data) else ""
+            st.success(f"Found {len(keywords_data)} unique keywords{dedup_note}")
 
             if st.button("Use these keywords", type="primary", key="qs_use_csv"):
                 clean_domain = _clean_domain(domain)
