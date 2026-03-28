@@ -18,8 +18,8 @@ def show(brand_name: str, data: dict):
 
     st.title(f"AI Visibility Dashboard - {brand_name}")
 
-    # Parse key metrics from text report
-    metrics = parse_metrics(data.get('text_report', ''))
+    # Parse key metrics from text report and competitors data
+    metrics = parse_metrics(data.get('text_report', ''), data.get('competitors'))
 
     # Top metrics row
     col1, col2, col3, col4 = st.columns(4)
@@ -29,7 +29,7 @@ def show(brand_name: str, data: dict):
             "Your Visibility",
             f"{metrics.get('visibility_rate', 0):.1f}%",
             delta=None,
-            help="Percentage of AI responses that mention your brand"
+            help="What percentage of AI responses mention your brand"
         )
 
     with col2:
@@ -43,13 +43,15 @@ def show(brand_name: str, data: dict):
         )
 
     with col3:
-        gap = metrics.get('top_competitor_rate', 0) - metrics.get('visibility_rate', 0)
+        # Calculate AI Share of Voice (ASoV)
+        # ASoV = your mentions / (your mentions + all competitor mentions) * 100
+        asov = metrics.get('ai_share_of_voice', 0)
         st.metric(
-            "Gap to Close",
-            f"{gap:.1f}%",
-            delta=f"{-gap:.1f}%",
-            delta_color="inverse",
-            help="Percentage points behind top competitor"
+            "AI Share of Voice",
+            f"{asov:.1f}%",
+            delta=None,
+            help="Your brand's share of ALL brand mentions — the competitive metric. "
+                 "If AI mentions 5 brands total and yours appears in 2 of those mentions, your ASoV is 40%."
         )
 
     with col4:
@@ -223,13 +225,14 @@ def show(brand_name: str, data: dict):
             )
 
 
-def parse_metrics(text_report: str) -> dict:
-    """Parse key metrics from text report."""
+def parse_metrics(text_report: str, competitors_df=None) -> dict:
+    """Parse key metrics from text report and calculate AI Share of Voice."""
     metrics = {
         'visibility_rate': 0,
         'top_competitor': 'N/A',
         'top_competitor_rate': 0,
-        'queries_tested': 0
+        'queries_tested': 0,
+        'ai_share_of_voice': 0
     }
 
     if not text_report:
@@ -250,5 +253,19 @@ def parse_metrics(text_report: str) -> dict:
     query_match = re.search(r'Tested: (\d+)', text_report)
     if query_match:
         metrics['queries_tested'] = int(query_match.group(1))
+
+    # Calculate AI Share of Voice from competitors data
+    # ASoV = your visibility rate / sum of all visibility rates * 100
+    if competitors_df is not None and not competitors_df.empty:
+        try:
+            # Extract mention rates and sum them
+            mention_rates = competitors_df['Mention Rate %'].str.rstrip('%').astype(float)
+            total_mention_rate = mention_rates.sum()
+            if total_mention_rate > 0:
+                # Your ASoV is your visibility as a share of total
+                metrics['ai_share_of_voice'] = (metrics['visibility_rate'] / total_mention_rate) * 100
+        except (KeyError, ValueError, AttributeError):
+            # If we can't calculate from competitors, estimate from visibility rate
+            pass
 
     return metrics

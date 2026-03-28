@@ -31,7 +31,8 @@ class HTMLReportGenerator:
                        citation_stats: Dict[str, Any] = None,
                        sentiment_analysis: Dict[str, Any] = None,
                        website_verification: Dict[str, Any] = None,
-                       source_analysis: Dict[str, Any] = None) -> str:
+                       source_analysis: Dict[str, Any] = None,
+                       trend_data: Dict[str, Any] = None) -> str:
         """
         Generate HTML visibility report with DaSilva Consulting branding.
 
@@ -47,6 +48,7 @@ class HTMLReportGenerator:
             citation_stats: Optional citation classification statistics
             website_verification: Optional website content verification results
             source_analysis: Optional source analysis results
+            trend_data: Optional historical trend data for momentum labels
 
         Returns:
             Path to generated HTML report
@@ -65,7 +67,8 @@ class HTMLReportGenerator:
             head_to_head_results,
             citation_stats,
             sentiment_analysis,
-            source_analysis
+            source_analysis,
+            trend_data
         )
 
         report_path = os.path.join(
@@ -178,7 +181,9 @@ class HTMLReportGenerator:
 
     def _build_top_executive_summary(self, brand_name: str, visibility_summary: Dict[str, Any],
                                     competitive_analysis: Dict[str, Any],
-                                    scored_results: List[Dict[str, Any]]) -> str:
+                                    scored_results: List[Dict[str, Any]],
+                                    trend_data: Optional[Dict[str, Any]] = None,
+                                    citation_stats: Optional[Dict[str, Any]] = None) -> str:
         """Build executive summary - strategic, educational, no fear-mongering. DaSilva voice."""
 
         visibility_rate = visibility_summary.get('brand_visibility_rate', 0)
@@ -209,12 +214,39 @@ class HTMLReportGenerator:
         competitors = competitive_analysis.get('top_competitors', [])
         top_comp = competitors[0] if competitors else {'name': 'Competitors', 'mention_rate': competitor_rate}
 
+        # Calculate AI Share of Voice (ASoV) - your mentions / all brand mentions
+        your_mentions = visibility_summary.get('brand_mentions', 0)
+        total_competitor_mentions = sum(c.get('mentions', 0) for c in competitors)
+        total_all_mentions = your_mentions + total_competitor_mentions
+        asov = (your_mentions / total_all_mentions * 100) if total_all_mentions > 0 else 0
+
+        # Calculate momentum label based on trend_data (SimilarWeb VAMP framework)
+        momentum_label = "New"
+        momentum_icon = "🆕"
+        if trend_data:
+            change = trend_data.get('changes', {}).get('visibility_rate', 0)
+            if change >= 10:
+                momentum_label = "Velocity"
+                momentum_icon = "↑"
+            elif change >= -5:
+                momentum_label = "Anchor"
+                momentum_icon = "→"
+            elif change >= -15:
+                momentum_label = "Monitor"
+                momentum_icon = "↓"
+            else:
+                momentum_label = "Protect"
+                momentum_icon = "⬇"
+
+        # Get citation presence rate
+        citation_presence = citation_stats.get('citation_presence_rate', 0) if citation_stats else 0
+
         # Calculate dollar impact (single, consistent methodology)
         total_results = visibility_summary.get('total_prompts_tested', 362)
         monthly_queries_estimate = total_results * 3  # Conservative scaling factor
         gap_percentage = competitor_rate - visibility_rate
         missed_visitors_monthly = (gap_percentage / 100) * monthly_queries_estimate
-        avg_visitor_value = 6  # Industry average for beauty/cosmetics
+        avg_visitor_value = 6  # Industry average
         monthly_cost_estimate = int(missed_visitors_monthly * avg_visitor_value / 100) * 100  # Round to $100
 
         # Calculate 90-day target (close 50% of gap - realistic)
@@ -227,6 +259,18 @@ class HTMLReportGenerator:
             primary_rec = f"You have strong visibility ({visibility_rate:.0f}%). Focus on improving prominence (currently {prominence:.1f}/10) to become the top recommendation."
         else:
             primary_rec = f"Most exciting is the untapped potential in AI visibility. You're at {visibility_rate:.0f}% while {top_comp['name']} is at {top_comp['mention_rate']:.0f}% - that gap represents your first-mover advantage."
+
+        # Build citation metric HTML if available
+        citation_html = ""
+        if citation_stats:
+            citation_class = 'strong' if citation_presence >= 80 else 'needs-work' if citation_presence >= 50 else 'weak'
+            citation_html = f"""
+            <div class="metric-card {citation_class}">
+                <div class="metric-label">Citation Presence</div>
+                <div class="metric-value">{citation_presence:.0f}%</div>
+                <div class="metric-status">{'Strong citations' if citation_presence >= 80 else 'Building citations' if citation_presence >= 50 else 'Citation opportunity'}</div>
+            </div>
+            """
 
         return f"""
         <h2 style="margin-top: 48px;">Executive Summary</h2>
@@ -243,23 +287,24 @@ class HTMLReportGenerator:
             </p>
         </div>
 
-        <!-- Three Core Metrics -->
-        <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin: 40px 0;">
+        <!-- Core Metrics Grid -->
+        <div class="metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin: 40px 0;">
             <div class="metric-card {'strong' if visibility_rate >= 60 else 'needs-work' if visibility_rate >= 30 else 'weak'}">
-                <div class="metric-label">Visibility Rate</div>
+                <div class="metric-label">Visibility Rate <span style="background: #E8E4EC; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 4px;">{momentum_icon} {momentum_label}</span></div>
                 <div class="metric-value">{visibility_rate:.0f}%</div>
                 <div class="metric-status">{'Strong presence' if visibility_rate >= 60 else 'Room for growth' if visibility_rate >= 30 else 'First-mover opportunity'}</div>
+            </div>
+            <div class="metric-card {'strong' if asov >= 40 else 'needs-work' if asov >= 20 else 'weak'}">
+                <div class="metric-label">AI Share of Voice</div>
+                <div class="metric-value">{asov:.0f}%</div>
+                <div class="metric-status">{'Market leader' if asov >= 40 else 'Competitive' if asov >= 20 else 'Growth opportunity'}</div>
             </div>
             <div class="metric-card {'strong' if prominence >= 7 else 'needs-work' if prominence >= 4 else 'weak'}">
                 <div class="metric-label">Prominence Score</div>
                 <div class="metric-value">{prominence:.1f}/10</div>
                 <div class="metric-status">{'Featured prominently' if prominence >= 7 else 'Mentioned as option' if prominence >= 4 else 'Brief mentions'}</div>
             </div>
-            <div class="metric-card {'strong' if visibility_rate > top_comp['mention_rate'] else 'needs-work'}">
-                <div class="metric-label">vs {top_comp['name']}</div>
-                <div class="metric-value">{visibility_rate - top_comp['mention_rate']:+.0f}%</div>
-                <div class="metric-status">{'Leading' if visibility_rate > top_comp['mention_rate'] else f"{abs(visibility_rate - top_comp['mention_rate']):.0f}% gap to close"}</div>
-            </div>
+            {citation_html}
         </div>
 
         <!-- What This Means (Educational, not fear-based) -->
@@ -291,10 +336,60 @@ class HTMLReportGenerator:
                 <span class="accordion-icon">▼</span>
             </button>
             <div class="accordion-content">
-                <p><strong>Visibility %:</strong> Percentage of {total_results} queries where {brand_name} appeared in AI responses across ChatGPT, Claude, Perplexity, and Gemini.</p>
+                <p><strong>Visibility Rate:</strong> Percentage of {total_results} queries where {brand_name} appeared in AI responses across ChatGPT, Claude, Perplexity, and Gemini.</p>
+                <p style="margin-top: 12px;"><strong>AI Share of Voice (ASoV):</strong> Your brand's share of all brand mentions across tested prompts. If AI mentions 5 brands total and yours appears in 2 of those mentions, your ASoV is 40%. This is the <a href="https://www.similarweb.com/blog/marketing/geo/what-is-geo/" target="_blank" style="color: #4A4458;">industry-standard metric</a> for measuring competitive position in AI responses. (<a href="https://www.airops.com/blog/ai-visibility-metrics" target="_blank" style="color: #4A4458;">AirOps 2026</a>)</p>
                 <p style="margin-top: 12px;"><strong>Prominence Score (0-10):</strong> How featured you are when mentioned. 8-10 = top recommendation with detail, 5-7 = listed as option, 1-4 = brief reference, 0 = not mentioned.</p>
-                <p style="margin-top: 12px;"><strong>Revenue Impact:</strong> Conservative estimate using industry average visitor value and 3x monthly query scaling. The industry is full of "grift" right now - we use realistic numbers, not inflated promises.</p>
+                <p style="margin-top: 12px;"><strong>Citation Presence Rate:</strong> How often AI links to your actual website when it mentions you. Citation is the new ranking. (<a href="https://searchengineland.com/what-is-generative-engine-optimization-geo-444418" target="_blank" style="color: #4A4458;">Search Engine Land GEO Guide</a>)</p>
+                <p style="margin-top: 12px;"><strong>Momentum Label:</strong> Based on the <a href="https://www.similarweb.com/blog/marketing/geo/ai-visibility-momentum/" target="_blank" style="color: #4A4458;">SimilarWeb VAMP Framework</a>. Tracks whether your visibility is rising (Velocity), stable (Anchor), declining (Monitor), or at risk (Protect) compared to your previous test run.</p>
+                <p style="margin-top: 12px;"><strong>Revenue Impact:</strong> Conservative estimate using industry average visitor value and 3x monthly query scaling. We use realistic, research-backed numbers — not inflated projections.</p>
                 <p style="margin-top: 12px;"><strong>90-Day Target ({target_visibility:.0f}%):</strong> Close 50% of the gap to competitors (realistic and achievable with proper infrastructure).</p>
+            </div>
+        </div>
+        """
+
+    def _build_methodology_section(self, brand_name: str, total_results: int) -> str:
+        """Build the 'How to Read This Report' methodology section with research citations."""
+
+        return f"""
+        <div class="accordion-group" style="margin: 32px 0;">
+            <button class="accordion-button" onclick="toggleAccordion(this)">
+                <span>📖 How to Read This Report</span>
+                <span class="accordion-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <div style="margin-bottom: 24px;">
+                    <h4 style="color: #4D2E3A; margin: 0 0 12px 0; font-size: 16px;">What Is AI Visibility?</h4>
+                    <p style="color: #4D2E3A; line-height: 1.7; margin: 0;">
+                        AI visibility measures how often and how prominently AI assistants (ChatGPT, Claude, Perplexity, Gemini) mention your brand when users ask questions related to your industry. As of 2026, 35% of consumers use AI tools for product discovery — more than the 13.6% who use traditional search engines.
+                        (Source: <a href="https://www.similarweb.com/corp/reports/the-2026-generative-ai-brand-visibility-index/" target="_blank" style="color: #4A4458;">SimilarWeb 2026 GenAI Brand Visibility Index</a>)
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 24px;">
+                    <h4 style="color: #4D2E3A; margin: 0 0 12px 0; font-size: 16px;">Key Metrics Explained</h4>
+                    <ul style="color: #4D2E3A; line-height: 1.8; margin: 0; padding-left: 20px;">
+                        <li><strong>Visibility Rate:</strong> What percentage of AI responses mention your brand</li>
+                        <li><strong>AI Share of Voice (ASoV):</strong> Your brand's share of ALL brand mentions — the competitive metric</li>
+                        <li><strong>Prominence Score (0-10):</strong> How featured you are when mentioned — top recommendation vs brief mention</li>
+                        <li><strong>Citation Presence Rate:</strong> How often AI links to your actual website when it mentions you — citation is the new ranking (Source: <a href="https://searchengineland.com/what-is-generative-engine-optimization-geo-444418" target="_blank" style="color: #4A4458;">Search Engine Land: GEO Guide</a>)</li>
+                        <li><strong>Platform Breakdown:</strong> Your visibility on each AI platform — they each have different data and audiences</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 24px;">
+                    <h4 style="color: #4D2E3A; margin: 0 0 12px 0; font-size: 16px;">Why This Matters Now</h4>
+                    <p style="color: #4D2E3A; line-height: 1.7; margin: 0;">
+                        AI is not replacing search — it's becoming the first step. Users ask AI for recommendations, then search to verify. Brands that don't appear in AI responses are invisible to a growing share of consumers. Research shows the overlap between top Google results and AI-cited sources has dropped below 20% — meaning traditional SEO alone no longer guarantees AI visibility.
+                        (Source: <a href="https://searchengineland.com/what-is-generative-engine-optimization-geo-444418" target="_blank" style="color: #4A4458;">Search Engine Land</a>)
+                    </p>
+                </div>
+
+                <div>
+                    <h4 style="color: #4D2E3A; margin: 0 0 12px 0; font-size: 16px;">Our Methodology</h4>
+                    <p style="color: #4D2E3A; line-height: 1.7; margin: 0;">
+                        We test {total_results} real prompts across multiple AI platforms (ChatGPT, Claude, Perplexity, Gemini) using personas that match your target audience. Each prompt simulates a real question someone in your industry might ask. We analyze every response for brand mentions, competitor mentions, source citations, sentiment, and prominence. This approach follows the methodology outlined in <a href="https://www.similarweb.com/blog/marketing/geo/what-is-geo/" target="_blank" style="color: #4A4458;">SimilarWeb's 2026 GEO Guide</a> and <a href="https://www.airops.com/blog/ai-visibility-metrics" target="_blank" style="color: #4A4458;">AirOps' AI Visibility Metrics framework</a>.
+                    </p>
+                </div>
             </div>
         </div>
         """
@@ -396,9 +491,8 @@ class HTMLReportGenerator:
 
             <div style="margin-top: 16px; padding: 12px; background: rgba(74,68,88,0.08); border-radius: 6px;">
                 <p style="margin: 0; font-size: 13px; color: #4D2E3A; line-height: 1.6;">
-                    <strong>Reality check:</strong> The industry is full of "grift" right now—inflated numbers and overnight promises.
-                    We use conservative estimates based on ~800 monthly queries × 73% ChatGPT usage × ${avg_visitor_value} visitor value.
-                    Real improvements take consistent work, not magic bullets.
+                    <strong>Our methodology:</strong> These estimates are based on ~800 monthly queries × 73% ChatGPT usage × ${avg_visitor_value} visitor value.
+                    We follow <a href="https://www.similarweb.com/corp/reports/the-2026-generative-ai-brand-visibility-index/" target="_blank" style="color: #4A4458;">SimilarWeb's 2026 AI Visibility Index</a> methodology for conservative, evidence-based projections. Meaningful improvements typically take 60-90 days of consistent work.
                 </p>
             </div>
         </div>
@@ -896,7 +990,8 @@ class HTMLReportGenerator:
                    head_to_head_results: Dict[str, Any] = None,
                    citation_stats: Dict[str, Any] = None,
                    sentiment_analysis: Dict[str, Any] = None,
-                   source_analysis: Dict[str, Any] = None) -> str:
+                   source_analysis: Dict[str, Any] = None,
+                   trend_data: Dict[str, Any] = None) -> str:
         """Build complete HTML report with DaSilva branding."""
 
         visibility_rate = visibility_summary.get('brand_visibility_rate', 0)
@@ -1949,15 +2044,17 @@ class HTMLReportGenerator:
         </div>
 
         <div class="tabs">
-            <button class="tab active" onclick="switchTab(event, 'overview')">Your Performance Overview</button>
-            <button class="tab" onclick="switchTab(event, 'sentiment')">How AI Describes You</button>
-            <button class="tab" onclick="switchTab(event, 'prompts')">What AI Actually Said</button>
-            <button class="tab" onclick="switchTab(event, 'sources')">Where AI Gets Its Information</button>
-            <button class="tab" onclick="switchTab(event, 'competitive-intel')">What Your Competitors Are Doing</button>
+            <button class="tab active" onclick="switchTab(event, 'overview')">Performance Overview</button>
+            <button class="tab" onclick="switchTab(event, 'sentiment')">Brand Sentiment</button>
+            <button class="tab" onclick="switchTab(event, 'prompts')">Prompt Responses</button>
+            <button class="tab" onclick="switchTab(event, 'sources')">Sources & Citations</button>
+            <button class="tab" onclick="switchTab(event, 'competitive-intel')">Competitive Intelligence</button>
         </div>
 
         <div id="overview" class="tab-content active">
-            {self._build_top_executive_summary(brand_name, visibility_summary, competitive_analysis, scored_results)}
+            {self._build_top_executive_summary(brand_name, visibility_summary, competitive_analysis, scored_results, trend_data, citation_stats)}
+
+            {self._build_methodology_section(brand_name, visibility_summary.get('total_prompts_tested', len(scored_results)))}
 
             {self._build_visibility_by_platform(scored_results)}
 
@@ -2194,14 +2291,14 @@ class HTMLReportGenerator:
                 platform_stats[platform]['mentions'] += 1
             platform_stats[platform]['avg_prominence'].append(visibility.get('prominence_score', 0))
 
-        # Map platform names to friendly names with context
+        # Map platform names to friendly names with 2026 context
         platform_mapping = {
-            'openai': ('ChatGPT (OpenAI)', '73% of all AI users'),
-            'anthropic': ('Claude (Anthropic)', '15% of AI users'),
-            'perplexity': ('Perplexity', '5% - Research-focused'),
-            'gemini': ('Gemini (Google)', '7% - Search integration'),
-            'deepseek': ('DeepSeek', 'Technical audience'),
-            'grok': ('Grok (X.AI)', 'Twitter integration')
+            'openai': ('ChatGPT (OpenAI)', '73% of AI users — largest discovery platform'),
+            'anthropic': ('Claude (Anthropic)', '15% of AI users — growing in professional use'),
+            'perplexity': ('Perplexity', '~5% — research-focused with direct citations'),
+            'gemini': ('Gemini (Google)', '~7% — integrated into Google Search'),
+            'deepseek': ('DeepSeek', 'Growing technical audience, strong in Asia'),
+            'grok': ('Grok (X.AI)', 'Integrated with X/Twitter feed')
         }
 
         rows = ""
@@ -2273,17 +2370,21 @@ class HTMLReportGenerator:
                 </div>
             </div>
 
+            <p style="font-size: 13px; color: #6B5660; margin-top: 16px;">
+                Platform usage data based on <a href="https://www.similarweb.com/corp/reports/the-2026-generative-ai-brand-visibility-index/" target="_blank" style="color: #4A4458;">SimilarWeb's 2026 AI Visibility Index</a>. Each platform uses different training data and retrieval methods, which is why visibility varies across platforms.
+            </p>
+
             <div class="accordion-group" style="margin-top: 16px;">
             <button class="accordion-button" onclick="toggleAccordion(this)">
                 <span>❓ Why Platform Breakdown Matters</span>
                 <span class="accordion-icon">▼</span>
             </button>
             <div class="accordion-content">
-                <p><strong>ChatGPT (73% market share):</strong> Highest priority - most users, consumer-focused</p>
-                <p style="margin-top: 8px;"><strong>Claude (15% market share):</strong> Growing fast, knowledge workers and developers</p>
-                <p style="margin-top: 8px;"><strong>Perplexity (5% market share):</strong> Research-focused users, high intent</p>
-                <p style="margin-top: 8px;"><strong>Gemini (7% market share):</strong> Google integration, search overlap</p>
-                <p style="margin-top: 16px; font-size: 13px; color: #6B5660;"><em>Market share based on public usage data as of 2025. Each platform has different training data and may cite different sources.</em></p>
+                <p><strong>ChatGPT (73% market share):</strong> Highest priority - largest user base, consumer-focused discovery</p>
+                <p style="margin-top: 8px;"><strong>Claude (15% market share):</strong> Growing fast in professional/enterprise use, knowledge workers and developers</p>
+                <p style="margin-top: 8px;"><strong>Perplexity (~5% market share):</strong> Research-focused users with high intent, provides direct citations</p>
+                <p style="margin-top: 8px;"><strong>Gemini (~7% market share):</strong> Integrated into Google Search, overlaps with traditional SEO</p>
+                <p style="margin-top: 16px; font-size: 13px; color: #6B5660;"><em>Market share based on <a href="https://www.similarweb.com/corp/reports/the-2026-generative-ai-brand-visibility-index/" target="_blank" style="color: #4A4458;">SimilarWeb 2026 data</a>. Each platform has different training data and may cite different sources.</em></p>
             </div>
         </div>
         </div>

@@ -528,7 +528,8 @@ class VisibilityTracker:
         gap_analysis['prioritized_audiences'] = prioritized_audiences
         gap_analysis['prioritized_content_gaps'] = prioritized_content_gaps
 
-        # Save historical tracking data
+        # Save historical tracking data and get trend data for momentum labels
+        trend_data = None
         if self.client_slug:
             try:
                 from src.tracking.historical_tracker import HistoricalTracker
@@ -539,6 +540,10 @@ class VisibilityTracker:
                     platform_results=None  # Platform breakdown not available in main.py
                 )
                 print("✓ Historical tracking data saved")
+                # Get trend data for momentum labels in report
+                trend_data = hist_tracker.get_latest_vs_previous(brand_name)
+                if trend_data:
+                    print(f"   ✓ Trend comparison: {trend_data.get('trend', 'new')}")
             except Exception as e:
                 print(f"⚠️  Could not save historical data: {str(e)}")
 
@@ -648,7 +653,8 @@ class VisibilityTracker:
             citation_stats=citation_stats,
             sentiment_analysis=sentiment_analysis,
             website_verification=website_verification,
-            source_analysis=source_analysis
+            source_analysis=source_analysis,
+            trend_data=trend_data
         )
 
         print(f"✓ HTML report saved to: {html_report_path}")
