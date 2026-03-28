@@ -2,7 +2,7 @@
 HTML report generator for visibility analysis - DaSilva Consulting Brand.
 """
 
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 import os
 from datetime import datetime
 
