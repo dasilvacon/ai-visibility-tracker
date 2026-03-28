@@ -162,162 +162,10 @@ def _render_input_step():
             key="qs_questionnaire_input"
         )
 
-    # Check Ahrefs availability
-    ahrefs = AhrefsClient()
-    ahrefs_available = ahrefs.is_configured
-
+    # ── Keywords: CSV upload only (no Ahrefs keyword fetch — too expensive) ──
     st.markdown("---")
-
-    if ahrefs_available:
-        st.markdown(f"""
-        <div style='background: #E8F5E9; padding: 12px 16px; border-radius: 8px;
-                    border-left: 4px solid {SUCCESS}; margin: 10px 0;'>
-            <strong>Ahrefs API connected</strong> — Keywords and competitors will be pulled automatically from the domain.
-        </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.markdown(f"""
-        <div style='background: #FFF3E0; padding: 12px 16px; border-radius: 8px;
-                    border-left: 4px solid {WARNING}; margin: 10px 0;'>
-            <strong>Ahrefs API not configured</strong> — You can upload an Ahrefs CSV export instead.
-            To enable auto-fetch, add your Ahrefs API key to Streamlit secrets under <code>[api_keys] ahrefs = "your_token"</code>.
-        </div>
-        """, unsafe_allow_html=True)
-
-    # Action buttons
-    if ahrefs_available:
-        if st.button("Pull Data from Ahrefs", type="primary", use_container_width=True, disabled=not (client_name and domain)):
-            if not client_name or not domain:
-                st.error("Please enter both a client name and domain.")
-                return
-
-            clean_domain = _clean_domain(domain)
-            st.session_state.qs_client_name = client_name
-            st.session_state.qs_domain = clean_domain
-            st.session_state.qs_country = country
-            st.session_state.qs_description = description
-            st.session_state.qs_questionnaire_raw = questionnaire_raw
-            st.session_state.qs_source = 'ahrefs'
-
-            with st.spinner(f"Pulling keywords and competitors for {clean_domain}..."):
-                _fetch_ahrefs_data(ahrefs, clean_domain, country)
-
-            if st.session_state.qs_keywords_data or st.session_state.qs_competitors_data:
-                st.session_state.qs_step = 'review'
-                st.rerun()
-            else:
-                st.error("No data returned from Ahrefs. Check the domain and try again, or upload a CSV below.")
-                # Show debug info so we can see what went wrong
-                fetch_notes = st.session_state.get('qs_fetch_notes', [])
-                if fetch_notes:
-                    for note in fetch_notes:
-                        if 'error' in note.lower() or 'Error' in note:
-                            st.warning(note)
-                        else:
-                            st.info(note)
-
-    # CSV upload — show directly (not hidden in expander)
-    st.markdown("---")
-    st.markdown("**Or upload an Ahrefs keyword export CSV:**")
+    st.markdown("**Upload your keyword CSV** (export from Ahrefs, or any CSV with a keyword column):")
     _render_csv_upload(client_name, domain, country, description)
-
-
-def _fetch_ahrefs_data(ahrefs: AhrefsClient, domain: str, country: str):
-    """Fetch keywords and competitors from Ahrefs API.
-
-    Strategy: Always query US (biggest keyword database) + the user's
-    selected country if different. Merge and deduplicate by keyword text.
-    Two API calls max — fast and reliable.
-    """
-    errors = []
-    keywords = []
-    seen_kws = set()
-
-    try:
-        selected = country.strip().upper() if country and country.lower() != 'global' else ''
-
-        # Always pull US first — largest keyword database
-        us_result = ahrefs.get_organic_keywords(domain, country='US', limit=300, min_volume=10)
-        if us_result.get('error'):
-            errors.append(f"Keywords (US): {us_result['error']}")
-        else:
-            for kw in us_result.get('keywords', []):
-                kw_text = kw.get('keyword', '').lower().strip()
-                if kw_text and kw_text not in seen_kws:
-                    seen_kws.add(kw_text)
-                    keywords.append(kw)
-
-        # Also pull selected country if different from US
-        if selected and selected != 'US':
-            local_result = ahrefs.get_organic_keywords(domain, country=selected, limit=200, min_volume=10)
-            if local_result.get('error'):
-                errors.append(f"Keywords ({selected}): {local_result['error']}")
-            else:
-                for kw in local_result.get('keywords', []):
-                    kw_text = kw.get('keyword', '').lower().strip()
-                    if kw_text and kw_text not in seen_kws:
-                        seen_kws.add(kw_text)
-                        keywords.append(kw)
-
-        if keywords:
-            errors.append(f"Pulled {len(keywords)} unique keywords")
-
-        # Pull competitors from US first, then selected country
-        competitors = []
-        comp_result = ahrefs.get_organic_competitors(domain, country='US', limit=10)
-        if comp_result.get('error'):
-            errors.append(f"Competitors (US): {comp_result['error']}")
-        else:
-            competitors = comp_result.get('competitors', [])
-
-        if selected and selected != 'US':
-            comp_result2 = ahrefs.get_organic_competitors(domain, country=selected, limit=10)
-            if not comp_result2.get('error'):
-                existing_domains = {c.get('competitor_domain', '').lower() for c in competitors}
-                for c in comp_result2.get('competitors', []):
-                    if c.get('competitor_domain', '').lower() not in existing_domains:
-                        competitors.append(c)
-
-        if not competitors:
-            errors.append("No competitors found")
-
-    except Exception as e:
-        errors.append(f"Fetch error: {str(e)}")
-        competitors = []
-
-    # Store any errors/notes so they persist after rerun
-    st.session_state.qs_fetch_notes = errors
-
-    # Run through auto-onboarder filtering
-    onboarder = ClientAutoOnboarder(
-        brand_name=st.session_state.qs_client_name,
-        domain=domain,
-        countries=country
-    )
-    onboarder.ingest_ahrefs_keywords(keywords)
-    onboarder.ingest_ahrefs_competitors(competitors)
-
-    # Parse questionnaire if provided
-    questionnaire = _parse_questionnaire(
-        st.session_state.get('qs_questionnaire_raw', ''),
-        st.session_state.get('qs_description', '')
-    )
-    if questionnaire:
-        onboarder.ingest_questionnaire(questionnaire)
-
-    filtered = onboarder.filter_keywords()
-    personas = onboarder.generate_personas()
-
-    # Store in session
-    st.session_state.qs_keywords_data = filtered
-    st.session_state.qs_keywords_selected = {
-        kw.get('keyword', ''): True for kw in filtered
-    }
-    st.session_state.qs_competitors_data = onboarder.raw_competitors
-    st.session_state.qs_competitors_selected = {
-        c.get('domain', ''): True for c in onboarder.raw_competitors
-    }
-    st.session_state.qs_personas = personas
 
 
 def _render_csv_upload(client_name, domain, country, description):
@@ -414,6 +262,26 @@ def _render_csv_upload(client_name, domain, country, description):
                 )
                 onboarder.ingest_ahrefs_keywords(keywords_data)
 
+                # Pull competitors from Ahrefs (cheap — ~12 units per call)
+                competitors = []
+                ahrefs = AhrefsClient()
+                if ahrefs.is_configured and clean_domain:
+                    try:
+                        selected = country.strip().upper() if country and country.lower() != 'global' else ''
+                        comp_result = ahrefs.get_organic_competitors(clean_domain, country='US', limit=10)
+                        if not comp_result.get('error'):
+                            competitors = comp_result.get('competitors', [])
+                        if selected and selected != 'US':
+                            comp_result2 = ahrefs.get_organic_competitors(clean_domain, country=selected, limit=10)
+                            if not comp_result2.get('error'):
+                                existing_domains = {c.get('competitor_domain', '').lower() for c in competitors}
+                                for c in comp_result2.get('competitors', []):
+                                    if c.get('competitor_domain', '').lower() not in existing_domains:
+                                        competitors.append(c)
+                    except Exception:
+                        pass  # Competitors are optional
+                onboarder.ingest_ahrefs_competitors(competitors)
+
                 # Parse questionnaire if provided
                 csv_questionnaire = _parse_questionnaire(
                     st.session_state.get('qs_questionnaire_raw', ''),
@@ -429,8 +297,10 @@ def _render_csv_upload(client_name, domain, country, description):
                 st.session_state.qs_keywords_selected = {
                     kw.get('keyword', ''): True for kw in filtered
                 }
-                st.session_state.qs_competitors_data = []
-                st.session_state.qs_competitors_selected = {}
+                st.session_state.qs_competitors_data = onboarder.raw_competitors
+                st.session_state.qs_competitors_selected = {
+                    c.get('domain', ''): True for c in onboarder.raw_competitors
+                }
                 st.session_state.qs_personas = personas
                 st.session_state.qs_step = 'review'
                 st.rerun()
@@ -522,6 +392,11 @@ def _render_csv_replace_upload(client_name, domain):
                         countries=country
                     )
                     onboarder.ingest_ahrefs_keywords(keywords_data)
+
+                    # Keep existing competitors if any, or fetch from Ahrefs
+                    existing_comps = st.session_state.get('qs_competitors_data', [])
+                    if existing_comps:
+                        onboarder.ingest_ahrefs_competitors(existing_comps)
 
                     csv_questionnaire = _parse_questionnaire(
                         st.session_state.get('qs_questionnaire_raw', ''),
