@@ -554,10 +554,13 @@ class GCSClientSync:
     def sync_all_data(self) -> bool:
         """
         Upload ALL app data to GCS (convenience method for full sync).
+        Discovers client slugs from the client registry and syncs per-client data.
 
         Returns:
             True if all syncs successful, False otherwise
         """
+        import json
+
         print("=" * 50)
         print("FULL DATA SYNC TO GCS")
         print("=" * 50)
@@ -570,11 +573,26 @@ class GCSClientSync:
         print("\n2. Syncing prompt data...")
         results.append(self.upload_prompt_data())
 
-        print("\n3. Syncing test results...")
-        results.append(self.upload_test_results())
+        # Discover client slugs from registry
+        client_slugs = []
+        try:
+            registry_path = Path('data/clients.json')
+            if registry_path.exists():
+                with open(registry_path, 'r') as f:
+                    registry = json.load(f)
+                client_slugs = [c['slug'] for c in registry.get('clients', []) if c.get('slug')]
+        except Exception:
+            pass
 
-        print("\n4. Syncing reports...")
-        results.append(self.upload_reports())
+        if client_slugs:
+            for slug in client_slugs:
+                print(f"\n3. Syncing test results for {slug}...")
+                results.append(self.upload_test_results(slug))
+
+                print(f"\n4. Syncing reports for {slug}...")
+                results.append(self.upload_reports(slug))
+        else:
+            print("\n⚠️ No client slugs found in registry — skipping per-client sync")
 
         print("\n" + "=" * 50)
         if all(results):

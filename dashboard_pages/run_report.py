@@ -254,11 +254,13 @@ def count_client_prompts(prompts_file: str, client_name: str) -> int:
 
 
 def get_test_status_files(client_name: str) -> tuple:
-    """Get paths for test status files."""
-    client_slug = client_name.replace(' ', '_')
-    log_file = Path(f'data/reports/test_run_{client_slug}.log')
-    pid_file = Path(f'data/reports/test_run_{client_slug}.pid')
-    status_file = Path(f'data/reports/test_run_{client_slug}.status')
+    """Get paths for test status files (per-client isolated)."""
+    client_slug = client_name.replace(' ', '_').lower()
+    status_dir = Path(f'data/reports/{client_slug}')
+    status_dir.mkdir(parents=True, exist_ok=True)
+    log_file = status_dir / f'test_run_{client_slug}.log'
+    pid_file = status_dir / f'test_run_{client_slug}.pid'
+    status_file = status_dir / f'test_run_{client_slug}.status'
     return log_file, pid_file, status_file
 
 

@@ -777,8 +777,12 @@ def display_html_report():
             except Exception:
                 pass
     else:
-        # Use local files
-        html_report_path = Path(f'data/reports/visibility_report_{brand_slug}.html')
+        # Use local files — check per-client subfolder first, then legacy flat path
+        client_slug = brand_slug.lower()
+        html_report_path = Path(f'data/reports/{client_slug}/visibility_report_{brand_slug}.html')
+        if not html_report_path.exists():
+            # Fallback to legacy flat path
+            html_report_path = Path(f'data/reports/visibility_report_{brand_slug}.html')
         report_exists = html_report_path.exists()
         metadata = get_report_metadata(html_report_path) if report_exists else None
 
@@ -831,7 +835,7 @@ def display_html_report():
                 st.error(f"Error loading report from cloud storage: {e}")
                 return
         else:
-            html_report_path = Path(f'data/reports/visibility_report_{brand_slug}.html')
+            # Use the html_report_path already resolved above (per-client or legacy)
             with open(html_report_path, 'r', encoding='utf-8') as f:
                 html_content = f.read()
 
