@@ -919,16 +919,8 @@ def show_navigation():
                 st.session_state.page = 'Client Manager'
                 st.rerun()
 
-            if st.button("✨ Generate", use_container_width=True, key="nav_generate"):
-                st.session_state.page = 'Generate'
-                st.rerun()
-
-            if st.button("✓ Review & Approve", use_container_width=True, key="nav_review"):
-                st.session_state.page = 'Review & Approve'
-                st.rerun()
-
-            if st.button("📤 Export", use_container_width=True, key="nav_export"):
-                st.session_state.page = 'Export'
+            if st.button("✨ Generate & Review", use_container_width=True, key="nav_generate_review"):
+                st.session_state.page = 'Generate & Review'
                 st.rerun()
 
             if st.button("📚 Prompt Library", use_container_width=True, key="nav_library"):
@@ -979,35 +971,22 @@ def main():
             except Exception as e:
                 st.error(f"Error loading Run Report: {e}")
         elif st.session_state.page == 'Client Manager' and st.session_state.get('role') == 'admin':
-            # Import and display client manager page
             try:
                 from prompt_generator_pages import settings
                 settings.render()
             except Exception as e:
                 st.error(f"Error loading Client Manager: {e}")
-        elif st.session_state.page == 'Generate' and st.session_state.get('role') == 'admin':
-            # Import and display generate page
+        elif st.session_state.page == 'Generate & Review' and st.session_state.get('role') == 'admin':
             try:
-                from prompt_generator_pages import generate
-                generate.render()
+                from prompt_generator_pages import generate_review
+                generate_review.render()
             except Exception as e:
-                st.error(f"Error loading Generate page: {e}")
-        elif st.session_state.page == 'Review & Approve' and st.session_state.get('role') == 'admin':
-            # Import and display review page
-            try:
-                from prompt_generator_pages import review
-                review.render()
-            except Exception as e:
-                st.error(f"Error loading Review page: {e}")
-        elif st.session_state.page == 'Export' and st.session_state.get('role') == 'admin':
-            # Import and display export page
-            try:
-                from prompt_generator_pages import export_page
-                export_page.render()
-            except Exception as e:
-                st.error(f"Error loading Export page: {e}")
+                st.error(f"Error loading Generate & Review: {e}")
+        # Legacy routes — redirect to new consolidated page
+        elif st.session_state.page in ('Generate', 'Review & Approve', 'Export') and st.session_state.get('role') == 'admin':
+            st.session_state.page = 'Generate & Review'
+            st.rerun()
         elif st.session_state.page == 'Prompt Library' and st.session_state.get('role') == 'admin':
-            # Import and display library page
             try:
                 from prompt_generator_pages import library
                 library.render()
