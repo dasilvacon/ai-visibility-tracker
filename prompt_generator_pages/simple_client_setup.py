@@ -94,7 +94,7 @@ def parse_keyword_file(uploaded_file):
         content = uploaded_file.read()
         if len(content) == 0:
             st.error("❌ **File is empty!** Please upload a CSV file with keyword data.")
-            st.info("💡 Your CSV should have at least one column with keywords. Example:\n```\nkeyword\nbest luxury eyeshadow\nmakeup palette reviews\n```")
+            st.info("💡 Your CSV should have at least one column with keywords. Example:\n```\nkeyword\nbest caregiver support programs\nonline project management tools\n```")
             return None, None, None
 
         # Reset for pandas
@@ -105,7 +105,7 @@ def parse_keyword_file(uploaded_file):
             df = pd.read_csv(uploaded_file)
         except pd.errors.EmptyDataError:
             st.error("❌ **No data found in file!** The CSV appears to be empty or has no valid rows.")
-            st.info("💡 Make sure your CSV has:\n- A header row with column names\n- At least one row of data\n\nExample:\n```\nkeyword,search_volume\nbest luxury eyeshadow,2400\nmakeup palette reviews,1800\n```")
+            st.info("💡 Make sure your CSV has:\n- A header row with column names\n- At least one row of data\n\nExample:\n```\nkeyword,search_volume\nbest caregiver support programs,2400\nonline project management tools,1800\n```")
             return None, None, None
         except Exception as e:
             st.error(f"❌ **Cannot read CSV file:** {str(e)}")
@@ -115,13 +115,13 @@ def parse_keyword_file(uploaded_file):
         # Check if dataframe is empty
         if df.empty or len(df.columns) == 0:
             st.error("❌ **No columns detected!** The CSV file has no valid data columns.")
-            st.info("💡 Your CSV needs at least one column with keyword data. Example format:\n```\nkeyword\nbest luxury eyeshadow\nmakeup palette reviews\n```")
+            st.info("💡 Your CSV needs at least one column with keyword data. Example format:\n```\nkeyword\nbest caregiver support programs\nonline project management tools\n```")
             return None, None, None
 
         # Check if we have any data rows
         if len(df) == 0:
             st.error("❌ **No data rows!** The CSV only has headers but no actual keyword data.")
-            st.info("💡 Add some keywords below the header row:\n```\nkeyword\nbest luxury eyeshadow\nmakeup palette reviews\n```")
+            st.info("💡 Add some keywords below the header row:\n```\nkeyword\nbest caregiver support programs\nonline project management tools\n```")
             return None, None, None
 
         # Detect keyword column
@@ -382,7 +382,7 @@ def render_simple_setup():
 
         new_client_name = st.text_input(
             "Client/Brand Name *",
-            placeholder="e.g., Rare Beauty, Natasha Denona",
+            placeholder="e.g., Ontario Caregiver Organization, Espresso Capital",
             help="Enter the client's brand name",
             value=st.session_state.new_client_data['name'],
             key="setup_client_name"
@@ -400,7 +400,7 @@ def render_simple_setup():
 
         description = st.text_area(
             "Brand Description",
-            placeholder="e.g., Luxury makeup brand specializing in high-end eyeshadow palettes...",
+            placeholder="e.g., Nonprofit supporting family caregivers across Ontario with programs, resources, and advocacy...",
             help="A brief 2-3 sentence description of the brand",
             value=st.session_state.new_client_data['description'],
             height=100,
@@ -429,7 +429,7 @@ def render_simple_setup():
 
         market_positioning = st.text_input(
             "How do they want to be positioned in AI responses?",
-            placeholder="e.g., Premium luxury beauty leader, Affordable eco-friendly alternative",
+            placeholder="e.g., Go-to resource for caregiver support in Ontario, Leading venture lending partner for startups",
             help="Their desired market position when AI tools recommend them",
             value=st.session_state.new_client_data['business_goals']['market_positioning'],
             key="setup_positioning"
@@ -438,7 +438,7 @@ def render_simple_setup():
 
         target_metrics = st.text_area(
             "What metrics matter most to them?",
-            placeholder="e.g.,\n- AI visibility rate >60%\n- Top 3 in luxury eyeshadow category\n- Featured in ChatGPT product recommendations",
+            placeholder="e.g.,\n- AI visibility rate >60%\n- Top 3 in caregiver support category\n- Featured in ChatGPT recommendations for our services",
             help="List the key success metrics they're tracking (one per line)",
             value=st.session_state.new_client_data['business_goals']['target_metrics'],
             height=100,
@@ -482,20 +482,20 @@ def render_simple_setup():
             st.markdown(f"<p style='color: {CREAM}; margin-top: 12px;'><strong>✅ Valid format examples:</strong></p>", unsafe_allow_html=True)
             st.code("""# Simple format (one column)
 keyword
-best luxury eyeshadow
-makeup palette reviews
-natasha denona bronze palette
+caregiver support programs ontario
+respite care services near me
+how to help aging parents
 
 # With volume (two columns)
 keyword,search_volume
-best luxury eyeshadow,2400
-makeup palette reviews,1800
-natasha denona bronze palette,1200
+caregiver support programs,2400
+respite care services,1800
+help for aging parents,1200
 
 # Ahrefs export (multiple columns - we'll detect keyword column)
 Keyword,Position,Search Volume,Keyword Difficulty
-best luxury eyeshadow,5,2400,45
-makeup palette reviews,12,1800,38
+caregiver support programs,5,2400,45
+respite care services near me,12,1800,38
             """, language="csv")
 
             st.markdown(f"<p style='color: {CREAM}; margin-top: 12px;'><strong>❌ Common issues:</strong></p>", unsafe_allow_html=True)

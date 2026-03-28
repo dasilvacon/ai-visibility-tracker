@@ -339,7 +339,7 @@ def render():
 
             new_client_name = st.text_input(
             "Client Name",
-            placeholder="e.g., Rare Beauty, Fenty Beauty",
+            placeholder="e.g., Ontario Caregiver Organization, Espresso Capital",
             help="Enter the client's brand name exactly as it should appear"
             )
 
@@ -534,28 +534,28 @@ def render():
         st.markdown(f"<h5 style='color: white;'>Example: Ahrefs Organic Keywords Export</h5>", unsafe_allow_html=True)
         st.code("""
 Keyword,Position,Search Volume,KD,Traffic,CPC
-best luxury eyeshadow,5,5000,45,250,2.50
-natasha denona review,12,2500,25,120,1.80
-luxury makeup brands,8,8000,60,400,3.20
+caregiver support programs,5,5000,45,250,2.50
+respite care services ontario,12,2500,25,120,1.80
+help for aging parents,8,8000,60,400,3.20
         """, language="csv")
         st.markdown(f"<p style='color: {ACCENT}; font-size: 0.85em;'>✅ Simple Setup will detect 'Keyword' column and 'Search Volume' automatically</p>", unsafe_allow_html=True)
 
         st.markdown(f"<h5 style='color: white; margin-top: 20px;'>Example: Your Link Building Keywords</h5>", unsafe_allow_html=True)
         st.code("""
 Target Keywords,Priority,Notes
-buy natasha denona online,High,Ecommerce focus
-natasha denova palette,Medium,Typo variant
-best eyeshadow for mature skin,High,Demographic target
+caregiver burnout support,High,High search volume
+home care for seniors ontario,Medium,Local focus
+venture debt for startups,High,Commercial intent
         """, language="csv")
         st.markdown(f"<p style='color: {ACCENT}; font-size: 0.85em;'>✅ Simple Setup will detect 'Target Keywords' column, ignore other columns</p>", unsafe_allow_html=True)
 
         st.markdown(f"<h5 style='color: white; margin-top: 20px;'>Example: Basic Keyword List</h5>", unsafe_allow_html=True)
         st.code("""
 Search Terms
-natasha denona biba palette
-how to apply eyeshadow
-luxury makeup tutorial
-best high-end eyeshadow
+caregiver support programs
+how to help aging parents
+respite care services near me
+best resources for family caregivers
         """, language="csv")
         st.markdown(f"<p style='color: {ACCENT}; font-size: 0.85em;'>✅ Simple Setup will detect this single-column format too!</p>", unsafe_allow_html=True)
 
@@ -563,10 +563,10 @@ best high-end eyeshadow
         <div style='background-color: {LIGHT_BG}; padding: 16px; border-radius: 6px; margin-top: 20px;'>
             <h5 style='color: {ACCENT}; margin-top: 0;'>🔍 Intent Types Explained:</h5>
             <ul style='color: {TEXT_COLOR};'>
-                <li><strong>Transactional:</strong> Ready to buy (e.g., "buy eyeshadow", "natasha denona sale")</li>
-                <li><strong>Informational:</strong> Learning/researching (e.g., "how to apply eyeshadow", "best makeup tips")</li>
-                <li><strong>Navigational:</strong> Looking for specific brand/page (e.g., "natasha denona website", "sephora natasha denona")</li>
-                <li><strong>Commercial:</strong> Comparing options (e.g., "best luxury eyeshadow", "natasha denona vs urban decay")</li>
+                <li><strong>Transactional:</strong> Ready to take action (e.g., "sign up for caregiver program", "apply for respite care")</li>
+                <li><strong>Informational:</strong> Learning/researching (e.g., "how to care for aging parents", "what is respite care")</li>
+                <li><strong>Navigational:</strong> Looking for specific brand/page (e.g., "OCO website", "espresso capital login")</li>
+                <li><strong>Commercial:</strong> Comparing options (e.g., "best caregiver support programs", "venture debt vs equity")</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -575,13 +575,13 @@ best high-end eyeshadow
         <div style='background-color: rgba(232, 215, 160, 0.1); padding: 16px; border-radius: 6px; margin-top: 20px; border-left: 4px solid {ACCENT};'>
             <h5 style='color: white; margin-top: 0;'>✨ What Gets Generated?</h5>
             <p style='color: {TEXT_COLOR};'>
-                Once you activate a client and go to "Generate", the tool will create AI-optimized prompts like:
+                Once you activate a client and go to "Generate & Review", the tool will create natural-language prompts like:
             </p>
             <p style='color: {ACCENT}; font-style: italic; margin: 12px 0;'>
-                "Best luxury eyeshadow palettes for mature skin - high-end brands like Natasha Denona with creamy, blendable formulas"
+                "my mom just got out of the hospital and I don't know where to find help for caregivers in Ontario"
             </p>
             <p style='color: {TEXT_COLOR};'>
-                Each prompt combines your keywords with persona insights to match how real people search.
+                Each prompt combines your keywords with persona insights to match how real people talk to AI.
             </p>
         </div>
         """, unsafe_allow_html=True)

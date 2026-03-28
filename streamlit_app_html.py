@@ -919,8 +919,8 @@ def show_navigation():
                 st.rerun()
             st.markdown(f"<div style='margin: 24px 0 12px 0; padding-top: 16px; border-top: 1px solid {BORDER_LIGHT};'><p style='color: {TEXT_DARK}; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;'>Prompt Generator</p></div>", unsafe_allow_html=True)
 
-            if st.button("👥 Client Manager", use_container_width=True, key="nav_client_manager"):
-                st.session_state.page = 'Client Manager'
+            if st.button("⚡ Quick Setup", use_container_width=True, key="nav_quick_setup"):
+                st.session_state.page = 'Quick Setup'
                 st.rerun()
 
             if st.button("✨ Generate & Review", use_container_width=True, key="nav_generate_review"):
@@ -974,12 +974,16 @@ def main():
                 run_report.render()
             except Exception as e:
                 st.error(f"Error loading Run Report: {e}")
-        elif st.session_state.page == 'Client Manager' and st.session_state.get('role') == 'admin':
+        elif st.session_state.page == 'Quick Setup' and st.session_state.get('role') == 'admin':
             try:
-                from prompt_generator_pages import settings
-                settings.render()
+                from prompt_generator_pages import quick_setup
+                quick_setup.render()
             except Exception as e:
-                st.error(f"Error loading Client Manager: {e}")
+                st.error(f"Error loading Quick Setup: {e}")
+        # Legacy route: old Client Manager -> Quick Setup
+        elif st.session_state.page == 'Client Manager' and st.session_state.get('role') == 'admin':
+            st.session_state.page = 'Quick Setup'
+            st.rerun()
         elif st.session_state.page == 'Generate & Review' and st.session_state.get('role') == 'admin':
             try:
                 from prompt_generator_pages import generate_review
