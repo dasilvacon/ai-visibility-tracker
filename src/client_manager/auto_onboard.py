@@ -294,13 +294,10 @@ class ClientAutoOnboarder:
         """
         Filter keywords to remove noise and keep high-quality, relevant keywords.
 
-        Filters out:
-        - Navigational keywords (login, sign in, etc.)
-        - Self-branded keywords (just the brand name)
-        - Foreign language keywords (French, etc.)
-        - Too-generic single words
-        - Keywords with 0 volume
-        - Near-duplicates
+        For AI visibility tracking, we KEEP brand keywords (people searching
+        for the brand should find it in AI responses). We only remove true
+        junk: navigational (login), foreign language, zero-volume, and
+        exact duplicates.
 
         Returns:
             List of filtered, deduplicated keywords
@@ -327,43 +324,37 @@ class ClientAutoOnboarder:
 
             seen_keywords.add(normalized)
 
-            # Volume check
-            if volume == 0 and kw_data.get("traffic_potential", 0) == 0:
+            # Volume check — but keep keywords with any traffic
+            traffic = kw_data.get("traffic_potential", 0) or kw_data.get("sum_traffic", 0)
+            if volume == 0 and traffic == 0:
                 filtered_out["no_volume"] += 1
                 continue
 
-            # Navigational check
+            # Navigational check (login, sign in, etc.) — these are useless
             if kw_data.get("is_navigational") or self._is_navigational(keyword):
                 filtered_out["navigational"] += 1
                 continue
 
-            # Self-branded check
-            if self._is_self_branded(keyword):
-                filtered_out["self_branded"] += 1
-                continue
+            # NOTE: We intentionally do NOT filter self-branded keywords.
+            # For AI visibility tracking, brand keywords are essential —
+            # you need to know if AI engines mention you when someone asks
+            # about your brand by name.
 
             # Language check
             if self._is_non_english(keyword):
                 filtered_out["non_english"] += 1
                 continue
 
-            # Generic check
+            # Generic check — only filter single generic words
             if self._is_too_generic(keyword):
                 filtered_out["too_generic"] += 1
                 continue
 
-            # Keep: has decent volume/traffic, and is substantive (2+ words or high volume)
-            words = keyword.split()
-            if len(words) < 2:
-                # Single words need higher volume to keep
-                if volume < 100 and kw_data.get("traffic_potential", 0) < 100:
-                    filtered_out["low_volume_single"] += 1
-                    continue
-
             temp_keywords.append(kw_data)
 
-        # Final deduplication of near-matches (e.g., "caregiver support" vs "caregiver supports")
-        self.filtered_keywords = self._deduplicate_near_matches(temp_keywords)
+        # Light dedup: only remove exact singular/plural matches, keep variations
+        # like "ukraine shirt" vs "ukraine shirts" since AI engines may answer differently
+        self.filtered_keywords = temp_keywords
 
         self.stats["keywords_after_filtering"] = len(self.filtered_keywords)
         self.stats["filtered_out_reasons"] = dict(filtered_out)
