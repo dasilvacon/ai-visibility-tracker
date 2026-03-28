@@ -441,6 +441,110 @@ def _render_csv_upload(client_name, domain, country, description):
         st.info("Enter a client name and domain above first, then upload your CSV.")
 
 
+def _render_csv_replace_upload(client_name, domain):
+    """Compact CSV upload shown on the review step to replace Ahrefs keywords."""
+    with st.expander("Replace keywords with CSV upload"):
+        uploaded_file = st.file_uploader(
+            "Upload Ahrefs keyword export CSV",
+            type=['csv'],
+            key="qs_csv_replace_upload"
+        )
+        if uploaded_file:
+            try:
+                df = pd.read_csv(uploaded_file)
+                if df.empty:
+                    st.error("CSV is empty.")
+                    return
+
+                keyword_col = _detect_keyword_column(df)
+                volume_col = _detect_volume_column(df)
+                cols_lower = {c.lower(): c for c in df.columns}
+
+                traffic_col = cols_lower.get('current organic traffic', cols_lower.get('sum_traffic'))
+                info_col = cols_lower.get('informational')
+                comm_col = cols_lower.get('commercial')
+                trans_col = cols_lower.get('transactional')
+                nav_col = cols_lower.get('navigational')
+                kd_col = cols_lower.get('kd', cols_lower.get('keyword_difficulty'))
+                pos_col = cols_lower.get('current position', cols_lower.get('best_position'))
+
+                def _bool_val(row, col):
+                    if not col:
+                        return False
+                    v = row.get(col, False)
+                    if isinstance(v, bool):
+                        return v
+                    return str(v).lower() in ('true', '1', 'yes')
+
+                def _int_val(row, col, default=0):
+                    if not col:
+                        return default
+                    try:
+                        return int(float(row.get(col, default)))
+                    except (ValueError, TypeError):
+                        return default
+
+                best_by_keyword = {}
+                total_rows = 0
+                for _, row in df.iterrows():
+                    kw = str(row[keyword_col]).strip().lower()
+                    if not kw or kw == 'nan':
+                        continue
+                    total_rows += 1
+                    vol = _int_val(row, volume_col) if volume_col else 0
+                    traffic = _int_val(row, traffic_col)
+                    existing = best_by_keyword.get(kw)
+                    if existing and existing['volume'] >= vol:
+                        continue
+                    best_by_keyword[kw] = {
+                        'keyword': str(row[keyword_col]).strip(),
+                        'volume': vol,
+                        'sum_traffic': traffic or vol,
+                        'best_position': _int_val(row, pos_col),
+                        'keyword_difficulty': _int_val(row, kd_col),
+                        'is_informational': _bool_val(row, info_col),
+                        'is_commercial': _bool_val(row, comm_col),
+                        'is_transactional': _bool_val(row, trans_col),
+                        'is_navigational': _bool_val(row, nav_col),
+                    }
+
+                keywords_data = sorted(best_by_keyword.values(), key=lambda x: x['volume'], reverse=True)
+                dedup_note = f" (from {total_rows} rows)" if total_rows > len(keywords_data) else ""
+                st.success(f"Found {len(keywords_data)} unique keywords{dedup_note}")
+
+                if st.button("Replace keywords with this CSV", type="primary", key="qs_replace_csv"):
+                    country = st.session_state.qs_country
+                    description = st.session_state.qs_description
+
+                    onboarder = ClientAutoOnboarder(
+                        brand_name=client_name,
+                        domain=domain,
+                        countries=country
+                    )
+                    onboarder.ingest_ahrefs_keywords(keywords_data)
+
+                    csv_questionnaire = _parse_questionnaire(
+                        st.session_state.get('qs_questionnaire_raw', ''),
+                        description
+                    )
+                    if csv_questionnaire:
+                        onboarder.ingest_questionnaire(csv_questionnaire)
+
+                    filtered = onboarder.filter_keywords()
+                    personas = onboarder.generate_personas()
+
+                    st.session_state.qs_keywords_data = filtered
+                    st.session_state.qs_keywords_selected = {
+                        kw.get('keyword', ''): True for kw in filtered
+                    }
+                    st.session_state.qs_personas = personas
+                    st.session_state.qs_source = 'csv'
+                    st.rerun()
+
+            except Exception as e:
+                st.error(f"Error reading CSV: {str(e)}")
+
+
 def _render_review_step():
     """Render the review step — filterable keywords, competitors, personas."""
 
@@ -466,10 +570,14 @@ def _render_review_step():
         else:
             st.warning(note)
 
-    # Back button
-    if st.button("< Back to setup", key="qs_back"):
-        st.session_state.qs_step = 'input'
-        st.rerun()
+    # Back button + CSV replace option
+    col_back, col_csv = st.columns([1, 2])
+    with col_back:
+        if st.button("< Back to setup", key="qs_back"):
+            st.session_state.qs_step = 'input'
+            st.rerun()
+    with col_csv:
+        _render_csv_replace_upload(client_name, domain)
 
     # Three sections
     tab_kw, tab_comp, tab_personas = st.tabs([

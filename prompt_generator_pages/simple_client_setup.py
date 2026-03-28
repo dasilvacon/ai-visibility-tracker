@@ -168,143 +168,48 @@ def parse_keyword_file(uploaded_file):
 
 
 def generate_default_personas(client_name, keywords_df):
-    """Auto-generate personas from keywords using topic clustering.
+    """Auto-generate basic personas from keywords."""
+    # Analyze keywords to determine personas
+    total_keywords = len(keywords_df)
 
-    Clusters keywords by shared theme words and creates personas per topic,
-    instead of generic 'Information Seeker / Active Buyer / Brand Explorer'.
+    # Count intent types
+    intent_counts = keywords_df['intent_type'].value_counts()
 
-    Example for Saint Javelin: 'Vyshyvanka Shopper', 'NAFO Enthusiast',
-    'Ukraine Shirt Buyer' — real groups based on real keyword data.
-    """
-    from collections import defaultdict
-
-    stopwords = {
-        'the', 'a', 'an', 'of', 'for', 'to', 'in', 'on', 'at', 'by',
-        'is', 'it', 'and', 'or', 'with', 'how', 'what', 'where', 'when',
-        'who', 'why', 'which', 'do', 'does', 'can', 'vs', 'best', 'top',
-        'buy', 'get', 'find', 'near', 'me', 'my', 'i', 'you', 'your',
-        'free', 'online', 'new', 'good', 'review', 'reviews', 'price',
-        'cost', 'cheap', 'shop', 'store', 'sale', 'from',
-    }
-
-    # Count how often each significant word appears across keywords
-    word_counts = defaultdict(int)
-    word_volume = defaultdict(int)
-    for _, row in keywords_df.iterrows():
-        kw = str(row.get('keyword', '')).lower()
-        vol = int(row.get('search_volume', 0))
-        words = set(kw.split())
-        for word in words:
-            if len(word) > 2 and word not in stopwords:
-                word_counts[word] += 1
-                word_volume[word] += vol
-
-    # Find theme words: appear in 3+ keywords, sorted by volume
-    theme_words = sorted(
-        [w for w, c in word_counts.items() if c >= 3],
-        key=lambda w: word_volume[w],
-        reverse=True,
-    )
-
-    # Assign keywords to their best theme word
-    clusters = {}  # theme -> {'keywords': [str], 'volume': int}
-    assigned = set()
-
-    for theme in theme_words[:15]:
-        cluster_kws = []
-        cluster_vol = 0
-        for _, row in keywords_df.iterrows():
-            kw = str(row.get('keyword', '')).lower()
-            if kw in assigned:
-                continue
-            if theme in kw.split():
-                cluster_kws.append(kw)
-                cluster_vol += int(row.get('search_volume', 0))
-                assigned.add(kw)
-        if len(cluster_kws) >= 3:
-            clusters[theme] = {'keywords': cluster_kws, 'volume': cluster_vol}
-
-    # Collect unassigned into 'other'
-    other_kws = []
-    other_vol = 0
-    for _, row in keywords_df.iterrows():
-        kw = str(row.get('keyword', '')).lower()
-        if kw not in assigned:
-            other_kws.append(kw)
-            other_vol += int(row.get('search_volume', 0))
-
-    # Build personas from clusters (max 5 + general)
     personas = []
-    sorted_themes = sorted(
-        clusters.items(), key=lambda x: x[1]['volume'], reverse=True
-    )
 
-    for i, (theme, data) in enumerate(sorted_themes[:5]):
-        # Name = Theme (capitalized) + Shopper/Enthusiast
-        intent_counts = keywords_df['intent_type'].value_counts()
-        has_commercial = ('commercial' in intent_counts.index or
-                         'transactional' in intent_counts.index)
-        suffix = "Shopper" if has_commercial else "Enthusiast"
-        persona_name = f"{theme.title()} {suffix}"
-
-        # Priority topics = top keywords in this cluster by volume
-        kw_volumes = []
-        for kw in data['keywords']:
-            vol_row = keywords_df[keywords_df['keyword'].str.lower() == kw]
-            vol = int(vol_row['search_volume'].iloc[0]) if len(vol_row) > 0 else 0
-            kw_volumes.append((kw, vol))
-        kw_volumes.sort(key=lambda x: x[1], reverse=True)
-        priority_topics = [kw for kw, _ in kw_volumes[:5]]
-
+    # Persona 1: Based on dominant intent
+    if 'commercial' in intent_counts.index or 'transactional' in intent_counts.index:
         personas.append({
-            "id": f"persona_{i + 1}",
-            "name": persona_name,
-            "weight": data['volume'],
-            "description": (
-                f"People searching for {theme}-related products and information "
-                f"from {client_name}. Top searches: {', '.join(priority_topics[:3])}"
-            ),
-            "priority_topics": priority_topics,
+            "id": "persona_buyer",
+            "name": "Active Buyer",
+            "weight": 0.4,
+            "description": f"Consumers actively researching and ready to purchase {client_name} products",
+            "priority_topics": ["product comparisons", "reviews", "pricing", "best options"]
         })
 
-    # Add general browser for remaining keywords
-    if other_kws and len(other_kws) >= 2:
-        other_sorted = sorted(other_kws, key=lambda kw: next(
-            (int(r.get('search_volume', 0))
-             for _, r in keywords_df.iterrows()
-             if str(r.get('keyword', '')).lower() == kw), 0
-        ), reverse=True)
+    # Persona 2: Information seeker
+    if 'informational' in intent_counts.index:
         personas.append({
-            "id": f"persona_{len(personas) + 1}",
-            "name": "General Browser",
-            "weight": other_vol,
-            "description": (
-                f"People exploring {client_name} across various topics. "
-                f"Top searches: {', '.join(other_sorted[:3])}"
-            ),
-            "priority_topics": other_sorted[:5],
+            "id": "persona_researcher",
+            "name": "Information Seeker",
+            "weight": 0.35,
+            "description": f"People learning about {client_name} products and how to use them",
+            "priority_topics": ["how to", "guides", "tutorials", "tips"]
         })
+
+    # Persona 3: Brand explorer
+    personas.append({
+        "id": "persona_explorer",
+        "name": "Brand Explorer",
+        "weight": 0.25,
+        "description": f"Users discovering {client_name} and comparing with alternatives",
+        "priority_topics": ["brand information", "alternatives", "comparisons"]
+    })
 
     # Normalize weights
     total_weight = sum(p['weight'] for p in personas)
-    if total_weight > 0:
-        for p in personas:
-            p['weight'] = round(p['weight'] / total_weight, 2)
-    elif personas:
-        even_weight = round(1.0 / len(personas), 2)
-        for p in personas:
-            p['weight'] = even_weight
-
-    # Fallback if clustering found nothing
-    if not personas:
-        top_kws = keywords_df.nlargest(5, 'search_volume')['keyword'].tolist()
-        personas = [{
-            "id": "persona_1",
-            "name": "General User",
-            "weight": 1.0,
-            "description": f"Users searching for information about {client_name}",
-            "priority_topics": top_kws,
-        }]
+    for p in personas:
+        p['weight'] = round(p['weight'] / total_weight, 2)
 
     return {"personas": personas}
 
