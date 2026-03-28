@@ -353,8 +353,8 @@ class GapAnalyzer:
             effort_estimate = "High" if sample_size > 100 else "Medium" if sample_size > 50 else "Low"
             content_pieces_needed = max(5, int(sample_size * gap_percentage / 1000))  # Rough estimate
 
-            # Determine priority based on gap and value
-            if gap_percentage > 30 and persona in ['Professional Makeup Artist', 'Luxury Beauty Enthusiast']:
+            # Determine priority based on gap size (generic — works for any client)
+            if gap_percentage > 30:
                 priority_level = "CRITICAL"
                 priority_emoji = "🔥"
             elif gap_percentage > 20:
@@ -539,14 +539,8 @@ class GapAnalyzer:
         return prioritized_content[:5]  # Top 5 content gaps
 
     def _get_persona_value_prop(self, persona: str) -> str:
-        """Get why this persona matters."""
-        value_props = {
-            'Professional Makeup Artist': 'High-value buyers, frequent purchases, recommend to clients',
-            'Luxury Beauty Enthusiast': 'Premium buyers, brand advocates, high lifetime value',
-            'Specific Need Shopper': 'High intent, specific problems to solve, ready to buy',
-            'Beauty Beginner': 'First luxury purchase, brand loyalty potential, growing segment',
-        }
-        return value_props.get(persona, 'Key target audience for your brand')
+        """Get why this persona matters — generic, works for any industry."""
+        return f'Key target audience — people identifying as "{persona}" are actively searching for solutions you provide'
 
     def _get_example_prompts_for_gap(self, gap_type: str, target: str, scored_results: List[Dict[str, Any]]) -> List[str]:
         """
@@ -650,80 +644,67 @@ class GapAnalyzer:
             return f"You show up for {intent} queries, but competitors have stronger presence."
 
     def _generate_specific_actions(self, opp_type: str, target: str) -> List[str]:
-        """Generate specific actionable steps."""
+        """Generate specific actionable steps — generic, works for any industry."""
         actions = {
             'Persona': {
-                'Professional Makeup Artist': [
-                    "Create '/for-professionals' landing page with pro-focused product info",
-                    "Write case studies from working MUAs with before/after photos",
-                    "Add professional use cases to product pages: '12-hour wear for bridal work'",
-                    "Feature pro discount and bulk ordering information"
-                ],
-                'Luxury Beauty Enthusiast': [
-                    "Write detailed product comparison guides: luxury vs drugstore",
-                    "Create 'Investment Pieces' collection featuring top luxury items",
-                    "Add ingredient breakdowns and formulation details to product pages",
-                    "Film luxury unboxing and first impressions videos"
-                ],
-                'Specific Need Shopper': [
-                    "Add FAQ sections to product pages addressing specific concerns (oily lids, hooded eyes, etc.)",
-                    "Create collection pages: 'Best for Hooded Eyes', 'Best for Oily Lids'",
-                    "Write problem-solution format guides: 'If you have X, use Y'",
-                    "Add before/after photos for specific skin concerns"
-                ],
-                'Beauty Beginner': [
-                    "Create 'Beginner's Guide to Luxury Eyeshadow' on blog",
-                    "Add 'Is this good for beginners?' FAQ on product pages",
-                    "Film simple tutorial videos for first-time users",
-                    "Create 'Starter Kit' bundles with beginner-friendly products"
-                ],
                 'default': [
-                    f"Write content targeting {target}",
-                    f"Add {target}-focused sections to product pages",
-                    f"Create case studies featuring {target} customers"
+                    f"Create a dedicated landing page or resource hub for {target}",
+                    f"Write FAQ content answering common {target} questions",
+                    f"Add {target} success stories or testimonials to your site",
+                    f"Create downloadable resources (checklists, guides) for {target}"
                 ]
             },
             'Category': {
                 'educational': [
-                    "Create how-to guides and tutorials for your products",
-                    "Add FAQ sections to product pages",
-                    "Film application videos and post on YouTube"
+                    "Create comprehensive how-to guides and explainers",
+                    "Add FAQ sections organized by topic",
+                    "Publish video tutorials on YouTube and embed on your site"
                 ],
                 'business': [
-                    "Write business case studies showing ROI",
-                    "Create professional buyer guides",
-                    "Add bulk ordering and professional discount information"
+                    "Write case studies showing real outcomes",
+                    "Create program/service comparison pages",
+                    "Add detailed service descriptions with eligibility info"
                 ],
                 'technical': [
-                    "Add technical specifications to all product pages",
-                    "Create ingredient breakdowns and formulation guides",
-                    "Write technical comparison charts vs competitors"
+                    "Add detailed specification and process documentation",
+                    "Create step-by-step technical guides",
+                    "Write troubleshooting and support content"
                 ],
                 'default': [
                     f"Create comprehensive content library for {target}",
                     f"Add dedicated {target} section to website",
-                    f"Publish weekly {target} content"
+                    f"Publish regular {target} content"
                 ]
             },
             'Intent': {
                 'informational': [
-                    "Create detailed guides and explainers",
-                    "Add comprehensive product information pages",
-                    "Write comparison articles and buying guides"
+                    "Create detailed guides and explainers for common questions",
+                    "Add comprehensive information pages with structured data",
+                    "Write comparison and overview articles"
                 ],
-                'transactional': [
-                    "Optimize product pages with clear CTAs",
-                    "Add reviews and social proof to purchase pages",
-                    "Create special offer and bundle pages"
+                'how_to': [
+                    "Create step-by-step tutorial content",
+                    "Add HowTo schema markup to instructional pages",
+                    "Film and publish how-to video content"
                 ],
                 'comparison': [
-                    "Create 'vs competitor' comparison pages",
-                    "Add feature comparison charts",
-                    "Write honest head-to-head reviews"
+                    "Create honest comparison pages vs alternatives",
+                    "Add feature comparison tables",
+                    "Write 'which is right for you' decision guides"
+                ],
+                'problem_solving': [
+                    "Create problem-solution content addressing common pain points",
+                    "Add troubleshooting guides and support resources",
+                    "Build a searchable knowledge base"
+                ],
+                'recommendation': [
+                    "Create 'best of' and recommendation pages",
+                    "Add expert picks and curated resource lists",
+                    "Write reviews and assessment content"
                 ],
                 'default': [
-                    f"Create content targeting {target} intent",
-                    f"Optimize existing pages for {target} queries",
+                    f"Create content targeting {target} queries",
+                    f"Optimize existing pages for {target} search intent",
                     f"Add {target}-focused landing pages"
                 ]
             }
@@ -736,21 +717,21 @@ class GapAnalyzer:
         return [f"Create targeted content for {target}"]
 
     def _extract_keywords_for_persona(self, persona: str) -> List[str]:
-        """Extract relevant keywords for persona."""
-        keywords = {
-            'Luxury Beauty Enthusiast': ['luxury eyeshadow', 'high-end makeup', 'premium beauty products'],
-            'Professional Makeup Artist': ['professional makeup', 'pro artist', 'makeup for work'],
-            'Beauty Beginner': ['beginner makeup', 'easy eyeshadow', 'makeup tutorial for beginners'],
-            'default': [f'{persona} makeup', f'{persona} beauty', f'{persona} products']
-        }
-        return keywords.get(persona, keywords['default'])
+        """Extract relevant keywords for persona — generic, works for any brand."""
+        # Build keyword suggestions from the persona name itself
+        persona_lower = persona.lower()
+        return [
+            f'{persona_lower} resources',
+            f'{persona_lower} support',
+            f'help for {persona_lower}',
+        ]
 
     def _extract_keywords_for_category(self, category: str) -> List[str]:
-        """Extract relevant keywords for category."""
+        """Extract relevant keywords for category — generic, works for any brand."""
         keywords = {
-            'educational': ['how to apply', 'tutorial', 'guide', 'tips'],
-            'business': ['professional', 'bulk order', 'business account'],
-            'technical': ['ingredients', 'formulation', 'specifications'],
+            'educational': ['how to', 'guide', 'explained', 'tips'],
+            'business': ['services', 'programs', 'options', 'providers'],
+            'technical': ['how it works', 'process', 'requirements', 'eligibility'],
             'default': [f'{category} content', f'{category} information']
         }
         return keywords.get(category, keywords['default'])

@@ -555,9 +555,30 @@ class VisibilityTracker:
         print("5. Creating action plan...")
         action_plan = gap_analyzer.generate_action_plan(scored_results, website_verification)
 
-        # Generate GEO/AEO quick wins
+        # Generate GEO/AEO quick wins (legacy — kept for fallback)
         geo_aeo_wins = gap_analyzer.generate_geo_aeo_quick_wins(scored_results)
         action_plan['geo_aeo_quick_wins'] = geo_aeo_wins
+
+        # Generate evidence-based competitor intelligence recommendations
+        print("5.5. Researching competitor strategies...")
+        try:
+            from src.analysis.competitor_researcher import CompetitorResearcher
+            comp_researcher = CompetitorResearcher(
+                brand_name=brand_name,
+                brand_config=brand_config
+            )
+            competitor_intelligence = comp_researcher.analyze_competitors(scored_results)
+            action_plan['competitor_intelligence'] = competitor_intelligence
+            evidence_recs = competitor_intelligence.get('evidence_recommendations', [])
+            if evidence_recs:
+                print(f"   ✓ {len(evidence_recs)} evidence-based recommendations generated")
+                for i, rec in enumerate(evidence_recs, 1):
+                    print(f"     {i}. {rec['competitor']}: {rec['strategy']}")
+            else:
+                print("   ⚠️ No evidence-based recommendations (insufficient competitor data)")
+        except Exception as e:
+            print(f"   ⚠️ Competitor research skipped: {str(e)}")
+            action_plan['competitor_intelligence'] = {}
 
         # Generate prioritized audiences and content gaps for new "Where to Focus" section
         prioritized_audiences = gap_analyzer.get_prioritized_audiences(scored_results)

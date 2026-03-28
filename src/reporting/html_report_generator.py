@@ -2591,27 +2591,145 @@ class HTMLReportGenerator:
 
     def _build_brief_priorities(self, gap_analysis: Dict[str, Any],
                                 action_plan: Dict[str, Any]) -> str:
-        """Build brief top 3 priorities for executive summary."""
-        geo_aeo_wins = action_plan.get('geo_aeo_quick_wins', [])
+        """
+        Build top 3 priorities for executive summary.
 
+        Uses evidence-based competitor intelligence if available,
+        falls back to legacy quick wins otherwise.
+        """
+        # Try evidence-based recommendations first
+        competitor_intel = action_plan.get('competitor_intelligence', {})
+        evidence_recs = competitor_intel.get('evidence_recommendations', [])
+
+        if evidence_recs:
+            return self._build_evidence_priorities(evidence_recs)
+
+        # Fallback to legacy quick wins
+        geo_aeo_wins = action_plan.get('geo_aeo_quick_wins', [])
         if not geo_aeo_wins:
             return ""
 
-        # Get top 3 priorities
-        top_3 = geo_aeo_wins[:3]
+        return self._build_legacy_priorities(geo_aeo_wins[:3])
 
+    def _build_evidence_priorities(self, evidence_recs: list) -> str:
+        """Build the Top 3 Priorities section using evidence-based competitor intelligence."""
+        html = """
+        <h2>Top 3 Priorities</h2>
+        <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 24px;">
+            These recommendations are based on what your competitors are doing right now to win AI visibility.
+            Each one is grounded in your test data and backed by research on what drives AI citations.
+        </p>
+        """
+
+        for i, rec in enumerate(evidence_recs[:3], 1):
+            priority_icon = "🥇" if i == 1 else "🥈" if i == 2 else "🥉"
+            competitor = rec.get('competitor', 'A competitor')
+            strategy = rec.get('strategy', 'Content Strategy')
+            what_they_do = rec.get('what_they_do', '')
+            prompts_affected = rec.get('prompts_affected', [])
+            why_it_matters = rec.get('why_it_matters', '')
+            what_to_do = rec.get('what_to_do', '')
+            impact = rec.get('impact_estimate', '')
+            total_won = rec.get('total_prompts_won_by_competitor', 0)
+            top_persona = rec.get('top_persona_affected', '')
+            cited_pages = rec.get('competitor_cited_pages', [])
+
+            # Build prompts list
+            prompts_html = ""
+            if prompts_affected:
+                prompts_html = '<div style="margin: 12px 0;">'
+                prompts_html += '<p style="font-size: 13px; font-weight: 600; color: #4D2E3A; margin-bottom: 6px;">Prompts you\'re losing:</p>'
+                for prompt in prompts_affected[:4]:
+                    prompts_html += f'<div style="background: #FFF3F0; border-left: 3px solid #E74C3C; padding: 6px 12px; margin-bottom: 4px; font-size: 13px; color: #6B5660; border-radius: 0 4px 4px 0;">"{prompt}"</div>'
+                if len(prompts_affected) > 4:
+                    prompts_html += f'<div style="font-size: 12px; color: #A78E8B; padding: 4px 12px;">+ {len(prompts_affected) - 4} more</div>'
+                prompts_html += '</div>'
+
+            # Build cited pages
+            cited_html = ""
+            if cited_pages:
+                domains = [f'<span style="background: #F0F0F0; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-family: monospace;">{d[0]}</span>' for d in cited_pages[:3]]
+                cited_html = f'<div style="margin: 8px 0; font-size: 13px; color: #A78E8B;">Pages being cited: {" ".join(domains)}</div>'
+
+            html += f"""
+            <div style="background: white; border: 2px solid #E8E4E3; border-radius: 10px; padding: 28px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: start; gap: 16px;">
+                    <span style="font-size: 32px; flex-shrink: 0;">{priority_icon}</span>
+                    <div style="flex: 1;">
+                        <!-- Competitor badge -->
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                            <span style="background: #FFE8E0; color: #C0392B; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px;">
+                                {competitor} wins {total_won} prompts
+                            </span>
+                            <span style="background: #EDE7F6; color: #7B1FA2; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600;">
+                                {strategy}
+                            </span>
+                        </div>
+
+                        <!-- What they're doing -->
+                        <h3 style="margin: 0 0 8px 0; color: #4D2E3A; font-size: 17px; font-weight: 600;">
+                            Why {competitor} is winning
+                        </h3>
+                        <p style="margin: 0 0 8px 0; color: #6B5660; font-size: 14px; line-height: 1.6;">
+                            {what_they_do}
+                        </p>
+
+                        {cited_html}
+
+                        <!-- Prompts affected -->
+                        {prompts_html}
+
+                        <!-- Research insight -->
+                        <div style="background: #F8F6F0; border-radius: 6px; padding: 12px 16px; margin: 12px 0;">
+                            <p style="margin: 0; font-size: 13px; color: #6B5660; line-height: 1.5;">
+                                <span style="font-weight: 700; color: #4D2E3A;">📊 Why this matters:</span> {why_it_matters}
+                            </p>
+                        </div>
+
+                        <!-- What to do -->
+                        <div style="background: #E8F5E9; border-radius: 6px; padding: 12px 16px; margin: 12px 0 0 0;">
+                            <p style="margin: 0; font-size: 14px; color: #2E7D32; line-height: 1.5;">
+                                <span style="font-weight: 700;">✅ Action:</span> {what_to_do}
+                            </p>
+                        </div>
+
+                        <!-- Impact -->
+                        <div style="display: flex; gap: 12px; align-items: center; margin-top: 12px;">
+                            <span style="background: #E3F2FD; color: #1565C0; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600;">
+                                {impact}
+                            </span>
+                            <span style="color: #A78E8B; font-size: 12px;">
+                                Most affected audience: {top_persona}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            """
+
+        html += """
+        <div style="text-align: center; margin-top: 16px;">
+            <p style="color: #A78E8B; font-size: 14px;">
+                👉 See the <strong>Action Plan & Recommendations</strong> tab for the full competitive landscape,
+                content gap analysis, and implementation roadmap.
+            </p>
+        </div>
+        """
+
+        return html
+
+    def _build_legacy_priorities(self, top_3: list) -> str:
+        """Build legacy quick wins format (fallback when no competitor intelligence)."""
         html = """
         <h2>Top 3 Priorities</h2>
         <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 24px;">
             Start here. These are your highest-impact opportunities based on the analysis.
         </p>
-
         <div style="background: white; border: 2px solid #E8E4E3; border-radius: 10px; padding: 32px; margin-bottom: 32px;">
         """
 
         for i, win in enumerate(top_3, 1):
             priority_icon = "🥇" if i == 1 else "🥈" if i == 2 else "🥉"
-
             html += f"""
             <div style="margin-bottom: {'32px' if i < 3 else '0'}; padding-bottom: {'32px' if i < 3 else '0'}; border-bottom: {'1px solid #E8E4E3' if i < 3 else 'none'};">
                 <div style="display: flex; align-items: start; gap: 16px;">
@@ -2634,17 +2752,7 @@ class HTMLReportGenerator:
             </div>
             """
 
-        html += """
-        </div>
-
-        <div style="text-align: center; margin-top: 24px;">
-            <p style="color: #A78E8B; font-size: 15px;">
-                👉 See the <strong>Action Plan & Recommendations</strong> tab for detailed implementation steps,
-                content gap analysis, and the full 90-day roadmap.
-            </p>
-        </div>
-        """
-
+        html += "</div>"
         return html
 
     def _build_top_opportunities(self, gap_analysis: Dict[str, Any],
