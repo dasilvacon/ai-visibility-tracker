@@ -216,59 +216,67 @@ def _render_input_step():
 def _fetch_ahrefs_data(ahrefs: AhrefsClient, domain: str, country: str):
     """Fetch keywords and competitors from Ahrefs API.
 
-    Strategy: Always pull GLOBAL keywords first (all countries) to get the
-    full picture, then also pull the selected country separately for
-    competitor data. This ensures we don't miss keywords just because
-    the site ranks in multiple markets (e.g., US, CA, GB, DE).
+    Strategy: Query multiple major markets (US first since it has the most
+    data, then the user's selected country, then other top markets) and
+    merge + deduplicate. The Ahrefs API requires a country per request —
+    there's no true 'global' mode for organic-keywords.
     """
     errors = []
 
-    # Pull keywords globally first — get everything Ahrefs has
-    kw_result = ahrefs.get_organic_keywords(domain, country='global', limit=1000, min_volume=10)
-    if kw_result.get('error'):
-        errors.append(f"Keywords: {kw_result['error']}")
-    keywords = kw_result.get('keywords', [])
+    # Build list of countries to query — US first (biggest), then selected, then other major markets
+    selected = country.strip().upper() if country and country.lower() != 'global' else ''
+    countries_to_query = ['US']
+    if selected and selected != 'US':
+        countries_to_query.append(selected)
+    # Add other major English-speaking + top markets
+    for extra in ['CA', 'GB', 'AU', 'DE', 'FR', 'NL', 'IN']:
+        if extra not in countries_to_query:
+            countries_to_query.append(extra)
 
-    # Deduplicate by keyword text (global query may return same keyword from multiple countries)
+    # Pull keywords from each country, merge + deduplicate
+    keywords = []
     seen_kws = set()
-    unique_keywords = []
-    for kw in keywords:
-        kw_text = kw.get('keyword', '').lower().strip()
-        if kw_text and kw_text not in seen_kws:
-            seen_kws.add(kw_text)
-            unique_keywords.append(kw)
-    keywords = unique_keywords
+    total_raw = 0
 
-    if len(keywords) > 0:
-        errors.append(f"Pulled {len(keywords)} unique keywords across all countries")
+    for ctry in countries_to_query:
+        kw_result = ahrefs.get_organic_keywords(domain, country=ctry, limit=500, min_volume=10)
+        if kw_result.get('error'):
+            # Only log errors for the primary markets, not all of them
+            if ctry in ('US', selected):
+                errors.append(f"Keywords ({ctry}): {kw_result['error']}")
+            continue
+        country_kws = kw_result.get('keywords', [])
+        total_raw += len(country_kws)
+        for kw in country_kws:
+            kw_text = kw.get('keyword', '').lower().strip()
+            if kw_text and kw_text not in seen_kws:
+                seen_kws.add(kw_text)
+                keywords.append(kw)
 
-    # If global query failed or returned nothing, fall back to country + US
-    if not keywords:
-        kw_result = ahrefs.get_organic_keywords(domain, country=country, limit=500, min_volume=10)
-        if not kw_result.get('error'):
-            keywords = kw_result.get('keywords', [])
-        if len(keywords) < 20 and country.lower() not in ('us', 'global'):
-            us_result = ahrefs.get_organic_keywords(domain, country='us', limit=500, min_volume=10)
-            if not us_result.get('error'):
-                existing_kws = {kw.get('keyword', '').lower() for kw in keywords}
-                for kw in us_result.get('keywords', []):
-                    if kw.get('keyword', '').lower() not in existing_kws:
-                        keywords.append(kw)
-                        existing_kws.add(kw.get('keyword', '').lower())
+    if keywords:
+        errors.append(f"Pulled {len(keywords)} unique keywords from {len(countries_to_query)} markets ({total_raw} total before dedup)")
 
-    # Pull competitors — use selected country (competitors endpoint requires a country)
-    comp_result = ahrefs.get_organic_competitors(domain, country=country, limit=10)
+    # Pull competitors — always try US first (most data), then selected country
+    competitors = []
+    comp_country = 'US'
+    comp_result = ahrefs.get_organic_competitors(domain, country='US', limit=10)
     if comp_result.get('error'):
-        errors.append(f"Competitors: {comp_result['error']}")
-    competitors = comp_result.get('competitors', [])
+        errors.append(f"Competitors (US): {comp_result['error']}")
+    else:
+        competitors = comp_result.get('competitors', [])
 
-    # If no competitors in selected country, try US
-    if not competitors and country.lower() not in ('us', 'global'):
-        us_comp_result = ahrefs.get_organic_competitors(domain, country='us', limit=10)
-        if not us_comp_result.get('error'):
-            competitors = us_comp_result.get('competitors', [])
-            if competitors:
-                errors.append("Note: Competitors pulled from US data (none found in selected country)")
+    # Also try selected country if different, merge unique competitors
+    if selected and selected != 'US':
+        comp_result2 = ahrefs.get_organic_competitors(domain, country=selected, limit=10)
+        if not comp_result2.get('error'):
+            existing_domains = {c.get('competitor_domain', '').lower() for c in competitors}
+            for c in comp_result2.get('competitors', []):
+                if c.get('competitor_domain', '').lower() not in existing_domains:
+                    competitors.append(c)
+                    existing_domains.add(c.get('competitor_domain', '').lower())
+
+    if not competitors:
+        errors.append("No competitors found in any market")
 
     # Store any errors/notes so they persist after rerun
     st.session_state.qs_fetch_notes = errors
