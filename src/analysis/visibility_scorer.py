@@ -11,7 +11,9 @@ class VisibilityScorer:
     """Analyzes AI responses to score brand visibility."""
 
     def __init__(self, brand_name: str, brand_aliases: Optional[List[str]] = None,
-                 competitor_names: Optional[List[str]] = None):
+                 competitor_names: Optional[List[str]] = None,
+                 known_sources: Optional[List[str]] = None,
+                 industry_keywords: Optional[List[str]] = None):
         """
         Initialize the visibility scorer.
 
@@ -19,10 +21,16 @@ class VisibilityScorer:
             brand_name: Primary brand name to track
             brand_aliases: Alternative names/acronyms for the brand
             competitor_names: List of competitor brand names
+            known_sources: List of known source domains/names relevant to this client's industry
+            industry_keywords: List of industry-specific keywords for relevance scoring
         """
         self.brand_name = brand_name
         self.brand_aliases = brand_aliases or []
         self.competitor_names = competitor_names or []
+
+        # Per-client known sources (no more hardcoded beauty/retail sites)
+        self.known_sources = set(s.lower() for s in (known_sources or []))
+        self.industry_keywords = [k.lower() for k in (industry_keywords or [])]
 
         # Create pattern variations for detection
         self.brand_patterns = self._create_patterns([brand_name] + self.brand_aliases)
@@ -52,6 +60,7 @@ class VisibilityScorer:
         """
         Extract actual sources (domains, known sites) from AI response.
         Focus on URLs and known source names, filter out noise.
+        Includes enriched context data for each source.
 
         Args:
             response_text: The AI's response text
@@ -59,68 +68,91 @@ class VisibilityScorer:
         Returns:
             List of source dictionaries containing:
             - type: 'url', 'known_source', or 'attribution'
-            - domain: extracted domain (e.g., 'sephora.com')
+            - domain: extracted domain (e.g., 'ontario.ca')
             - full_url: complete URL if available
-            - source_name: display name (e.g., 'Sephora')
+            - source_name: display name (e.g., 'Ontario')
+            - context_snippet: ~200 chars surrounding the source mention
+            - brand_in_context: True if brand appears in the same snippet
+            - competitors_in_context: List of competitor names in the snippet
+            - position_in_response: Float 0.0-1.0 indicating where in response
         """
         sources = []
         seen_domains = set()
+        text_length = len(response_text) if response_text else 1
+
+        def enrich_source(source_dict: Dict, match_position: int) -> Dict:
+            """Add context enrichment to a source dict."""
+            # Extract context snippet (~200 chars around match)
+            start = max(0, match_position - 100)
+            end = min(text_length, match_position + 100)
+            snippet = response_text[start:end].strip()
+
+            # Check if brand appears in context
+            brand_in_context = False
+            for pattern in self.brand_patterns:
+                if pattern.search(snippet):
+                    brand_in_context = True
+                    break
+
+            # Check which competitors appear in context
+            competitors_in_context = []
+            for comp_name, patterns in self.competitor_patterns.items():
+                for pattern in patterns:
+                    if pattern.search(snippet):
+                        competitors_in_context.append(comp_name)
+                        break
+
+            # Calculate position in response (0.0 = start, 1.0 = end)
+            position_in_response = match_position / text_length if text_length > 0 else 0.0
+
+            source_dict['context_snippet'] = snippet
+            source_dict['brand_in_context'] = brand_in_context
+            source_dict['competitors_in_context'] = competitors_in_context
+            source_dict['position_in_response'] = round(position_in_response, 3)
+
+            return source_dict
 
         # PRIORITY 1: Extract URLs (most reliable)
         url_pattern = r'https?://(?:www\.)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,})(?:/[^\s]*)?'
-        url_matches = re.findall(url_pattern, response_text)
-
-        for match in url_matches:
-            domain = match.lower().strip()
+        for match in re.finditer(url_pattern, response_text):
+            domain = match.group(1).lower().strip()
 
             # Clean domain (remove trailing chars)
             domain = re.sub(r'[^a-z0-9.-].*', '', domain)
 
             if domain and domain not in seen_domains:
                 seen_domains.add(domain)
-                sources.append({
+                source = {
                     'type': 'url',
                     'domain': domain,
                     'source_name': domain.split('.')[0].title(),
-                    'full_url': f'https://{match}'
-                })
+                    'full_url': match.group(0)
+                }
+                sources.append(enrich_source(source, match.start()))
 
-        # PRIORITY 2: Known beauty/retail sources (common patterns)
-        known_sources = {
-            # Retailers
-            'sephora', 'ulta', 'nordstrom', 'bloomingdales', 'macys', 'target', 'walmart',
-            # Beauty sites
-            'temptalia', 'beautylish', 'makeupandbeautyblog', 'beautypedia',
-            # Social/Community
-            'reddit', 'youtube', 'instagram', 'tiktok', 'pinterest',
-            # Reviews
-            'influenster', 'makeupalley', 'beautypedia',
-            # Magazines
-            'allure', 'vogue', 'elle', 'cosmopolitan', 'glamour', 'instyle',
-            # General
-            'amazon', 'dermstore', 'spacenk'
-        }
+        # PRIORITY 2: Known sources (loaded per-client from brand_config.json)
+        for source_name in self.known_sources:
+            pattern = r'\b' + re.escape(source_name) + r'\b'
+            match = re.search(pattern, response_text, re.IGNORECASE)
+            if match:
+                # Handle sources that already look like domains
+                if '.' in source_name:
+                    domain = source_name.lower()
+                else:
+                    domain = source_name.lower() + '.com'
 
-        # Search for known sources in text (case insensitive)
-        for source in known_sources:
-            # Look for source name as whole word
-            pattern = r'\b' + source + r'\b'
-            if re.search(pattern, response_text, re.IGNORECASE):
-                domain = source + '.com'
                 if domain not in seen_domains:
                     seen_domains.add(domain)
-                    sources.append({
+                    source = {
                         'type': 'known_source',
                         'domain': domain,
-                        'source_name': source.title(),
+                        'source_name': source_name.split('.')[0].title() if '.' in source_name else source_name.title(),
                         'full_url': None
-                    })
+                    }
+                    sources.append(enrich_source(source, match.start()))
 
         # PRIORITY 3: Clean attribution patterns (only if reliable)
-        # Only extract if followed by colon or comma (indicates actual citation)
         attribution_pattern = r'(?:According to|Per|From|As (?:reported|mentioned|noted) (?:by|on|in))\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s*[,:.]'
-
-        attribution_matches = re.findall(attribution_pattern, response_text)
 
         # Known brand/source keywords to filter
         brand_keywords = set([b.lower() for b in self.brand_aliases + self.competitor_names])
@@ -131,8 +163,8 @@ class VisibilityScorer:
             'products', 'items', 'options', 'choices', 'selections'
         }
 
-        for match in attribution_matches:
-            source_name = match.strip()
+        for match in re.finditer(attribution_pattern, response_text):
+            source_name = match.group(1).strip()
             source_lower = source_name.lower()
 
             # Filter out brand names and noise
@@ -151,12 +183,13 @@ class VisibilityScorer:
             domain = source_lower.replace(' ', '') + '.com'
             if domain not in seen_domains and len(source_name) > 2:
                 seen_domains.add(domain)
-                sources.append({
+                source = {
                     'type': 'attribution',
                     'domain': domain,
                     'source_name': source_name,
                     'full_url': None
-                })
+                }
+                sources.append(enrich_source(source, match.start()))
 
         # Sort by type priority (URLs first, then known sources, then attributions)
         type_priority = {'url': 0, 'known_source': 1, 'attribution': 2}

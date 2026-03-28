@@ -435,11 +435,16 @@ class VisibilityTracker:
             response_preview = sample.get('response_text', '')[:100] if sample.get('response_text') else 'NO RESPONSE'
             print(f"  Sample response: {response_preview}...")
 
+        # Load known_sources and industry_keywords from brand_config
+        known_sources = brand_config.get('known_sources', [])
+        source_categories = brand_config.get('source_categories', {})
+
         # Initialize analyzers
         scorer = VisibilityScorer(
             brand_name=brand_name,
             brand_aliases=brand_aliases,
-            competitor_names=competitors
+            competitor_names=competitors,
+            known_sources=known_sources
         )
 
         comp_analyzer = CompetitorAnalyzer(brand_name)
@@ -483,7 +488,7 @@ class VisibilityTracker:
 
         # Analyze sources and citations
         print("3.5. Analyzing sources and citations...")
-        source_analysis = source_analyzer.analyze_sources(scored_results)
+        source_analysis = source_analyzer.analyze_sources(scored_results, brand_config=brand_config)
 
         # Run website verification if URLs are available
         website_verification = None
@@ -600,7 +605,7 @@ class VisibilityTracker:
             brand_domains=brand_domains,
             competitor_domains=competitor_domains_dict
         )
-        citation_stats = citation_classifier.classify_all_sources(scored_results)
+        citation_stats = citation_classifier.classify_all_sources(scored_results, source_categories=source_categories)
         print(f"   ✓ Citation authority: {citation_stats['citation_authority_score']:.1f}/100")
 
         # Sentiment analysis

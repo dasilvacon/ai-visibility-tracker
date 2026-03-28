@@ -66,6 +66,81 @@
       "VON": "adjacent"
     }
   },
+  "known_sources": [
+    "ontario.ca",
+    "canada.ca",
+    "health.gc.ca",
+    "211ontario.ca",
+    "ontariocaregiver.ca",
+    "alzheimer.ca",
+    "canadiancaregiving.org",
+    "familycaregiversbc.ca",
+    "parkinson.ca",
+    "heartandstroke.ca",
+    "cancer.ca",
+    "cmha.ca",
+    "von.ca",
+    "cbc.ca",
+    "thestar.com",
+    "globalnews.ca",
+    "ctv.ca",
+    "macleans.ca",
+    "theglobeandmail.com",
+    "reddit",
+    "youtube",
+    "facebook",
+    "linkedin",
+    "pubmed",
+    "ncbi.nlm.nih.gov",
+    "healthline.com",
+    "webmd.com",
+    "mayoclinic.org",
+    "nih.gov"
+  ],
+  "source_categories": {
+    "government": [
+      "ontario.ca",
+      "canada.ca",
+      "health.gc.ca",
+      "cancer.ca",
+      "nih.gov"
+    ],
+    "industry": [
+      "ontariocaregiver.ca",
+      "canadiancaregiving.org",
+      "familycaregiversbc.ca",
+      "alzheimer.ca",
+      "parkinson.ca",
+      "heartandstroke.ca",
+      "cmha.ca",
+      "von.ca"
+    ],
+    "media": [
+      "cbc.ca",
+      "thestar.com",
+      "globalnews.ca",
+      "ctv.ca",
+      "macleans.ca",
+      "theglobeandmail.com"
+    ],
+    "social": [
+      "reddit",
+      "youtube",
+      "facebook",
+      "linkedin"
+    ],
+    "academic": [
+      "pubmed",
+      "ncbi.nlm.nih.gov",
+      "healthline.com",
+      "webmd.com",
+      "mayoclinic.org"
+    ],
+    "resource": [
+      "211ontario.ca"
+    ]
+  },
+  "irrelevant_sources": [],
   "metadata": {
     "created_at": "2026-03-08T16:23:46.146537Z",
     "last_modified": "2026-03-08T16:23:46.146627Z",

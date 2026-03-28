@@ -28,24 +28,32 @@ class CitationClassifier:
             for comp, domains in self.competitor_domains.items()
         }
 
-    def classify_source(self, source: Dict[str, Any]) -> Dict[str, Any]:
+    def classify_source(self, source: Dict[str, Any],
+                       source_categories: Optional[Dict[str, List[str]]] = None) -> Dict[str, Any]:
         """
         Classify a single source as Owned, Third-party, or Competitor.
+        Also determines the source category (government, media, industry, social, academic, general).
 
         Args:
             source: Source dictionary with domain/url information
+            source_categories: Optional dict mapping category names to lists of domains
+                              (from client's brand_config.json)
 
         Returns:
-            Dictionary with classification
+            Dictionary with classification and source_category
         """
         domain = source.get('domain', '').lower()
+
+        # Determine source category from config
+        source_category = self._determine_source_category(domain, source_categories)
 
         # Check if owned domain
         if self._is_owned_domain(domain):
             return {
                 **source,
                 'citation_type': 'owned',
-                'classification': 'Owned'
+                'classification': 'Owned',
+                'source_category': source_category
             }
 
         # Check if competitor domain
@@ -55,15 +63,44 @@ class CitationClassifier:
                 **source,
                 'citation_type': 'competitor',
                 'classification': 'Competitor',
-                'competitor_name': competitor_name
+                'competitor_name': competitor_name,
+                'source_category': source_category
             }
 
         # Default to third-party
         return {
             **source,
             'citation_type': 'third_party',
-            'classification': 'Third-party'
+            'classification': 'Third-party',
+            'source_category': source_category
         }
+
+    def _determine_source_category(self, domain: str,
+                                   source_categories: Optional[Dict[str, List[str]]]) -> str:
+        """
+        Determine the category of a source domain.
+
+        Args:
+            domain: The domain to categorize
+            source_categories: Dict mapping category names to domain lists
+
+        Returns:
+            Category string: government, media, industry, social, academic, resource, or general
+        """
+        if not source_categories:
+            return 'general'
+
+        domain = domain.lower()
+
+        # Check each category for a match
+        for category, domains in source_categories.items():
+            for cat_domain in domains:
+                cat_domain_lower = cat_domain.lower()
+                # Match if domain equals or contains the category domain
+                if domain == cat_domain_lower or cat_domain_lower in domain or domain.endswith(cat_domain_lower):
+                    return category
+
+        return 'general'
 
     def _is_owned_domain(self, domain: str) -> bool:
         """Check if domain is an owned domain."""
@@ -86,12 +123,14 @@ class CitationClassifier:
 
         return None
 
-    def classify_all_sources(self, scored_results: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def classify_all_sources(self, scored_results: List[Dict[str, Any]],
+                            source_categories: Optional[Dict[str, List[str]]] = None) -> Dict[str, Any]:
         """
         Classify all sources across all results.
 
         Args:
             scored_results: List of results with visibility scores
+            source_categories: Optional dict mapping category names to lists of domains
 
         Returns:
             Dictionary with citation analysis
@@ -101,6 +140,7 @@ class CitationClassifier:
             'count': 0,
             'type': None,
             'competitor_name': None,
+            'source_category': None,
             'sample_urls': []
         })
 
@@ -122,7 +162,7 @@ class CitationClassifier:
 
             for source in sources:
                 # Classify this source
-                classified = self.classify_source(source)
+                classified = self.classify_source(source, source_categories)
                 all_sources.append(classified)
 
                 domain = classified.get('domain', '')
@@ -133,6 +173,7 @@ class CitationClassifier:
                 domain_counts[domain]['count'] += 1
                 domain_counts[domain]['type'] = classified['citation_type']
                 domain_counts[domain]['competitor_name'] = classified.get('competitor_name')
+                domain_counts[domain]['source_category'] = classified.get('source_category', 'general')
 
                 if len(domain_counts[domain]['sample_urls']) < 3:
                     domain_counts[domain]['sample_urls'].append(
@@ -179,6 +220,7 @@ class CitationClassifier:
                 'type': data['type'],
                 'classification': self._type_to_label(data['type']),
                 'competitor_name': data['competitor_name'],
+                'source_category': data.get('source_category', 'general'),
                 'sample_urls': data['sample_urls']
             })
 
