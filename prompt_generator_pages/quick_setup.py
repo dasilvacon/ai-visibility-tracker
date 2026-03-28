@@ -1106,40 +1106,40 @@ def _render_existing_clients():
             st.caption(created)
         with col_actions:
             if not is_active:
-                col_act, col_del = st.columns(2)
-                with col_act:
-                    if st.button("Activate", key=f"qs_activate_{slug}"):
-                        st.session_state.active_client = slug
-                        files = client.get('files', {})
-                        st.session_state.generation_config = st.session_state.get('generation_config', {})
-                        st.session_state.generation_config.update({
-                            'personas_file': files.get('personas', ''),
-                            'keywords_file': files.get('keywords', ''),
-                            'brand_config_file': files.get('brand_config', ''),
-                            'client_name': name
-                        })
-                        st.rerun()
-                with col_del:
-                    if st.button("Delete", key=f"qs_delete_{slug}", type="secondary"):
-                        st.session_state[f'confirm_delete_{slug}'] = True
-                        st.rerun()
+                if st.button("Activate", key=f"qs_activate_{slug}"):
+                    st.session_state.active_client = slug
+                    files = client.get('files', {})
+                    st.session_state.generation_config = st.session_state.get('generation_config', {})
+                    st.session_state.generation_config.update({
+                        'personas_file': files.get('personas', ''),
+                        'keywords_file': files.get('keywords', ''),
+                        'brand_config_file': files.get('brand_config', ''),
+                        'client_name': name
+                    })
+                    st.rerun()
 
-            # Confirm delete dialog
-            if st.session_state.get(f'confirm_delete_{slug}'):
-                st.warning(f"Delete **{name}**? This removes the client from the registry.")
-                col_yes, col_no = st.columns(2)
-                with col_yes:
-                    if st.button("Yes, delete", key=f"qs_confirm_del_{slug}", type="primary"):
-                        registry.remove_client(slug)
-                        st.session_state.pop(f'confirm_delete_{slug}', None)
-                        if st.session_state.get('active_client') == slug:
-                            st.session_state.pop('active_client', None)
-                            st.session_state.pop('generation_config', None)
-                        st.rerun()
-                with col_no:
-                    if st.button("Cancel", key=f"qs_cancel_del_{slug}"):
-                        st.session_state.pop(f'confirm_delete_{slug}', None)
-                        st.rerun()
+    # Delete — tucked away behind an expander, requires typing the client name
+    with st.expander("Manage clients"):
+        st.caption("Remove a client from the registry. This does not delete data from GCS.")
+        delete_slug = st.selectbox(
+            "Select client to remove",
+            options=[c['slug'] for c in clients],
+            format_func=lambda s: next((c['name'] for c in clients if c['slug'] == s), s),
+            key="qs_delete_select"
+        )
+        if delete_slug:
+            delete_name = next((c['name'] for c in clients if c['slug'] == delete_slug), delete_slug)
+            typed_name = st.text_input(
+                f"Type **{delete_name}** to confirm removal",
+                key="qs_delete_confirm_text",
+                placeholder=f"Type: {delete_name}"
+            )
+            if st.button("Remove client", key="qs_delete_btn", disabled=(typed_name != delete_name)):
+                registry.remove_client(delete_slug)
+                if st.session_state.get('active_client') == delete_slug:
+                    st.session_state.pop('active_client', None)
+                    st.session_state.pop('generation_config', None)
+                st.rerun()
 
 
 # --- Main render ---

@@ -17,6 +17,7 @@ sys.path.insert(0, 'src')
 from src.prompt_generator.generator import PromptGenerator
 from src.prompt_generator.deduplicator import PromptDeduplicator
 from src.prompt_generator.batch_manager import BatchManager, add_batch_metadata_to_prompts
+from src.client_manager.client_registry import ClientRegistry
 
 
 # Brand colors - LIGHT THEME
@@ -765,13 +766,28 @@ def render():
 
     st.title("✨ Generate & Review")
 
+    # Always re-sync generation_config from the registry for the active client.
+    # This prevents stale/cross-client file paths from a previous session.
+    active_slug = st.session_state.get('active_client', '')
+    if active_slug:
+        registry = ClientRegistry()
+        client_data = registry.get_client(active_slug)
+        if client_data:
+            files = client_data.get('files', {})
+            st.session_state.generation_config = {
+                'client_name': client_data.get('name', active_slug),
+                'personas_file': files.get('personas', ''),
+                'keywords_file': files.get('keywords', ''),
+                'brand_config_file': files.get('brand_config', ''),
+            }
+
     # Check client
     client_name = st.session_state.generation_config.get('client_name')
     personas_file = st.session_state.generation_config.get('personas_file')
     keywords_file = st.session_state.generation_config.get('keywords_file')
 
     if not (client_name and personas_file and keywords_file):
-        st.warning("⚠️ No client selected. Go to **Client Manager** to select a client first.")
+        st.warning("⚠️ No client selected. Go to **Quick Setup** to select a client first.")
         return
 
     # Active client banner
