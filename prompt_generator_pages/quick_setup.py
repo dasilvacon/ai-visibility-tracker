@@ -994,24 +994,25 @@ def _parse_list_items(text: str) -> list:
 
 
 def _infer_intent(kw_data: dict) -> str:
-    """Infer intent from keyword data."""
-    if kw_data.get('is_informational'):
-        return 'informational'
-    if kw_data.get('is_commercial'):
-        return 'commercial'
+    """Infer intent from keyword data. Prefers specific intents over generic informational."""
+    # Check most specific first — transactional > commercial > informational
     if kw_data.get('is_transactional'):
         return 'transactional'
+    if kw_data.get('is_commercial'):
+        return 'commercial'
     if kw_data.get('is_navigational'):
         return 'navigational'
+    if kw_data.get('is_informational'):
+        return 'informational'
 
     # Fallback: pattern matching
     keyword = kw_data.get('keyword', '').lower()
-    if any(w in keyword for w in ['how', 'what', 'why', 'when', 'guide', 'tips']):
-        return 'informational'
+    if any(w in keyword for w in ['buy', 'price', 'order', 'shop', 'discount', 'for sale']):
+        return 'transactional'
     if any(w in keyword for w in ['best', 'top', 'compare', 'vs', 'review']):
         return 'commercial'
-    if any(w in keyword for w in ['buy', 'price', 'order', 'shop', 'discount']):
-        return 'transactional'
+    if any(w in keyword for w in ['how', 'what', 'why', 'when', 'guide', 'tips']):
+        return 'informational'
     return 'informational'
 
 

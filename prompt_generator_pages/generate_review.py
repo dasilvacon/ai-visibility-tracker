@@ -200,13 +200,10 @@ def _render_methodology():
             Passionfruit (2026) — "GEO Prompts That Unlock AI Search Visibility"
         </p>
 
-        <h4 style='color: #E8D7A0; margin-top: 20px;'>4. Quality Scoring & Deduplication</h4>
+        <h4 style='color: #E8D7A0; margin-top: 20px;'>4. Deduplication</h4>
         <p style='color: #FBFBEF; line-height: 1.6;'>
-            Every generated prompt is scored on naturalness, clarity, length, keyword
-            relevance, and diversity. Prompts that score below the quality floor (60/100)
-            are automatically rejected and regenerated. Semantic deduplication ensures
-            no two prompts test the same thing. This gives you a clean, high-quality
-            prompt set that produces reliable, actionable results.
+            Semantic deduplication ensures no two prompts test the same thing,
+            giving you a clean prompt set that produces reliable, actionable results.
         </p>
 
         <h4 style='color: #E8D7A0; margin-top: 20px;'>5. Competitive Intelligence</h4>
@@ -242,10 +239,9 @@ def _render_methodology():
                     border-radius: 6px; margin-top: 20px;'>
             <p style='color: #E8D7A0; margin: 0; font-size: 0.95em;'>
                 <strong>💡 Bottom line:</strong> This tool generates prompts the way your
-                real audience actually talks to AI — grounded in your keyword data, shaped
-                by your audience personas, and quality-checked to ensure reliable results.
-                The approach is aligned with the GEO best practices from Ahrefs, Search
-                Engine Journal, and the leading AI visibility platforms in 2026.
+                real audience actually talks to AI — grounded in your keyword data and shaped
+                by your audience personas. The approach is aligned with the GEO best practices
+                from Ahrefs, Search Engine Journal, and the leading AI visibility platforms in 2026.
             </p>
         </div>
     </div>
@@ -378,9 +374,7 @@ def _render_generation_section(client_name, batch_manager):
             use_ai_generation=False,
             deduplicator=deduplicator,
             enable_deduplication=enable_dedup,
-            enable_quality_scoring=True,
-            brand_config=brand_config,
-            quality_floor=60.0
+            brand_config=brand_config
         )
 
         progress_bar = st.progress(0)
@@ -418,19 +412,9 @@ def _render_generation_section(client_name, batch_manager):
             stats = generator.generation_stats
             status_text.success(f"✅ Generated {len(prompts)} prompts!")
 
-            # Show quality summary
-            quality_stats = stats.get('quality_stats', {})
-            if quality_stats:
-                col1, col2, col3, col4 = st.columns(4)
-                with col1:
-                    st.metric("Average Quality", f"{quality_stats.get('average_score', 0)}/100")
-                with col2:
-                    st.metric("Excellent", quality_stats.get('quality_distribution', {}).get('Excellent', 0))
-                with col3:
-                    st.metric("Good", quality_stats.get('quality_distribution', {}).get('Good', 0))
-                with col4:
-                    duration = (stats['end_time'] - stats['start_time']).total_seconds()
-                    st.metric("Duration", f"{duration:.1f}s")
+            # Show generation metrics
+            duration = (stats['end_time'] - stats['start_time']).total_seconds()
+            st.metric("Duration", f"{duration:.1f}s")
 
             # Save to draft files
             draft_dir = Path('data/prompt_generation/drafts')
@@ -569,14 +553,6 @@ def _render_review_section(client_name):
         intent_types = sorted(set(p['intent_type'] for p in all_prompts))
         selected_intents = st.multiselect("Intent Type", intent_types, default=intent_types)
 
-        has_quality = any('quality_score' in p for p in all_prompts)
-        if has_quality:
-            quality_level_filter = st.multiselect(
-                "Quality Level",
-                ["Excellent", "Good", "Fair", "Poor"],
-                default=["Excellent", "Good", "Fair", "Poor"]
-            )
-
         status_filter = st.radio("Status", ["All", "Pending", "Approved", "Rejected"], index=0)
 
         search_text = st.text_input("Search Text", "")
@@ -590,11 +566,6 @@ def _render_review_section(client_name):
     filtered = [p for p in filtered if p['persona'] in selected_personas]
     filtered = [p for p in filtered if p['intent_type'] in selected_intents]
 
-    if has_quality:
-        filtered = [p for p in filtered
-                     if 'quality_score' not in p or
-                     p['quality_score'].get('quality_level', 'Unknown') in quality_level_filter]
-
     if search_text:
         filtered = [p for p in filtered if search_text.lower() in p['prompt_text'].lower()]
 
@@ -606,14 +577,12 @@ def _render_review_section(client_name):
         # Build CSV of ALL filtered prompts (not just current page)
         all_csv_rows = []
         for p in filtered:
-            qs = p.get('quality_score', {})
             all_csv_rows.append({
                 'ID': p['prompt_id'],
                 'Persona': p['persona'],
                 'Intent': p['intent_type'],
                 'Prompt Text': p['prompt_text'],
                 'Score': p.get('expected_visibility_score', ''),
-                'Quality': f"{qs.get('overall_score', '')}/100" if qs else '',
                 'Status': p.get('status', 'pending').title(),
             })
         if all_csv_rows:
@@ -669,11 +638,8 @@ def _render_review_section(client_name):
                 'Intent': prompt['intent_type'],
                 'Prompt Text': prompt['prompt_text'],
                 'Score': prompt['expected_visibility_score'],
+                'Status': prompt.get('approval_status', 'pending').title()
             }
-            if 'quality_score' in prompt:
-                qs = prompt['quality_score']
-                row['Quality'] = f"{qs['overall_score']}/100"
-            row['Status'] = prompt.get('approval_status', 'pending').title()
             df_data.append(row)
 
         df = pd.DataFrame(df_data)
@@ -724,15 +690,6 @@ def _render_review_section(client_name):
                         approval_mgr.reset_prompts([selected_id])
                         _save_approval_statuses(client_name)
                         st.rerun()
-
-                # Quality details
-                if 'quality_score' in selected_prompt:
-                    qs = selected_prompt['quality_score']
-                    dims = qs['dimension_scores']
-                    st.markdown(f"**Quality:** {qs['quality_level']} ({qs['overall_score']}/100) — "
-                                 f"Natural: {dims['naturalness']:.0f} · "
-                                 f"Clarity: {dims['clarity']:.0f} · "
-                                 f"Relevance: {dims['keyword_relevance']:.0f}")
     else:
         st.info("No prompts match the current filters.")
 

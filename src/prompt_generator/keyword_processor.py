@@ -31,10 +31,22 @@ class KeywordProcessor:
         with open(self.keywords_file, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             for row in reader:
+                # Primary intent from the CSV
+                primary_intent = row.get('intent_type', 'informational')
+
+                # Build list of ALL valid intents for this keyword
+                # (populated when CSV was saved with Ahrefs multi-intent data)
+                all_intents_str = row.get('all_intents', '')
+                if all_intents_str:
+                    all_intents = [i.strip() for i in all_intents_str.split(',') if i.strip()]
+                else:
+                    all_intents = [primary_intent]
+
                 keyword_data = {
                     'keyword': row['keyword'],
                     'search_volume': int(row.get('search_volume', 0)),
-                    'intent_type': row.get('intent_type', 'informational'),
+                    'intent_type': primary_intent,
+                    'all_intents': all_intents,
                     'competitor_brands': [b.strip() for b in row.get('competitor_brands', '').split(',') if b.strip()]
                 }
                 self.keywords.append(keyword_data)

@@ -399,38 +399,47 @@ class ClientAutoOnboarder:
         """
         Classify the search intent of a keyword.
 
+        Uses Ahrefs intent flags when available, preferring the most specific
+        intent (transactional > commercial > informational) to ensure prompt
+        variety. Falls back to keyword pattern matching.
+
         Args:
             keyword: The keyword to classify
             ahrefs_intents: Optional Ahrefs intent dict with boolean flags
 
         Returns:
-            Intent type: 'informational', 'how_to', 'comparison', 'problem_solving',
-                        'recommendation', 'review'
+            Intent type: 'informational', 'commercial', 'transactional',
+                        'how_to', 'comparison', 'recommendation', 'review'
         """
         keyword_lower = keyword.lower()
 
-        # Check for explicit patterns first
+        # Check for explicit patterns first — these are unambiguous
         if keyword_lower.startswith(("how to ", "how do ")):
             return "how_to"
 
-        if any(x in keyword_lower for x in [" vs ", " versus ", " compared to ", " or "]):
+        if any(x in keyword_lower for x in [" vs ", " versus ", " compared to "]):
             return "comparison"
 
         if any(x in keyword_lower for x in ["best ", "top ", "which ", "recommend"]):
             return "recommendation"
 
-        if any(x in keyword_lower for x in ["review", "worth it", "is ", "good ", "quality"]):
+        if any(x in keyword_lower for x in ["review", "worth it", "pros and cons"]):
             return "review"
 
-        if any(x in keyword_lower for x in ["fix", "problem", "issue", "not working", "error"]):
-            return "problem_solving"
+        if any(x in keyword_lower for x in ["buy ", "order ", "shop ", "price ", "for sale", "where to get"]):
+            return "transactional"
 
-        # Use Ahrefs intent flags if available
+        # Use Ahrefs intent flags — prefer more specific intents
+        # (most keywords are flagged informational, so check that last)
         if ahrefs_intents:
             if ahrefs_intents.get("transactional"):
-                return "problem_solving"
+                return "transactional"
             if ahrefs_intents.get("commercial"):
-                return "recommendation"
+                return "commercial"
+            if ahrefs_intents.get("navigational"):
+                return "informational"  # navigational maps to informational for prompts
+            if ahrefs_intents.get("informational"):
+                return "informational"
 
         # Default to informational
         return "informational"
@@ -889,16 +898,40 @@ class ClientAutoOnboarder:
         # Save keywords CSV
         keywords_file = output_path / f"{client_slug}_keywords.csv"
         with open(keywords_file, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=["keyword", "search_volume", "intent_type", "competitor_brands"])
+            writer = csv.DictWriter(f, fieldnames=["keyword", "search_volume", "intent_type", "all_intents", "competitor_brands"])
             writer.writeheader()
 
             for kw_data in self.filtered_keywords:
-                intent = self.classify_intent(kw_data.get("keyword", ""))
+                # Collect ALL applicable intents from Ahrefs flags
+                all_intents = []
+                intent_map = {
+                    'is_transactional': 'transactional',
+                    'is_commercial': 'commercial',
+                    'is_informational': 'informational',
+                }
+                for flag, intent_name in intent_map.items():
+                    if kw_data.get(flag, False):
+                        all_intents.append(intent_name)
+
+                # Fall back to pattern-based classification if no flags
+                if not all_intents:
+                    ahrefs_intents = {
+                        'informational': kw_data.get('is_informational', False),
+                        'commercial': kw_data.get('is_commercial', False),
+                        'transactional': kw_data.get('is_transactional', False),
+                        'navigational': kw_data.get('is_navigational', False),
+                    }
+                    all_intents = [self.classify_intent(kw_data.get("keyword", ""), ahrefs_intents)]
+
+                # Primary intent = most specific one
+                primary = all_intents[0]
+
                 writer.writerow({
                     "keyword": kw_data.get("keyword", ""),
                     "search_volume": kw_data.get("volume", 0),
-                    "intent_type": intent,
-                    "competitor_brands": "",  # Will be populated in separate enrichment step
+                    "intent_type": primary,
+                    "all_intents": ",".join(all_intents),
+                    "competitor_brands": "",
                 })
 
         summary["files"]["keywords"] = str(keywords_file)

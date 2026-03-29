@@ -22,28 +22,30 @@ class PromptBuilder:
     """Builds natural AI-style prompt variations for any industry."""
 
     # ── STYLE 1: Direct AI Questions (30%) ────────────────────────────
-    # Clean, conversational questions people ask AI engines
+    # Clean, conversational questions people ask AI engines.
+    # Avoid "What is {keyword}" — it produces broken grammar with
+    # multi-word keywords ("What is ukrainian shirts").
     DIRECT_TEMPLATES = {
         'informational': [
-            "What is {keyword}",
             "Tell me about {keyword}",
             "What should I know about {keyword}",
-            "Can you explain {keyword}",
-            "What are the best {keyword}",
+            "Can you tell me about {keyword}",
+            "What are the best options for {keyword}",
+            "I'd like to learn about {keyword}",
         ],
         'commercial': [
-            "Best {keyword} to buy",
-            "Top rated {keyword}",
+            "Best {keyword} to buy right now",
+            "What are the top rated {keyword}",
             "What {keyword} do you recommend",
-            "Most popular {keyword}",
-            "Where to buy {keyword}",
+            "What's the most popular {keyword}",
+            "Where should I buy {keyword}",
         ],
         'transactional': [
             "Where can I buy {keyword}",
             "Best place to order {keyword}",
-            "Where to get {keyword} online",
-            "{keyword} for sale",
-            "Buy {keyword} online",
+            "Where can I get {keyword} online",
+            "Where to find {keyword} for sale",
+            "Best online store for {keyword}",
         ],
         'comparison': [
             "{keyword} vs {competitor}",
@@ -52,21 +54,21 @@ class PromptBuilder:
             "What's the difference between {keyword} and {competitor}",
         ],
         'how_to': [
-            "How to {keyword}",
-            "Best way to {keyword}",
-            "How do I {keyword}",
-            "Step by step guide to {keyword}",
+            "How to find {keyword}",
+            "Best way to find {keyword}",
+            "How do I choose {keyword}",
+            "Guide to choosing {keyword}",
         ],
         'recommendation': [
             "What {keyword} do you recommend",
-            "Best {keyword} right now",
-            "Top {keyword} options",
+            "Best {keyword} available right now",
+            "What are the top {keyword} options",
             "Which {keyword} should I get",
         ],
         'review': [
             "Is {keyword} worth it",
-            "Honest review of {keyword}",
-            "{keyword} pros and cons",
+            "What's the real deal with {keyword}",
+            "{keyword} — is it any good",
             "What do people think about {keyword}",
         ],
     }
@@ -78,12 +80,12 @@ class PromptBuilder:
         'informational': [
             "What are the best options for {keyword}",
             "I'm looking for information about {keyword}",
-            "Can you help me understand {keyword}",
+            "Can you help me understand the options for {keyword}",
             "What do I need to know about {keyword}",
             "I want to learn more about {keyword}",
             "Tell me about the best {keyword} available",
-            "What makes a good {keyword}",
             "I'm researching {keyword} — what should I know",
+            "What should I look for when shopping for {keyword}",
         ],
         'commercial': [
             "I'm looking to buy {keyword} — what do you recommend",
@@ -91,7 +93,7 @@ class PromptBuilder:
             "Where should I buy {keyword}",
             "I want to find high quality {keyword}",
             "What's the best {keyword} for the money",
-            "Can you recommend good {keyword}",
+            "Can you recommend a good place to get {keyword}",
             "I need {keyword} — what are my options",
             "Who makes the best {keyword}",
         ],
@@ -111,23 +113,23 @@ class PromptBuilder:
             "Compare {keyword} and {competitor} for me",
         ],
         'how_to': [
-            "How do I {keyword}",
-            "What's the best way to {keyword}",
-            "Can you walk me through how to {keyword}",
-            "I need help with {keyword}",
-            "What's the process for {keyword}",
+            "How do I find the best {keyword}",
+            "What's the best way to shop for {keyword}",
+            "Can you walk me through choosing {keyword}",
+            "I need help picking {keyword}",
+            "What's the process for ordering {keyword}",
         ],
         'recommendation': [
             "What would you recommend for {keyword}",
-            "I need a good {keyword} — any suggestions",
+            "I need {keyword} — any suggestions",
             "What's the best {keyword} you'd recommend",
             "Help me find the right {keyword}",
-            "What {keyword} would work best",
+            "Which {keyword} would work best for a gift",
         ],
         'review': [
-            "Is {keyword} actually good",
+            "Is {keyword} actually worth buying",
             "What's the real deal with {keyword}",
-            "Has anyone had a good experience with {keyword}",
+            "Has anyone had a good experience buying {keyword}",
             "What are people saying about {keyword}",
             "Is {keyword} worth the money",
         ],

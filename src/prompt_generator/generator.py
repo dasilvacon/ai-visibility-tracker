@@ -9,11 +9,12 @@ import time
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 
+import re as _re
+
 from .persona_manager import PersonaManager
 from .keyword_processor import KeywordProcessor
 from .prompt_builder import PromptBuilder
 from .deduplicator import PromptDeduplicator
-from .quality_scorer import PromptQualityScorer
 
 
 class PromptGenerator:
@@ -24,9 +25,7 @@ class PromptGenerator:
                  use_ai_generation: bool = True,
                  deduplicator: Optional[PromptDeduplicator] = None,
                  enable_deduplication: bool = True,
-                 enable_quality_scoring: bool = True,
-                 brand_config: Optional[Dict[str, Any]] = None,
-                 quality_floor: float = 60.0):
+                 brand_config: Optional[Dict[str, Any]] = None):
         """
         Initialize the prompt generator.
 
@@ -37,14 +36,11 @@ class PromptGenerator:
             use_ai_generation: Whether to use AI API for generation
             deduplicator: Optional custom deduplicator instance
             enable_deduplication: Whether to enable deduplication during generation
-            enable_quality_scoring: Whether to enable quality scoring for prompts
             brand_config: Brand configuration dict (loaded from brand_config.json)
-            quality_floor: Minimum quality score (0-100) — prompts below this are rejected
         """
         self.persona_manager = PersonaManager(personas_file)
         self.keyword_processor = KeywordProcessor(keywords_file)
         self.brand_config = brand_config or {}
-        self.quality_floor = quality_floor
         self.prompt_builder = PromptBuilder(
             use_natural_language=True,
             brand_config=self.brand_config
@@ -62,12 +58,9 @@ class PromptGenerator:
         else:
             self.deduplicator = None
 
-        # Initialize quality scorer
-        self.enable_quality_scoring = enable_quality_scoring
-        if enable_quality_scoring:
-            self.quality_scorer = PromptQualityScorer()
-        else:
-            self.quality_scorer = None
+        # Quality scoring disabled — quality_scorer.py no longer used
+        self.enable_quality_scoring = False
+        self.quality_scorer = None
 
         self.generated_prompts = []
         self.generation_stats = {
@@ -77,10 +70,8 @@ class PromptGenerator:
             'by_intent': {},
             'with_competitors': 0,
             'duplicates_removed': 0,
-            'quality_rejected': 0,
             'start_time': None,
-            'end_time': None,
-            'quality_stats': {}
+            'end_time': None
         }
 
     def generate_prompts(self, total_count: int = 1000,
@@ -129,19 +120,7 @@ class PromptGenerator:
         self.generation_stats['end_time'] = datetime.now()
         self.generation_stats['total_generated'] = len(self.generated_prompts)
 
-        # Calculate quality statistics if scoring is enabled
-        if self.enable_quality_scoring and self.quality_scorer:
-            quality_stats = self.quality_scorer.get_batch_statistics(self.generated_prompts)
-            self.generation_stats['quality_stats'] = quality_stats
-
-            print(f"\n✓ Total prompts generated: {len(self.generated_prompts)}")
-            print(f"✓ Average quality score: {quality_stats.get('average_score', 0)}")
-            print(f"  - Excellent: {quality_stats.get('quality_distribution', {}).get('Excellent', 0)}")
-            print(f"  - Good: {quality_stats.get('quality_distribution', {}).get('Good', 0)}")
-            print(f"  - Fair: {quality_stats.get('quality_distribution', {}).get('Fair', 0)}")
-            print(f"  - Poor: {quality_stats.get('quality_distribution', {}).get('Poor', 0)}")
-        else:
-            print(f"\n✓ Total prompts generated: {len(self.generated_prompts)}")
+        print(f"\n✓ Total prompts generated: {len(self.generated_prompts)}")
 
         if self.enable_deduplication:
             duplicates = self.generation_stats['duplicates_removed']
@@ -150,16 +129,12 @@ class PromptGenerator:
                 dup_rate = (duplicates / (len(self.generated_prompts) + duplicates)) * 100
                 print(f"  Deduplication rate: {dup_rate:.1f}%")
 
-        quality_rejected = self.generation_stats.get('quality_rejected', 0)
-        if quality_rejected > 0:
-            print(f"✓ Quality rejected (below {self.quality_floor}): {quality_rejected}")
-
         return self.generated_prompts
 
     def _generate_for_persona(self, persona_id: str, count: int,
                              competitor_ratio: float) -> List[Dict[str, Any]]:
         """
-        Generate prompts for a specific persona with quality floor rejection and retries.
+        Generate prompts for a specific persona.
 
         Args:
             persona_id: The persona ID
@@ -177,7 +152,7 @@ class PromptGenerator:
         competitor_count = int(count * competitor_ratio)
         competitor_keywords = self.keyword_processor.get_keywords_with_competitors()
 
-        # Allow retries — try up to 2x the target count to hit the quality floor
+        # Allow retries for duplicate detection
         max_attempts = count * 2
         attempts = 0
         accepted = 0
@@ -198,6 +173,11 @@ class PromptGenerator:
                 continue
 
             keyword_data = random.choice(keywords)
+            attempts += 1
+
+            # Skip junk keywords (currency conversions, bare numbers, etc.)
+            if self._is_junk_keyword(keyword_data['keyword']):
+                continue
 
             # Generate the prompt
             prompt_data = self._generate_single_prompt(
@@ -205,9 +185,12 @@ class PromptGenerator:
                 keyword_data,
                 include_competitor
             )
-            attempts += 1
 
             if not prompt_data:
+                continue
+
+            # Validate prompt text — reject cut-offs, broken grammar, etc.
+            if not self._validate_prompt(prompt_data['prompt_text']):
                 continue
 
             # Check for duplicates
@@ -217,14 +200,6 @@ class PromptGenerator:
                 is_duplicate = dup_result['is_duplicate']
                 if is_duplicate:
                     self.generation_stats['duplicates_removed'] += 1
-                    continue
-
-            # Quality floor check — reject bad prompts
-            if self.enable_quality_scoring and self.quality_scorer and self.quality_floor > 0:
-                quality = prompt_data.get('quality_score', {})
-                overall = quality.get('overall_score', 0) if quality else 0
-                if overall < self.quality_floor:
-                    self.generation_stats['quality_rejected'] += 1
                     continue
 
             # Accepted — add to results
@@ -262,7 +237,14 @@ class PromptGenerator:
             Prompt dictionary or None
         """
         keyword = keyword_data['keyword']
-        intent_type = keyword_data['intent_type']
+
+        # Pick from ALL intents for this keyword (not just primary)
+        # This ensures a keyword flagged informational+commercial+transactional
+        # gets prompts across all three intent types
+        all_intents = keyword_data.get('all_intents', [keyword_data['intent_type']])
+        if not all_intents:
+            all_intents = [keyword_data['intent_type']]
+        intent_type = random.choice(all_intents)
 
         # Use AI generation 80% of the time (up from 70%) — templates as fallback
         if self.use_ai_generation and random.random() < 0.8:
@@ -297,27 +279,54 @@ class PromptGenerator:
             'notes': f"Generated from keyword: {keyword}{competitor_note}"
         }
 
-        # Add quality score if enabled
-        if self.enable_quality_scoring and self.quality_scorer:
-            # Collect existing prompt texts for diversity scoring
-            existing_texts = [p['prompt_text'] for p in self.generated_prompts]
-
-            # Build context for scoring — include priority_topics for relevance
-            score_context = {
-                'keyword': keyword,
-                'intent_type': intent_type,
-                'persona': persona['name'],
-                'priority_topics': persona.get('priority_topics', [])
-            }
-
-            quality_score = self.quality_scorer.score_prompt(
-                prompt_text,
-                context=score_context,
-                existing_prompts=existing_texts
-            )
-            prompt_dict['quality_score'] = quality_score
-
         return prompt_dict
+
+    # ── Junk-keyword & bad-prompt filters ──────────────────────────────
+
+    # Keywords that should never be used for prompts (currency, gibberish, etc.)
+    _JUNK_KEYWORD_PATTERNS = [
+        _re.compile(r'\d+\s*(cad|usd|eur|gbp|aud)\s*(to|in)\s*(cad|usd|eur|gbp|aud)', _re.I),
+        _re.compile(r'^\d+(\.\d+)?$'),               # bare numbers
+        _re.compile(r'^.{1,2}$'),                     # 1–2 char keywords
+    ]
+
+    @classmethod
+    def _is_junk_keyword(cls, keyword: str) -> bool:
+        """Return True if this keyword should be skipped entirely."""
+        for pat in cls._JUNK_KEYWORD_PATTERNS:
+            if pat.search(keyword):
+                return True
+        return False
+
+    @staticmethod
+    def _validate_prompt(text: str) -> bool:
+        """
+        Return True if the prompt text is acceptable quality.
+        Rejects cut-offs, broken grammar, empty, or too-short text.
+        """
+        if not text or len(text.strip()) < 10:
+            return False
+
+        # Cut-off detection: ends with a single letter + optional whitespace
+        stripped = text.rstrip()
+        if _re.search(r'\s[a-zA-Z]$', stripped):
+            return False
+
+        # Broken "What is" + multi-word phrase (grammar mismatch)
+        # e.g. "What is ukrainian shirts", "What is buy ukrainian products"
+        # "What is X" only works with singular nouns, not phrases
+        what_is_match = _re.match(r'^What is (.+)$', text, _re.I)
+        if what_is_match:
+            rest = what_is_match.group(1).strip()
+            # If what follows "What is" has 2+ words, it's almost always broken
+            if len(rest.split()) >= 2:
+                return False
+
+        # Duplicate word stutter: "the the", "for for"
+        if _re.search(r'\b(\w+)\s+\1\b', text, _re.I):
+            return False
+
+        return True
 
     def _generate_with_templates(self, persona: Dict[str, Any], keyword: str,
                                  intent_type: str, include_competitor: bool) -> str:
@@ -505,17 +514,9 @@ Return ONLY the clean query text, nothing else."""
 
         # Base fieldnames
         fieldnames = ['prompt_id', 'persona', 'category', 'intent_type',
-                     'prompt_text', 'expected_visibility_score']
+                     'prompt_text', 'expected_visibility_score', 'notes']
 
-        # Add quality score fields if present
-        if self.generated_prompts and 'quality_score' in self.generated_prompts[0]:
-            fieldnames.extend(['quality_overall', 'quality_level', 'quality_naturalness',
-                             'quality_clarity', 'quality_length', 'quality_relevance',
-                             'quality_diversity'])
-
-        fieldnames.append('notes')
-
-        # Flatten quality scores for CSV export
+        # Flatten prompts for CSV export
         export_prompts = []
         for prompt in self.generated_prompts:
             export_prompt = {
@@ -527,17 +528,6 @@ Return ONLY the clean query text, nothing else."""
                 'expected_visibility_score': prompt['expected_visibility_score'],
                 'notes': prompt.get('notes', '')
             }
-
-            # Add quality scores if present
-            if 'quality_score' in prompt:
-                qs = prompt['quality_score']
-                export_prompt['quality_overall'] = qs['overall_score']
-                export_prompt['quality_level'] = qs['quality_level']
-                export_prompt['quality_naturalness'] = qs['dimension_scores']['naturalness']
-                export_prompt['quality_clarity'] = qs['dimension_scores']['clarity']
-                export_prompt['quality_length'] = qs['dimension_scores']['length']
-                export_prompt['quality_relevance'] = qs['dimension_scores']['keyword_relevance']
-                export_prompt['quality_diversity'] = qs['dimension_scores']['diversity']
 
             export_prompts.append(export_prompt)
 
