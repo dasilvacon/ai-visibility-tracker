@@ -366,12 +366,29 @@ def _render_generation_section(client_name, batch_manager):
             except Exception:
                 pass
 
+        # Initialize AI client for batch generation (if API key available)
+        ai_client = None
+        use_ai = False
+        try:
+            api_keys = st.secrets.get('api_keys', {})
+            anthropic_key = api_keys.get('anthropic', '')
+            if anthropic_key:
+                from src.api_clients.anthropic_client import AnthropicClient
+                ai_client = AnthropicClient(
+                    api_key=anthropic_key,
+                    model='claude-haiku-4-5-20251001',
+                    config={'testing': {'default_temperature': 0.9, 'max_tokens': 4000, 'timeout_seconds': 60}}
+                )
+                use_ai = True
+        except Exception:
+            pass  # No API key = template-only generation
+
         # Initialize generator
         generator = PromptGenerator(
             personas_file=personas_file,
             keywords_file=keywords_file,
-            api_client=None,
-            use_ai_generation=False,
+            api_client=ai_client,
+            use_ai_generation=use_ai,
             deduplicator=deduplicator,
             enable_deduplication=enable_dedup,
             brand_config=brand_config

@@ -136,32 +136,80 @@ class PromptGenerator:
         """
         Generate prompts for a specific persona.
 
-        Args:
-            persona_id: The persona ID
-            count: Number of prompts to generate
-            competitor_ratio: Ratio with competitor mentions
-
-        Returns:
-            List of prompt dictionaries
+        Uses AI batch generation when an API client is available.
+        Falls back to template-based generation otherwise.
         """
         persona = self.persona_manager.get_persona_by_id(persona_id)
         priority_topics = self.persona_manager.get_priority_topics(persona_id)
         prompts = []
 
-        # Determine how many should have competitor mentions
-        competitor_count = int(count * competitor_ratio)
-        competitor_keywords = self.keyword_processor.get_keywords_with_competitors()
+        # ── AI batch generation (preferred) ──────────────────────────────
+        if self.use_ai_generation and self.api_client:
+            BATCH_SIZE = 25
+            remaining = count
 
-        # Allow retries for duplicate detection
-        max_attempts = count * 2
+            while remaining > 0:
+                batch_size = min(BATCH_SIZE, remaining)
+
+                # Select keywords for this batch
+                keyword_batch = []
+                attempts = 0
+                while len(keyword_batch) < batch_size and attempts < batch_size * 3:
+                    attempts += 1
+                    if priority_topics and random.random() < 0.75:
+                        topic = random.choice(priority_topics)
+                        kws = self.keyword_processor.select_keywords_for_topic(topic, 5)
+                    else:
+                        kws = self.keyword_processor.get_random_keywords(5)
+                    if not kws:
+                        continue
+                    kw = random.choice(kws)
+                    if not self._is_junk_keyword(kw['keyword']):
+                        keyword_batch.append(kw)
+
+                if not keyword_batch:
+                    break
+
+                # Generate batch
+                batch_prompts = self.generate_batch_with_ai(
+                    persona, keyword_batch, competitor_ratio
+                )
+
+                for p in batch_prompts:
+                    prompts.append(p)
+                    # Update stats
+                    self.generation_stats['by_persona'][persona_id] = \
+                        self.generation_stats['by_persona'].get(persona_id, 0) + 1
+                    self.generation_stats['by_category'][p['category']] = \
+                        self.generation_stats['by_category'].get(p['category'], 0) + 1
+                    self.generation_stats['by_intent'][p['intent_type']] = \
+                        self.generation_stats['by_intent'].get(p['intent_type'], 0) + 1
+
+                remaining -= len(batch_prompts)
+
+                # If AI returned fewer than expected, fill remainder with templates
+                if len(batch_prompts) < batch_size * 0.5:
+                    print(f"    AI batch low yield, switching to templates for remainder")
+                    break
+
+            # If we still need more, fall through to template generation
+            if len(prompts) >= count:
+                return prompts[:count]
+            count_remaining = count - len(prompts)
+            print(f"    Filling {count_remaining} remaining with templates...")
+        else:
+            count_remaining = count
+
+        # ── Template-based generation (fallback) ─────────────────────────
+        competitor_count = int(count_remaining * competitor_ratio)
+        competitor_keywords = self.keyword_processor.get_keywords_with_competitors()
+        max_attempts = count_remaining * 2
         attempts = 0
         accepted = 0
 
-        while accepted < count and attempts < max_attempts:
-            # Decide if this prompt should include a competitor
-            include_competitor = accepted < competitor_count and competitor_keywords
+        while accepted < count_remaining and attempts < max_attempts:
+            include_competitor = accepted < competitor_count and bool(competitor_keywords)
 
-            # Select a keyword — 75% from priority topics (up from 60%)
             if priority_topics and random.random() < 0.75:
                 topic = random.choice(priority_topics)
                 keywords = self.keyword_processor.select_keywords_for_topic(topic, 5)
@@ -175,47 +223,31 @@ class PromptGenerator:
             keyword_data = random.choice(keywords)
             attempts += 1
 
-            # Skip junk keywords (currency conversions, bare numbers, etc.)
             if self._is_junk_keyword(keyword_data['keyword']):
                 continue
 
-            # Generate the prompt
-            prompt_data = self._generate_single_prompt(
-                persona,
-                keyword_data,
-                include_competitor
-            )
-
+            prompt_data = self._generate_single_prompt(persona, keyword_data, include_competitor)
             if not prompt_data:
                 continue
 
-            # Validate prompt text — reject cut-offs, broken grammar, etc.
             if not self._validate_prompt(prompt_data['prompt_text']):
                 continue
 
-            # Check for duplicates
-            is_duplicate = False
             if self.enable_deduplication and self.deduplicator:
                 dup_result = self.deduplicator.check_duplicate(prompt_data['prompt_text'])
-                is_duplicate = dup_result['is_duplicate']
-                if is_duplicate:
+                if dup_result['is_duplicate']:
                     self.generation_stats['duplicates_removed'] += 1
                     continue
 
-            # Accepted — add to results
             prompts.append(prompt_data)
             accepted += 1
 
-            # Update stats
-            category = prompt_data['category']
-            intent = prompt_data['intent_type']
-
             self.generation_stats['by_persona'][persona_id] = \
                 self.generation_stats['by_persona'].get(persona_id, 0) + 1
-            self.generation_stats['by_category'][category] = \
-                self.generation_stats['by_category'].get(category, 0) + 1
-            self.generation_stats['by_intent'][intent] = \
-                self.generation_stats['by_intent'].get(intent, 0) + 1
+            self.generation_stats['by_category'][prompt_data['category']] = \
+                self.generation_stats['by_category'].get(prompt_data['category'], 0) + 1
+            self.generation_stats['by_intent'][prompt_data['intent_type']] = \
+                self.generation_stats['by_intent'].get(prompt_data['intent_type'], 0) + 1
 
             if include_competitor:
                 self.generation_stats['with_competitors'] += 1
@@ -416,91 +448,144 @@ class PromptGenerator:
 
         return '\n'.join(parts)
 
-    def _generate_with_ai(self, persona: Dict[str, Any], keyword: str,
-                         intent_type: str, include_competitor: bool) -> Optional[str]:
+    def generate_batch_with_ai(self, persona: Dict[str, Any],
+                               keyword_batch: List[Dict[str, Any]],
+                               competitor_ratio: float = 0.3) -> List[Dict[str, Any]]:
         """
-        Generate prompt using AI API with full brand and persona context.
+        Generate prompts for a batch of keywords using the AI API.
 
-        Uses brand_config for industry-aware examples and persona fields
-        for deeply personalized queries. No hardcoded industry examples.
+        Sends 20-25 keywords at once with full brand + persona context.
+        Returns structured prompt dicts. Falls back to templates on failure.
 
         Args:
             persona: Persona dictionary
-            keyword: Keyword string
-            intent_type: Intent type
-            include_competitor: Whether to include competitor
+            keyword_batch: List of keyword data dicts
+            competitor_ratio: Ratio of prompts that should mention competitors
 
         Returns:
-            Generated prompt text or None
+            List of prompt dictionaries
         """
         if not self.api_client:
-            return None
+            return []
 
-        # Build competitor context
-        competitor_context = ""
-        if include_competitor:
-            competitors = self.keyword_processor.get_all_competitors()
-            if competitors:
-                competitor = random.choice(competitors)
-                competitor_context = f"\nInclude a natural comparison or mention of '{competitor}'."
-
-        # Build rich context from brand config and persona
         brand_context = self._build_brand_context()
         persona_context = self._build_persona_context(persona)
+        all_competitors = self.keyword_processor.get_all_competitors()
 
-        # Vary the prompt structure to avoid repetitive output
-        style = random.choice(['search_query', 'ai_assistant_question', 'voice_search'])
-        style_instructions = {
-            'search_query': "Generate a clean search query someone would type into Google.",
-            'ai_assistant_question': "Generate a question someone would ask ChatGPT, Claude, or Perplexity.",
-            'voice_search': "Generate a natural spoken question someone would ask a voice assistant."
-        }
+        # Build the keyword list with intents
+        kw_lines = []
+        for i, kw_data in enumerate(keyword_batch, 1):
+            keyword = kw_data['keyword']
+            all_intents = kw_data.get('all_intents', [kw_data.get('intent_type', 'informational')])
+            intent = random.choice(all_intents) if all_intents else 'informational'
+            include_comp = (i <= len(keyword_batch) * competitor_ratio) and all_competitors
+            comp_note = f" [mention {random.choice(all_competitors)}]" if include_comp else ""
+            kw_lines.append(f"{i}. keyword=\"{keyword}\" intent={intent}{comp_note}")
 
-        system_prompt = f"""{style_instructions[style]}
+        keywords_block = "\n".join(kw_lines)
 
---- BRAND CONTEXT ---
+        system_prompt = f"""Generate one natural AI search query for each keyword below.
+
+--- BRAND ---
 {brand_context}
 
 --- PERSONA ---
 {persona_context}
 
---- QUERY DETAILS ---
-Keyword/Topic: {keyword}
-Intent: {intent_type}
-{competitor_context}
+--- KEYWORDS ---
+{keywords_block}
 
---- CRITICAL REQUIREMENTS ---
-- Sound like a REAL PERSON searching, NOT a marketer describing a persona
-- NEVER include persona labels like "as an adult child caregiver" or "for HR leaders"
-- Real people say "my mom just got out of hospital what do I do" not "hospital discharge planning resources for adult child caregiver"
-- NO greetings (no "Hi", "Hey", "Hello")
-- NO pleasantries (no "Thanks!", "Appreciate any help!")
-- NO conversational filler (no "Can anyone help?", "Quick question:")
-- Vary structure — mix questions, statements, and comparison formats
-- Keep it concise (1-2 sentences max, 5-20 words ideal)
-- The persona's situation should shape the LANGUAGE and ANGLE of the query
-- Use the keyword naturally — don't just repeat it verbatim
-- Think: what would this person ACTUALLY type into Google or ask ChatGPT?
+--- RULES ---
+- Each query should sound like a REAL PERSON asking ChatGPT, Perplexity, or Google
+- Match the intent: informational=learning, commercial=comparing/shopping, transactional=ready to buy, review=evaluating
+- If a keyword is a brand name (like the brand above), don't say "buy [brand name]" — say "What's worth buying from [brand]?" or "Is [brand] legit?"
+- If a keyword is informational (size chart, meaning, history), don't use buy/recommend language
+- If [mention competitor] is noted, work that competitor into the query naturally
+- NO greetings, NO filler, NO persona labels in the output
+- Keep each query 5-20 words, 1-2 sentences max
+- Vary the sentence structure — mix questions, "I'm looking for...", "Can you...", "What's the best..."
 
-Return ONLY the clean query text, nothing else."""
+Return ONLY a JSON array of objects, one per keyword, in this exact format:
+[
+  {{"n": 1, "intent": "commercial", "prompt": "The natural query text here"}},
+  ...
+]
+
+Return ONLY the JSON array. No other text."""
 
         try:
-            result = self.api_client.send_prompt(system_prompt, temperature=0.9, max_tokens=100)
+            result = self.api_client.send_prompt(
+                system_prompt,
+                temperature=0.9,
+                max_tokens=4000
+            )
 
-            if result['success']:
-                generated_text = result['response_text'].strip()
-                # Clean up any quotes or extra formatting
-                generated_text = generated_text.strip('"\'').strip()
-                # Remove any leading/trailing quotation marks the AI might add
-                if generated_text.startswith('"') and generated_text.endswith('"'):
-                    generated_text = generated_text[1:-1].strip()
-                return generated_text
-            else:
-                return self._generate_with_templates(persona, keyword, intent_type, include_competitor)
+            if not result['success']:
+                print(f"  AI batch failed: {result.get('error')}")
+                return []
 
+            # Parse JSON response
+            import json
+            raw = result['response_text'].strip()
+            # Handle markdown code fences
+            if raw.startswith('```'):
+                raw = raw.split('\n', 1)[1] if '\n' in raw else raw[3:]
+                if raw.endswith('```'):
+                    raw = raw[:-3]
+                raw = raw.strip()
+
+            parsed = json.loads(raw)
+            prompts = []
+
+            for item in parsed:
+                idx = item.get('n', 0) - 1
+                if idx < 0 or idx >= len(keyword_batch):
+                    continue
+                kw_data = keyword_batch[idx]
+                prompt_text = item.get('prompt', '').strip().strip('"\'')
+
+                if not prompt_text or not self._validate_prompt(prompt_text):
+                    continue
+
+                # Check dedup
+                if self.enable_deduplication and self.deduplicator:
+                    dup_result = self.deduplicator.check_duplicate(prompt_text)
+                    if dup_result['is_duplicate']:
+                        self.generation_stats['duplicates_removed'] += 1
+                        continue
+
+                prompt_id = f"gen_{int(time.time()*1000)}_{random.randint(1000, 9999)}"
+                intent = item.get('intent', kw_data.get('intent_type', 'informational'))
+                category = self.prompt_builder.categorize_prompt(intent)
+                vis_score = self.prompt_builder.estimate_visibility_score(kw_data)
+
+                prompts.append({
+                    'prompt_id': prompt_id,
+                    'persona': persona['name'],
+                    'category': category,
+                    'intent_type': intent,
+                    'prompt_text': prompt_text,
+                    'expected_visibility_score': round(vis_score, 1),
+                    'notes': f"AI-generated from keyword: {kw_data['keyword']}"
+                })
+
+            print(f"    AI batch: {len(prompts)}/{len(keyword_batch)} usable prompts")
+            return prompts
+
+        except json.JSONDecodeError as e:
+            print(f"  AI batch JSON parse error: {e}")
+            return []
         except Exception as e:
-            print(f"  Warning: AI generation failed: {e}")
-            return self._generate_with_templates(persona, keyword, intent_type, include_competitor)
+            print(f"  AI batch failed: {e}")
+            return []
+
+    def _generate_with_ai(self, persona: Dict[str, Any], keyword: str,
+                         intent_type: str, include_competitor: bool) -> Optional[str]:
+        """Single-prompt AI generation (legacy). Prefer generate_batch_with_ai."""
+        if not self.api_client:
+            return None
+        # Fall back to template for single prompts
+        return self._generate_with_templates(persona, keyword, intent_type, include_competitor)
 
     def save_to_csv(self, output_file: str) -> str:
         """
