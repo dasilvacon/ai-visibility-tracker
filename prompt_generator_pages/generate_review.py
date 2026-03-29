@@ -598,8 +598,38 @@ def _render_review_section(client_name):
     if search_text:
         filtered = [p for p in filtered if search_text.lower() in p['prompt_text'].lower()]
 
-    # Bulk actions
-    st.markdown(f"**{len(filtered)} prompts** matching filters")
+    # Bulk actions + download all
+    action_col, dl_col = st.columns([3, 1])
+    with action_col:
+        st.markdown(f"**{len(filtered)} prompts** matching filters")
+    with dl_col:
+        # Build CSV of ALL filtered prompts (not just current page)
+        all_csv_rows = []
+        for p in filtered:
+            qs = p.get('quality_score', {})
+            all_csv_rows.append({
+                'ID': p['prompt_id'],
+                'Persona': p['persona'],
+                'Intent': p['intent_type'],
+                'Prompt Text': p['prompt_text'],
+                'Score': p.get('expected_visibility_score', ''),
+                'Quality': f"{qs.get('overall_score', '')}/100" if qs else '',
+                'Status': p.get('status', 'pending').title(),
+            })
+        if all_csv_rows:
+            import io
+            csv_buf = io.StringIO()
+            w = csv.DictWriter(csv_buf, fieldnames=all_csv_rows[0].keys())
+            w.writeheader()
+            w.writerows(all_csv_rows)
+            st.download_button(
+                "⬇ Download All",
+                data=csv_buf.getvalue(),
+                file_name=f"all_prompts_{client_name.replace(' ', '_')}.csv",
+                mime="text/csv",
+                key="download_all_csv",
+                use_container_width=True,
+            )
 
     col1, col2, col3 = st.columns(3)
     with col1:
