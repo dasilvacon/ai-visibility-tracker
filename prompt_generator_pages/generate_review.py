@@ -491,14 +491,16 @@ def _render_review_section(client_name):
             st.session_state.generated_prompts = []
             if 'approval_manager' in st.session_state:
                 st.session_state.approval_manager.load_prompts([], default_status='pending')
-            # Delete draft files for this client
+            # Delete draft files for this client (local + GCS)
             draft_dir = Path('data/prompt_generation/drafts')
+            deleted_files = []
             if draft_dir.exists():
                 for df in draft_dir.glob('batch_*_prompts.json'):
                     try:
                         with open(df, 'r') as f:
                             data = json.load(f)
                         if data.get('client_name') == client_name:
+                            deleted_files.append(df.name)
                             df.unlink()
                     except Exception:
                         pass
@@ -514,7 +516,26 @@ def _render_review_section(client_name):
                         json.dump(batches, f, indent=2, default=str)
                 except Exception:
                     pass
-            st.success(f"All prompts for {client_name} have been deleted.")
+
+            # ── GCS cleanup — delete drafts from cloud so they don't come back ──
+            gcs_status = ""
+            try:
+                from src.client_manager.gcs_sync import GCSClientSync
+                gcs = GCSClientSync()
+                bucket = gcs.bucket
+                for filename in deleted_files:
+                    gcs_path = f"prompt-data/drafts/{filename}"
+                    blob = bucket.blob(gcs_path)
+                    if blob.exists():
+                        blob.delete()
+                if batches_file.exists():
+                    blob = bucket.blob('prompt-data/prompt_batches.json')
+                    blob.upload_from_filename(str(batches_file))
+                gcs_status = " (including cloud storage)"
+            except Exception as e:
+                gcs_status = f" (local only — cloud cleanup failed: {e})"
+
+            st.success(f"All prompts for {client_name} have been deleted{gcs_status}.")
             st.rerun()
 
     approval_mgr = st.session_state.approval_manager

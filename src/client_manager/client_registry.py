@@ -94,35 +94,57 @@ class ClientRegistry:
             self._cleanup_prompt_drafts(client_name)
 
     def _cleanup_prompt_drafts(self, client_name: str):
-        """Delete all prompt draft files belonging to a client."""
+        """Delete all prompt draft files belonging to a client (local + GCS)."""
+        # ── Local cleanup ──
         draft_dir = Path('data/prompt_generation/drafts')
-        if not draft_dir.exists():
-            return
+        deleted_files = []
 
-        deleted = 0
-        for draft_file in draft_dir.glob('batch_*_prompts.json'):
-            try:
-                with open(draft_file, 'r') as f:
-                    draft_data = json.load(f)
-                if draft_data.get('client_name') == client_name:
-                    draft_file.unlink()
-                    deleted += 1
-            except Exception:
-                pass
+        if draft_dir.exists():
+            for draft_file in draft_dir.glob('batch_*_prompts.json'):
+                try:
+                    with open(draft_file, 'r') as f:
+                        draft_data = json.load(f)
+                    if draft_data.get('client_name') == client_name:
+                        deleted_files.append(draft_file.name)
+                        draft_file.unlink()
+                except Exception:
+                    pass
 
-        # Also clean up batch metadata
+        # Clean up batch metadata locally
         batches_file = Path('data/prompt_batches.json')
         if batches_file.exists():
             try:
                 with open(batches_file, 'r') as f:
                     batches = json.load(f)
-                # Remove batches for this client
                 batches = {k: v for k, v in batches.items()
                            if v.get('client_name') != client_name}
                 with open(batches_file, 'w') as f:
                     json.dump(batches, f, indent=2, default=str)
             except Exception:
                 pass
+
+        # ── GCS cleanup — delete draft files from cloud storage ──
+        try:
+            from src.client_manager.gcs_sync import GCSClientSync
+            gcs = GCSClientSync()
+            bucket = gcs.bucket
+
+            # Delete matching draft files from GCS
+            for filename in deleted_files:
+                gcs_path = f"prompt-data/drafts/{filename}"
+                blob = bucket.blob(gcs_path)
+                if blob.exists():
+                    blob.delete()
+                    print(f"✓ Deleted gs://{bucket.name}/{gcs_path}")
+
+            # Re-upload cleaned batch metadata
+            if batches_file.exists():
+                blob = bucket.blob('prompt-data/prompt_batches.json')
+                blob.upload_from_filename(str(batches_file))
+                print(f"✓ Updated batch metadata in GCS")
+
+        except Exception as e:
+            print(f"⚠️  GCS cleanup failed (local cleanup still succeeded): {e}")
 
     def check_missing_files(self) -> Dict[str, List[str]]:
         """
