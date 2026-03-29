@@ -288,6 +288,9 @@ class PromptGenerator:
         _re.compile(r'\d+\s*(cad|usd|eur|gbp|aud)\s*(to|in)\s*(cad|usd|eur|gbp|aud)', _re.I),
         _re.compile(r'^\d+(\.\d+)?$'),               # bare numbers
         _re.compile(r'^.{1,2}$'),                     # 1–2 char keywords
+        _re.compile(r'(uah|cad|usd|eur)\s+(cad|usd|eur|uah)$', _re.I),  # currency pairs
+        _re.compile(r'[а-яёіїєґА-ЯЁІЇЄҐ]'),          # Cyrillic characters
+        _re.compile(r'^is\s+\w+\s+(christian|jewish|muslim|religious|gay|dead|alive)', _re.I),  # gossip queries
     ]
 
     @classmethod
