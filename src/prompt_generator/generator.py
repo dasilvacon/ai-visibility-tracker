@@ -411,7 +411,13 @@ class PromptGenerator:
         if isinstance(competitors_section, dict):
             competitor_names = [c.get('name', '') for c in competitors_section.get('expected', [])]
         elif isinstance(competitors_section, list):
-            competitor_names = competitors_section
+            # Items may be strings or dicts — handle both
+            competitor_names = []
+            for c in competitors_section:
+                if isinstance(c, str):
+                    competitor_names.append(c)
+                elif isinstance(c, dict):
+                    competitor_names.append(c.get('name', c.get('domain', str(c))))
         else:
             competitor_names = []
 
