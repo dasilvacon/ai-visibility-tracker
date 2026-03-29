@@ -79,10 +79,50 @@ class ClientRegistry:
         return None
 
     def remove_client(self, client_slug: str):
-        """Remove a client from the registry."""
+        """Remove a client from the registry and clean up prompt drafts."""
+        # Get client name before removing (needed for draft cleanup)
+        client_data = self.get_client(client_slug)
+        client_name = client_data.get('name', '') if client_data else ''
+
+        # Remove from registry
         registry = self._load_registry()
         registry['clients'] = [c for c in registry['clients'] if c['slug'] != client_slug]
         self._save_registry(registry)
+
+        # Clean up prompt drafts for this client
+        if client_name:
+            self._cleanup_prompt_drafts(client_name)
+
+    def _cleanup_prompt_drafts(self, client_name: str):
+        """Delete all prompt draft files belonging to a client."""
+        draft_dir = Path('data/prompt_generation/drafts')
+        if not draft_dir.exists():
+            return
+
+        deleted = 0
+        for draft_file in draft_dir.glob('batch_*_prompts.json'):
+            try:
+                with open(draft_file, 'r') as f:
+                    draft_data = json.load(f)
+                if draft_data.get('client_name') == client_name:
+                    draft_file.unlink()
+                    deleted += 1
+            except Exception:
+                pass
+
+        # Also clean up batch metadata
+        batches_file = Path('data/prompt_batches.json')
+        if batches_file.exists():
+            try:
+                with open(batches_file, 'r') as f:
+                    batches = json.load(f)
+                # Remove batches for this client
+                batches = {k: v for k, v in batches.items()
+                           if v.get('client_name') != client_name}
+                with open(batches_file, 'w') as f:
+                    json.dump(batches, f, indent=2, default=str)
+            except Exception:
+                pass
 
     def check_missing_files(self) -> Dict[str, List[str]]:
         """

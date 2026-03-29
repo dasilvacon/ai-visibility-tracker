@@ -477,6 +477,46 @@ def _render_review_section(client_name):
         st.info("No prompts generated yet. Use the controls above to generate your first batch.")
         return
 
+    # Clear all prompts option
+    with st.expander("Clear all prompts"):
+        st.caption("Delete all generated prompts and draft files for this client. This cannot be undone.")
+        confirm_text = st.text_input(
+            f"Type **{client_name}** to confirm",
+            key="clear_prompts_confirm",
+            placeholder=client_name,
+        )
+        if st.button("Delete all prompts", type="secondary", key="clear_prompts_btn",
+                      disabled=(confirm_text != client_name)):
+            # Clear session state
+            st.session_state.generated_prompts = []
+            if 'approval_manager' in st.session_state:
+                st.session_state.approval_manager.load_prompts([], default_status='pending')
+            # Delete draft files for this client
+            draft_dir = Path('data/prompt_generation/drafts')
+            if draft_dir.exists():
+                for df in draft_dir.glob('batch_*_prompts.json'):
+                    try:
+                        with open(df, 'r') as f:
+                            data = json.load(f)
+                        if data.get('client_name') == client_name:
+                            df.unlink()
+                    except Exception:
+                        pass
+            # Clean batch metadata
+            batches_file = Path('data/prompt_batches.json')
+            if batches_file.exists():
+                try:
+                    with open(batches_file, 'r') as f:
+                        batches = json.load(f)
+                    batches = {k: v for k, v in batches.items()
+                               if v.get('client_name') != client_name}
+                    with open(batches_file, 'w') as f:
+                        json.dump(batches, f, indent=2, default=str)
+                except Exception:
+                    pass
+            st.success(f"All prompts for {client_name} have been deleted.")
+            st.rerun()
+
     approval_mgr = st.session_state.approval_manager
 
     try:
