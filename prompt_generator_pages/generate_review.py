@@ -284,46 +284,30 @@ def _render_generation_section(client_name, batch_manager):
                                         placeholder="Context about why these prompts are being generated",
                                         height=80)
 
-    # Generation settings
-    with st.expander("⚙️ Generation Settings", expanded=True):
-        col1, col2 = st.columns(2)
+    # Generation settings — only show what matters
+    total_prompts = st.slider(
+        "Total Prompts to Generate", min_value=10, max_value=1000,
+        value=st.session_state.generation_config.get('total_prompts', 100), step=10
+    )
+    st.session_state.generation_config['total_prompts'] = total_prompts
 
-        with col1:
-            total_prompts = st.slider(
-                "Total Prompts to Generate", min_value=10, max_value=1000,
-                value=st.session_state.generation_config.get('total_prompts', 100), step=10
-            )
-            st.session_state.generation_config['total_prompts'] = total_prompts
-
-            ai_ratio = st.slider(
-                "AI Generation (%)", min_value=0, max_value=100,
-                value=int(st.session_state.generation_config.get('ai_ratio', 0.7) * 100), step=10
-            ) / 100
-            st.session_state.generation_config['ai_ratio'] = ai_ratio
-
-        with col2:
-            competitor_ratio = st.slider(
-                "Competitor Mentions (%)", min_value=0, max_value=50,
-                value=int(st.session_state.generation_config.get('competitor_ratio', 0.3) * 100), step=5
-            ) / 100
-            st.session_state.generation_config['competitor_ratio'] = competitor_ratio
-
-            dedup_mode = st.selectbox(
-                "Deduplication Mode",
-                ["Exact Match", "High Similarity (90%)", "Disabled"], index=1
-            )
-            if dedup_mode == "Exact Match":
-                dedup_threshold, enable_dedup = 1.0, True
-            elif dedup_mode == "High Similarity (90%)":
-                dedup_threshold, enable_dedup = 0.90, True
-            else:
-                dedup_threshold, enable_dedup = 0, False
+    # Fixed defaults (no need to expose these)
+    competitor_ratio = 0.30        # 30% competitor mentions
+    dedup_threshold = 0.90         # High similarity dedup
+    enable_dedup = True
 
     # Summary
     col1, col2 = st.columns([2, 1])
     with col1:
-        st.markdown(f"**{total_prompts}** prompts · **{int(competitor_ratio*100)}%** competitor mentions · "
-                     f"**{int(ai_ratio*100)}%** AI generated · **{dedup_mode}** dedup")
+        # Check if AI generation will be available
+        ai_available = False
+        try:
+            api_keys = st.secrets.get('api_keys', {})
+            ai_available = bool(api_keys.get('anthropic', ''))
+        except Exception:
+            pass
+        gen_mode = "AI-powered" if ai_available else "Template-based"
+        st.markdown(f"**{total_prompts}** prompts · **{gen_mode}** · 30% competitor mentions")
     with col2:
         personas_file_path = st.session_state.generation_config.get('personas_file')
         keywords_file_path = st.session_state.generation_config.get('keywords_file')
