@@ -138,9 +138,10 @@ class PromptBuilder:
     # description is used directly (not hardcoded trigger maps), making
     # this work for ANY industry.
     PERSONA_TEMPLATES = [
-        # Situation-driven
+        # Situation-driven (persona_context is a phrase like "interested in X"
+        # or "a caregiver for my aging parent")
         "I'm {persona_context} and I need {keyword}",
-        "As someone who {persona_context}, what {keyword} would you recommend",
+        "As someone {persona_context}, what {keyword} would you recommend",
         "I'm {persona_context} — where can I find {keyword}",
         "I need {keyword} because I'm {persona_context}",
         "What {keyword} would work for someone who is {persona_context}",
@@ -171,20 +172,39 @@ class PromptBuilder:
         Works with ANY persona structure — uses description, role,
         key_trigger, etc. Returns a phrase like "looking for Ukrainian
         clothing" or "a caregiver for my aging parent."
+
+        For auto-generated personas (topic-clustered), uses priority_topics
+        to create natural phrases like "interested in tactical backpacks"
+        instead of the full description which reads badly in templates.
         """
-        # Try description first (most universal field)
+        # For rich personas (OCO-style) — use caregiving_role or key_trigger
+        role = persona.get('caregiving_role', '') or persona.get('role', '')
+        if role:
+            trigger = persona.get('key_trigger', '')
+            if trigger:
+                return f"{role.lower()} dealing with {trigger.lower()}"
+            return role.lower()
+
+        # For auto-generated personas — use priority_topics for natural phrases
+        topics = persona.get('priority_topics', [])
+        if topics:
+            # Use the top topic to create a natural phrase
+            top_topic = topics[0]
+            return f"interested in {top_topic}"
+
+        # Fall back to description, but clean it up
         desc = persona.get('description', '')
         if desc:
+            # Skip auto-generated descriptions that start with "People searching for"
+            if desc.lower().startswith('people '):
+                name = persona.get('name', '')
+                if name:
+                    return f"a {name.lower()}"
             # Take first sentence or first 60 chars
             desc = desc.split('.')[0].strip()
             if len(desc) > 60:
                 desc = desc[:60].rsplit(' ', 1)[0]
             return desc.lower()
-
-        # Fall back to role/name
-        role = persona.get('caregiving_role', '') or persona.get('role', '')
-        if role:
-            return role.lower()
 
         name = persona.get('name', '')
         if name:
