@@ -1,39 +1,34 @@
 {
   "personas": [
     {
-      "id": "persona_buyer",
-      "name": "Active Buyer",
-      "weight": 0.4,
-      "description": "Consumers actively researching and ready to purchase Espresso Capital products",
-      "priority_topics": [
-        "product comparisons",
-        "reviews",
-        "pricing",
-        "best options"
-      ]
+      "id": "saas_founder_ceo",
+      "name": "SaaS Founder / CEO",
+      "weight": 0.3,
+      "description": "Founder or CEO of a B2B SaaS company with $5M+ ARR exploring non-dilutive financing to extend runway without giving up equity. Researching venture debt vs. raising another round, comparing lenders on speed, terms, and warrants."
     },
     {
-      "id": "persona_researcher",
-      "name": "Information Seeker",
-      "weight": 0.35,
-      "description": "People learning about Espresso Capital products and how to use them",
-      "priority_topics": [
-        "how to",
-        "guides",
-        "tutorials",
-        "tips"
-      ]
-    },
-    {
-      "id": "persona_explorer",
-      "name": "Brand Explorer",
+      "id": "startup_cfo_finance",
+      "name": "Startup CFO / VP Finance",
       "weight": 0.25,
-      "description": "Users discovering Espresso Capital and comparing with alternatives",
-      "priority_topics": [
-        "brand information",
-        "alternatives",
-        "comparisons"
-      ]
+      "description": "Finance leader at a growth-stage tech company evaluating debt structures \u2014 unitranche, second lien, revolving lines. Comparing cost of capital, covenants, amortization schedules, and term lengths across venture debt providers."
+    },
+    {
+      "id": "canadian_investor",
+      "name": "Canadian Investor (Private Credit)",
+      "weight": 0.2,
+      "description": "Canadian institutional or retail investor researching venture debt funds, private credit, or alternative fixed income for portfolio diversification. Evaluating fund performance, yield, risk profile, and track record of fund managers."
+    },
+    {
+      "id": "vc_advisor",
+      "name": "VC / Board Advisor",
+      "weight": 0.15,
+      "description": "Venture capital investor or board member advising a portfolio company on financing strategy. Researching which venture debt lenders are founder-friendly, fast to close, and fair on terms to recommend to their founders."
+    },
+    {
+      "id": "healthcare_tech_operator",
+      "name": "Healthcare / Vertical SaaS Operator",
+      "weight": 0.1,
+      "description": "Operator in healthcare tech or vertical SaaS \u2014 Espresso's most profitable lending verticals \u2014 researching growth financing options specific to their industry. May be less familiar with venture debt as a concept."
     }
   ]
 }
