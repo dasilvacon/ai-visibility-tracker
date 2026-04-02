@@ -127,7 +127,7 @@ def get_approved_prompts_from_gcs(client_name: str) -> Optional[str]:
 def get_client_prompts_file(client_name: str) -> Optional[str]:
     """
     Find the prompts CSV file for a client.
-    Priority: 1) GCS approved prompts, 2) local client file, 3) generated_prompts.csv
+    Priority: 1) local client-specific file, 2) GCS approved prompts, 3) generated_prompts.csv
 
     Args:
         client_name: Name of the client
@@ -135,43 +135,37 @@ def get_client_prompts_file(client_name: str) -> Optional[str]:
     Returns:
         Path to prompts file, or None if not found
     """
-    # First, try to get approved prompts from GCS (source of truth)
-    gcs_prompts = get_approved_prompts_from_gcs(client_name)
-    if gcs_prompts:
-        return gcs_prompts
-
     client_slug = client_name.replace(' ', '_').lower()
 
-    # Fallback: Check for client-specific prompts file in client subdirectory
+    # Priority 1: Client-specific prompts file (written by export button)
     client_prompts_file = Path(f'data/{client_slug}/{client_slug}_prompts.csv')
     if client_prompts_file.exists():
         return str(client_prompts_file)
 
-    # Fallback: Check main generated_prompts.csv
+    # Priority 2: Try to download from GCS (source of truth for cloud)
+    gcs_prompts = get_approved_prompts_from_gcs(client_name)
+    if gcs_prompts:
+        return gcs_prompts
+
+    # Priority 3: Check main generated_prompts.csv (legacy shared file)
     prompts_file = Path('data/generated_prompts.csv')
 
     if not prompts_file.exists():
         return None
 
-    # Check if client has prompts in the file
+    # Check if client has prompts in the shared file
     try:
         with open(prompts_file, 'r') as f:
             reader = csv.DictReader(f)
             fieldnames = reader.fieldnames or []
 
-            # If file has client_name column, check for matching client
             if 'client_name' in fieldnames:
                 for row in reader:
                     if row.get('client_name') == client_name:
-                        # Found at least one prompt for this client
                         return str(prompts_file)
             else:
-                # Legacy format without client_name column
-                # Check if there are any prompts at all
                 for row in reader:
                     if row.get('prompt_text'):
-                        # Has prompts but no client_name - return file
-                        # (user needs to re-export with client_name)
                         return str(prompts_file)
     except Exception:
         pass

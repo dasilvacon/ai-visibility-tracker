@@ -734,7 +734,21 @@ def _render_export_section(client_name):
                         row['client_name'] = client_name
                         writer.writerow(row)
 
-                # Also write to main CSV
+                # Write to client-specific prompts file (this is what run_report reads)
+                client_slug = client_name.replace(' ', '_').lower()
+                client_dir = Path(f'data/{client_slug}')
+                client_dir.mkdir(parents=True, exist_ok=True)
+                client_prompts_file = client_dir / f'{client_slug}_prompts.csv'
+
+                with open(client_prompts_file, 'w', newline='') as f:
+                    writer = csv.DictWriter(f, fieldnames=fieldnames)
+                    writer.writeheader()
+                    for prompt in approved_prompts:
+                        row = {k: prompt.get(k, '') for k in fieldnames}
+                        row['client_name'] = client_name
+                        writer.writerow(row)
+
+                # Also write to main CSV (legacy, keeps all clients in one file)
                 main_csv = Path('data/generated_prompts.csv')
                 existing_ids = set()
                 if main_csv.exists():
@@ -753,10 +767,20 @@ def _render_export_section(client_name):
                         row['client_name'] = client_name
                         writer.writerow(row)
 
+                # Upload client prompts file to GCS for persistence
+                try:
+                    from src.client_manager.gcs_sync import GCSClientSync
+                    gcs_sync = GCSClientSync()
+                    gcs_sync.upload_client_files(client_slug, {
+                        'prompts': str(client_prompts_file)
+                    })
+                except Exception as gcs_err:
+                    print(f"GCS upload of client prompts failed: {gcs_err}")
+
                 _sync_to_gcs()
-                st.success(f"✅ Exported {len(new_prompts)} new prompts to dashboard CSV")
-                if len(new_prompts) < len(approved_prompts):
-                    st.info(f"Skipped {len(approved_prompts) - len(new_prompts)} duplicates")
+                st.success(f"✅ Exported {len(approved_prompts)} prompts for {client_name}")
+                if new_prompts and len(new_prompts) < len(approved_prompts):
+                    st.info(f"{len(new_prompts)} new prompts added to shared library")
 
             except Exception as e:
                 st.error(f"❌ Export error: {str(e)}")
