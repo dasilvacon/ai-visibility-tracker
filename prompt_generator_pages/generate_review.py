@@ -846,9 +846,17 @@ def render():
         registry = ClientRegistry()
         client_data = registry.get_client(active_slug)
         if client_data:
+            new_client_name = client_data.get('name', active_slug)
             files = client_data.get('files', {})
+
+            # Detect client switch — clear prompts from previous client
+            old_client_name = st.session_state.get('generation_config', {}).get('client_name', '')
+            if old_client_name and old_client_name != new_client_name:
+                st.session_state.pop('generated_prompts', None)
+                st.session_state.pop('approval_manager', None)
+
             st.session_state.generation_config = {
-                'client_name': client_data.get('name', active_slug),
+                'client_name': new_client_name,
                 'personas_file': files.get('personas', ''),
                 'keywords_file': files.get('keywords', ''),
                 'brand_config_file': files.get('brand_config', ''),
