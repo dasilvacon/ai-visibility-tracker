@@ -27,6 +27,9 @@ data/results/
 !data/*_personas.json
 !data/*_brand_config.json
 !data/clients.json
+!data/*/*.json
+!data/*/*_prompts.csv
+!data/*/*_keywords.csv
 
 # Reports (with exceptions for deployment)
 data/reports/*

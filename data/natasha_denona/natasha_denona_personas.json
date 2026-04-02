@@ -1,0 +1,28 @@
+{
+  "personas": [
+    {
+      "id": "luxury_beauty_enthusiast",
+      "name": "Luxury Beauty Enthusiast",
+      "weight": 0.4,
+      "description": "Experienced beauty consumer who invests in high-end makeup and values quality, packaging, and brand prestige."
+    },
+    {
+      "id": "professional_makeup_artist",
+      "name": "Professional Makeup Artist",
+      "weight": 0.25,
+      "description": "Working MUA who needs reliable, high-pigment products for clients and values performance and versatility."
+    },
+    {
+      "id": "beauty_beginner",
+      "name": "Beauty Beginner (Aspirational)",
+      "weight": 0.2,
+      "description": "Newer to luxury makeup, researching whether premium products are worth the investment, influenced by tutorials and reviews."
+    },
+    {
+      "id": "specific_need_shopper",
+      "name": "Specific Need Shopper",
+      "weight": 0.15,
+      "description": "Shopping for a specific product type (e.g., bridal makeup, sensitive skin) and comparing options across brands."
+    }
+  ]
+}

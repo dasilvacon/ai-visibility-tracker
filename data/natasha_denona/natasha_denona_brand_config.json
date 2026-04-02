@@ -1,0 +1,51 @@
+{
+  "brand": {
+    "name": "Natasha Denona",
+    "domain": "natashadenona.com",
+    "industry": "Beauty & Cosmetics",
+    "description": "Luxury makeup brand known for high-performance eyeshadow palettes, face products, and lip products. Founded by makeup artist Natasha Denona."
+  },
+  "competitors": [
+    {
+      "name": "Pat McGrath Labs",
+      "domain": "patmcgrath.com"
+    },
+    {
+      "name": "Charlotte Tilbury",
+      "domain": "charlottetilbury.com"
+    },
+    {
+      "name": "Anastasia Beverly Hills",
+      "domain": "anastasiabeverlyhills.com"
+    },
+    {
+      "name": "Tom Ford Beauty",
+      "domain": "tomford.com"
+    },
+    {
+      "name": "Urban Decay",
+      "domain": "urbandecay.com"
+    },
+    {
+      "name": "MAC",
+      "domain": "maccosmetics.com"
+    },
+    {
+      "name": "Stila",
+      "domain": "stilacosmetics.com"
+    },
+    {
+      "name": "ColourPop",
+      "domain": "colourpop.com"
+    }
+  ],
+  "key_topics": [
+    "eyeshadow palettes",
+    "luxury makeup",
+    "professional makeup",
+    "neutral eyeshadow",
+    "shimmer eyeshadow",
+    "face palettes",
+    "lip products"
+  ]
+}
