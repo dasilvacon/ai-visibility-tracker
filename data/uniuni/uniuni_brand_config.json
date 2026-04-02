@@ -1,0 +1,51 @@
+{
+  "brand": {
+    "name": "UniUni",
+    "domain": "uniuni.com",
+    "industry": "Logistics & Last-Mile Delivery",
+    "description": "Canadian last-mile delivery company founded in 2019, using a crowd-sourced driver model (similar to Uber) for affordable, fast parcel delivery. Operates in 180+ cities across 9 Canadian provinces with major US expansion underway. Ranked #4 on Globe and Mail's Top Growing Firms with 12,854% three-year growth. Offers e-commerce shipping, cross-border US-to-Canada delivery, and same-day/next-day options."
+  },
+  "competitors": [
+    {
+      "name": "Intelcom",
+      "domain": "intelcom.ca"
+    },
+    {
+      "name": "GoBolt",
+      "domain": "gobolt.com"
+    },
+    {
+      "name": "Purolator",
+      "domain": "purolator.com"
+    },
+    {
+      "name": "Canpar",
+      "domain": "canpar.com"
+    },
+    {
+      "name": "TForce Logistics",
+      "domain": "tforcelogistics.com"
+    },
+    {
+      "name": "Veho",
+      "domain": "shipveho.com"
+    },
+    {
+      "name": "Canada Post",
+      "domain": "canadapost-postescanada.ca"
+    },
+    {
+      "name": "FedEx",
+      "domain": "fedex.com"
+    }
+  ],
+  "key_topics": [
+    "last-mile delivery",
+    "e-commerce shipping Canada",
+    "cross-border delivery US to Canada",
+    "same-day delivery",
+    "parcel tracking",
+    "crowdsourced delivery",
+    "affordable shipping"
+  ]
+}

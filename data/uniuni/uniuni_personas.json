@@ -1,0 +1,34 @@
+{
+  "personas": [
+    {
+      "id": "ecommerce_merchant",
+      "name": "E-Commerce Merchant",
+      "weight": 0.35,
+      "description": "Online store owner or operations manager evaluating shipping carriers for their Canadian or cross-border fulfillment. Comparing cost, speed, reliability, and tracking capabilities across last-mile providers."
+    },
+    {
+      "id": "consumer_recipient",
+      "name": "Online Shopper / Package Recipient",
+      "weight": 0.25,
+      "description": "Canadian consumer who has received or is expecting a UniUni delivery. Searching for tracking info, delivery status, or reviews of the delivery experience."
+    },
+    {
+      "id": "logistics_decision_maker",
+      "name": "Logistics / 3PL Decision Maker",
+      "weight": 0.2,
+      "description": "Supply chain or fulfillment professional evaluating last-mile partners for a 3PL, marketplace, or enterprise retailer. Focused on network coverage, SLAs, integration, and cost per delivery."
+    },
+    {
+      "id": "gig_driver_prospect",
+      "name": "Gig Driver / Delivery Partner",
+      "weight": 0.1,
+      "description": "Person exploring delivery driving opportunities, comparing UniUni driver pay and flexibility against Uber Eats, DoorDash, Amazon Flex, and other gig platforms."
+    },
+    {
+      "id": "cross_border_shipper",
+      "name": "Cross-Border Shipper",
+      "weight": 0.1,
+      "description": "US-based e-commerce brand or fulfillment center looking for reliable, affordable US-to-Canada shipping without customs headaches or multiple carrier handoffs."
+    }
+  ]
+}
