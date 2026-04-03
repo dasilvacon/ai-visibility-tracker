@@ -1,0 +1,489 @@
+prompt_id,client_name,persona,category,intent_type,prompt_text,expected_visibility_score,notes,batch_id,batch_name,date_added,status
+gen_1773401725576_8443,Say I Do,The Comparison Shopper,wedding,navigational,wedding websites with rsvp feature recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725595_9520,Say I Do,The Comparison Shopper,wedding,commercial,What makes minted rsvp names of couples different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725612_8558,Say I Do,The Comparison Shopper,wedding,navigational,What makes wedding website comparisons different from other options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725649_5581,Say I Do,The Comparison Shopper,wedding,commercial,wedding in a budget explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725681_3715,Say I Do,The Comparison Shopper,wedding,commercial,Best online invites with rsvp free,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725694_7746,Say I Do,The Comparison Shopper,wedding,navigational,Can someone explain why have a wedding website,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725696_1007,Say I Do,The Comparison Shopper,wedding,commercial,What makes web invitations different from other options specifically for zola vs say i do,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725737_3284,Say I Do,The Comparison Shopper,wedding,navigational,Trying to learn about wedding websites with rsvp feature,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725755_4689,Say I Do,The Comparison Shopper,wedding,navigational,Can someone explain q and a for wedding website,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725777_9428,Say I Do,The Comparison Shopper,wedding,commercial,I need to understand withjoy pricing,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725794_6894,Say I Do,The Comparison Shopper,wedding,commercial,What makes platform for wedding ceremony different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725818_9228,Say I Do,The Comparison Shopper,wedding,navigational,Can someone explain zola wedding website reviews,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725836_7006,Say I Do,The Comparison Shopper,wedding,navigational,free website guys reviews guide,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725867_3920,Say I Do,The Comparison Shopper,wedding,informational,Best when do u send out save the dates,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725887_7033,Say I Do,The Comparison Shopper,wedding,commercial,save the date wedding examples recommendations focused on withjoy reviews,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725893_3169,Say I Do,The Comparison Shopper,wedding,commercial,Trying to learn about send your own invitations online,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725924_1815,Say I Do,The Comparison Shopper,wedding,commercial,Trying to learn about rsvp platforms,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725943_9254,Say I Do,The Comparison Shopper,wedding,informational,Trying to learn about how far in advance do you send wedding invites,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725966_3460,Say I Do,The Comparison Shopper,wedding,commercial,wedding table plan who sits where recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726000_6510,Say I Do,The Comparison Shopper,wedding,commercial,Looking for information on hate wedding planning,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726037_5952,Say I Do,The Comparison Shopper,wedding,commercial,Trying to learn about with joy pricing,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726045_2688,Say I Do,The Comparison Shopper,wedding,commercial,Best so you said yes,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726063_9309,Say I Do,The Comparison Shopper,wedding,commercial,wedding planning app free explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726081_3467,Say I Do,The Comparison Shopper,wedding,navigational,what is a correct format of the website links explained focused on platform reviews,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726111_9027,Say I Do,The Comparison Shopper,wedding,commercial,wedding check list explained,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726116_8016,Say I Do,The Comparison Shopper,wedding,navigational,wedding free website explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726121_4774,Say I Do,The Comparison Shopper,wedding,navigational,simple rsvp website free guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726140_8220,Say I Do,The Comparison Shopper,wedding,commercial,I need to understand artinya save the date specifically for platform reviews,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726152_3216,Say I Do,The Comparison Shopper,wedding,commercial,What makes free save the date email template different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726206_3900,Say I Do,The Comparison Shopper,wedding,commercial,Looking for information on wedding invitations with rsvp cards,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726230_9899,Say I Do,The Comparison Shopper,wedding,informational,Looking for information on what is the best wedding planner book,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726272_2238,Say I Do,The Comparison Shopper,wedding,navigational,joy wedding website reviews explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726293_2201,Say I Do,The Comparison Shopper,wedding,informational,Can someone explain when do i send out wedding invites,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726338_7162,Say I Do,The Comparison Shopper,wedding,commercial,Can someone explain wedding checklis,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726358_1797,Say I Do,The Comparison Shopper,wedding,navigational,Looking for information on wedding website comparisons,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726395_2391,Say I Do,The Comparison Shopper,wedding,commercial,Top save the date postcard examples options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726440_7576,Say I Do,The Comparison Shopper,wedding,commercial,withjoy vs zola guide,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726458_7354,Say I Do,The Comparison Shopper,wedding,informational,how to do a wedding on a budget recommendations,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726468_3453,Say I Do,The Comparison Shopper,wedding,commercial,Trying to learn about online guest list,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726490_1102,Say I Do,The Comparison Shopper,wedding,informational,Can someone explain how to send a save the date email focused on competitor pricing,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726506_1611,Say I Do,The Comparison Shopper,wedding,commercial,we still do wedding invitations explained specifically for platform reviews,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726522_4080,Say I Do,The Comparison Shopper,wedding,informational,I need to understand couples app review focused on competitor pricing,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726538_2515,Say I Do,The Comparison Shopper,wedding,informational,Looking for information on what to say on a wedding invitation,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726564_4545,Say I Do,The Comparison Shopper,wedding,commercial,the night before wedding invite recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726575_9064,Say I Do,The Comparison Shopper,wedding,navigational,I need to understand are wedding websites free,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726587_2690,Say I Do,The Comparison Shopper,wedding,commercial,seating plan app recommendations focused on wedding website comparisons,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726607_3720,Say I Do,The Comparison Shopper,wedding,commercial,Can someone explain common wedding questions from guests,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726645_3986,Say I Do,The Comparison Shopper,wedding,navigational,Top with joy wedding website reviews options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726674_7732,Say I Do,The Comparison Shopper,wedding,informational,I need to understand how far in advance do you send out wedding invitations,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726711_5963,Say I Do,The Comparison Shopper,wedding,commercial,I need to understand save the date verbiage,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726726_9963,Say I Do,The Comparison Shopper,wedding,commercial,the perfect wedding checklist guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726778_1096,Say I Do,The Comparison Shopper,wedding,commercial,Top design online wedding card options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726804_1707,Say I Do,The Comparison Shopper,wedding,commercial,details card wedding invitation guide,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726831_2100,Say I Do,The Comparison Shopper,wedding,navigational,Top wedding website comparisons options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726855_9846,Say I Do,The Comparison Shopper,wedding,informational,Top how to word save the dates options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726886_9267,Say I Do,The Comparison Shopper,wedding,navigational,Trying to learn about what to include in wedding website,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726905_4458,Say I Do,The Comparison Shopper,wedding,commercial,Can someone explain registry link,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726919_4903,Say I Do,The Comparison Shopper,wedding,commercial,What makes e invite free online different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726962_3534,Say I Do,The Comparison Shopper,wedding,navigational,Looking for information on wedding help websites,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727018_6329,Say I Do,The Comparison Shopper,wedding,commercial,Best wedding invatation,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727026_7516,Say I Do,The Comparison Shopper,wedding,navigational,Trying to learn about welcome messages for wedding websites,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727059_1959,Say I Do,The Comparison Shopper,wedding,navigational,I need to understand zola or the knot for wedding website,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727092_7458,Say I Do,The Comparison Shopper,wedding,navigational,Top build your own wedding website options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727193_8489,Say I Do,The Comparison Shopper,wedding,commercial,www.withjoy.com/ explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727213_9918,Say I Do,The Comparison Shopper,wedding,navigational,I need to understand wedding website comparisons,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727235_8838,Say I Do,The Comparison Shopper,wedding,informational,Can someone explain what does ravp,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727269_5887,Say I Do,The Comparison Shopper,wedding,commercial,What makes wedding invitarions different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727287_7808,Say I Do,The Comparison Shopper,wedding,commercial,I need to understand wedding to do list uk,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727302_6790,Say I Do,The Comparison Shopper,wedding,commercial,online rsvp examples guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727372_8216,Say I Do,The Comparison Shopper,wedding,commercial,Top wedding photo hashtags options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727414_8898,Say I Do,The Comparison Shopper,wedding,commercial,Best virtual save the dates free,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727429_3006,Say I Do,The Comparison Shopper,wedding,commercial,What makes email and text invitations different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727454_1541,Say I Do,The Comparison Shopper,wedding,commercial,Trying to learn about questions for rsvp wedding,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727498_1588,Say I Do,The Comparison Shopper,wedding,navigational,Can someone explain wedding website comparisons,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727565_1562,Say I Do,The Comparison Shopper,wedding,informational,Can someone explain i do now i don't reviews,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727584_4831,Say I Do,The Comparison Shopper,wedding,informational,how soon should you send out bridal shower invitations explained,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727614_1631,Say I Do,The Comparison Shopper,wedding,commercial,Can someone explain party guest list app,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727646_6453,Say I Do,The Comparison Shopper,wedding,commercial,I need to understand do it yourself save the dates specifically for the knot alternatives,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727697_6680,Say I Do,The Comparison Shopper,wedding,informational,What makes how to reply to a wedding invitation different from other options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727743_2247,Say I Do,The Comparison Shopper,wedding,commercial,Best gift cards for wedding registry,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727772_3337,Say I Do,The Comparison Shopper,wedding,commercial,weding planner guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727795_3260,Say I Do,The Comparison Shopper,wedding,commercial,withjoy pricing recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727833_4976,Say I Do,The Comparison Shopper,wedding,navigational,wedding websites with rsvp feature guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727864_1833,Say I Do,The Digital Invites Planner,wedding,commercial,Top things to put on your wedding registry options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727888_5123,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand zola online invitations focused on online invitation maker,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727934_7219,Say I Do,The Digital Invites Planner,wedding,commercial,rsvp wedding online explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727960_2814,Say I Do,The Digital Invites Planner,wedding,informational,how to save money on wedding invitations guide,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727981_6918,Say I Do,The Digital Invites Planner,wedding,commercial,Trying to learn about online hochzeitsplaner specifically for online invitation maker,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728039_1707,Say I Do,The Digital Invites Planner,wedding,commercial,Best wedding sotes,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728088_3260,Say I Do,The Digital Invites Planner,wedding,commercial,Top digital save the date options,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728109_9037,Say I Do,The Digital Invites Planner,wedding,commercial,Best wedding day photos,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728139_8198,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on save the date wedding invitation,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728176_2799,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand e invite sites,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728214_2793,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on paperless wedding invitation examples,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728262_1589,Say I Do,The Digital Invites Planner,wedding,commercial,free online email invitation templates recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728326_8798,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand simple wedding invitations wording,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728372_8609,Say I Do,The Digital Invites Planner,wedding,commercial,Best guest wedding photos,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728401_9896,Say I Do,The Digital Invites Planner,wedding,informational,What makes how far in advance to mail wedding invitations different from other options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728459_6876,Say I Do,The Digital Invites Planner,wedding,informational,Trying to learn about when to send wedding invites uk,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728499_6871,Say I Do,The Digital Invites Planner,wedding,commercial,rsvp invitation explained,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728531_9134,Say I Do,The Digital Invites Planner,wedding,commercial,What makes electronic invites with rsvp different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728583_1668,Say I Do,The Digital Invites Planner,wedding,commercial,Can someone explain online free wedding invitations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728627_9198,Say I Do,The Digital Invites Planner,wedding,commercial,australia wedding explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728657_9122,Say I Do,The Digital Invites Planner,wedding,commercial,Trying to learn about best electronic invite,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728688_7916,Say I Do,The Digital Invites Planner,wedding,informational,Can someone explain how long in advance to send wedding invites,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728731_6108,Say I Do,The Digital Invites Planner,wedding,informational,Best how to word registry information on wedding invitation,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728776_7083,Say I Do,The Digital Invites Planner,wedding,commercial,Top wedding invites with rsvp online options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728828_5539,Say I Do,The Digital Invites Planner,wedding,informational,Top how to tell someone you can't go to their wedding last minute options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728899_1256,Say I Do,The Digital Invites Planner,wedding,informational,Best when to send wedding invitations,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728948_8298,Say I Do,The Digital Invites Planner,wedding,transactional,What makes order of the day ideas different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729000_5556,Say I Do,The Digital Invites Planner,wedding,commercial,What makes save the date wedding invitations online different from other options specifically for save the date cards,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729100_6444,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on seating chart maker for wedding,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729147_2230,Say I Do,The Digital Invites Planner,wedding,commercial,wedding.invitation explained focused on photo wedding invitations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729243_3070,Say I Do,The Digital Invites Planner,wedding,informational,I need to understand when should you send save the dates for a wedding focused on photo wedding invitations,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729384_5957,Say I Do,The Digital Invites Planner,wedding,commercial,Can someone explain best way to send wedding invitations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729433_7588,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand things to organise for a wedding,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729496_9649,Say I Do,The Digital Invites Planner,wedding,navigational,Can someone explain event rsvp website,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729536_9454,Say I Do,The Digital Invites Planner,wedding,informational,Top when do you send save the dates for wedding options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729569_8027,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand online party invitations with rsvp,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729619_5715,Say I Do,The Digital Invites Planner,wedding,commercial,wedding rsvp date calculator explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729656_1907,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand best online invitation maker,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729704_2010,Say I Do,The Digital Invites Planner,wedding,navigational,What makes wedding websites best different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729737_8801,Say I Do,The Digital Invites Planner,wedding,informational,Top when rsvp for wedding are due options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729781_7474,Say I Do,The Digital Invites Planner,wedding,informational,What makes how to save money on a wedding venue different from other options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729890_4835,Say I Do,The Digital Invites Planner,wedding,navigational,Top website for party rsvp options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729933_7839,Say I Do,The Digital Invites Planner,wedding,commercial,Can someone explain wedding registry greeting,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730006_7491,Say I Do,The Digital Invites Planner,wedding,commercial,What makes best e invitation sites different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730043_9493,Say I Do,The Digital Invites Planner,wedding,transactional,Trying to learn about order for wedding reception,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730075_3853,Say I Do,The Digital Invites Planner,wedding,informational,when should a wedding rsvp be due explained,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730128_5180,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on free invitations with rsvp,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730182_6807,Say I Do,The Digital Invites Planner,wedding,commercial,Can someone explain invitations for wedding wording,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730234_3963,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand ecard invitations,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730285_9170,Say I Do,The Digital Invites Planner,wedding,commercial,Best wedding to do list uk focused on save the date cards,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730340_1403,Say I Do,The Digital Invites Planner,wedding,commercial,wedding i do explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730358_1159,Say I Do,The Digital Invites Planner,wedding,commercial,Trying to learn about rsvp.,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730394_2788,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand create wedding invitation,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730440_9457,Say I Do,The Digital Invites Planner,wedding,commercial,What makes free online invitations with link different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730535_5197,Say I Do,The Digital Invites Planner,wedding,informational,What makes how far ahead should wedding invitations be sent different from other options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730602_1920,Say I Do,The Digital Invites Planner,wedding,commercial,wedding packages templates explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730704_5696,Say I Do,The Digital Invites Planner,wedding,informational,What makes when to send save the dates for weddings different from other options,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730759_1285,Say I Do,The Digital Invites Planner,wedding,commercial,What makes free wedding cards different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730801_8155,Say I Do,The Digital Invites Planner,wedding,commercial,Can someone explain save the date with dog,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730857_4193,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on where to have a wedding registry,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730941_9388,Say I Do,The Digital Invites Planner,wedding,informational,Best how to ask for cash for wedding,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730982_6050,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand invitation qr code specifically for wedding invitation etiquette,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731057_1067,Say I Do,The Digital Invites Planner,wedding,commercial,the bay canada wedding registry guide specifically for save the date cards,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731106_5875,Say I Do,The Digital Invites Planner,wedding,commercial,Best qr code the knot,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731204_3093,Say I Do,The Digital Invites Planner,wedding,commercial,Top cash wedding registry wording options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731249_6346,Say I Do,The Digital Invites Planner,wedding,informational,Trying to learn about when do you send out save the dates specifically for save the date tips,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731328_9037,Say I Do,The Digital Invites Planner,wedding,commercial,wedding countdown explained focused on online invitation maker,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731387_1587,Say I Do,The Digital Invites Planner,wedding,informational,What makes how long to give rsvp for wedding uk different from other options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731443_2254,Say I Do,The Digital Invites Planner,wedding,commercial,Trying to learn about wedding planned,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731489_1431,Say I Do,The Digital Invites Planner,wedding,navigational,What makes what are the best wedding websites different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731553_2896,Say I Do,The Digital Invites Planner,wedding,commercial,Can someone explain wedding page,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731591_7698,Say I Do,The Digital Invites Planner,wedding,commercial,modern save the date wedding recommendations,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731668_8774,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on saves the date specifically for save the date tips,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731745_9700,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand save the date cards online,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731801_1505,Say I Do,The Digital Invites Planner,wedding,commercial,wedding gift site recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731842_5476,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand e wedding invite,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731887_6015,Say I Do,The Digital Invites Planner,wedding,commercial,Can someone explain friends wedding invitation,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731942_6484,Say I Do,The Digital Invites Planner,wedding,navigational,Looking for information on wedding planner website free,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731982_4840,Say I Do,The Digital Invites Planner,wedding,informational,What makes how to do a digital invitation different from other options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732052_2061,Say I Do,The Digital Invites Planner,wedding,commercial,Can someone explain wedding wishing well australia,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732111_4438,Say I Do,The Digital Invites Planner,wedding,navigational,best invitation websites free recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732155_9722,Say I Do,The Digital Invites Planner,wedding,commercial,Trying to learn about virtual wedding invitations with rsvp,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732224_3107,Say I Do,The Digital Invites Planner,wedding,commercial,What makes destination wedding invitation wording different from other options specifically for invitation design,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732310_9899,Say I Do,The Digital Invites Planner,wedding,informational,Can someone explain how to send a save the date email,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732360_4462,Say I Do,The Digital Invites Planner,wedding,informational,Can someone explain how to add to amazon registry,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732411_2356,Say I Do,The Digital Invites Planner,wedding,commercial,Top lovely weddings options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732509_9705,Say I Do,The First-Time Planner,wedding,navigational,Trying to learn about how to ask for money on wedding website,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732583_6924,Say I Do,The First-Time Planner,wedding,commercial,Looking for information on wedding registry calgary,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732637_7769,Say I Do,The First-Time Planner,wedding,informational,Can someone explain how soon do you need rsvp for wedding,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732746_6186,Say I Do,The First-Time Planner,wedding,navigational,Best best free wedding websites canada,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732827_5524,Say I Do,The First-Time Planner,wedding,commercial,Trying to learn about find a wedding date specifically for how early to send invitations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732899_7319,Say I Do,The First-Time Planner,wedding,commercial,I need to understand best wedding invitations canada,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732955_6384,Say I Do,The First-Time Planner,wedding,commercial,Trying to learn about save the date wedding invites,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733015_8356,Say I Do,The First-Time Planner,wedding,commercial,wedding invitation online free recommendations,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733067_4233,Say I Do,The First-Time Planner,wedding,informational,Trying to learn about how far in advance should you send out bridal shower invitations,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733207_4475,Say I Do,The First-Time Planner,wedding,commercial,6 months until wedding explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733237_1955,Say I Do,The First-Time Planner,wedding,commercial,Trying to learn about hate wedding planning,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733280_7912,Say I Do,The First-Time Planner,wedding,commercial,Best the best wedding planner,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733323_2216,Say I Do,The First-Time Planner,wedding,commercial,where to have wedding registry guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733356_6926,Say I Do,The First-Time Planner,wedding,navigational,wedding website titles recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733401_2859,Say I Do,The First-Time Planner,wedding,navigational,Looking for information on registry note on wedding website,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733462_8311,Say I Do,The First-Time Planner,wedding,informational,Trying to learn about what information needs to be on a wedding invitation,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733525_2928,Say I Do,The First-Time Planner,wedding,informational,I need to understand how to collect pictures from friends,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733596_7152,Say I Do,The First-Time Planner,wedding,commercial,What makes wedding seating chart maker free different from other options specifically for wedding planning tips,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733739_3853,Say I Do,The First-Time Planner,wedding,informational,Can someone explain how far in advance to mail wedding invitations,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733846_8228,Say I Do,The First-Time Planner,wedding,informational,What makes when do invitations go out for a wedding different from other options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734051_4401,Say I Do,The First-Time Planner,wedding,navigational,Looking for information on wedding information website specifically for wedding planning on a budget,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734129_9915,Say I Do,The First-Time Planner,wedding,commercial,What makes registry wedding nz different from other options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734285_5572,Say I Do,The First-Time Planner,wedding,commercial,What makes where to send wedding invites for free stuff different from other options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734357_5009,Say I Do,The First-Time Planner,wedding,navigational,Top weddingwebsite options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734398_5559,Say I Do,The First-Time Planner,wedding,commercial,wedding picture app for guests recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734526_8616,Say I Do,The First-Time Planner,wedding,navigational,Looking for information on when to make wedding website,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734672_9188,Say I Do,The First-Time Planner,wedding,informational,Trying to learn about what do i need to include on my wedding invitation,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734736_8608,Say I Do,The First-Time Planner,wedding,commercial,Trying to learn about honeymoon fund site,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734784_9644,Say I Do,The First-Time Planner,wedding,informational,when do people send out wedding invites explained,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734849_9664,Say I Do,The First-Time Planner,wedding,navigational,Looking for information on best stores for wedding registry focused on how early to send invitations,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734993_2832,Say I Do,The First-Time Planner,wedding,informational,how to create a rsvp qr code recommendations specifically for wedding timeline,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735082_7394,Say I Do,The First-Time Planner,wedding,commercial,Looking for information on custom wedding thank you cards,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735146_9640,Say I Do,The First-Time Planner,wedding,commercial,best places to register for wedding gifts explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735212_2493,Say I Do,The First-Time Planner,wedding,navigational,Top examples of how we met stories for wedding website options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735341_1119,Say I Do,The First-Time Planner,wedding,navigational,wedding website wording recommendations,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735381_9937,Say I Do,The First-Time Planner,wedding,commercial,Looking for information on day of wedding planner checklist,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735436_4865,Say I Do,The First-Time Planner,wedding,commercial,Top cost of wedding invitations options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735533_6008,Say I Do,The First-Time Planner,wedding,informational,Looking for information on how to get qr code for the knot specifically for wedding planning tips,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735622_3098,Say I Do,The First-Time Planner,wedding,navigational,free rsvp event website recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735802_6992,Say I Do,The First-Time Planner,wedding,commercial,create a wedding email recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735843_4967,Say I Do,The First-Time Planner,wedding,informational,Looking for information on how much to give for wedding wishing well australia,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735927_2770,Say I Do,The First-Time Planner,wedding,navigational,danielle and josh wedding website explained focused on wedding transportation tips,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736023_5331,Say I Do,The First-Time Planner,wedding,informational,Can someone explain how to say thank you for money wedding,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736107_3364,Say I Do,The First-Time Planner,wedding,navigational,questions to add to wedding website guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736161_1391,Say I Do,The First-Time Planner,wedding,informational,Can someone explain what to write on honeymoon fund,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736234_2124,Say I Do,The First-Time Planner,wedding,commercial,What makes registry greeting examples wedding different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736311_2092,Say I Do,The First-Time Planner,wedding,navigational,I need to understand qr code for wedding website,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736378_8972,Say I Do,The First-Time Planner,wedding,commercial,Looking for information on wedding invitations packages,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736518_1449,Say I Do,The First-Time Planner,wedding,commercial,reply to a wedding invitation recommendations focused on wedding planning platform,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736611_4537,Say I Do,The First-Time Planner,wedding,commercial,wedding q&a examples explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736657_9094,Say I Do,The First-Time Planner,wedding,navigational,I need to understand wedding website to rsvp,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736787_2235,Say I Do,The First-Time Planner,wedding,informational,Looking for information on what to say in a wedding card,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736901_8346,Say I Do,The First-Time Planner,wedding,navigational,What makes bride websites different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736970_8461,Say I Do,The First-Time Planner,wedding,navigational,What makes cocktail attire description for wedding website different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737080_3202,Say I Do,The First-Time Planner,wedding,informational,Top when should guest rsvp by for a wedding options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737141_5652,Say I Do,The First-Time Planner,wedding,commercial,Looking for information on best online invitations,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737214_4597,Say I Do,The First-Time Planner,wedding,commercial,Best planning wedding,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737254_1918,Say I Do,The First-Time Planner,wedding,commercial,Trying to learn about wedding invitations with online rsvp,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737464_6786,Say I Do,The Guest Experience Optimizer,wedding,commercial,online guest list guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737509_6943,Say I Do,The Guest Experience Optimizer,wedding,commercial,I need to understand the guest photo sharing,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737579_4563,Say I Do,The Guest Experience Optimizer,wedding,commercial,Best custom check list,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737612_9331,Say I Do,The Guest Experience Optimizer,wedding,commercial,Top save the date email invite options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737663_9758,Say I Do,The Guest Experience Optimizer,wedding,commercial,wedding rsvp tracker recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737716_8395,Say I Do,The Guest Experience Optimizer,wedding,commercial,Looking for information on online wedding planner,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737783_8382,Say I Do,The Guest Experience Optimizer,wedding,informational,Looking for information on how to do rsvp online focused on wedding photo sharing,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737884_8418,Say I Do,The Guest Experience Optimizer,wedding,commercial,Looking for information on online invitations with payment options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737963_5290,Say I Do,The Guest Experience Optimizer,wedding,commercial,I need to understand i saiy,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738002_7445,Say I Do,The Guest Experience Optimizer,wedding,navigational,Best wedding website builder,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738082_3054,Say I Do,The Guest Experience Optimizer,wedding,informational,Trying to learn about how to invite a guest for an event,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738163_2828,Say I Do,The Guest Experience Optimizer,wedding,commercial,Trying to learn about guest manager,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738210_6606,Say I Do,The Guest Experience Optimizer,wedding,informational,how to send a wedding invitation guide,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738271_1528,Say I Do,The Guest Experience Optimizer,wedding,commercial,wedding seating app guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738435_5795,Say I Do,The Guest Experience Optimizer,wedding,commercial,wedding invite dietary requirements guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738500_7537,Say I Do,The Guest Experience Optimizer,wedding,commercial,I need to understand table seating plan ideas,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738642_6374,Say I Do,The Guest Experience Optimizer,wedding,commercial,Can someone explain planning a wedding abroad,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738693_5059,Say I Do,The Guest Experience Optimizer,wedding,commercial,What makes clever save the date ideas different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738767_1235,Say I Do,The Guest Experience Optimizer,wedding,commercial,What makes wedding registry card wording different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738857_9942,Say I Do,The Guest Experience Optimizer,wedding,informational,I need to understand how long should you give guests to rsvp to wedding,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738951_3361,Say I Do,The Guest Experience Optimizer,wedding,commercial,What makes wedding checklist app different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739017_8791,Say I Do,The Guest Experience Optimizer,wedding,commercial,Trying to learn about save the date examples for wedding,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739094_5369,Say I Do,The Guest Experience Optimizer,wedding,commercial,wedding gift list name explained,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739135_7484,Say I Do,The Guest Experience Optimizer,wedding,informational,I need to understand when do rsvps need to be returned specifically for seating planner,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739316_1484,Say I Do,The Guest Experience Optimizer,wedding,navigational,"What makes joy - wedding website, guest list, invitations & more different from other options",6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739494_2697,Say I Do,The Guest Experience Optimizer,wedding,informational,Trying to learn about how to make wedding guest list,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739570_5749,Say I Do,The Guest Experience Optimizer,wedding,commercial,wedding e card online guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739621_5918,Say I Do,The Guest Experience Optimizer,wedding,navigational,Can someone explain wedding invitation website templates free,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739691_6113,Say I Do,The Guest Experience Optimizer,wedding,navigational,Can someone explain easy weddings login,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739798_6279,Say I Do,The Guest Experience Optimizer,wedding,informational,Top minted how to add couples to guest list options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739887_2213,Say I Do,The Guest Experience Optimizer,wedding,commercial,Can someone explain list wedding planner,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739958_7495,Say I Do,The Guest Experience Optimizer,wedding,informational,Can someone explain how long before wedding should you send invites,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740054_9548,Say I Do,The Guest Experience Optimizer,wedding,commercial,Can someone explain rsvp options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740100_5377,Say I Do,The Guest Experience Optimizer,wedding,commercial,Best the knot vs minted,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740150_8829,Say I Do,The Guest Experience Optimizer,wedding,commercial,What makes wedding guest list organizer different from other options focused on wedding photo sharing,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740284_4957,Say I Do,The Guest Experience Optimizer,wedding,commercial,wedding seating plan top table explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740333_4792,Say I Do,The Guest Experience Optimizer,wedding,navigational,Best faq questions for wedding website,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740387_7891,Say I Do,The Guest Experience Optimizer,wedding,commercial,thanks for wedding invitation explained,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740449_8974,Say I Do,The Guest Experience Optimizer,wedding,commercial,guest list example recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740510_7440,Say I Do,The Guest Experience Optimizer,wedding,commercial,Trying to learn about virtual wedding planner,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740568_8613,Say I Do,The Guest Experience Optimizer,wedding,commercial,registery explained,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740612_6153,Say I Do,The Guest Experience Optimizer,wedding,informational,Trying to learn about how to ask about dietary restrictions,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740710_1476,Say I Do,The Guest Experience Optimizer,wedding,navigational,free rsvp website for party recommendations,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740857_9720,Say I Do,The Guest Experience Optimizer,wedding,commercial,What makes online invitations with payment options different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740945_8371,Say I Do,The Guest Experience Optimizer,wedding,commercial,Looking for information on interactive digital invitations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741030_4420,Say I Do,The Guest Experience Optimizer,wedding,commercial,Top rsvp services options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741078_9481,Say I Do,The Guest Experience Optimizer,wedding,commercial,Best wedding story examples,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741124_1444,Say I Do,The Guest Experience Optimizer,wedding,commercial,best time to send wedding invitations guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741319_8639,Say I Do,The Non-Traditional Couple,wedding,commercial,Looking for information on marriage invitation email,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741400_3095,Say I Do,The Non-Traditional Couple,wedding,commercial,I need to understand best way to share wedding photos,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741567_7668,Say I Do,The Non-Traditional Couple,wedding,informational,Best how to collect wedding photos from guests,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741643_3209,Say I Do,The Non-Traditional Couple,wedding,commercial,Can someone explain wedding planning platform,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741712_9685,Say I Do,The Non-Traditional Couple,wedding,commercial,Top the ultimate wedding planning checklist options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741789_8935,Say I Do,The Non-Traditional Couple,wedding,commercial,wedding ceremony ideas to involve guests explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741855_2323,Say I Do,The Non-Traditional Couple,wedding,commercial,creative unique wedding invitation wording guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741931_5259,Say I Do,The Non-Traditional Couple,wedding,commercial,Can someone explain platform for wedding ceremony,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401742044_2733,Say I Do,The Non-Traditional Couple,wedding,informational,Can someone explain how to rsvp to a wedding invitation,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401742117_4136,Say I Do,The Non-Traditional Couple,wedding,commercial,I need to understand average wedding party size,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401742248_4085,Say I Do,The Non-Traditional Couple,wedding,commercial,Top wedding ceremony seating arrangements options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401742314_9979,Say I Do,The Non-Traditional Couple,wedding,commercial,What makes online rsvp with meal choice different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401742418_5706,Say I Do,The Non-Traditional Couple,wedding,commercial,I need to understand create wedding color palette,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401742494_1116,Say I Do,The Non-Traditional Couple,wedding,navigational,I need to understand joy wedding websites focused on alternative wedding ideas,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401742621_5301,Say I Do,The Non-Traditional Couple,wedding,navigational,free wedding planning websites explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401742674_2367,Say I Do,The Non-Traditional Couple,wedding,commercial,Top make your own wedding invitations online free options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401742766_1789,Say I Do,The Non-Traditional Couple,wedding,commercial,Trying to learn about planning a cheap wedding focused on alternative wedding ideas,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401742880_8999,Say I Do,The Non-Traditional Couple,wedding,informational,how to create qr code for invitation recommendations,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401742972_2924,Say I Do,The Non-Traditional Couple,wedding,commercial,I need to understand best wedding planning apps australia,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743052_5480,Say I Do,The Non-Traditional Couple,wedding,informational,Can someone explain what to include on save the date,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743129_9176,Say I Do,The Non-Traditional Couple,wedding,commercial,What makes respond to wedding invitation different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743216_9641,Say I Do,The Non-Traditional Couple,wedding,commercial,Best rsvp for or to,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743264_3174,Say I Do,The Non-Traditional Couple,wedding,commercial,the best wedding planning app recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743341_7250,Say I Do,The Non-Traditional Couple,wedding,informational,Top wedding planning guide checklist options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743420_3956,Say I Do,The Non-Traditional Couple,wedding,informational,how to ask for cash for wedding gift guide,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743492_2831,Say I Do,The Non-Traditional Couple,wedding,commercial,fun questions to ask on wedding rsvp recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743643_8634,Say I Do,The Non-Traditional Couple,wedding,commercial,Trying to learn about sending invitation via email,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743735_5473,Say I Do,The Non-Traditional Couple,wedding,commercial,What makes table planning different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743829_3257,Say I Do,The Non-Traditional Couple,wedding,commercial,I need to understand a wedding wishing well,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743963_7334,Say I Do,The Non-Traditional Couple,wedding,informational,Looking for information on when to send out rsvp for wedding,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401744047_3070,Say I Do,The Non-Traditional Couple,wedding,commercial,What makes free wedding planning checklist different from other options specifically for elopement planning,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401744194_7272,Say I Do,The Non-Traditional Couple,wedding,commercial,Can someone explain hate wedding planning,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401744274_8625,Say I Do,The Non-Traditional Couple,wedding,commercial,Best wedding saying,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401744445_1684,Say I Do,The Non-Traditional Couple,wedding,navigational,real wedding websites explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401744503_7543,Say I Do,The Non-Traditional Couple,wedding,informational,when should i start planning my wedding recommendations focused on non-traditional ceremony,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725595_5100,Say I Do,The Comparison Shopper,wedding,informational,Can someone explain the bridal company reviews,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725596_9850,Say I Do,The Comparison Shopper,wedding,commercial,Top wedding at adare manor options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725627_5297,Say I Do,The Comparison Shopper,wedding,informational,Trying to learn about how much money do wedding photographers make,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725628_7018,Say I Do,The Comparison Shopper,wedding,commercial,Trying to learn about made with love bridal,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725629_3880,Say I Do,The Comparison Shopper,wedding,commercial,Can someone explain june saying,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725663_9444,Say I Do,The Comparison Shopper,wedding,commercial,What makes junk bee gone pricing different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725666_2164,Say I Do,The Comparison Shopper,wedding,commercial,Best sammy first dates,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725716_4731,Say I Do,The Comparison Shopper,wedding,informational,I need to understand password manager reviews australia,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725719_1887,Say I Do,The Comparison Shopper,wedding,commercial,2815 lorne ave saskatoon explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725839_9161,Say I Do,The Comparison Shopper,wedding,informational,Looking for information on how to make email not go to junk,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725913_5240,Say I Do,The Comparison Shopper,wedding,informational,Looking for information on rsvp dating site reviews,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401725995_6397,Say I Do,The Comparison Shopper,wedding,informational,the bridal company reviews guide,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726019_9574,Say I Do,The Comparison Shopper,wedding,commercial,junk bee gone pricing recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726162_3046,Say I Do,The Comparison Shopper,wedding,commercial,What makes questions to ask a photographer for wedding different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726187_8883,Say I Do,The Comparison Shopper,wedding,commercial,What makes easy up do for wedding guest different from other options specifically for withjoy reviews,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726202_9517,Say I Do,The Comparison Shopper,wedding,commercial,alice fearn explained,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726251_5565,Say I Do,The Comparison Shopper,wedding,informational,Looking for information on chuffed.org reviews,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726314_3179,Say I Do,The Comparison Shopper,wedding,informational,I need to understand big w town hall reviews,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726382_2388,Say I Do,The Comparison Shopper,wedding,informational,What makes happy molly reviews different from other options focused on withjoy reviews,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726418_1668,Say I Do,The Comparison Shopper,wedding,informational,What makes chuffed reviews different from other options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726621_1008,Say I Do,The Comparison Shopper,wedding,commercial,Top melbourne town hall wedding options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401726936_3072,Say I Do,The Comparison Shopper,wedding,commercial,Top melissa grace options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727004_3201,Say I Do,The Comparison Shopper,wedding,informational,Top eyes on sheppard reviews options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727121_5887,Say I Do,The Comparison Shopper,wedding,informational,What makes custom love reviews different from other options,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727138_5587,Say I Do,The Comparison Shopper,wedding,commercial,Looking for information on niamh designs,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727168_6402,Say I Do,The Comparison Shopper,wedding,informational,the chloe kyle reviews guide,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727249_4476,Say I Do,The Comparison Shopper,wedding,commercial,What makes wedding dress broad shoulders different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727327_9625,Say I Do,The Comparison Shopper,wedding,commercial,What makes kombi wedding cars sydney different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727387_8008,Say I Do,The Comparison Shopper,wedding,commercial,paul young celebrant guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727471_6841,Say I Do,The Comparison Shopper,wedding,commercial,Top 633-123 bsb options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727528_6157,Say I Do,The Comparison Shopper,wedding,informational,Looking for information on miss maddy reviews,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727544_2106,Say I Do,The Comparison Shopper,wedding,commercial,wwe gareth guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401727759_9314,Say I Do,The Comparison Shopper,wedding,commercial,Top park 118 nora options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401728049_5314,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on sydney kombi hire,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729058_2393,Say I Do,The Digital Invites Planner,wedding,commercial,Trying to learn about wellnow virtual,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729130_3481,Say I Do,The Digital Invites Planner,wedding,commercial,bsb 633123 guide,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729198_9864,Say I Do,The Digital Invites Planner,wedding,commercial,best small wedding venues melbourne recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729321_3763,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on wedding photography packages focused on photo wedding invitations,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729473_4088,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on dr chiam,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729828_3096,Say I Do,The Digital Invites Planner,wedding,commercial,What makes rebecca barlow different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729862_7400,Say I Do,The Digital Invites Planner,wedding,commercial,Can someone explain georgia fletcher,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401729970_2492,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on send it saying,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730487_6773,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on a present for mrs. robertson,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730627_1211,Say I Do,The Digital Invites Planner,wedding,commercial,Top sophie rebecca options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730651_4480,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on wedding venues melbourne cheap,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401730897_3161,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand sasha bali,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731147_5574,Say I Do,The Digital Invites Planner,wedding,commercial,Trying to learn about types of wedding dress codes,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401731625_8483,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on ruby gribbin,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732450_9637,Say I Do,The First-Time Planner,wedding,commercial,What makes jordan wedding different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401732696_6150,Say I Do,The First-Time Planner,wedding,commercial,Top videography canberra options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733161_8538,Say I Do,The First-Time Planner,wedding,commercial,Trying to learn about kylie and jason wedding song,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733684_9628,Say I Do,The First-Time Planner,wedding,commercial,Can someone explain george brown event planning,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733799_1674,Say I Do,The First-Time Planner,wedding,commercial,Trying to learn about hotmail too much spam,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733912_2182,Say I Do,The First-Time Planner,wedding,commercial,I need to understand weddings byron bay specifically for wedding planning platform,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401733998_7164,Say I Do,The First-Time Planner,wedding,informational,how to describe wedding dress code recommendations,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734178_7095,Say I Do,The First-Time Planner,wedding,informational,why does michael scott hate toby guide,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734218_9568,Say I Do,The First-Time Planner,wedding,informational,password manager reviews australia recommendations,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734447_9217,Say I Do,The First-Time Planner,wedding,commercial,What makes amanda and kyle wedding different from other options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734586_4214,Say I Do,The First-Time Planner,wedding,informational,What makes how to describe wedding dress code different from other options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401734943_8107,Say I Do,The First-Time Planner,wedding,commercial,Trying to learn about jacqua celebrant,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735491_6483,Say I Do,The First-Time Planner,wedding,commercial,Top danielle armstrong wedding options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735678_9426,Say I Do,The First-Time Planner,wedding,informational,Trying to learn about what is dressy casual for a wedding specifically for wedding checklist,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401735762_3913,Say I Do,The First-Time Planner,wedding,commercial,I need to understand fleck and co,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736446_7168,Say I Do,The First-Time Planner,wedding,commercial,Trying to learn about wedding videographer canberra,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736710_6644,Say I Do,The First-Time Planner,wedding,commercial,bsb063097 guide specifically for how early to send invitations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401736860_8622,Say I Do,The First-Time Planner,wedding,informational,Best how to choose songs for weddings,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737314_8945,Say I Do,The Guest Experience Optimizer,wedding,commercial,Looking for information on romance plots generator focused on online rsvp,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401737386_9180,Say I Do,The Guest Experience Optimizer,wedding,informational,Can someone explain what happened between toby and chloe,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738042_8723,Say I Do,The Guest Experience Optimizer,wedding,commercial,one nz/getgoing guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738327_8374,Say I Do,The Guest Experience Optimizer,wedding,commercial,wedding plan the series 4 explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738368_6403,Say I Do,The Guest Experience Optimizer,wedding,commercial,Looking for information on amanda elise lee age,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401738573_3885,Say I Do,The Guest Experience Optimizer,wedding,commercial,What makes wedding guest attire options different from other options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739259_4442,Say I Do,The Guest Experience Optimizer,wedding,commercial,Looking for information on saylove,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739411_8285,Say I Do,The Guest Experience Optimizer,wedding,informational,Trying to learn about how to download excel to mac,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401739740_8335,Say I Do,The Guest Experience Optimizer,wedding,commercial,Can someone explain sai builders,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401740787_4811,Say I Do,The Guest Experience Optimizer,wedding,commercial,Trying to learn about wedding guest book nz,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741217_7621,Say I Do,The Guest Experience Optimizer,wedding,commercial,Looking for information on wedding rate park view hotel newtownmountkennedy,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401741487_6757,Say I Do,The Non-Traditional Couple,wedding,commercial,wedding gift london explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743562_6050,Say I Do,The Non-Traditional Couple,wedding,commercial,Looking for information on weddingdecor focused on casual wedding,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401743903_9717,Say I Do,The Non-Traditional Couple,wedding,commercial,Best wedding plan the series,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773401744316_1117,Say I Do,The Non-Traditional Couple,wedding,commercial,wedding transportation costs recommendations focused on alternative wedding ideas,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725198_3931,Say I Do,The Comparison Shopper,wedding,informational,I need to understand withjoy reviews,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725200_9988,Say I Do,The Comparison Shopper,wedding,commercial,Top we still do save the date options specifically for feature comparisons,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725201_1880,Say I Do,The Comparison Shopper,wedding,navigational,wedding website faq guide,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725215_5870,Say I Do,The Comparison Shopper,wedding,navigational,Can someone explain wedding websites with rsvp feature focused on platform reviews,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725216_8296,Say I Do,The Comparison Shopper,wedding,commercial,I need to understand questions for wedding photographers,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725217_6357,Say I Do,The Comparison Shopper,wedding,commercial,I need to understand another way to say rsvp,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725233_8990,Say I Do,The Comparison Shopper,wedding,commercial,Trying to learn about to do list for a wedding focused on feature comparisons,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725235_5801,Say I Do,The Comparison Shopper,wedding,commercial,Looking for information on wedding invitation designs,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725236_7724,Say I Do,The Comparison Shopper,wedding,commercial,online invitation card for marriage recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725252_5012,Say I Do,The Comparison Shopper,wedding,navigational,I need to understand wedding websites with rsvp feature,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725253_5965,Say I Do,The Comparison Shopper,wedding,navigational,bridal party website recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725269_6772,Say I Do,The Comparison Shopper,wedding,informational,Can someone explain wedding venue reviews,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725285_6432,Say I Do,The Comparison Shopper,wedding,navigational,What makes wedding websites with rsvp feature different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725287_8745,Say I Do,The Comparison Shopper,wedding,commercial,Looking for information on qr code for uploading wedding photos,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725303_5330,Say I Do,The Comparison Shopper,wedding,informational,Top junes bridal reviews options specifically for competitor pricing,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725306_2821,Say I Do,The Comparison Shopper,wedding,commercial,Looking for information on save the date language,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725309_9083,Say I Do,The Comparison Shopper,wedding,commercial,Trying to learn about wedding rsvp cards,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725312_9116,Say I Do,The Comparison Shopper,wedding,commercial,Best save the date for destination wedding wording,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725331_7816,Say I Do,The Comparison Shopper,wedding,commercial,Trying to learn about withjoy pricing,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725337_9966,Say I Do,The Comparison Shopper,wedding,commercial,What makes minted vs the knot different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725341_1692,Say I Do,The Comparison Shopper,wedding,commercial,What makes john lewis registry different from other options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725361_7290,Say I Do,The Comparison Shopper,wedding,informational,Trying to learn about when do you send out wedding invitations for destination,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725370_5567,Say I Do,The Comparison Shopper,wedding,commercial,Can someone explain does evite track rsvp,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725395_1300,Say I Do,The Comparison Shopper,wedding,commercial,Trying to learn about save the date invitation ideas,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725418_5610,Say I Do,The Comparison Shopper,wedding,informational,I need to understand what to say for honeymoon fund,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725426_2586,Say I Do,The Comparison Shopper,wedding,commercial,simple wedding list explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725445_5324,Say I Do,The Comparison Shopper,wedding,commercial,Trying to learn about pete the celebrant,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725467_7448,Say I Do,The Comparison Shopper,wedding,informational,I need to understand vintage love ceremonies reviews,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725472_2375,Say I Do,The Comparison Shopper,wedding,commercial,dress code for formal wedding recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725495_5509,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand email invitation sites,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725513_8721,Say I Do,The Digital Invites Planner,wedding,commercial,zola online invitations recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725520_9683,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand wedding incites,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725525_3938,Say I Do,The Digital Invites Planner,wedding,navigational,Can someone explain website for invitations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725530_7632,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on free rsvp online focused on photo wedding invitations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725540_8616,Say I Do,The Digital Invites Planner,wedding,commercial,Trying to learn about wedding cards invites,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725565_1875,Say I Do,The Digital Invites Planner,wedding,navigational,theknot wedding website guide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725584_9149,Say I Do,The Digital Invites Planner,wedding,commercial,Can someone explain invitations electronic,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725602_2913,Say I Do,The Digital Invites Planner,wedding,informational,Top how to send wedding invitations options,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725625_3401,Say I Do,The Digital Invites Planner,wedding,commercial,Top save the date dress code ideas options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725648_3295,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on wedding webistes,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725654_2413,Say I Do,The Digital Invites Planner,wedding,commercial,Trying to learn about types of wedding attire,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725661_8313,Say I Do,The Digital Invites Planner,wedding,informational,Trying to learn about how to come up with a wedding budget,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725686_4444,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on wedding invitation templates online,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725693_3502,Say I Do,The Digital Invites Planner,wedding,navigational,Top zola create wedding website options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725716_7721,Say I Do,The Digital Invites Planner,wedding,commercial,Looking for information on round table wedding seating chart template,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725738_2683,Say I Do,The Digital Invites Planner,wedding,commercial,Top e wedding cards online options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725760_6689,Say I Do,The Digital Invites Planner,wedding,navigational,What makes wedding picture website different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725768_3557,Say I Do,The Digital Invites Planner,wedding,informational,Trying to learn about how to reply rsvp invitation by email,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725777_5701,Say I Do,The Digital Invites Planner,wedding,commercial,Can someone explain digital invitation cards,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725785_6957,Say I Do,The Digital Invites Planner,wedding,commercial,I need to understand registry office wedding adelaide,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725807_2864,Say I Do,The Digital Invites Planner,wedding,commercial,please save the date explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725828_1453,Say I Do,The Digital Invites Planner,wedding,informational,when should you send save the dates for a wedding explained,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725864_5913,Say I Do,The Digital Invites Planner,wedding,commercial,katie j design explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725883_2687,Say I Do,The First-Time Planner,wedding,informational,Trying to learn about when to send wedding invites australia,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725908_5202,Say I Do,The First-Time Planner,wedding,commercial,I need to understand save the date and wedding invitations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725930_6956,Say I Do,The First-Time Planner,wedding,commercial,Trying to learn about best wedding planning apps australia,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725955_1237,Say I Do,The First-Time Planner,wedding,informational,Trying to learn about how long in advance to send wedding invitations,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725969_1472,Say I Do,The First-Time Planner,wedding,commercial,I need to understand ing australia refer a friend,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348725978_4782,Say I Do,The First-Time Planner,wedding,commercial,Trying to learn about rsvp dietary requirements,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726001_3251,Say I Do,The First-Time Planner,wedding,commercial,Can someone explain wedding day timeline 12pm ceremony,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726011_6548,Say I Do,The First-Time Planner,wedding,navigational,Can someone explain https //sayi.do login,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726019_9243,Say I Do,The First-Time Planner,wedding,commercial,I need to understand sai bennett,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726042_6134,Say I Do,The First-Time Planner,wedding,commercial,affordable wedding celebrant melbourne recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726072_4732,Say I Do,The First-Time Planner,wedding,commercial,Best wedding planner melbourne cost,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726080_8849,Say I Do,The First-Time Planner,wedding,commercial,Top brenda song married options,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726101_2266,Say I Do,The First-Time Planner,wedding,commercial,I need to understand things to include in wedding invitation,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726125_8580,Say I Do,The First-Time Planner,wedding,informational,Looking for information on how to say thank you for rsvping,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726136_4979,Say I Do,The First-Time Planner,wedding,commercial,sustainable wedding registry explained,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726156_9328,Say I Do,The First-Time Planner,wedding,commercial,Looking for information on sending invitations,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726166_3453,Say I Do,The First-Time Planner,wedding,informational,how long for wedding rsvp explained,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726174_3932,Say I Do,The First-Time Planner,wedding,commercial,Looking for information on simple wedding reception rectangle table layout,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726203_8771,Say I Do,The First-Time Planner,wedding,commercial,What makes engagement planning different from other options,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726219_9382,Say I Do,The First-Time Planner,wedding,informational,Looking for information on how to make e invite for wedding,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726249_8102,Say I Do,The Guest Experience Optimizer,wedding,commercial,I need to understand cut your wedding guest list,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726289_1683,Say I Do,The Guest Experience Optimizer,wedding,commercial,Best islington wedding venues,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726310_3929,Say I Do,The Guest Experience Optimizer,wedding,informational,when to rsvp explained focused on rsvp app,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726322_2931,Say I Do,The Guest Experience Optimizer,wedding,navigational,make your own wedding websites recommendations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726334_1357,Say I Do,The Guest Experience Optimizer,wedding,commercial,Trying to learn about smiso,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726362_8173,Say I Do,The Guest Experience Optimizer,wedding,informational,how to create a qr code for wedding rsvp guide,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726376_1710,Say I Do,The Guest Experience Optimizer,wedding,commercial,Looking for information on eco friendly invitations,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726404_8023,Say I Do,The Guest Experience Optimizer,wedding,commercial,Best wedding rsvp online wording,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726412_7640,Say I Do,The Guest Experience Optimizer,wedding,commercial,I need to understand weeddig,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726421_8593,Say I Do,The Guest Experience Optimizer,wedding,informational,Can someone explain how soon should rsvp for wedding,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726446_4182,Say I Do,The Guest Experience Optimizer,wedding,commercial,I need to understand letting guest know a member is under weather,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726466_8820,Say I Do,The Guest Experience Optimizer,wedding,commercial,traditional wedding seating chart explained focused on wedding registry,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726500_8697,Say I Do,The Guest Experience Optimizer,wedding,navigational,Best rsvp on website wording focused on wedding registry,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726530_8859,Say I Do,The Guest Experience Optimizer,wedding,navigational,Can someone explain wed planner near me specifically for wedding registry,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726552_3474,Say I Do,The Non-Traditional Couple,wedding,informational,Best what to ask for wedding registry,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726582_6480,Say I Do,The Non-Traditional Couple,wedding,commercial,Looking for information on seating chart for wedding ceremony,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726600_6541,Say I Do,The Non-Traditional Couple,wedding,commercial,Can someone explain wedding invite designs,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726621_6057,Say I Do,The Non-Traditional Couple,wedding,commercial,Looking for information on each element of the ceremony has a specifically for alternatives to traditional wedding,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726657_3712,Say I Do,The Non-Traditional Couple,wedding,commercial,Can someone explain planning day,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726676_3499,Say I Do,The Non-Traditional Couple,wedding,navigational,I need to understand wedding website services specifically for alternative wedding ideas,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726707_7625,Say I Do,The Non-Traditional Couple,wedding,commercial,I need to understand hashtag for wedding specifically for intimate wedding,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726743_9117,Say I Do,The Non-Traditional Couple,wedding,commercial,wedding planning app recommendations focused on intimate wedding,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726782_7392,Say I Do,The Non-Traditional Couple,wedding,informational,I need to understand how to save money planning a wedding,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1773348726813_3122,Say I Do,The Non-Traditional Couple,wedding,informational,Top how far in advance should wedding invitations go out options focused on casual wedding,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
