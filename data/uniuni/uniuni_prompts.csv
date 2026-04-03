@@ -1,0 +1,391 @@
+prompt_id,client_name,persona,category,intent_type,prompt_text,expected_visibility_score,notes,batch_id,batch_name,date_added,status
+gen_1775178418933_4485,UniUni,E-Commerce Merchant,logistics,informational,How do I track a package with UniGlobal tracking?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418933_3927,UniUni,E-Commerce Merchant,logistics,informational,Where can I find Amazon delivery options in Moncton?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418933_9455,UniUni,E-Commerce Merchant,logistics,informational,How do I check my coli suivi package status?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418934_9312,UniUni,E-Commerce Merchant,logistics,informational,Is 17Track a reliable parcel tracking tool for Canadian packages?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418935_6702,UniUni,E-Commerce Merchant,logistics,informational,What does a UNIs tracking number look like and how do I use it?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418935_1910,UniUni,E-Commerce Merchant,logistics,informational,How can I track my Bay order online?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418936_3400,UniUni,E-Commerce Merchant,logistics,informational,What does suivi mean and how do I track my package?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418938_7132,UniUni,E-Commerce Merchant,logistics,informational,What happens when a package is marked wrong address return to sender?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418939_6774,UniUni,E-Commerce Merchant,logistics,navigational,How do I access Canada Post tracking?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418940_2296,UniUni,E-Commerce Merchant,logistics,informational,Can I track my AliExpress order with suivi colis?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418942_2253,UniUni,E-Commerce Merchant,logistics,navigational,Where do I go to track my DHL shipment?,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418943_9310,UniUni,E-Commerce Merchant,logistics,informational,Does UPS deliver packages on Memorial Day?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418945_2420,UniUni,E-Commerce Merchant,logistics,informational,Should I use 17Track to monitor my cross-border parcels?,9.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418947_1563,UniUni,E-Commerce Merchant,logistics,informational,How many USPS warehouses are there in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418950_6127,UniUni,E-Commerce Merchant,logistics,informational,What does we missed you mean on a delivery notice?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418954_6637,UniUni,E-Commerce Merchant,logistics,commercial,What are the best shipping options for Alibaba Express orders to Canada?,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418957_1483,UniUni,E-Commerce Merchant,logistics,informational,How does Cainiao Express tracking work for Chinese packages?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418961_5935,UniUni,E-Commerce Merchant,logistics,informational,What does ETA mean in shipping and delivery chats?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418964_4187,UniUni,E-Commerce Merchant,logistics,informational,How do I check my rastreio USPS tracking online?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418968_5018,UniUni,E-Commerce Merchant,logistics,informational,How do I track my order number through last-mile carriers?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418972_8565,UniUni,E-Commerce Merchant,logistics,informational,How long does it take for Temu to ship to Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178418977_4575,UniUni,E-Commerce Merchant,logistics,informational,What are POD storage options available in Vancouver?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423880_6467,UniUni,E-Commerce Merchant,logistics,informational,What region does the 229 area code cover?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423886_9121,UniUni,E-Commerce Merchant,logistics,commercial,How do I start selling on Temu as a seller?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423889_9496,UniUni,E-Commerce Merchant,logistics,transactional,Where can I access AliExpress in French?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423895_1759,UniUni,E-Commerce Merchant,logistics,commercial,Is UniUni a reliable shipping option for my e-commerce store?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423898_6366,UniUni,E-Commerce Merchant,logistics,informational,How do I track my AliExpress order?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423903_9485,UniUni,E-Commerce Merchant,logistics,informational,What's the postal code for Medicine Hat?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423908_8589,UniUni,E-Commerce Merchant,logistics,informational,How can I track my Temu package?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423913_1164,UniUni,E-Commerce Merchant,logistics,informational,Can I track my Shein order using just the order number?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423919_9658,UniUni,E-Commerce Merchant,logistics,informational,How long does Temu delivery take to Australia?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423926_4272,UniUni,E-Commerce Merchant,logistics,informational,What company or service is the phone number 604-800-6211?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423933_8409,UniUni,E-Commerce Merchant,logistics,informational,What does Uni Ship offer for parcel delivery?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423938_5796,UniUni,E-Commerce Merchant,logistics,informational,How do I use 17Track to track my parcel?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423944_4281,UniUni,E-Commerce Merchant,logistics,informational,What should I do if UPS rescheduled my delivery?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423952_6760,UniUni,E-Commerce Merchant,logistics,informational,Where is the Mountain Warehouse location in Mississauga?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423959_9331,UniUni,E-Commerce Merchant,logistics,informational,What does 'commande expédiée' mean on Shein?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423963_3313,UniUni,E-Commerce Merchant,logistics,informational,What does Yuni mean?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423968_5089,UniUni,E-Commerce Merchant,logistics,navigational,How do I track a UPS package in the USA?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423973_6088,UniUni,E-Commerce Merchant,logistics,informational,How does Cainiao shipping work?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423980_2197,UniUni,E-Commerce Merchant,logistics,informational,What's the customer service phone number for Temu?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423986_2967,UniUni,E-Commerce Merchant,logistics,informational,Where do I find my Shein tracking number?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423991_1058,UniUni,E-Commerce Merchant,logistics,informational,What does ETA mean in shipping?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178423994_9636,UniUni,E-Commerce Merchant,logistics,informational,What is Yuni?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429204_5101,UniUni,E-Commerce Merchant,logistics,informational,What does UniUni delivery service offer in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429209_7712,UniUni,E-Commerce Merchant,logistics,informational,Comment suivre ma commande Temu?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429218_6369,UniUni,E-Commerce Merchant,logistics,informational,What location does the 315 area code cover?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429225_2966,UniUni,E-Commerce Merchant,logistics,informational,Comment faire un suivi colis au Canada?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429233_6208,UniUni,E-Commerce Merchant,logistics,informational,Do Shein packages get delivered on Sundays?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429241_1935,UniUni,E-Commerce Merchant,logistics,informational,How do I track my Shein order in real time?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429253_8101,UniUni,E-Commerce Merchant,logistics,informational,Comment utiliser le repérage Postes Canada pour suivre mon colis?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429264_4638,UniUni,E-Commerce Merchant,logistics,informational,How long does it typically take to receive a Shein order?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429275_5464,UniUni,E-Commerce Merchant,logistics,informational,What's the average shipping time for Temu orders to Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429283_5632,UniUni,E-Commerce Merchant,logistics,informational,How are Temu packages shipped and tracked?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429295_9372,UniUni,E-Commerce Merchant,logistics,commercial,Is QuickBox a good parcel locker solution for my online store?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429306_5134,UniUni,E-Commerce Merchant,logistics,informational,What are current UPS fuel surcharge rates in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429317_5493,UniUni,E-Commerce Merchant,logistics,informational,Comment suivre un colis AliExpress livré en France?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429330_1819,UniUni,E-Commerce Merchant,logistics,informational,Is Truth and Reconciliation Day a statutory holiday in Manitoba?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429343_5387,UniUni,E-Commerce Merchant,logistics,informational,What shipping options does Temu offer to Canadian customers?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429357_9996,UniUni,E-Commerce Merchant,logistics,informational,What are UniUni's delivery hours and service areas in Mississauga?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429369_8159,UniUni,E-Commerce Merchant,logistics,informational,Why am I getting an undeliverable message for my text?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429381_7860,UniUni,E-Commerce Merchant,logistics,informational,What region does the 647 area code cover in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429393_4475,UniUni,E-Commerce Merchant,logistics,informational,What are UniUni delivery hours and service availability?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429407_9932,UniUni,E-Commerce Merchant,logistics,informational,How do I track a package using just the tracking number?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178429421_9705,UniUni,E-Commerce Merchant,logistics,informational,How does UniUni Global tracking work for cross-border orders?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435124_5598,UniUni,E-Commerce Merchant,logistics,informational,What time zone is 516 area code in?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435135_3204,UniUni,E-Commerce Merchant,logistics,informational,Where is DHL located in Halifax?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435153_9858,UniUni,E-Commerce Merchant,logistics,informational,How fast is UniUni delivery compared to other carriers?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435164_4418,UniUni,E-Commerce Merchant,logistics,informational,How do I use 17track to monitor my package?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435179_6061,UniUni,E-Commerce Merchant,logistics,informational,Why is my package stuck in customs and how long will it take?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435190_2653,UniUni,E-Commerce Merchant,logistics,informational,What does it mean to be a uni driver?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435202_1793,UniUni,E-Commerce Merchant,logistics,informational,How do I track my shipment on Comis?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435212_6216,UniUni,E-Commerce Merchant,logistics,informational,How do Canadian postal codes work?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435227_9688,UniUni,E-Commerce Merchant,logistics,informational,Where is the 8 Mile distribution center located?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435239_6135,UniUni,E-Commerce Merchant,logistics,informational,How do I track my Temu order from Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435254_5593,UniUni,E-Commerce Merchant,logistics,informational,How do I track international deliveries to Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435267_7847,UniUni,E-Commerce Merchant,logistics,commercial,Does Shein deliver to Montreal and how much is shipping?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435279_3798,UniUni,E-Commerce Merchant,logistics,informational,How do I track USPS packages internationally?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435297_2020,UniUni,E-Commerce Merchant,logistics,commercial,What's the best way to find discount codes on AliExpress?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435314_9212,UniUni,E-Commerce Merchant,logistics,informational,What's the customer service phone number for AliExpress?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435325_3097,UniUni,E-Commerce Merchant,logistics,informational,How do I become a UniUni driver?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435341_9118,UniUni,E-Commerce Merchant,logistics,commercial,Which carriers does Shein use for delivery in Canada?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435357_1821,UniUni,E-Commerce Merchant,logistics,informational,Why is my FedEx package delayed in customs clearance?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435371_3702,UniUni,E-Commerce Merchant,logistics,informational,What does out for delivery mean for my package?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435383_5478,UniUni,E-Commerce Merchant,logistics,informational,Is Temu safe and is it worth using?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178435397_1689,UniUni,E-Commerce Merchant,logistics,informational,What region does the 424 area code belong to?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178440786_5575,UniUni,E-Commerce Merchant,logistics,informational,How do I track my Amazon package in Spanish?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178440802_1317,UniUni,E-Commerce Merchant,logistics,informational,How long does Temu typically take to deliver orders?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178440819_3057,UniUni,E-Commerce Merchant,logistics,informational,What should I do if UPS lost my package?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178440836_5576,UniUni,E-Commerce Merchant,logistics,informational,Where is the Canada Post location in Medicine Hat?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178440855_1244,UniUni,E-Commerce Merchant,logistics,informational,How do I contact UniUni customer service for tracking help?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178440883_6138,UniUni,E-Commerce Merchant,logistics,informational,How can I track my AliExpress order in real time?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178440907_4019,UniUni,E-Commerce Merchant,logistics,informational,What's the difference between last mile delivery providers in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178440920_6724,UniUni,E-Commerce Merchant,logistics,informational,Does Temu deliver to Montreal and how fast?,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178440935_3149,UniUni,E-Commerce Merchant,logistics,navigational,Where do I log into my ShipBob account?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178440950_5162,UniUni,E-Commerce Merchant,logistics,informational,What time zone is the 647 area code in?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178440970_8688,UniUni,E-Commerce Merchant,logistics,informational,What does 'order received' mean on UniData Center tracking?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178440984_8972,UniUni,E-Commerce Merchant,logistics,informational,How do I track my Shein order status?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178441004_1700,UniUni,E-Commerce Merchant,logistics,informational,What time zone is 360 area code and current time?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178441021_7097,UniUni,E-Commerce Merchant,logistics,commercial,Are Shein and Temu the same company or different?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178441042_8255,UniUni,E-Commerce Merchant,logistics,informational,How does 17track package tracker compare to other options?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178441061_9182,UniUni,E-Commerce Merchant,logistics,informational,Where is the Amazon warehouse located in Montreal?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178441074_2381,UniUni,E-Commerce Merchant,logistics,informational,What does the word 'unnie' mean?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446469_2533,UniUni,E-Commerce Merchant,logistics,informational,How do I track my parcel delivery in real time?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446493_8547,UniUni,E-Commerce Merchant,logistics,informational,Where does Shein operate its international warehouse locations?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446513_6420,UniUni,E-Commerce Merchant,logistics,informational,Can storage units be delivered directly to my house?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446537_1701,UniUni,E-Commerce Merchant,logistics,informational,Where is Temu's main headquarters and distribution center located?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446558_7467,UniUni,E-Commerce Merchant,logistics,informational,How do I look up US zip codes and postal codes?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446577_9307,UniUni,E-Commerce Merchant,logistics,informational,How can I track my Amazon package shipment?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446602_7671,UniUni,E-Commerce Merchant,logistics,informational,What courier services operate express delivery across Canada?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446625_2261,UniUni,E-Commerce Merchant,logistics,informational,Does Shein use the Mississauga gateway for Canadian shipments?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446643_2147,UniUni,E-Commerce Merchant,logistics,informational,How do I track packages with Cainiao tracking?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446669_2880,UniUni,E-Commerce Merchant,logistics,informational,Where is the Mountain Warehouse store located in Calgary?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446694_7783,UniUni,E-Commerce Merchant,logistics,informational,What are the FedEx drop-off locations near Mississauga?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446720_2217,UniUni,E-Commerce Merchant,logistics,informational,What does Victoria Day mean and when is it celebrated?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446740_3527,UniUni,E-Commerce Merchant,logistics,informational,Does Uni Express deliver packages on weekends?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446767_8696,UniUni,E-Commerce Merchant,logistics,informational,Does Amazon have a fulfillment center in Yuma Arizona?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446788_6038,UniUni,E-Commerce Merchant,logistics,informational,Is mail delivered on Easter Monday in Canada?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446809_3420,UniUni,E-Commerce Merchant,logistics,informational,How do I track my AliExpress order from China?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446830_2917,UniUni,E-Commerce Merchant,logistics,informational,How do I track a Western Union money transfer?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446846_1715,UniUni,E-Commerce Merchant,logistics,informational,What does the UIN logo stand for?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446870_4194,UniUni,E-Commerce Merchant,logistics,informational,What are typical delivery timeframes for online orders?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446896_1166,UniUni,E-Commerce Merchant,logistics,informational,What does 'met y le paquet' mean in package delivery?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178446916_5396,UniUni,E-Commerce Merchant,logistics,informational,How do I track my Canada Post package online?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178449755_7606,UniUni,E-Commerce Merchant,logistics,informational,How do I track my UniUni delivery in real-time?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178449780_3095,UniUni,E-Commerce Merchant,logistics,informational,What's 17track and how does it work for package tracking?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178449813_1836,UniUni,E-Commerce Merchant,logistics,commercial,Is Uno Express a good shipping option compared to other Canadian carriers?,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178449844_7320,UniUni,E-Commerce Merchant,logistics,informational,Does Amazon Flex deliver packages on Thanksgiving in Canada?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178449875_5728,UniUni,E-Commerce Merchant,logistics,informational,How do I check my AliExpress standard shipping tracking status?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178449894_8030,UniUni,E-Commerce Merchant,logistics,informational,Where is Temu's US warehouse located?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178449917_5603,UniUni,E-Commerce Merchant,logistics,informational,How do I track international parcels online?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178449946_3740,UniUni,E-Commerce Merchant,logistics,informational,What does the Temu logo look like and what does it mean?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178449956_6506,UniUni,E-Commerce Merchant,logistics,informational,Cainiao 배송조회 어떻게 하는지 알려줘?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178449974_1655,UniUni,E-Commerce Merchant,logistics,informational,How can I track my Shein order shipment?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178450000_9934,UniUni,E-Commerce Merchant,logistics,informational,"What's the gateway transit hub in Mississauga, Ontario?",6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178450023_6143,UniUni,E-Commerce Merchant,logistics,informational,"What are the postal codes for Dallas, Texas?",7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178455842_9343,UniUni,Online Shopper / Package Recipient,logistics,informational,What are people saying about delivery services on Reddit in Saskatoon?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178455866_2101,UniUni,Online Shopper / Package Recipient,logistics,informational,Does Canada Post deliver packages on Christmas Eve?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178455899_5510,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I reroute a FedEx package that's already in transit?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178455931_2703,UniUni,Online Shopper / Package Recipient,logistics,informational,What does 'gateway transit in' mean on my package tracking?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178455956_9696,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I track international packages using 17track?,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178455983_7692,UniUni,Online Shopper / Package Recipient,logistics,commercial,Is YesStyle a legit website for ordering clothes?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456008_7200,UniUni,Online Shopper / Package Recipient,logistics,informational,What does 'livraison uni' mean and how do I track it?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456036_8796,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I track my AliExpress standard shipping order?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456057_7005,UniUni,Online Shopper / Package Recipient,logistics,informational,How can I track my DHL shipment in Hebrew?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456083_6610,UniUni,Online Shopper / Package Recipient,logistics,informational,Does FedEx deliver on Christmas Day in Canada?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456104_3092,UniUni,Online Shopper / Package Recipient,logistics,informational,How fast is Shein shipping to Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456134_7448,UniUni,Online Shopper / Package Recipient,logistics,informational,What's the best way to contact Shein customer service?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456170_4733,UniUni,Online Shopper / Package Recipient,logistics,informational,What are people discussing about deliveries on Reddit in Winnipeg?,9.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456197_8369,UniUni,Online Shopper / Package Recipient,logistics,informational,"How do I track a package in Windsor, Ontario?",6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456226_9165,UniUni,Online Shopper / Package Recipient,logistics,informational,What does 'gateway transit out' mean on my tracking?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456256_2260,UniUni,Online Shopper / Package Recipient,logistics,informational,What does ETA mean when someone texts it to me?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456283_1372,UniUni,Online Shopper / Package Recipient,logistics,navigational,How do I arrange a FedEx pickup for my package?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456323_8455,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I track a Shein order?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456347_8016,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I track packages coming from China?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178456373_1257,UniUni,Online Shopper / Package Recipient,logistics,informational,Where is Houston in relation to Gatineau?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462051_8076,UniUni,Online Shopper / Package Recipient,logistics,informational,Why hasn't my Shein package been delivered yet?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462088_3624,UniUni,Online Shopper / Package Recipient,logistics,informational,What's UniUni delivery like in Montreal? Any photos or reviews?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462121_2076,UniUni,Online Shopper / Package Recipient,logistics,commercial,Is Temu actually reliable for shopping or just a scam?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462157_3035,UniUni,Online Shopper / Package Recipient,logistics,informational,What's Temu's returns policy if I get a defective item?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462188_2296,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I track my Shein order after I place it?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462220_9425,UniUni,Online Shopper / Package Recipient,logistics,informational,What does Muni University stand for or refer to?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462259_1281,UniUni,Online Shopper / Package Recipient,logistics,informational,What's the Broadview routing number for bank transfers?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462293_1959,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I track my package with USPS rastreo de paquetes?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462328_2092,UniUni,Online Shopper / Package Recipient,logistics,informational,How long does AliExpress standard shipping usually take?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462358_7309,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I track my package using Cainiao tracking?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462394_1117,UniUni,Online Shopper / Package Recipient,logistics,informational,What are the best last-mile delivery services in Canada?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462423_1119,UniUni,Online Shopper / Package Recipient,logistics,informational,Where can I find FedEx locations in Vancouver?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462447_3094,UniUni,Online Shopper / Package Recipient,logistics,informational,What does UNU stand for or mean?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462482_7821,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I use 17track to track my international shipment?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462516_7122,UniUni,Online Shopper / Package Recipient,logistics,informational,"My USPS package was delivered to the wrong address, what do I do?",7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462551_6132,UniUni,Online Shopper / Package Recipient,logistics,commercial,Is Shein reliable for shopping in Canada and do they ship fast?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462588_9555,UniUni,Online Shopper / Package Recipient,logistics,informational,Is UPS open on Christmas Eve or will it be closed?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462622_5744,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I cancel an AliExpress order I just placed?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462656_1817,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I use suivi tracking to monitor my package?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462686_4490,UniUni,Online Shopper / Package Recipient,logistics,informational,How can I track my shipment in real-time?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462718_9379,UniUni,Online Shopper / Package Recipient,logistics,informational,What does www uni refer to or stand for?,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178462754_2681,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I check my Cainiao tracking number for my order?,9.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178467989_8687,UniUni,Online Shopper / Package Recipient,logistics,informational,What's the easiest way to return a Shein order from Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468024_6844,UniUni,Online Shopper / Package Recipient,logistics,informational,Comment vérifier le suivi de ma commande en ligne?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468058_8140,UniUni,Online Shopper / Package Recipient,logistics,informational,Is Temu actually reliable for shipping to Canada?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468084_6504,UniUni,Online Shopper / Package Recipient,logistics,informational,Comment suivre mon colis en temps réel?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468115_4518,UniUni,Online Shopper / Package Recipient,logistics,commercial,Is UniUni a legit delivery service in Canada?,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468151_5875,UniUni,Online Shopper / Package Recipient,logistics,informational,What are Uni Express delivery hours in my area?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468200_4687,UniUni,Online Shopper / Package Recipient,logistics,informational,What does UUSC stand for in shipping?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468231_6506,UniUni,Online Shopper / Package Recipient,logistics,informational,Does USPS deliver priority mail on Sundays?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468267_5024,UniUni,Online Shopper / Package Recipient,logistics,informational,What happens if FedEx refuses to deliver my package?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468300_4303,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I track my package with a suivi number?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468324_1522,UniUni,Online Shopper / Package Recipient,logistics,informational,Can I track my colis online right now?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468360_7118,UniUni,Online Shopper / Package Recipient,logistics,informational,What's the rastreo process for YesStyle orders?,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468387_9023,UniUni,Online Shopper / Package Recipient,logistics,informational,What does unnie mean in Korean?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468415_5639,UniUni,Online Shopper / Package Recipient,logistics,informational,What's the postal code for Ottawa?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468447_5551,UniUni,Online Shopper / Package Recipient,logistics,transactional,Where can I buy packing boxes in Saskatoon?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468480_4521,UniUni,Online Shopper / Package Recipient,logistics,informational,Is GoFo a reliable delivery option in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468552_6350,UniUni,Online Shopper / Package Recipient,logistics,informational,How long does AliExpress standard shipping take to Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468589_7271,UniUni,Online Shopper / Package Recipient,logistics,informational,Is there a Mountain Warehouse store in Montreal?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468626_8582,UniUni,Online Shopper / Package Recipient,logistics,informational,What does UNU mean in shipping and logistics?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468662_4125,UniUni,Online Shopper / Package Recipient,logistics,informational,How does Cainiao tracking work for AliExpress?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468695_4417,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I track a USPS ground shipping number?,9.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178468736_8581,UniUni,Online Shopper / Package Recipient,logistics,informational,What's the best package tracking app like AfterShip?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178473822_7097,UniUni,Online Shopper / Package Recipient,logistics,informational,Does Temu use Canada Post for Canadian deliveries?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178473859_9729,UniUni,Online Shopper / Package Recipient,logistics,informational,What are the postal codes in Vancouver BC?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178473889_6344,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I track my package in real-time?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178473929_3604,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I look up who's calling from a 604 number?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178473967_5342,UniUni,Online Shopper / Package Recipient,logistics,informational,Is UniUni available for delivery in Mississauga?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474015_9051,UniUni,Online Shopper / Package Recipient,logistics,informational,What's the step-by-step process for returning Shein items?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474046_2728,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I track my ECU shipping package?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474075_3538,UniUni,Online Shopper / Package Recipient,logistics,informational,What shipping options does Uni offer?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474108_2127,UniUni,Online Shopper / Package Recipient,logistics,informational,How does 17Track work for package tracking?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474150_5179,UniUni,Online Shopper / Package Recipient,logistics,informational,Is 17Track reliable for international shipment tracking?,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474165_3155,UniUni,Online Shopper / Package Recipient,logistics,navigational,Go to uni.com,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474202_6574,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I check my FedEx delivery schedule?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474230_7446,UniUni,Online Shopper / Package Recipient,logistics,informational,How can I track my UniUni shipment?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474269_5705,UniUni,Online Shopper / Package Recipient,logistics,informational,What USPS locations are near Billings MT?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474307_2069,UniUni,Online Shopper / Package Recipient,logistics,transactional,How do I schedule a FedEx package pickup?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474327_8844,UniUni,Online Shopper / Package Recipient,logistics,navigational,Track my YesStyle order,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474360_3079,UniUni,Online Shopper / Package Recipient,logistics,informational,What does last-mile delivery mean?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474395_3370,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I find my AliExpress tracking number?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474428_4740,UniUni,Online Shopper / Package Recipient,logistics,informational,Does FedEx deliver packages after 8pm?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474461_1259,UniUni,Online Shopper / Package Recipient,logistics,informational,How does UniUni shipping work in Canada?,9.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474493_1436,UniUni,Online Shopper / Package Recipient,logistics,informational,What's the current Niu stock price?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178474536_7236,UniUni,Online Shopper / Package Recipient,logistics,informational,How long does AliExpress livraison take to Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178477346_5072,UniUni,Online Shopper / Package Recipient,logistics,informational,What are UniUni delivery hours across Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178477385_7809,UniUni,Online Shopper / Package Recipient,logistics,informational,What company has the phone number 310-879-5886?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178477419_1249,UniUni,Online Shopper / Package Recipient,logistics,informational,Is NiuNiu the same as UniUni delivery?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178477462_5023,UniUni,Online Shopper / Package Recipient,logistics,informational,Does Shein deliver packages on weekends in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178477505_5082,UniUni,Online Shopper / Package Recipient,logistics,informational,How does Cainiao logistics work in the Netherlands?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178477539_4762,UniUni,Online Shopper / Package Recipient,logistics,informational,How do I track my UMI package delivery?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178477579_5312,UniUni,Online Shopper / Package Recipient,logistics,navigational,Where is GoFo NL located and how do I contact them?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178477620_4575,UniUni,Online Shopper / Package Recipient,logistics,informational,Does DHL have a depot or service in Kelowna?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178477667_8190,UniUni,Online Shopper / Package Recipient,logistics,informational,What's the latest time FedEx delivers packages in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178477715_6966,UniUni,Online Shopper / Package Recipient,logistics,informational,What does a delivery status notification failure mean?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178478572_8931,UniUni,Online Shopper / Package Recipient,logistics,informational,Tell me about the best does fedex work on thanksgiving available,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178484557_6937,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What cities and regions does TX QC cover for delivery?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178484603_9720,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does Shein actually mean as a company name?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178484648_3985,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Is Shein a legitimate retailer or is it a scam?,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178484702_9069,UniUni,Logistics / 3PL Decision Maker,logistics,transactional,How do I reroute my FedEx package to a different address?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178484731_4978,UniUni,Logistics / 3PL Decision Maker,logistics,navigational,USPS package tracking rastreo,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178484788_3287,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How long does Canada Post expedited parcel delivery actually take?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178484829_1232,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does expediated mean in shipping terms?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178484879_9325,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Does UPS deliver packages at 9pm or later in the evening?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178484931_5486,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Will USPS deliver packages on Good Friday?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178484978_7762,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Does UniUni deliver in Quebec and what's their coverage?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178485024_3816,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does uni mean in delivery or logistics context?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178485081_1472,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What country does the +1 prefix represent for phone numbers?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178485166_2194,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Is Uni Express a legitimate delivery service in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178485207_4418,UniUni,Logistics / 3PL Decision Maker,logistics,transactional,How do I track my City Pack delivery order?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178485253_7422,UniUni,Logistics / 3PL Decision Maker,logistics,informational,À quelle heure La Poste livre-t-elle les colis?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178485306_7837,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What area code is 647 and which Canadian province does it serve?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178485348_1662,UniUni,Logistics / 3PL Decision Maker,logistics,transactional,Shein 追跡 tracking how do I find my order number?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178485409_6367,UniUni,Logistics / 3PL Decision Maker,logistics,transactional,Where do I find my tracking number on my order receipt?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178485464_6963,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How do I track an AliExpress package from China to Canada?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178485514_6399,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What are the main postal codes used in California?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178485560_9514,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Is Shein a trustworthy place to shop online?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178485617_7352,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What's the best way to track a package through the mail?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490353_6627,UniUni,Logistics / 3PL Decision Maker,logistics,commercial,Is Shein reliable for shipping to Canada?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490399_2972,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Como rastrear un pedido de Shein desde EUA?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490441_5192,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What courier does Shein use for tracking?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490469_5204,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does UNID stand for?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490502_9641,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does the prefix uni mean?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490537_3728,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Is USPS Informed Delivery accurate?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490581_2875,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does delivery attempted mean on USPS?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490646_7899,UniUni,Logistics / 3PL Decision Maker,logistics,commercial,How much are customs fees for AliExpress orders to Canada?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490695_3761,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What are reviews like for Stat Overnight delivery?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490747_6773,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What's the exchange rate for 315 Canadian to US dollars?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490789_1930,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Where is Saskatoon Correctional located?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490822_2751,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Does Canada have TikTok Shop?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490865_6703,UniUni,Logistics / 3PL Decision Maker,logistics,informational,"What's the zip code for Surrey, Canada?",7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490903_7218,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Can FedEx deliver packages to a PO box?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490939_5485,UniUni,Logistics / 3PL Decision Maker,logistics,navigational,How do I order from Shein Canada?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178490978_5116,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What time is it in Canada right now?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178491015_6279,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Como rastrear mi pedido de Shein?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178491061_3900,UniUni,Logistics / 3PL Decision Maker,logistics,informational,"What's the postal code for Regina, Canada?",7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178491099_7117,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Does UPS deliver packages on Sunday?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178496942_9771,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How do I track my Amazon delivery in French?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178496995_3212,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Does mail get delivered on Good Friday in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497062_9762,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does last mile delivery mean and why is it important?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497110_5535,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does MB mean when someone texts me?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497169_2889,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How do I apply for a FedEx driver job in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497201_3745,UniUni,Logistics / 3PL Decision Maker,logistics,navigational,Canada Post tracking number lookup,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497260_4341,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Where is Mountain Warehouse located in Waterloo?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497312_2487,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Does Canada Post deliver packages on weekends?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497351_3661,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How do I track a package in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497394_9058,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does ETA mean on my mail tracking?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497442_7996,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How fast does Shein ship to Canada?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497500_3622,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Where is the DHL facility in Louisville Kentucky?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497547_8534,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Does mail run on Good Friday in Canada?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497588_5698,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How do I track my package in French?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497686_5276,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How do I track international packages?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497740_8786,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What's the best way to track packages in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497785_4530,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does colis mean and how do I track it?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497842_6037,UniUni,Logistics / 3PL Decision Maker,logistics,transactional,Where can I find Shein discount codes for Canada?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497892_3971,UniUni,Logistics / 3PL Decision Maker,logistics,navigational,USPS package tracking for international shipments,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178497942_6188,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Does mail get delivered on Veterans Day?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178498000_8781,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How do I track international packages with customs?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178501905_6039,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How do I contact Shein customer service about a delayed delivery?,9.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178501970_6527,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does 'Ontario Inc' mean on a company registration?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178502071_7206,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What's last-mile delivery and why does it matter for shipping?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178502143_1650,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What happens at a Shenzhen sorting centre during shipping?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178502205_5528,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does gateway transit mean in shipping terminology?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178502272_9928,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does ETA mean on Reddit and in shipping contexts?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178502338_4467,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How accurate is AliExpress tracking for international orders?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178502404_4807,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What's the Burnaby area known for on Reddit discussions?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178502465_3345,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What does Temu mean in texting slang?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178502536_7069,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How fast is Temu shipping to Canada compared to other platforms?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178502593_8225,UniUni,Logistics / 3PL Decision Maker,logistics,informational,How do I track packages shipped from China reliably?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178502660_4752,UniUni,Logistics / 3PL Decision Maker,logistics,commercial,Does Shein deliver to Canada and what are the shipping costs?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178502707_4600,UniUni,Logistics / 3PL Decision Maker,logistics,informational,What company does the HNI logo belong to?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178502767_6378,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Are AliExpress reviews from Canadian buyers trustworthy?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178503834_8732,UniUni,Logistics / 3PL Decision Maker,logistics,informational,Does UniUni deliver on weekends or just weekdays?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178504637_2905,UniUni,Logistics / 3PL Decision Maker,logistics,informational,"What are the best last-mile delivery options available in Sacramento, California?",7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178510326_1477,UniUni,Gig Driver / Delivery Partner,logistics,informational,How long does UniExpress usually take to deliver packages?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178510392_1689,UniUni,Gig Driver / Delivery Partner,logistics,informational,"My Shein package says data received in Carteret NJ, what's next?",6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178510481_1755,UniUni,Gig Driver / Delivery Partner,logistics,informational,Can I track my Amazon delivery in real-time with their truck tracker?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178510559_1609,UniUni,Gig Driver / Delivery Partner,logistics,informational,Why does my package show delivered but I haven't received it yet?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178510620_7828,UniUni,Gig Driver / Delivery Partner,logistics,informational,What's the postal code for St. John's Newfoundland?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178510671_2847,UniUni,Gig Driver / Delivery Partner,logistics,informational,How do I track my Temu order status online?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178510727_1866,UniUni,Gig Driver / Delivery Partner,logistics,informational,Can I put a vacation hold on my FedEx deliveries?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178510798_3846,UniUni,Gig Driver / Delivery Partner,logistics,informational,What's UniUni and how does their delivery service work in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178510867_1649,UniUni,Gig Driver / Delivery Partner,logistics,informational,What are people saying about O Positiv delivery reviews?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178510933_9490,UniUni,Gig Driver / Delivery Partner,logistics,informational,What does a buzz number mean in a Canadian address?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178511002_4261,UniUni,Gig Driver / Delivery Partner,logistics,informational,How long does Shein typically take to deliver to Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178511060_1424,UniUni,Gig Driver / Delivery Partner,logistics,informational,How do I track my AliExpress order to Canada?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178511124_7841,UniUni,Gig Driver / Delivery Partner,logistics,informational,How do Canada Post mailboxes work and where can I find one?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178511192_2267,UniUni,Gig Driver / Delivery Partner,logistics,informational,Is 17Track reliable for tracking international packages?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178511249_7376,UniUni,Gig Driver / Delivery Partner,logistics,informational,How long does Temu take to ship to Quebec?,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178511291_2085,UniUni,Gig Driver / Delivery Partner,logistics,navigational,Canada Post official tracking website,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178511356_5988,UniUni,Gig Driver / Delivery Partner,logistics,informational,Where is the USPS facility in Fremont and what do they handle?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178511421_3136,UniUni,Gig Driver / Delivery Partner,logistics,informational,What's the easiest way to track a package delivery?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178511492_6593,UniUni,Gig Driver / Delivery Partner,logistics,informational,Who is Rivo and do they offer delivery services in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178511541_9950,UniUni,Gig Driver / Delivery Partner,logistics,informational,How do I find a Canadian postal code?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178511600_2203,UniUni,Gig Driver / Delivery Partner,logistics,informational,How do I track my package with Courier Center?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178511659_2975,UniUni,Gig Driver / Delivery Partner,logistics,informational,Does FedEx deliver packages on Sundays in Canada?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515291_4106,UniUni,Gig Driver / Delivery Partner,logistics,informational,How do I track my Colissimo package?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515331_4006,UniUni,Gig Driver / Delivery Partner,logistics,informational,How can I track my Shein order?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515401_1630,UniUni,Gig Driver / Delivery Partner,logistics,informational,What's AliExpress customer service contact information?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515452_7360,UniUni,Gig Driver / Delivery Partner,logistics,informational,How do I track an international parcel?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515490_3790,UniUni,Gig Driver / Delivery Partner,logistics,informational,Is Temu available in Quebec?,6.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515572_5205,UniUni,Gig Driver / Delivery Partner,logistics,informational,What's a carrier transportadora and how do I contact them on WhatsApp?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515655_6746,UniUni,Gig Driver / Delivery Partner,logistics,commercial,What's the best shipping solution for small e-commerce businesses?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515699_3031,UniUni,Gig Driver / Delivery Partner,logistics,informational,How do I track my parcel online?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515770_5016,UniUni,Gig Driver / Delivery Partner,logistics,informational,What are people saying about Victoria BC on Reddit?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515824_9934,UniUni,Gig Driver / Delivery Partner,logistics,commercial,Is YesStyle legit and safe to order from?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515870_1171,UniUni,Gig Driver / Delivery Partner,logistics,informational,What's a good parcel tracker app?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515924_9127,UniUni,Gig Driver / Delivery Partner,logistics,informational,What does gateway transit mean in shipping?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178515984_8183,UniUni,Gig Driver / Delivery Partner,logistics,transactional,Download AliExpress app for Android or iOS?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178516016_9191,UniUni,Gig Driver / Delivery Partner,logistics,informational,What does suivi mean?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178516058_2044,UniUni,Gig Driver / Delivery Partner,logistics,informational,How do I use Cainiao tracking?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178517041_7468,UniUni,Gig Driver / Delivery Partner,logistics,informational,How do I access the official Shein website from Canada?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178517098_8012,UniUni,Gig Driver / Delivery Partner,logistics,informational,How can I track my USPS package number online?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178521887_4622,UniUni,Cross-Border Shipper,logistics,informational,What do people say about UniUni's service in Burnaby?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178521940_9008,UniUni,Cross-Border Shipper,logistics,informational,Can you return items you bought from Shein?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178521971_9593,UniUni,Cross-Border Shipper,logistics,informational,What does ummi mean?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522017_8699,UniUni,Cross-Border Shipper,logistics,informational,How do I track my UniUni delivery?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522068_4718,UniUni,Cross-Border Shipper,logistics,informational,What does a UUS tracking number mean?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522130_8680,UniUni,Cross-Border Shipper,logistics,informational,What are Postes Canada's operating hours?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522208_4558,UniUni,Cross-Border Shipper,logistics,informational,Can I reroute my FedEx package after it ships?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522258_9159,UniUni,Cross-Border Shipper,logistics,informational,Is UniU a reliable delivery service?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522314_1269,UniUni,Cross-Border Shipper,logistics,commercial,Does Shein offer express shipping options?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522359_1016,UniUni,Cross-Border Shipper,logistics,informational,Como funciona o rastreio Cainao?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522426_9546,UniUni,Cross-Border Shipper,logistics,informational,What's the best subreddit for Montreal discussions?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522466_9726,UniUni,Cross-Border Shipper,logistics,transactional,"UPS lost my package, what do I do?",7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522519_5660,UniUni,Cross-Border Shipper,logistics,informational,What's the postal code for Kelowna?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522566_4998,UniUni,Cross-Border Shipper,logistics,informational,Who is the owner of AliExpress?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522609_6760,UniUni,Cross-Border Shipper,logistics,informational,Comment suivre ma commande Shein?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522672_6613,UniUni,Cross-Border Shipper,logistics,informational,How does 17track work for international parcels?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522723_1619,UniUni,Cross-Border Shipper,logistics,informational,How do I track a Canada Post parcel?,8.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522787_6325,UniUni,Cross-Border Shipper,logistics,informational,How do I return something I bought on Shein?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522845_3075,UniUni,Cross-Border Shipper,logistics,informational,Is there a DHL location in Sacramento?,7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178522903_3417,UniUni,Cross-Border Shipper,logistics,informational,Does Shein have local warehouses in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178528131_3466,UniUni,Cross-Border Shipper,logistics,informational,How do I track my AliExpress package in real time?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178528209_6653,UniUni,Cross-Border Shipper,logistics,informational,What does 'suivi de coli' mean and how do I track my parcel?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178528290_9217,UniUni,Cross-Border Shipper,logistics,informational,How can I find my lost package when I don't have tracking info?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178528373_4725,UniUni,Cross-Border Shipper,logistics,informational,Does USPS actually fly packages or do they use ground transport?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178528459_6736,UniUni,Cross-Border Shipper,logistics,informational,Where is the Canada Post location in Lethbridge and their hours?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178528531_7722,UniUni,Cross-Border Shipper,logistics,informational,How do I track my Shein order from the US to Canada?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178528593_5729,UniUni,Cross-Border Shipper,logistics,informational,How do I check my 4PX Express tracking number?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178528680_4383,UniUni,Cross-Border Shipper,logistics,informational,What does 'gateway transit' mean in shipping and package tracking?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178528743_8088,UniUni,Cross-Border Shipper,logistics,informational,How fast does Shein actually ship to Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178528828_6660,UniUni,Cross-Border Shipper,logistics,informational,"What's in Kent, Moncton and is there a shipping hub there?",8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178528896_9363,UniUni,Cross-Border Shipper,logistics,informational,How do I track my AliExpress order step by step?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178528951_3778,UniUni,Cross-Border Shipper,logistics,informational,What region does area code 315 cover?,8.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178529031_5324,UniUni,Cross-Border Shipper,logistics,navigational,"I need to track my UPS package, where's the UPS tracking portal?",7.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178529111_6325,UniUni,Cross-Border Shipper,logistics,informational,How long does AliExpress shipping to Canada typically take?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178529184_5392,UniUni,Cross-Border Shipper,logistics,informational,What are some meaningful Remembrance Day quotes?,6.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178529272_1704,UniUni,Cross-Border Shipper,logistics,informational,Can I order from AliExpress and have it shipped to the USA?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178529351_2034,UniUni,Cross-Border Shipper,logistics,informational,How do I track a package using my Cainiao tracking number?,9.0,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178529425_2066,UniUni,Cross-Border Shipper,logistics,informational,Is FedEx open on Saturdays for pickups and deliveries?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178530528_8651,UniUni,Cross-Border Shipper,logistics,informational,What does livraison uni mean and is it a shipping service in Canada?,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
+gen_1775178531368_6187,UniUni,Cross-Border Shipper,logistics,informational,What makes a good aliexpress logo,7.5,,ai_batch_202604,AI Generated April 2026,2026-04-02,approved
