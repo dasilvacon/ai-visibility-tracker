@@ -77,6 +77,47 @@ gcloud services enable containerregistry.googleapis.com
 gcloud services enable storage-api.googleapis.com
 echo -e "${GREEN}✓ APIs enabled${NC}"
 
+# Sync client data to GCS BEFORE building the image
+# This ensures GCS (source of truth) always has the latest files
+echo ""
+echo -e "${BLUE}→ Syncing client data to GCS...${NC}"
+echo "  This ensures the live app uses the latest client files"
+python3 -c "
+import os, sys
+os.environ.setdefault('GOOGLE_CLOUD_PROJECT', '${PROJECT_ID}')
+sys.path.insert(0, '.')
+from src.client_manager.gcs_sync import GCSClientSync
+from pathlib import Path
+try:
+    gcs = GCSClientSync()
+    # Find all client folders and upload their files
+    data_dir = Path('data')
+    uploaded = 0
+    for client_dir in sorted(data_dir.iterdir()):
+        if not client_dir.is_dir() or client_dir.name in ('results', 'reports', 'prompt_generation', 'temp'):
+            continue
+        files = {}
+        for f in client_dir.iterdir():
+            if f.suffix in ('.json', '.csv') and not f.name.startswith('.'):
+                file_type = f.stem.split('_')[-1]  # brand_config, personas, keywords, prompts
+                if 'brand_config' in f.name: file_type = 'brand_config'
+                elif 'personas' in f.name: file_type = 'personas'
+                elif 'keywords' in f.name: file_type = 'keywords'
+                elif 'prompts' in f.name: file_type = 'prompts'
+                files[file_type] = str(f)
+        if files:
+            gcs.upload_client_files(client_dir.name, files)
+            uploaded += len(files)
+    # Also upload registry if it exists
+    if (data_dir / 'clients.json').exists():
+        gcs.upload_registry(str(data_dir / 'clients.json'))
+    print(f'Synced {uploaded} client files to GCS')
+except Exception as e:
+    print(f'Warning: GCS sync failed: {e}')
+    print('Continuing with deploy anyway...')
+" 2>&1 | while read line; do echo "  $line"; done
+echo -e "${GREEN}✓ Client data synced to GCS${NC}"
+
 # Build container image
 echo ""
 echo -e "${BLUE}→ Building container image...${NC}"
