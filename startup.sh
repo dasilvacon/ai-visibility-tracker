@@ -1,5 +1,13 @@
 #!/bin/bash
-# Startup script for Cloud Run - downloads client data from GCS
+# Startup script for Cloud Run - downloads runtime data from GCS
+#
+# IMPORTANT: Client data files (brand configs, personas, keywords, prompts)
+# are baked into the Docker image and synced TO GCS during deploy.
+# On startup, we only download files that DON'T already exist locally.
+# This prevents stale GCS data from overwriting newer files in the image.
+#
+# Runtime data (test results, reports, prompt drafts) is always downloaded
+# from GCS since it's created at runtime and not in the Docker image.
 
 # Don't exit on error - we'll handle errors manually
 set +e
@@ -17,20 +25,51 @@ else
     echo "⚠️  No STREAMLIT_SECRETS env var found (OK for local development)"
 fi
 
-# Download client data from Google Cloud Storage
-echo "📥 Syncing client data from Google Cloud Storage..."
+# Download client data from GCS — only files that don't exist locally
+# Docker image has the latest committed files; GCS fills in runtime additions
+echo "📥 Syncing client data from Google Cloud Storage (skip existing)..."
 python3 -c "
 from src.client_manager.gcs_sync import GCSClientSync
+from pathlib import Path
 import sys
 
 try:
     gcs_sync = GCSClientSync()
-    success = gcs_sync.download_all_client_data()
-    sys.exit(0 if success else 1)
+    bucket = gcs_sync.bucket
+    prefix = 'client-data/'
+    local_dir = Path('data')
+    downloaded = 0
+    skipped = 0
+
+    for blob in bucket.list_blobs(prefix=prefix):
+        if blob.name.endswith('/'):
+            continue
+        relative_path = blob.name[len(prefix):]
+        if relative_path == 'clients.json':
+            destination = local_dir / 'clients.json'
+        else:
+            parts = relative_path.split('/')
+            if len(parts) == 2:
+                destination = local_dir / parts[0] / parts[1]
+            else:
+                destination = local_dir / relative_path
+
+        # Only download if file doesn't already exist in the image
+        if destination.exists():
+            skipped += 1
+            continue
+
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        blob.download_to_filename(str(destination))
+        downloaded += 1
+        print(f'  Downloaded {blob.name} (new)')
+
+    print(f'Client data: {downloaded} downloaded, {skipped} already in image')
+    sys.exit(0)
 except Exception as e:
     print(f'⚠️  GCS client sync failed: {e}')
-    print('   Continuing with local data (OK for first run)')
-    sys.exit(0)  # Don't fail startup if GCS sync fails
+    print('   Continuing with Docker image data')
+    sys.exit(0)
 "
 
 if [ $? -eq 0 ]; then
@@ -39,20 +78,50 @@ else
     echo "⚠️  GCS client sync had issues, but continuing with startup"
 fi
 
-# Download prompt data from Google Cloud Storage
-echo "📥 Syncing prompt data from Google Cloud Storage..."
+# Download prompt drafts from GCS — only files that don't exist locally
+# Approved prompts and main CSV are in the image; drafts are runtime data
+echo "📥 Syncing prompt data from Google Cloud Storage (skip existing)..."
 python3 -c "
 from src.client_manager.gcs_sync import GCSClientSync
+from pathlib import Path
 import sys
 
 try:
     gcs_sync = GCSClientSync()
-    success = gcs_sync.download_prompt_data()
-    sys.exit(0 if success else 1)
+    bucket = gcs_sync.bucket
+    prefix = 'prompt-data/'
+    local_dir = Path('data')
+    downloaded = 0
+    skipped = 0
+
+    for blob in bucket.list_blobs(prefix=prefix):
+        if blob.name.endswith('/'):
+            continue
+        relative_path = blob.name[len(prefix):]
+
+        if relative_path.startswith('drafts/'):
+            destination = local_dir / 'prompt_generation' / relative_path
+        elif relative_path.startswith('approved/'):
+            destination = local_dir / 'prompt_generation' / relative_path
+        else:
+            destination = local_dir / relative_path
+
+        # Only download if file doesn't already exist
+        if destination.exists():
+            skipped += 1
+            continue
+
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        blob.download_to_filename(str(destination))
+        downloaded += 1
+        print(f'  Downloaded {blob.name} (new)')
+
+    print(f'Prompt data: {downloaded} downloaded, {skipped} already in image')
+    sys.exit(0)
 except Exception as e:
     print(f'⚠️  GCS prompt sync failed: {e}')
-    print('   Continuing with local data (OK for first run)')
-    sys.exit(0)  # Don't fail startup if GCS sync fails
+    print('   Continuing with Docker image data')
+    sys.exit(0)
 "
 
 if [ $? -eq 0 ]; then
@@ -61,7 +130,7 @@ else
     echo "⚠️  GCS prompt sync had issues, but continuing with startup"
 fi
 
-# Download test results from Google Cloud Storage
+# Download test results from GCS — ALWAYS download (runtime data, not in image)
 echo "📥 Syncing test results from Google Cloud Storage..."
 python3 -c "
 from src.client_manager.gcs_sync import GCSClientSync
@@ -74,7 +143,7 @@ try:
 except Exception as e:
     print(f'⚠️  GCS test results sync failed: {e}')
     print('   Continuing with local data (OK for first run)')
-    sys.exit(0)  # Don't fail startup if GCS sync fails
+    sys.exit(0)
 "
 
 if [ $? -eq 0 ]; then
@@ -83,7 +152,7 @@ else
     echo "⚠️  GCS test results sync had issues, but continuing with startup"
 fi
 
-# Download reports from Google Cloud Storage
+# Download reports from GCS — ALWAYS download (runtime data, not in image)
 echo "📥 Syncing reports from Google Cloud Storage..."
 python3 -c "
 from src.client_manager.gcs_sync import GCSClientSync
@@ -96,7 +165,7 @@ try:
 except Exception as e:
     print(f'⚠️  GCS reports sync failed: {e}')
     print('   Continuing with local data (OK for first run)')
-    sys.exit(0)  # Don't fail startup if GCS sync fails
+    sys.exit(0)
 "
 
 if [ $? -eq 0 ]; then
