@@ -502,20 +502,60 @@ def _render_review_section(client_name):
                 except Exception:
                     pass
 
-            # ── GCS cleanup — delete drafts from cloud so they don't come back ──
+            # Delete client-specific prompts file
+            client_slug = client_name.replace(' ', '_').lower()
+            client_prompts = Path(f'data/{client_slug}/{client_slug}_prompts.csv')
+            if client_prompts.exists():
+                try:
+                    client_prompts.unlink()
+                except Exception:
+                    # If can't delete, empty it
+                    client_prompts.write_text('')
+
+            # Remove this client's entries from shared generated_prompts.csv
+            main_csv = Path('data/generated_prompts.csv')
+            if main_csv.exists():
+                try:
+                    with open(main_csv, 'r') as f:
+                        reader = csv.DictReader(f)
+                        fieldnames = reader.fieldnames
+                        rows = [r for r in reader if r.get('client_name') != client_name]
+                    with open(main_csv, 'w', newline='') as f:
+                        writer = csv.DictWriter(f, fieldnames=fieldnames)
+                        writer.writeheader()
+                        writer.writerows(rows)
+                except Exception:
+                    pass
+
+            # ── GCS cleanup — delete ALL prompt data for this client ──
             gcs_status = ""
             try:
                 from src.client_manager.gcs_sync import GCSClientSync
                 gcs = GCSClientSync()
                 bucket = gcs.bucket
+                # Delete draft blobs
                 for filename in deleted_files:
                     gcs_path = f"prompt-data/drafts/{filename}"
                     blob = bucket.blob(gcs_path)
                     if blob.exists():
                         blob.delete()
+                # Delete approved prompt files for this client
+                client_slug_variants = [
+                    client_name.replace(' ', '_'),
+                    client_name.replace(' ', '_').lower()
+                ]
+                for prefix in ['prompt-data/approved/', 'client-data/']:
+                    for blob in bucket.list_blobs(prefix=prefix):
+                        if any(v in blob.name for v in client_slug_variants) and 'prompt' in blob.name.lower():
+                            blob.delete()
+                # Re-upload cleaned batch metadata
                 if batches_file.exists():
                     blob = bucket.blob('prompt-data/prompt_batches.json')
                     blob.upload_from_filename(str(batches_file))
+                # Re-upload cleaned generated_prompts.csv
+                if main_csv.exists():
+                    blob = bucket.blob('prompt-data/generated_prompts.csv')
+                    blob.upload_from_filename(str(main_csv))
                 gcs_status = " (including cloud storage)"
             except Exception as e:
                 gcs_status = f" (local only — cloud cleanup failed: {e})"
