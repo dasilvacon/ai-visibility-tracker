@@ -57,15 +57,36 @@ def get_client_files(client):
     return prompts, brand_config, None
 
 
-def run_client_test(client, prompts_file, brand_config):
+def clear_client_results(slug):
+    """Clear existing test results for a client so tests start fresh."""
+    results_dir = Path(f'data/results/{slug}')
+    if results_dir.exists():
+        for f in results_dir.glob('*'):
+            if f.is_file():
+                f.unlink()
+        print(f"  Cleared existing results for {slug}")
+
+    reports_dir = Path(f'data/reports/{slug}')
+    if reports_dir.exists():
+        for f in reports_dir.glob('test_run_*'):
+            f.unlink()
+
+
+def run_client_test(client, prompts_file, brand_config, fresh=False):
     """
     Run a visibility test for a single client.
+
+    Args:
+        fresh: If True, clear existing results first (for mid-month re-runs)
 
     Returns:
         (success: bool, message: str)
     """
     name = client['name']
     slug = client['slug']
+
+    if fresh:
+        clear_client_results(slug)
 
     print(f"\n{'='*60}")
     print(f"  TESTING: {name}")
@@ -128,8 +149,17 @@ def run_client_test(client, prompts_file, brand_config):
 
 def main():
     """Run tests for all clients sequentially."""
+    import argparse
+    parser = argparse.ArgumentParser(description="Run visibility tests for all clients")
+    parser.add_argument('--fresh', action='store_true',
+                        help='Clear existing results and start fresh (for mid-month re-runs)')
+    args = parser.parse_args()
+
+    mode = "FRESH (clearing old results)" if args.fresh else "RESUME (keeping existing results)"
+
     print(f"\n{'#'*60}")
     print(f"  AI VISIBILITY TRACKER — BATCH TEST RUN")
+    print(f"  Mode:    {mode}")
     print(f"  Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"{'#'*60}")
 
@@ -152,7 +182,7 @@ def main():
             continue
 
         # Run test
-        success, message = run_client_test(client, prompts, brand_config)
+        success, message = run_client_test(client, prompts, brand_config, fresh=args.fresh)
         results[name] = ('success' if success else 'failed', message)
 
         # Brief pause between clients to avoid rate limit carryover
