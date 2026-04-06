@@ -93,6 +93,12 @@ class BaseAPIClient(ABC):
         end_time = time.time()
         latency = end_time - start_time
 
+        # Merge metadata and ensure cited_urls is always present
+        merged_metadata = {**metadata, **result.get('metadata', {})}
+
+        # Normalize: ensure cited_urls exists at top level for easy access
+        cited_urls = merged_metadata.get('cited_urls', [])
+
         return {
             'prompt_id': prompt_id,
             'platform': self.platform_name,
@@ -104,7 +110,8 @@ class BaseAPIClient(ABC):
             'expected_visibility_score': expected_score,
             'latency_seconds': round(latency, 2),
             'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
-            'metadata': {**metadata, **result.get('metadata', {})}
+            'metadata': merged_metadata,
+            'cited_urls': cited_urls
         }
 
     def validate_config(self) -> bool:

@@ -635,70 +635,255 @@ class HTMLReportGenerator:
         </div>
         """
 
-    def _build_sources_tab(self, brand_name: str, source_analysis: Dict[str, Any]) -> str:
-        """Build the Sources & Citations tab showing where brands are being mentioned."""
+    def _build_sources_tab(self, brand_name: str, source_analysis: Dict[str, Any],
+                           scored_results: list = None) -> str:
+        """Build the Sources & Citations tab showing where brands are being mentioned.
 
-        if not source_analysis or not source_analysis.get('all_sources'):
+        Uses two data sources:
+        1. PRIMARY: Structured cited_urls from API responses (Perplexity, Gemini, Google AI Overviews)
+        2. SECONDARY: Text-extracted source mentions from source_analysis
+        """
+        scored_results = scored_results or []
+
+        # Aggregate cited_urls from all scored results (the real API citation data)
+        from collections import Counter, defaultdict
+        cited_domains = Counter()        # domain -> response count
+        cited_pages = defaultdict(set)    # domain -> set of full URLs
+        cited_by_platform = defaultdict(lambda: Counter())  # platform -> domain -> count
+        citations_with_brand = Counter()  # domain -> count where brand was co-mentioned
+        per_prompt_citations = []         # list of {prompt, platform, cited_urls}
+
+        for result in scored_results:
+            platform = result.get('platform', '')
+            prompt_text = result.get('prompt_text', '')
+            visibility = result.get('visibility', {})
+            sources = visibility.get('sources', [])
+
+            # Collect prompt-level citation data
+            prompt_citations = []
+            for source in sources:
+                domain = source.get('domain', '')
+                full_url = source.get('full_url', '')
+                if not domain:
+                    continue
+
+                cited_domains[domain] += 1
+                if full_url:
+                    cited_pages[domain].add(full_url)
+                cited_by_platform[platform][domain] += 1
+
+                if source.get('brand_in_context', False):
+                    citations_with_brand[domain] += 1
+
+                prompt_citations.append({
+                    'domain': domain,
+                    'url': full_url or f'https://{domain}',
+                    'title': source.get('source_name', domain),
+                    'type': source.get('type', 'unknown'),
+                    'brand_co_mentioned': source.get('brand_in_context', False)
+                })
+
+            if prompt_citations:
+                per_prompt_citations.append({
+                    'prompt': prompt_text,
+                    'platform': platform,
+                    'citations': prompt_citations
+                })
+
+        total_api_citations = sum(cited_domains.values())
+        total_unique_domains = len(cited_domains)
+        has_api_citations = total_api_citations > 0
+
+        # Also check text-extracted source analysis
+        has_text_sources = source_analysis and source_analysis.get('all_sources')
+
+        if not has_api_citations and not has_text_sources:
             return f"""
             <h2>Sources & Citations</h2>
             <div class="info-card">
                 <div class="info-card-title">What This Section Tracks</div>
                 <div class="info-card-content">
                     <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 16px;">
-                        When AI platforms answer questions about your industry, they sometimes reference
-                        third-party sources — review sites, news outlets, comparison platforms, and more.
-                        This section identifies <strong>which sources AI is citing</strong> when it mentions
-                        (or doesn't mention) {brand_name}.
+                        When AI platforms answer questions about your industry, they often cite
+                        third-party sources — linking to review sites, news outlets, comparison articles,
+                        and more. This section shows <strong>exactly which URLs</strong> AI platforms
+                        are referencing when they discuss your industry.
                     </p>
                     <p style="font-size: 15px; line-height: 1.7; color: #6B5660; margin-bottom: 16px;">
-                        <strong>No source citations were detected in this test run.</strong> This is common
-                        in first-time reports — it means the AI responses in our test didn't explicitly
-                        reference third-party URLs or well-known platforms by name. This doesn't mean
-                        sources aren't influencing AI recommendations behind the scenes.
+                        <strong>No source citations were detected in this test run.</strong> This typically
+                        means the AI platforms responded without citing external sources. Perplexity and
+                        Gemini typically provide the most citation data — ChatGPT and Claude provide less.
                     </p>
                     <p style="font-size: 15px; line-height: 1.7; color: #6B5660; margin-bottom: 0;">
-                        <strong>What you can do:</strong> Focus on getting {brand_name} mentioned on
-                        high-authority sites in your industry (review platforms, trade publications, comparison
-                        articles). As AI models increasingly cite sources in their responses, this section
-                        will populate with actionable data showing exactly where to focus outreach efforts.
+                        <strong>What you can do:</strong> Getting {brand_name} featured on high-authority
+                        sites that AI platforms trust (review sites, industry publications, comparison
+                        articles) increases the likelihood of being cited. This section will show exactly
+                        which domains to target as citation data becomes available.
                     </p>
                 </div>
             </div>
             """
 
-        total_sources = source_analysis.get('total_unique_sources', 0)
-        brand_sources = source_analysis.get('sources_mentioning_brand', 0)
-        gap_opportunities = source_analysis.get('gap_opportunities', 0)
+        total_sources = source_analysis.get('total_unique_sources', 0) if source_analysis else 0
+        brand_sources = source_analysis.get('sources_mentioning_brand', 0) if source_analysis else 0
+        gap_opportunities = source_analysis.get('gap_opportunities', 0) if source_analysis else 0
 
-        sources_with_brand = source_analysis.get('sources_with_your_brand', [])
-        recommended_targets = source_analysis.get('recommended_targets', [])
+        sources_with_brand = source_analysis.get('sources_with_your_brand', []) if source_analysis else []
+        recommended_targets = source_analysis.get('recommended_targets', []) if source_analysis else []
+
+        # Use API citation counts if available, otherwise fall back to text extraction
+        display_total = total_unique_domains if has_api_citations else total_sources
+        display_brand = len(citations_with_brand) if has_api_citations else brand_sources
+
+        # Determine which platforms provided citation data
+        platforms_with_citations = [p for p in cited_by_platform.keys() if cited_by_platform[p]]
+        platform_labels = {
+            'perplexity': 'Perplexity',
+            'gemini': 'Gemini',
+            'google_ai_overview': 'Google AI Overview',
+            'openai': 'ChatGPT',
+            'anthropic': 'Claude'
+        }
 
         html = f"""
         <h2>Sources & Citations</h2>
         <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 32px;">
-            When AI mentions "{brand_name}" or your competitors, it's often citing third-party sources like
-            Sephora, Reddit, beauty blogs—not just brand websites. This section shows which sources are
-            driving brand mentions, revealing high-value outreach opportunities.
+            When AI platforms answer questions about your industry, they cite third-party sources —
+            linking to specific URLs that inform their responses. This section shows <strong>exactly which
+            domains and pages</strong> AI is citing, and whether {brand_name} appears alongside those citations.
         </p>
 
         <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr);">
             <div class="metric-card">
-                <div class="metric-label">Total Sources Found</div>
-                <div class="metric-value" style="font-size: 40px;">{total_sources}</div>
-                <div class="metric-status">Unique sources cited by AI</div>
+                <div class="metric-label">Cited Domains</div>
+                <div class="metric-value" style="font-size: 40px;">{display_total}</div>
+                <div class="metric-status">Unique domains cited across {total_api_citations} responses</div>
             </div>
-            <div class="metric-card {'strong' if brand_sources > 0 else 'weak'}">
-                <div class="metric-label">Sources Mentioning You</div>
-                <div class="metric-value" style="font-size: 40px;">{brand_sources}</div>
-                <div class="metric-status">Where you appear</div>
+            <div class="metric-card {'strong' if display_brand > 0 else 'weak'}">
+                <div class="metric-label">Co-Cited with {brand_name}</div>
+                <div class="metric-value" style="font-size: 40px;">{display_brand}</div>
+                <div class="metric-status">Domains where your brand also appears</div>
             </div>
-            <div class="metric-card {'weak' if gap_opportunities > 0 else 'strong'}">
-                <div class="metric-label">Gap Opportunities</div>
-                <div class="metric-value" style="font-size: 40px;">{gap_opportunities}</div>
-                <div class="metric-status">Competitors only (you're missing)</div>
+            <div class="metric-card">
+                <div class="metric-label">Citation Sources</div>
+                <div class="metric-value" style="font-size: 40px;">{len(platforms_with_citations)}</div>
+                <div class="metric-status">{'  '.join(platform_labels.get(p, p) for p in platforms_with_citations) if platforms_with_citations else 'Pending next test run'}</div>
             </div>
         </div>
         """
+
+        # Section 1: Top Cited Domains (like Ahrefs Brand Radar)
+        if cited_domains:
+            top_domains = cited_domains.most_common(15)
+
+            domains_table = """
+            <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+                <thead>
+                    <tr style="background: #F3EFF2; border-bottom: 2px solid #D4C5CE;">
+                        <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Domain</th>
+                        <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Responses</th>
+                        <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Unique Pages</th>
+                        <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Brand Co-Cited</th>
+                        <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Platforms Citing</th>
+                    </tr>
+                </thead>
+                <tbody>
+            """
+
+            for domain, count in top_domains:
+                pages_count = len(cited_pages.get(domain, set()))
+                brand_co = citations_with_brand.get(domain, 0)
+                brand_pct = round(brand_co / count * 100) if count > 0 else 0
+                brand_color = '#27AE60' if brand_co > 0 else '#E74C3C'
+
+                # Which platforms cite this domain
+                citing_platforms = []
+                for platform, domain_counts in cited_by_platform.items():
+                    if domain in domain_counts:
+                        citing_platforms.append(platform_labels.get(platform, platform))
+
+                domains_table += f"""
+                <tr style="border-bottom: 1px solid #E8E4E3;">
+                    <td style="padding: 12px; color: #4D2E3A; font-weight: 500;">
+                        <a href="https://{domain}" target="_blank" style="color: #4D2E3A; text-decoration: none; border-bottom: 1px dotted #A78E8B;">{domain}</a>
+                    </td>
+                    <td style="padding: 12px; text-align: center; color: #6B5660; font-weight: 600; font-size: 18px;">{count}</td>
+                    <td style="padding: 12px; text-align: center; color: #6B5660;">{pages_count}</td>
+                    <td style="padding: 12px; text-align: center; color: {brand_color}; font-weight: 600;">
+                        {'Yes (' + str(brand_pct) + '%)' if brand_co > 0 else 'No'}
+                    </td>
+                    <td style="padding: 12px; color: #6B5660; font-size: 13px;">{'  '.join(citing_platforms)}</td>
+                </tr>
+                """
+
+            domains_table += "</tbody></table>"
+
+            html += f"""
+            <div class="accordion-group" style="margin-top: 32px;">
+                <button class="accordion-button active" onclick="toggleAccordion(this)">
+                    <span>Top Cited Domains ({total_unique_domains} found)</span>
+                    <span class="accordion-icon">▼</span>
+                </button>
+                <div class="accordion-content active">
+                    <p style="color: #6B5660; margin: 16px 0; line-height: 1.7;">
+                        These are the domains AI platforms cited most frequently when answering questions
+                        related to your industry. Domains where {brand_name} is co-cited are marked in green.
+                    </p>
+                    {domains_table}
+                </div>
+            </div>
+            """
+
+        # Section 2: Per-Prompt Citations (which sources were cited for which questions)
+        if per_prompt_citations:
+            prompt_rows = ""
+            for i, entry in enumerate(per_prompt_citations[:20]):
+                prompt_short = entry['prompt'][:100] + ('...' if len(entry['prompt']) > 100 else '')
+                platform_label = platform_labels.get(entry['platform'], entry['platform'])
+                citation_links = []
+                for cit in entry['citations'][:5]:
+                    co_badge = ' <span style="color: #27AE60; font-weight: 600;">&#10003;</span>' if cit.get('brand_co_mentioned') else ''
+                    citation_links.append(
+                        f'<a href="{cit["url"]}" target="_blank" style="color: #D4698B; text-decoration: none; font-size: 13px;">'
+                        f'{cit["domain"]}</a>{co_badge}'
+                    )
+                more = f' +{len(entry["citations"]) - 5} more' if len(entry['citations']) > 5 else ''
+
+                prompt_rows += f"""
+                <tr style="border-bottom: 1px solid #E8E4E3;">
+                    <td style="padding: 12px; color: #4D2E3A; font-size: 14px; max-width: 400px;">{prompt_short}</td>
+                    <td style="padding: 12px; color: #6B5660; text-align: center; font-size: 13px;">{platform_label}</td>
+                    <td style="padding: 12px; color: #6B5660; font-size: 13px;">{'&ensp;'.join(citation_links)}{more}</td>
+                </tr>
+                """
+
+            html += f"""
+            <div class="accordion-group" style="margin-top: 24px;">
+                <button class="accordion-button" onclick="toggleAccordion(this)">
+                    <span>Citations by Prompt ({len(per_prompt_citations)} responses with sources)</span>
+                    <span class="accordion-icon">▼</span>
+                </button>
+                <div class="accordion-content">
+                    <p style="color: #6B5660; margin: 16px 0; line-height: 1.7;">
+                        For each question tested, these are the sources AI cited in its response.
+                        A <span style="color: #27AE60; font-weight: 600;">&#10003;</span> means {brand_name}
+                        was mentioned in the same response as that source.
+                    </p>
+                    <div style="max-height: 500px; overflow-y: auto; border: 1px solid #E8E4E3; border-radius: 6px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead style="position: sticky; top: 0; background: #F3EFF2; z-index: 10;">
+                                <tr style="border-bottom: 2px solid #D4C5CE;">
+                                    <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Prompt</th>
+                                    <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Platform</th>
+                                    <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Cited Sources</th>
+                                </tr>
+                            </thead>
+                            <tbody>{prompt_rows}</tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            """
 
         # Table 1: Sources with your brand (wrapped in accordion)
         if sources_with_brand:
@@ -2202,7 +2387,7 @@ class HTMLReportGenerator:
         <div id="sources" class="tab-content">
             {self._build_citation_analysis(citation_stats) if citation_stats else ''}
 
-            {self._build_sources_tab(brand_name, source_analysis) if source_analysis else '<p>No source analysis available.</p>'}
+            {self._build_sources_tab(brand_name, source_analysis, scored_results) if source_analysis else '<p>No source analysis available.</p>'}
         </div>
 
         <div class="footer">

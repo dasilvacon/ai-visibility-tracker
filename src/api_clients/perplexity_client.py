@@ -1,8 +1,13 @@
 """
 Perplexity API client implementation.
+
+Perplexity returns structured citations (URLs) in its API responses.
+These are normalized into the standard cited_urls format for the
+Sources & Citations report tab.
 """
 
 from typing import Dict, Any, Optional
+from urllib.parse import urlparse
 from .base_client import BaseAPIClient
 
 
@@ -24,7 +29,7 @@ class PerplexityClient(BaseAPIClient):
             max_tokens: Maximum tokens in response
 
         Returns:
-            Dictionary with response data
+            Dictionary with response data including structured citations
         """
         try:
             from openai import OpenAI
@@ -49,10 +54,26 @@ class PerplexityClient(BaseAPIClient):
                 timeout=timeout
             )
 
-            # Extract citations if present
-            citations = []
+            # Extract raw citations from Perplexity response
+            raw_citations = []
             if hasattr(response, 'citations') and response.citations:
-                citations = response.citations
+                raw_citations = response.citations
+
+            # Normalize into standard cited_urls format
+            cited_urls = []
+            seen_domains = set()
+            for citation in raw_citations:
+                url = citation if isinstance(citation, str) else citation.get('url', '') if isinstance(citation, dict) else str(citation)
+                if not url:
+                    continue
+                domain = self._extract_domain(url)
+                cited_urls.append({
+                    'url': url,
+                    'domain': domain,
+                    'title': citation.get('title', '') if isinstance(citation, dict) else '',
+                    'source_type': 'api_citation'
+                })
+                seen_domains.add(domain)
 
             return {
                 'response_text': response.choices[0].message.content,
@@ -65,7 +86,9 @@ class PerplexityClient(BaseAPIClient):
                     'finish_reason': response.choices[0].finish_reason,
                     'temperature': temperature,
                     'max_tokens': max_tokens,
-                    'citations': citations  # Perplexity-specific feature
+                    'citations': raw_citations,
+                    'cited_urls': cited_urls,
+                    'citation_count': len(cited_urls)
                 }
             }
 
@@ -83,3 +106,12 @@ class PerplexityClient(BaseAPIClient):
                 'error': f'Perplexity API error: {str(e)}',
                 'metadata': {}
             }
+
+    @staticmethod
+    def _extract_domain(url: str) -> str:
+        """Extract domain from a URL, stripping www. prefix."""
+        try:
+            parsed = urlparse(url)
+            return parsed.netloc.replace('www.', '')
+        except Exception:
+            return ''

@@ -508,14 +508,28 @@ class VisibilityScorer:
             # Score this response
             visibility_score = self.score_response(response_text, result)
 
-            # For AI Overviews, enrich sources from SerpAPI references
-            if platform == 'google_ai_overview' and metadata.get('references'):
-                ai_overview_sources = self._extract_ai_overview_sources(metadata['references'])
-                visibility_score['sources'].extend(ai_overview_sources)
+            # PRIMARY: Use structured cited_urls from API (Perplexity, Gemini, SerpAPI)
+            cited_urls = result.get('cited_urls', []) or metadata.get('cited_urls', [])
+            if cited_urls:
+                api_sources = self._normalize_cited_urls(cited_urls, response_text)
+                # Merge: API citations first, then text-extracted ones (deduped)
+                existing_domains = {s.get('domain', '') for s in api_sources}
+                text_sources = [s for s in visibility_score['sources'] if s.get('domain', '') not in existing_domains]
+                visibility_score['sources'] = api_sources + text_sources
                 visibility_score['source_count'] = len(visibility_score['sources'])
-                # Check if any reference directly cites a brand domain
+                visibility_score['has_api_citations'] = True
+            else:
+                visibility_score['has_api_citations'] = False
+
+            # LEGACY: For AI Overviews, also process references (backward compat)
+            if platform == 'google_ai_overview' and metadata.get('references'):
+                existing_domains = {s.get('domain', '') for s in visibility_score['sources']}
+                ai_overview_sources = self._extract_ai_overview_sources(metadata['references'])
+                new_sources = [s for s in ai_overview_sources if s.get('domain', '') not in existing_domains]
+                visibility_score['sources'].extend(new_sources)
+                visibility_score['source_count'] = len(visibility_score['sources'])
                 visibility_score['ai_overview_brand_cited'] = any(
-                    s.get('brand_in_context', False) for s in ai_overview_sources
+                    s.get('brand_in_context', False) for s in visibility_score['sources']
                 )
 
             # Add visibility data to result
@@ -525,6 +539,95 @@ class VisibilityScorer:
             scored_results.append(result_with_score)
 
         return scored_results
+
+    def _normalize_cited_urls(self, cited_urls: List[Dict[str, Any]], response_text: str) -> List[Dict[str, Any]]:
+        """
+        Convert structured cited_urls from API responses into our enriched source format.
+
+        This is the PRIMARY source extraction path — used when Perplexity, Gemini,
+        or SerpAPI return actual citation URLs in their API responses.
+
+        Args:
+            cited_urls: List of {'url', 'domain', 'title', 'source_type'} dicts
+            response_text: The AI response text (for context snippet extraction)
+
+        Returns:
+            List of enriched source dicts matching our standard format
+        """
+        sources = []
+        seen_domains = set()
+        text_length = len(response_text) if response_text else 1
+
+        for citation in cited_urls:
+            url = citation.get('url', '')
+            domain = citation.get('domain', '')
+            title = citation.get('title', '')
+            source_type = citation.get('source_type', 'api_citation')
+
+            if not domain and url:
+                try:
+                    from urllib.parse import urlparse
+                    domain = urlparse(url).netloc.replace('www.', '')
+                except Exception:
+                    pass
+
+            if not domain or domain in seen_domains:
+                continue
+            seen_domains.add(domain)
+
+            # Try to find where this domain/source appears in the response text
+            context_snippet = ''
+            position_in_response = 0.5  # default to middle
+            brand_in_context = False
+            competitors_in_context = []
+
+            # Search for domain or title mention in response for context
+            search_terms = [domain]
+            if title:
+                # Use first significant word of title
+                title_words = [w for w in title.split() if len(w) > 3]
+                if title_words:
+                    search_terms.append(title_words[0])
+
+            import re
+            for term in search_terms:
+                match = re.search(re.escape(term), response_text, re.IGNORECASE)
+                if match:
+                    start = max(0, match.start() - 100)
+                    end = min(text_length, match.end() + 100)
+                    context_snippet = response_text[start:end].strip()
+                    position_in_response = match.start() / text_length
+                    break
+
+            # If no context found from domain, use first 200 chars as general context
+            if not context_snippet and response_text:
+                context_snippet = response_text[:200].strip()
+
+            # Check if brand appears near this citation
+            for pattern in self.brand_patterns:
+                if context_snippet and pattern.search(context_snippet):
+                    brand_in_context = True
+                    break
+
+            # Check which competitors appear near this citation
+            for comp_name, patterns in self.competitor_patterns.items():
+                for pattern in patterns:
+                    if context_snippet and pattern.search(context_snippet):
+                        competitors_in_context.append(comp_name)
+                        break
+
+            sources.append({
+                'type': source_type,
+                'domain': domain,
+                'full_url': url,
+                'source_name': title or domain.split('.')[0].title(),
+                'context_snippet': context_snippet,
+                'brand_in_context': brand_in_context,
+                'competitors_in_context': competitors_in_context,
+                'position_in_response': round(position_in_response, 3)
+            })
+
+        return sources
 
     def _extract_ai_overview_sources(self, references: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """

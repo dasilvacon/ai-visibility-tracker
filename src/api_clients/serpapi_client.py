@@ -132,14 +132,24 @@ class SerpAPIClient(BaseAPIClient):
 
         # Step 5: Extract references (these become sources in our system)
         references = []
+        cited_urls = []
         for ref in ai_overview.get('references', []):
+            link = ref.get('link', '')
+            domain = self._extract_domain(link)
             references.append({
                 'title': ref.get('title', ''),
-                'link': ref.get('link', ''),
+                'link': link,
                 'snippet': ref.get('snippet', ''),
                 'source': ref.get('source', ''),
-                'domain': self._extract_domain(ref.get('link', ''))
+                'domain': domain
             })
+            if link:
+                cited_urls.append({
+                    'url': link,
+                    'domain': domain,
+                    'title': ref.get('title', ''),
+                    'source_type': 'ai_overview_reference'
+                })
 
         return {
             'response_text': response_text,
@@ -149,6 +159,8 @@ class SerpAPIClient(BaseAPIClient):
                 'has_ai_overview': True,
                 'references': references,
                 'reference_count': len(references),
+                'cited_urls': cited_urls,
+                'citation_count': len(cited_urls),
                 'text_block_count': len(ai_overview.get('text_blocks', [])),
                 'organic_results_count': len(data.get('organic_results', [])),
                 'search_id': search_id,
