@@ -155,8 +155,8 @@ gcloud run deploy ${SERVICE_NAME} \
     --memory 2Gi \
     --cpu 2 \
     --cpu-boost \
-    --timeout 300 \
-    --min-instances 0 \
+    --timeout 3600 \
+    --min-instances 1 \
     --max-instances 10 \
     --set-secrets="/app/.streamlit/secrets.toml=streamlit-secrets:latest" \
     --port 8080

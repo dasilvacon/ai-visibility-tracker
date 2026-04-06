@@ -6,6 +6,7 @@ All platform-specific clients should inherit from this class.
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional
 import time
+import signal
 
 
 class BaseAPIClient(ABC):
@@ -68,8 +69,26 @@ class BaseAPIClient(ABC):
 
         temperature = self.config.get('testing', {}).get('default_temperature', 0.7)
         max_tokens = self.config.get('testing', {}).get('max_tokens', 1000)
+        hard_timeout = self.config.get('testing', {}).get('timeout_seconds', 30) + 15  # extra buffer
 
-        result = self.send_prompt(prompt_text, temperature, max_tokens)
+        # Safety timeout — if any API call hangs, kill it after hard_timeout seconds
+        try:
+            old_handler = signal.signal(signal.SIGALRM, lambda s, f: (_ for _ in ()).throw(TimeoutError("API call timed out")))
+            signal.alarm(hard_timeout)
+            result = self.send_prompt(prompt_text, temperature, max_tokens)
+            signal.alarm(0)  # Cancel alarm
+            signal.signal(signal.SIGALRM, old_handler)
+        except TimeoutError:
+            signal.alarm(0)
+            result = {
+                'response_text': '',
+                'success': False,
+                'error': f'{self.platform_name} API call hard-timed out after {hard_timeout}s',
+                'metadata': {}
+            }
+        except Exception:
+            signal.alarm(0)
+            raise
 
         end_time = time.time()
         latency = end_time - start_time

@@ -501,13 +501,36 @@ def run_visibility_test(client_name: str, prompts_file: str, brand_config: str) 
         client_slug_escaped = client_slug.replace("'", "'\\''").lower()
         wrapper_cmd = f'''
 cd {parent_dir}
+
+# Background process: periodically save results to GCS every 5 minutes
+# This prevents losing hours of progress if the container restarts
+(
+    sleep 300  # Wait 5 minutes before first save
+    while true; do
+        python3 -c "
+from src.client_manager.gcs_sync import GCSClientSync
+try:
+    gcs = GCSClientSync()
+    gcs.upload_test_results('{client_slug_escaped}')
+    print('>>> Periodic GCS save complete for {client_slug_escaped}')
+except Exception as e:
+    print(f'Periodic GCS save failed: {{e}}')
+" 2>&1 | head -5
+        sleep 300  # Save every 5 minutes
+    done
+) &
+SAVER_PID=$!
+
+# Run the actual test
 {main_cmd}
 EXIT_CODE=$?
+
+# Kill the background saver
+kill $SAVER_PID 2>/dev/null || true
+
 if [ $EXIT_CODE -eq 0 ]; then
     echo "success" > {status_file}
-    echo ">>> Uploading results and reports to GCS..."
-    # Upload to GCS immediately - critical for Cloud Run persistence
-    # Uses per-client isolation: test-results/{client_slug}/ and reports/{client_slug}/
+    echo ">>> Uploading final results and reports to GCS..."
     python3 -c "
 from src.client_manager.gcs_sync import GCSClientSync
 try:
@@ -523,6 +546,16 @@ except Exception as e:
 "
 else
     echo "failed" > {status_file}
+    echo ">>> Saving partial results to GCS..."
+    python3 -c "
+from src.client_manager.gcs_sync import GCSClientSync
+try:
+    gcs = GCSClientSync()
+    gcs.upload_test_results('{client_slug_escaped}')
+    print('Partial results saved to GCS')
+except Exception as e:
+    print(f'Partial results save failed: {{e}}')
+"
 fi
 # Clean up temp prompts file
 rm -f {temp_prompts}
@@ -898,18 +931,43 @@ def render():
         # No test running - show start button
         st.markdown("### 🚀 Run Test")
 
+        prompt_count = count_client_prompts(prompts_file, client_name)
+        # Estimate: ~5 platforms × ~8 seconds per call = ~40 seconds per prompt
+        est_minutes = max(10, int(prompt_count * 40 / 60))
+        est_hours = est_minutes / 60
+
         st.info(f"""
         **What will happen:**
-        1. Load {count_client_prompts(prompts_file, client_name)} prompts for {client_name}
+        1. Load {prompt_count} prompts for {client_name}
         2. Test each prompt across available AI platforms (OpenAI, Anthropic, etc.)
         3. Analyze brand visibility and competitor mentions
         4. Generate HTML report, PDF summary, and CSV exports
         5. Update historical tracking data
 
-        **Estimated time:** 30-60 minutes for full test (runs in background)
+        **Estimated time:** ~{est_minutes} minutes ({est_hours:.1f} hours) for {prompt_count} prompts × 5 platforms
 
-        **Important:** The test runs on the server - you can close this tab and come back later!
+        **Important:** The test runs on the server and saves progress to cloud storage every 5 minutes.
+        You can close this tab and come back later!
         """)
+
+        # Check if OTHER clients have tests running (warn about concurrent tests)
+        try:
+            from src.client_manager import ClientRegistry
+            registry = ClientRegistry()
+            other_running = []
+            for c in registry.list_clients():
+                c_name = c.get('name', '')
+                if c_name != client_name and is_test_running(c_name):
+                    other_running.append(c_name)
+            if other_running:
+                st.warning(f"""
+                ⚠️ **Tests already running for:** {', '.join(other_running)}
+
+                Running multiple tests simultaneously will cause API rate limiting and can make
+                all tests take much longer. Consider waiting for the current test(s) to finish first.
+                """)
+        except Exception:
+            pass
 
         if st.button("▶️ Start Visibility Test", type="primary", use_container_width=True):
             with st.spinner("Starting test..."):

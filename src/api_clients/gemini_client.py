@@ -34,6 +34,7 @@ class GeminiClient(BaseAPIClient):
 
             temperature = temperature or self.config.get('testing', {}).get('default_temperature', 0.7)
             max_tokens = max_tokens or self.config.get('testing', {}).get('max_tokens', 1000)
+            timeout = self.config.get('testing', {}).get('timeout_seconds', 30)
 
             # Generate response with new API
             response = client.models.generate_content(
@@ -41,7 +42,8 @@ class GeminiClient(BaseAPIClient):
                 contents=prompt,
                 config={
                     'temperature': temperature,
-                    'max_output_tokens': max_tokens
+                    'max_output_tokens': max_tokens,
+                    'http_options': {'timeout': timeout * 1000}  # milliseconds
                 }
             )
 
