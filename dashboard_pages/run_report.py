@@ -1082,6 +1082,88 @@ def render():
 
     st.markdown("---")
 
+    # Run All Clients section (admin only)
+    user_role_check = st.session_state.get('user_role', st.session_state.get('role', ''))
+    if user_role_check == 'admin':
+        with st.expander("🔄 Run All Clients (Sequential)"):
+            st.markdown("""
+            Run visibility tests for **all clients**, one at a time. Each client's test will
+            complete fully before the next one starts. Tests support resume — if interrupted,
+            re-run to pick up where it left off.
+            """)
+
+            # Show all clients and their readiness
+            try:
+                from src.client_manager import ClientRegistry
+                registry = ClientRegistry()
+                all_clients = registry.list_clients()
+
+                for c in all_clients:
+                    c_name = c.get('name', '')
+                    c_slug = c_name.replace(' ', '_').lower()
+                    c_prompts = Path(f'data/{c_slug}/{c_slug}_prompts.csv')
+                    c_config = Path(f'data/{c_slug}/{c_slug}_brand_config.json')
+                    ready = c_prompts.exists() and c_config.exists()
+
+                    if is_test_running(c_name):
+                        st.markdown(f"🏃 **{c_name}** — test running")
+                    elif ready:
+                        st.markdown(f"✅ **{c_name}** — ready")
+                    else:
+                        missing = []
+                        if not c_prompts.exists():
+                            missing.append("prompts")
+                        if not c_config.exists():
+                            missing.append("brand config")
+                        st.markdown(f"❌ **{c_name}** — missing: {', '.join(missing)}")
+
+                if st.button("🚀 Start All Client Tests (Sequential)", use_container_width=True):
+                    # Launch the batch test script as a background process
+                    script_dir = os.path.dirname(os.path.abspath(__file__))
+                    parent_dir = os.path.dirname(script_dir)
+                    batch_script = os.path.join(parent_dir, 'scripts', 'run_all_tests.py')
+
+                    if not Path(batch_script).exists():
+                        st.error("Batch test script not found.")
+                    else:
+                        # Build env with API keys
+                        env = os.environ.copy()
+                        try:
+                            api_keys = st.secrets.get('api_keys', {})
+                            for key_name, env_name in [
+                                ('openai', 'OPENAI_API_KEY'),
+                                ('anthropic', 'ANTHROPIC_API_KEY'),
+                                ('perplexity', 'PERPLEXITY_API_KEY'),
+                                ('gemini', 'GEMINI_API_KEY'),
+                                ('serpapi', 'SERPAPI_API_KEY'),
+                            ]:
+                                if api_keys.get(key_name):
+                                    env[env_name] = api_keys[key_name]
+                        except Exception:
+                            pass
+
+                        batch_log = Path(parent_dir) / 'data' / 'reports' / 'batch_test.log'
+                        batch_log.parent.mkdir(parents=True, exist_ok=True)
+
+                        with open(batch_log, 'w') as log:
+                            log.write(f"=== Batch test started: {datetime.now()} ===\n")
+                            subprocess.Popen(
+                                [sys.executable, batch_script],
+                                stdout=log,
+                                stderr=subprocess.STDOUT,
+                                env=env,
+                                cwd=parent_dir,
+                                start_new_session=True
+                            )
+
+                        st.success("✅ Batch test started for all clients! Tests will run sequentially in the background.")
+                        st.info("Check back in a few hours. Each client runs one at a time to avoid rate limiting.")
+
+            except Exception as e:
+                st.error(f"Could not load client list: {e}")
+
+    st.markdown("---")
+
     # Help section
     with st.expander("❓ Help & Troubleshooting"):
         st.markdown("""
