@@ -8,6 +8,9 @@
 #
 # Runtime data (test results, reports, prompt drafts) is always downloaded
 # from GCS since it's created at runtime and not in the Docker image.
+#
+# NOTE: GCS sync runs in BACKGROUND so Streamlit starts immediately
+# and passes health checks. Data will be available within seconds.
 
 # Don't exit on error - we'll handle errors manually
 set +e
@@ -25,9 +28,12 @@ else
     echo "⚠️  No STREAMLIT_SECRETS env var found (OK for local development)"
 fi
 
-# Download client data from GCS — only files that don't exist locally
-# Docker image has the latest committed files; GCS fills in runtime additions
-echo "📥 Syncing client data from Google Cloud Storage (skip existing)..."
+# Run GCS sync in BACKGROUND so Streamlit starts immediately
+# This prevents startup probe timeouts while still getting data
+echo "📥 Starting background GCS sync..."
+(
+    sleep 2  # Let Streamlit start first
+    echo "📥 Syncing client data from Google Cloud Storage (skip existing)..."
 python3 -c "
 from src.client_manager.gcs_sync import GCSClientSync
 from pathlib import Path
@@ -169,12 +175,14 @@ except Exception as e:
 "
 
 if [ $? -eq 0 ]; then
-    echo "✓ Reports synced from GCS"
-else
-    echo "⚠️  GCS reports sync had issues, but continuing with startup"
-fi
+        echo "✓ Reports synced from GCS"
+    else
+        echo "⚠️  GCS reports sync had issues, but continuing"
+    fi
+    echo "✓ Background GCS sync complete"
+) &
 
-# Start Streamlit
+# Start Streamlit immediately (don't wait for GCS sync)
 echo "🌐 Starting Streamlit on port 8080..."
 exec streamlit run streamlit_app_html.py \
     --server.port=8080 \
