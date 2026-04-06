@@ -47,5 +47,56 @@
     "parcel tracking",
     "crowdsourced delivery",
     "affordable shipping"
+  ],
+  "known_sources": [
+    "reddit",
+    "trustpilot.com",
+    "glassdoor.com",
+    "indeed.com",
+    "betakit.com",
+    "techcrunch.com",
+    "freightwaves.com",
+    "supplychainbrain.com",
+    "dcvelocity.com",
+    "canadianshipper.com",
+    "financialpost.com",
+    "globeandmail.com",
+    "linkedin",
+    "twitter",
+    "facebook",
+    "google reviews",
+    "bbb.org",
+    "yelp.com",
+    "sitejabber.com"
+  ],
+  "source_categories": {
+    "logistics_media": [
+      "freightwaves.com",
+      "supplychainbrain.com",
+      "dcvelocity.com",
+      "canadianshipper.com"
+    ],
+    "review_platforms": [
+      "trustpilot.com",
+      "sitejabber.com",
+      "bbb.org",
+      "yelp.com"
+    ],
+    "business_media": [
+      "betakit.com",
+      "financialpost.com",
+      "globeandmail.com"
+    ],
+    "social": [
+      "reddit",
+      "linkedin",
+      "twitter",
+      "facebook"
+    ]
+  },
+  "irrelevant_sources": [
+    "wikipedia.org",
+    "wikihow.com",
+    "pinterest.com"
   ]
 }

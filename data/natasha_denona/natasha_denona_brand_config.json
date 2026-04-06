@@ -47,5 +47,66 @@
     "shimmer eyeshadow",
     "face palettes",
     "lip products"
+  ],
+  "known_sources": [
+    "sephora.com",
+    "ulta.com",
+    "nordstrom.com",
+    "temptalia.com",
+    "allure.com",
+    "beautylish.com",
+    "makeupbyTiffanyD",
+    "reddit",
+    "youtube",
+    "instagram",
+    "tiktok",
+    "byrdie.com",
+    "refinery29.com",
+    "cosmopolitan.com",
+    "vogue.com",
+    "harpersbazaar.com",
+    "elle.com",
+    "glamour.com",
+    "beautyinsider",
+    "makeupalley.com",
+    "influenster.com",
+    "nymag.com",
+    "thecut.com",
+    "whowhatwear.com",
+    "beautytalkph"
+  ],
+  "source_categories": {
+    "review_sites": [
+      "temptalia.com",
+      "makeupalley.com",
+      "influenster.com"
+    ],
+    "retailers": [
+      "sephora.com",
+      "ulta.com",
+      "nordstrom.com",
+      "beautylish.com"
+    ],
+    "media": [
+      "allure.com",
+      "byrdie.com",
+      "refinery29.com",
+      "vogue.com",
+      "cosmopolitan.com",
+      "elle.com",
+      "glamour.com",
+      "harpersbazaar.com"
+    ],
+    "social": [
+      "reddit",
+      "youtube",
+      "instagram",
+      "tiktok"
+    ]
+  },
+  "irrelevant_sources": [
+    "wikipedia.org",
+    "wikihow.com",
+    "pinterest.com"
   ]
 }

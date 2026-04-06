@@ -72,5 +72,62 @@
     "last_modified": "2026-03-08T16:49:08.555351Z",
     "schema_version": "2.0"
   },
-  "legacy_settings": {}
+  "legacy_settings": {},
+  "known_sources": [
+    "theknot.com",
+    "weddingwire.com",
+    "zola.com",
+    "brides.com",
+    "marthastewartweddings.com",
+    "stylemepretty.com",
+    "junebugweddings.com",
+    "ruffledblog.com",
+    "greenweddingshoes.com",
+    "reddit",
+    "youtube",
+    "instagram",
+    "tiktok",
+    "pinterest.com",
+    "appstore",
+    "googleplay",
+    "trustpilot.com",
+    "g2.com",
+    "capterra.com",
+    "producthunt.com",
+    "weddingsonline.com",
+    "hitched.co.uk",
+    "easyweddings.com.au"
+  ],
+  "source_categories": {
+    "wedding_media": [
+      "theknot.com",
+      "weddingwire.com",
+      "brides.com",
+      "marthastewartweddings.com",
+      "stylemepretty.com",
+      "junebugweddings.com"
+    ],
+    "review_platforms": [
+      "trustpilot.com",
+      "g2.com",
+      "capterra.com",
+      "producthunt.com"
+    ],
+    "competitors": [
+      "zola.com",
+      "theknot.com",
+      "weddingwire.com"
+    ],
+    "social": [
+      "reddit",
+      "youtube",
+      "instagram",
+      "tiktok",
+      "pinterest.com"
+    ]
+  },
+  "irrelevant_sources": [
+    "wikipedia.org",
+    "wikihow.com"
+  ]
 }

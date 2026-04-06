@@ -86,5 +86,58 @@
     "last_modified": "2026-03-08T16:32:39.052032Z",
     "schema_version": "2.0"
   },
-  "legacy_settings": {}
+  "legacy_settings": {},
+  "known_sources": [
+    "techcrunch.com",
+    "crunchbase.com",
+    "pitchbook.com",
+    "betakit.com",
+    "financialpost.com",
+    "globeandmail.com",
+    "bloomberg.com",
+    "wsj.com",
+    "forbes.com",
+    "linkedin",
+    "twitter",
+    "producthunt.com",
+    "venturebeat.com",
+    "businessinsider.com",
+    "theglobeandmail.com",
+    "bdc.ca",
+    "edc.ca",
+    "cbinsights.com",
+    "saasstr",
+    "sacra.com",
+    "investmentexecutive.com"
+  ],
+  "source_categories": {
+    "fintech_media": [
+      "techcrunch.com",
+      "venturebeat.com",
+      "betakit.com",
+      "businessinsider.com"
+    ],
+    "data_platforms": [
+      "crunchbase.com",
+      "pitchbook.com",
+      "cbinsights.com",
+      "sacra.com"
+    ],
+    "business_media": [
+      "financialpost.com",
+      "globeandmail.com",
+      "bloomberg.com",
+      "wsj.com",
+      "forbes.com"
+    ],
+    "social": [
+      "linkedin",
+      "twitter"
+    ]
+  },
+  "irrelevant_sources": [
+    "wikipedia.org",
+    "wikihow.com",
+    "pinterest.com"
+  ]
 }
