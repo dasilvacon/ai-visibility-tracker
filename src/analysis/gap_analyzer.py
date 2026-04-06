@@ -367,10 +367,8 @@ class GapAnalyzer:
             # Business value context
             value_context = self._get_persona_value_prop(persona)
 
-            # Calculate estimated monthly impressions lost
-            total_prompts = len(scored_results)
-            monthly_multiplier = 4  # Assuming weekly testing = 4x per month
-            missed_impressions = int((gap_percentage / 100) * sample_size * monthly_multiplier)
+            # Calculate missed responses (how many test responses lacked brand mention)
+            missed_responses = int((gap_percentage / 100) * sample_size)
 
             prioritized_audiences.append({
                 'persona': persona,
@@ -386,7 +384,7 @@ class GapAnalyzer:
                 'example_queries': example_queries,
                 'effort_estimate': effort_estimate,
                 'content_pieces_needed': content_pieces_needed,
-                'missed_monthly_impressions': missed_impressions,
+                'missed_responses': missed_responses,
                 'action_items': self._generate_specific_actions('Persona', persona)[:3],
                 'quick_win': gap_percentage > 25 and effort_estimate == "Low"
             })
@@ -459,9 +457,8 @@ class GapAnalyzer:
             effort_estimate = "High" if sample_size > 100 else "Medium" if sample_size > 50 else "Low"
             content_pieces_needed = max(5, int(sample_size * gap_percentage / 1000))
 
-            # Monthly impressions lost
-            monthly_multiplier = 4
-            missed_impressions = int((gap_percentage / 100) * sample_size * monthly_multiplier)
+            # Missed responses (how many test responses lacked brand mention)
+            missed_responses = int((gap_percentage / 100) * sample_size)
 
             prioritized_content.append({
                 'content_type': content_type_name,
@@ -476,7 +473,7 @@ class GapAnalyzer:
                 'example_queries': example_queries,
                 'effort_estimate': effort_estimate,
                 'content_pieces_needed': content_pieces_needed,
-                'missed_monthly_impressions': missed_impressions,
+                'missed_responses': missed_responses,
                 'specific_content_to_create': self._generate_specific_actions('Category', category)[:3],
                 'quick_win': gap_percentage > 25 and effort_estimate == "Low"
             })
@@ -512,8 +509,7 @@ class GapAnalyzer:
             content_type_name = self._get_content_type_name('Intent Type', intent)
             effort_estimate = "High" if sample_size > 100 else "Medium" if sample_size > 50 else "Low"
             content_pieces_needed = max(5, int(sample_size * gap_percentage / 1000))
-            monthly_multiplier = 4
-            missed_impressions = int((gap_percentage / 100) * sample_size * monthly_multiplier)
+            missed_responses = int((gap_percentage / 100) * sample_size)
 
             prioritized_content.append({
                 'content_type': content_type_name,
@@ -528,7 +524,7 @@ class GapAnalyzer:
                 'example_queries': example_queries,
                 'effort_estimate': effort_estimate,
                 'content_pieces_needed': content_pieces_needed,
-                'missed_monthly_impressions': missed_impressions,
+                'missed_responses': missed_responses,
                 'specific_content_to_create': self._generate_specific_actions('Intent', intent)[:3],
                 'quick_win': gap_percentage > 25 and effort_estimate == "Low"
             })

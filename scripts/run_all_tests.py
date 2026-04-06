@@ -61,11 +61,13 @@ def clear_client_results(slug):
     """Clear existing test results for a client so tests start fresh."""
     results_dir = Path(f'data/results/{slug}')
     if results_dir.exists():
+        # Remove results CSV and JSON files
         for f in results_dir.glob('*'):
             if f.is_file():
                 f.unlink()
         print(f"  Cleared existing results for {slug}")
 
+    # Also clear status files
     reports_dir = Path(f'data/reports/{slug}')
     if reports_dir.exists():
         for f in reports_dir.glob('test_run_*'):

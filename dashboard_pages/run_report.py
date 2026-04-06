@@ -1090,6 +1090,9 @@ def render():
             Run visibility tests for **all clients**, one at a time. Each client's test will
             complete fully before the next one starts. Tests support resume — if interrupted,
             re-run to pick up where it left off.
+
+            This **bypasses the monthly limit** — use it when you've made major changes
+            to prompts or brand configs and need fresh data for all clients.
             """)
 
             # Show all clients and their readiness
@@ -1117,7 +1120,20 @@ def render():
                             missing.append("brand config")
                         st.markdown(f"❌ **{c_name}** — missing: {', '.join(missing)}")
 
-                if st.button("🚀 Start All Client Tests (Sequential)", use_container_width=True):
+                # Two-step confirmation
+                confirm = st.checkbox(
+                    "⚠️ I understand this will re-run ALL client tests, use API credits, "
+                    "and may take several hours to complete.",
+                    key="confirm_run_all"
+                )
+
+                run_all_btn = st.button(
+                    "🚀 Start All Client Tests (Sequential)",
+                    use_container_width=True,
+                    disabled=not confirm
+                )
+
+                if run_all_btn and confirm:
                     # Launch the batch test script as a background process
                     script_dir = os.path.dirname(os.path.abspath(__file__))
                     parent_dir = os.path.dirname(script_dir)
@@ -1146,9 +1162,9 @@ def render():
                         batch_log.parent.mkdir(parents=True, exist_ok=True)
 
                         with open(batch_log, 'w') as log:
-                            log.write(f"=== Batch test started: {datetime.now()} ===\n")
+                            log.write(f"=== Batch test started (FRESH): {datetime.now()} ===\n")
                             subprocess.Popen(
-                                [sys.executable, batch_script],
+                                [sys.executable, batch_script, '--fresh'],
                                 stdout=log,
                                 stderr=subprocess.STDOUT,
                                 env=env,

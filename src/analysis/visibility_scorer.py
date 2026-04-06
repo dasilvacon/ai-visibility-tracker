@@ -130,6 +130,20 @@ class VisibilityScorer:
                 }
                 sources.append(enrich_source(source, match.start()))
 
+        # PRIORITY 1.5: Bare domain mentions (e.g., "sephora.com", "temptalia.com")
+        bare_domain_pattern = r'(?<!\w)([a-zA-Z0-9-]+\.(?:com|org|net|ca|co\.uk|com\.au|io|gov|edu))(?!\w)'
+        for match in re.finditer(bare_domain_pattern, response_text):
+            domain = match.group(1).lower().strip()
+            if domain and domain not in seen_domains:
+                seen_domains.add(domain)
+                source = {
+                    'type': 'url',
+                    'domain': domain,
+                    'source_name': domain.split('.')[0].title(),
+                    'full_url': f'https://{domain}'
+                }
+                sources.append(enrich_source(source, match.start()))
+
         # PRIORITY 2: Known sources (loaded per-client from brand_config.json)
         for source_name in self.known_sources:
             pattern = r'\b' + re.escape(source_name) + r'\b'
@@ -151,8 +165,15 @@ class VisibilityScorer:
                     }
                     sources.append(enrich_source(source, match.start()))
 
-        # PRIORITY 3: Clean attribution patterns (only if reliable)
-        attribution_pattern = r'(?:According to|Per|From|As (?:reported|mentioned|noted) (?:by|on|in))\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s*[,:.]'
+        # PRIORITY 3: Expanded attribution patterns (multiple styles)
+        attribution_patterns = [
+            r'(?:According to|Per|From|As (?:reported|mentioned|noted|seen|featured|reviewed) (?:by|on|in))\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s*[,:.]',
+            r'(?:recommended|featured|reviewed|listed|mentioned|covered|profiled|highlighted|discussed) (?:by|on|in|at)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)',
+            r'(?:on|via|through|at)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s*,\s*(?:users?|people|reviewers?|customers?|experts?)',
+            r'(?:sites?\s+like|platforms?\s+(?:like|such as|including))\s+([A-Z][a-z]+(?:(?:\s+[A-Z][a-z]+)|(?:\.[a-z]+))?)',
+            r'(?:popular|trending|discussed|reviewed|rated)\s+on\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)',
+            r'(?:check|visit|see|try|browse|explore)\s+([A-Z][a-z]+(?:\.[a-z]+)?)',
+        ]
 
         # Known brand/source keywords to filter
         brand_keywords = set([b.lower() for b in self.brand_aliases + self.competitor_names])
@@ -163,33 +184,39 @@ class VisibilityScorer:
             'products', 'items', 'options', 'choices', 'selections'
         }
 
-        for match in re.finditer(attribution_pattern, response_text):
-            source_name = match.group(1).strip()
-            source_lower = source_name.lower()
+        for pattern in attribution_patterns:
+            for match in re.finditer(pattern, response_text):
+                source_name = match.group(1).strip()
+                source_lower = source_name.lower()
 
-            # Filter out brand names and noise
-            if source_lower in brand_keywords or source_lower in noise_words:
-                continue
+                # Filter out brand names and noise
+                if source_lower in brand_keywords or source_lower in noise_words:
+                    continue
 
-            # Filter out if it's part of a brand name
-            is_brand_part = any(source_lower in brand.lower() for brand in (self.brand_aliases + self.competitor_names))
-            if is_brand_part:
-                continue
+                # Filter out if it's part of a brand name
+                is_brand_part = any(source_lower in brand.lower() for brand in (self.brand_aliases + self.competitor_names))
+                if is_brand_part:
+                    continue
 
-            # Validate source name
-            if not self._is_valid_source(source_name):
-                continue
+                # Validate source name
+                if not self._is_valid_source(source_name):
+                    continue
 
-            domain = source_lower.replace(' ', '') + '.com'
-            if domain not in seen_domains and len(source_name) > 2:
-                seen_domains.add(domain)
-                source = {
-                    'type': 'attribution',
-                    'domain': domain,
-                    'source_name': source_name,
-                    'full_url': None
-                }
-                sources.append(enrich_source(source, match.start()))
+                # Handle sources that already look like domains
+                if '.' in source_name:
+                    domain = source_name.lower()
+                else:
+                    domain = source_lower.replace(' ', '') + '.com'
+
+                if domain not in seen_domains and len(source_name) > 2:
+                    seen_domains.add(domain)
+                    source = {
+                        'type': 'attribution',
+                        'domain': domain,
+                        'source_name': source_name,
+                        'full_url': None
+                    }
+                    sources.append(enrich_source(source, match.start()))
 
         # Sort by type priority (URLs first, then known sources, then attributions)
         type_priority = {'url': 0, 'known_source': 1, 'attribution': 2}

@@ -241,13 +241,9 @@ class HTMLReportGenerator:
         # Get citation presence rate
         citation_presence = citation_stats.get('citation_presence_rate', 0) if citation_stats else 0
 
-        # Calculate dollar impact (single, consistent methodology)
+        # Calculate visibility gap (factual — no dollar estimates without real data)
         total_results = visibility_summary.get('total_prompts_tested', 362)
-        monthly_queries_estimate = total_results * 3  # Conservative scaling factor
         gap_percentage = competitor_rate - visibility_rate
-        missed_visitors_monthly = (gap_percentage / 100) * monthly_queries_estimate
-        avg_visitor_value = 6  # Industry average
-        monthly_cost_estimate = int(missed_visitors_monthly * avg_visitor_value / 100) * 100  # Round to $100
 
         # Calculate 90-day target (close 50% of gap - realistic)
         target_visibility = min(visibility_rate + (competitor_rate - visibility_rate) * 0.5, 100)
@@ -279,8 +275,7 @@ class HTMLReportGenerator:
         <div class="insight" style="background: linear-gradient(135deg, #4D2E3A15 0%, #4D2E3A25 100%); border-left: 4px solid #4D2E3A; padding: 32px; border-radius: 8px; margin: 32px 0;">
             <p style="font-size: 18px; line-height: 1.7; margin: 0; color: #4D2E3A; font-weight: 500;">
                 {brand_name} is at <strong>{visibility_rate:.0f}%</strong> AI visibility while your top competitor ({top_comp['name']}) appears in <strong>{top_comp['mention_rate']:.0f}%</strong> of queries.
-                That gap represents approximately <strong>${monthly_cost_estimate/1000:.0f}K/month</strong> in missed qualified traffic
-                (~{int(missed_visitors_monthly)} monthly impressions from pre-qualified prospects).
+                That <strong>{gap_percentage:.0f}% gap</strong> means potential customers asking AI for recommendations in your space are being directed to competitors instead of you.
             </p>
             <p style="font-size: 16px; line-height: 1.7; margin: 24px 0 0 0; color: #6B5660;">
                 <strong>Primary recommendation:</strong> {primary_rec}
@@ -325,8 +320,8 @@ class HTMLReportGenerator:
                 <div class="info-card" style="background: #F0FFF4; border-left: 4px solid #10b981; margin-top: 16px;">
                     <div class="info-card-title" style="color: #065f46;">Quality Over Quantity</div>
                     <div class="info-card-content">
-                        <p>AI-sourced traffic shows higher engagement despite lower volume. Prospects are <strong>pre-qualified through AI research</strong> - they've already asked intelligent questions and received recommendations.</p>
-                        <p style="margin-top: 12px;"><strong>Conservative estimate:</strong> ${monthly_cost_estimate:,}/month opportunity based on ${avg_visitor_value} average visitor value and 3x monthly scaling from test sample. Your actual opportunity depends on conversion rate and average order value.</p>
+                        <p>AI-sourced traffic shows higher engagement despite lower volume. Prospects are <strong>pre-qualified through AI research</strong> — they've already asked intelligent questions and received recommendations.</p>
+                        <p style="margin-top: 12px;">When someone asks an AI assistant about your industry and your competitor gets mentioned but you don't, that's a <strong>missed opportunity with a high-intent prospect</strong>. Unlike traditional search, AI users are often ready to act on the recommendation they receive.</p>
                     </div>
                 </div>
             </div>
@@ -341,7 +336,7 @@ class HTMLReportGenerator:
                 <p style="margin-top: 12px;"><strong>Prominence Score (0-10):</strong> How featured you are when mentioned. 8-10 = top recommendation with detail, 5-7 = listed as option, 1-4 = brief reference, 0 = not mentioned.</p>
                 <p style="margin-top: 12px;"><strong>Citation Presence Rate:</strong> How often AI links to your actual website when it mentions you. Citation is the new ranking. (<a href="https://searchengineland.com/what-is-generative-engine-optimization-geo-444418" target="_blank" style="color: #4A4458;">Search Engine Land GEO Guide</a>)</p>
                 <p style="margin-top: 12px;"><strong>Momentum Label:</strong> Based on the <a href="https://www.similarweb.com/blog/marketing/geo/ai-visibility-momentum/" target="_blank" style="color: #4A4458;">SimilarWeb VAMP Framework</a>. Tracks whether your visibility is rising (Velocity), stable (Anchor), declining (Monitor), or at risk (Protect) compared to your previous test run.</p>
-                <p style="margin-top: 12px;"><strong>Revenue Impact:</strong> Conservative estimate using industry average visitor value and 3x monthly query scaling. We use realistic, research-backed numbers — not inflated projections.</p>
+                <p style="margin-top: 12px;"><strong>Visibility Gap:</strong> The percentage difference between your brand's visibility and your top competitor's. This gap represents queries where prospects are being sent to competitors instead of you.</p>
                 <p style="margin-top: 12px;"><strong>90-Day Target ({target_visibility:.0f}%):</strong> Close 50% of the gap to competitors (realistic and achievable with proper infrastructure).</p>
             </div>
         </div>
@@ -644,7 +639,32 @@ class HTMLReportGenerator:
         """Build the Sources & Citations tab showing where brands are being mentioned."""
 
         if not source_analysis or not source_analysis.get('all_sources'):
-            return "<p>No source data available.</p>"
+            return f"""
+            <h2>Sources & Citations</h2>
+            <div class="info-card">
+                <div class="info-card-title">What This Section Tracks</div>
+                <div class="info-card-content">
+                    <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 16px;">
+                        When AI platforms answer questions about your industry, they sometimes reference
+                        third-party sources — review sites, news outlets, comparison platforms, and more.
+                        This section identifies <strong>which sources AI is citing</strong> when it mentions
+                        (or doesn't mention) {brand_name}.
+                    </p>
+                    <p style="font-size: 15px; line-height: 1.7; color: #6B5660; margin-bottom: 16px;">
+                        <strong>No source citations were detected in this test run.</strong> This is common
+                        in first-time reports — it means the AI responses in our test didn't explicitly
+                        reference third-party URLs or well-known platforms by name. This doesn't mean
+                        sources aren't influencing AI recommendations behind the scenes.
+                    </p>
+                    <p style="font-size: 15px; line-height: 1.7; color: #6B5660; margin-bottom: 0;">
+                        <strong>What you can do:</strong> Focus on getting {brand_name} mentioned on
+                        high-authority sites in your industry (review platforms, trade publications, comparison
+                        articles). As AI models increasingly cite sources in their responses, this section
+                        will populate with actionable data showing exactly where to focus outreach efforts.
+                    </p>
+                </div>
+            </div>
+            """
 
         total_sources = source_analysis.get('total_unique_sources', 0)
         brand_sources = source_analysis.get('sources_mentioning_brand', 0)
@@ -1958,6 +1978,7 @@ class HTMLReportGenerator:
         }}
 
         .accordion-content {{
+            display: none;
             padding: 20px;
             border: 1px solid #E8E4E3;
             border-top: none;
@@ -1965,6 +1986,10 @@ class HTMLReportGenerator:
             margin-top: -9px;
             margin-bottom: 16px;
             background: white;
+        }}
+
+        .accordion-content.active {{
+            display: block;
         }}
 
         /* Hero Stats Card */
@@ -2094,19 +2119,22 @@ class HTMLReportGenerator:
             const content = button.nextElementSibling;
             const isActive = button.classList.contains('active');
 
-            // Close all accordions in the same parent
+            // Close all accordions in the same parent group (if grouped)
             const parent = button.closest('.accordion-group');
             if (parent) {{
                 parent.querySelectorAll('.accordion-button').forEach(btn => {{
                     btn.classList.remove('active');
-                    btn.nextElementSibling.classList.remove('active');
+                    if (btn.nextElementSibling) btn.nextElementSibling.classList.remove('active');
                 }});
             }}
 
-            // Toggle current accordion
-            if (!isActive) {{
+            // Toggle current accordion open/closed
+            if (isActive) {{
+                button.classList.remove('active');
+                if (content) content.classList.remove('active');
+            }} else {{
                 button.classList.add('active');
-                content.classList.add('active');
+                if (content) content.classList.add('active');
             }}
         }}
 
@@ -2837,8 +2865,8 @@ class HTMLReportGenerator:
                     <strong style="color: #6B5660; font-size: 14px;">🎯 The Opportunity:</strong>
                     <p style="margin: 6px 0 0 0; color: #1C1C1C; line-height: 1.6; font-size: 14px;">
                         <strong>{aud['top_competitor']}</strong> dominates this audience at {aud['competitor_rate']:.0f}% visibility
-                        ({aud['gap_percentage']:.0f} points ahead). You're missing <strong>~{aud['missed_monthly_impressions']} monthly impressions</strong>
-                        from this high-value audience.
+                        ({aud['gap_percentage']:.0f} points ahead). In our test, <strong>{aud['missed_responses']} responses</strong>
+                        to this audience's queries mentioned competitors but not you.
                     </p>
                 </div>
 
@@ -2874,7 +2902,7 @@ class HTMLReportGenerator:
         </p>
 
         <div style="margin-bottom: 24px; padding: 10px 14px; background: #F8F8F7; border-left: 3px solid #A7868F; border-radius: 4px; font-size: 11px; color: #6B5660; line-height: 1.5;">
-            <strong>How priority is calculated:</strong> Rankings based on visibility gap size × number of queries tested. "Any Competitor" = % of queries where one or more competitors appeared (not average competitor rate). "Missed impressions" assumes queries tested reflect real-world search patterns with 4x monthly scaling. Actual impact depends on your target market and content strategy.
+            <strong>How priority is calculated:</strong> Rankings based on visibility gap size x number of queries tested. "Any Competitor" = % of queries where one or more competitors appeared (not average competitor rate). "Missed responses" = test responses where competitors were mentioned but your brand was not. Actual impact depends on your target market and content strategy.
         </div>
 
         {cards_html}
@@ -2944,7 +2972,7 @@ class HTMLReportGenerator:
                     <strong style="color: #6B5660; font-size: 14px;">🎯 The Opportunity:</strong>
                     <p style="margin: 6px 0 0 0; color: #1C1C1C; line-height: 1.6; font-size: 14px;">
                         <strong>{gap['top_competitor']}</strong> dominates this content type at {gap['competitor_average']:.0f}% coverage.
-                        You're missing <strong>~{gap['missed_monthly_impressions']} monthly impressions</strong> from lack of {gap['content_type'].lower()}.
+                        In our test, <strong>{gap['missed_responses']} responses</strong> about {gap['content_type'].lower()} mentioned competitors but not you.
                     </p>
                 </div>
 
@@ -2980,7 +3008,7 @@ class HTMLReportGenerator:
         </p>
 
         <div style="margin-bottom: 24px; padding: 10px 14px; background: #F8F8F7; border-left: 3px solid #A7868F; border-radius: 4px; font-size: 11px; color: #6B5660; line-height: 1.5;">
-            <strong>How gaps are identified:</strong> Analyzed which content types (how-to, comparison, product info) had competitor presence. "Any Competitor" = % of queries where one or more competitors appeared (not average competitor rate). "Missed impressions" = estimated monthly opportunities based on gap size and test volume. Creating this content increases likelihood of AI citation.
+            <strong>How gaps are identified:</strong> Analyzed which content types (how-to, comparison, product info) had competitor presence. "Any Competitor" = % of queries where one or more competitors appeared (not average competitor rate). "Missed responses" = test responses where competitors appeared but your brand did not. Creating this content increases likelihood of AI citation.
         </div>
 
         {cards_html}
@@ -3274,7 +3302,7 @@ class HTMLReportGenerator:
 
 
     def _build_roi_estimator(self, visibility_summary: Dict[str, Any], competitive_analysis: Dict[str, Any]) -> str:
-        """Build ROI Estimator showing business impact of improvements."""
+        """Build ROI Estimator showing visibility improvement potential."""
 
         current_visibility = visibility_summary.get('brand_visibility_rate', 0)
         competitor_avg = visibility_summary.get('competitor_mention_rate', 0)
@@ -3283,146 +3311,116 @@ class HTMLReportGenerator:
         projected_visibility_low = int(min(current_visibility + 15, 100))
         projected_visibility_high = int(min(current_visibility + 25, 100))
 
-        # Estimate traffic (conservative assumptions)
-        # Assume 100 AI queries/month per 1% visibility rate
-        current_monthly_queries = int(current_visibility * 100)
-        projected_queries_low = int(projected_visibility_low * 100)
-        projected_queries_high = int(projected_visibility_high * 100)
-
-        # Estimate impressions (awareness value)
-        # Each AI mention reaches ~10 people (conversation shared, etc.)
-        current_impressions = current_monthly_queries * 10
-        projected_impressions_low = projected_queries_low * 10
-        projected_impressions_high = projected_queries_high * 10
-
-        # Revenue estimation (conservative)
-        # Assume 2% conversion rate and $45 AOV (beauty industry average)
-        conversion_rate = 0.02
-        aov = 45
-
-        current_revenue = int(current_monthly_queries * conversion_rate * aov)
-        projected_revenue_low = int(projected_queries_low * conversion_rate * aov)
-        projected_revenue_high = int(projected_queries_high * conversion_rate * aov)
-
-        revenue_lift_low = projected_revenue_low - current_revenue
-        revenue_lift_high = projected_revenue_high - current_revenue
+        # Calculate the gap to close
+        visibility_gap = max(0, competitor_avg - current_visibility)
+        total_prompts = visibility_summary.get('total_prompts', 0)
+        brand_mentions = visibility_summary.get('brand_mentions', 0)
+        prompts_tested = visibility_summary.get('total_responses', total_prompts)
 
         html = f"""
         <div class="info-card">
-            <div class="info-card-title">💰 ROI Estimator</div>
+            <div class="info-card-title">Visibility Growth Potential</div>
             <div class="info-card-content">
                 <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 0;">
-                    Estimated business impact of implementing the recommendations in this report.
-                    These are conservative projections based on industry benchmarks and your current performance.
+                    Based on your current performance and competitive benchmarks, here's what
+                    implementing the recommendations in this report could achieve.
                 </p>
             </div>
         </div>
 
         <div style="background: linear-gradient(135deg, #4D2E3A 0%, #A78E8B 100%); color: white; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
-            <h3 style="color: white; margin: 0 0 24px 0; font-size: 24px;">📈 Projected Impact (90 Days)</h3>
+            <h3 style="color: white; margin: 0 0 24px 0; font-size: 24px;">Projected Visibility Improvement (90 Days)</h3>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
                 <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
-                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">AI Visibility Rate</div>
+                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Current AI Visibility</div>
+                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 4px;">{current_visibility:.1f}%</div>
+                    <div style="font-size: 13px; opacity: 0.8;">Mentioned in {brand_mentions} of {prompts_tested} responses</div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
+                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Target AI Visibility</div>
                     <div style="font-size: 32px; font-weight: 700; margin-bottom: 4px;">{projected_visibility_low}-{projected_visibility_high}%</div>
-                    <div style="font-size: 13px; opacity: 0.8;">Currently: {current_visibility:.1f}%</div>
+                    <div style="font-size: 13px; opacity: 0.8;">+{projected_visibility_low - int(current_visibility)} to +{projected_visibility_high - int(current_visibility)} percentage points</div>
                 </div>
 
                 <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
-                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Monthly AI-Driven Traffic</div>
-                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 4px;">{projected_queries_low:,}-{projected_queries_high:,}</div>
-                    <div style="font-size: 13px; opacity: 0.8;">Currently: {current_monthly_queries:,}</div>
-                </div>
-
-                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; backdrop-filter: blur(10px);">
-                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Brand Impressions/Month</div>
-                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 4px;">{projected_impressions_low:,}-{projected_impressions_high:,}</div>
-                    <div style="font-size: 13px; opacity: 0.8;">Currently: {current_impressions:,}</div>
+                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Competitive Gap to Close</div>
+                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 4px;">{visibility_gap:.1f}%</div>
+                    <div style="font-size: 13px; opacity: 0.8;">Avg competitor visibility: {competitor_avg:.1f}%</div>
                 </div>
             </div>
         </div>
 
         <div style="background: #FFF4E6; padding: 16px 20px; border-left: 4px solid #F39C12; border-radius: 6px; margin-bottom: 24px;">
-            <strong style="color: #B77400;">⚠️ Important:</strong>
+            <strong style="color: #B77400;">Why This Matters:</strong>
             <span style="color: #6B5660; margin-left: 8px;">
-                These are <strong>projected estimates</strong>, not actual tracked revenue. To measure real AI-driven revenue,
-                connect Google Analytics to track traffic from AI sources (ChatGPT, Perplexity, Claude, etc.) and their conversion rates.
+                AI-driven search is growing rapidly. When someone asks ChatGPT, Claude, or Perplexity
+                for recommendations, being mentioned means reaching <strong>high-intent prospects</strong>
+                who are actively looking for solutions. These aren't casual browsers — they're ready to act.
             </span>
         </div>
 
         <div style="background: white; border: 2px solid #27AE60; border-radius: 10px; padding: 32px; margin-bottom: 32px;">
-            <h3 style="color: #27AE60; margin: 0 0 20px 0; font-size: 22px;">💵 Potential Revenue Impact (Conservative Projection)</h3>
+            <h3 style="color: #27AE60; margin: 0 0 20px 0; font-size: 22px;">What Improved Visibility Means</h3>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
-                <div>
-                    <div style="font-size: 15px; color: #6B5660; margin-bottom: 12px; font-weight: 600;">Estimated Current Potential</div>
-                    <div style="font-size: 40px; color: #4D2E3A; font-weight: 700; margin-bottom: 8px;">${current_revenue:,}<span style="font-size: 20px; color: #A78E8B;">/mo</span></div>
-                    <div style="font-size: 13px; color: #A78E8B;">
-                        If {current_monthly_queries:,} monthly AI mentions converted at 2%
-                    </div>
+                <div style="padding: 20px; background: #F8F8F7; border-radius: 8px;">
+                    <div style="font-size: 15px; color: #6B5660; margin-bottom: 12px; font-weight: 600;">More AI Recommendations</div>
+                    <p style="color: #4D2E3A; margin: 0; line-height: 1.7;">
+                        Moving from {current_visibility:.0f}% to {projected_visibility_low}-{projected_visibility_high}%
+                        means AI platforms mention your brand in <strong>{projected_visibility_low - int(current_visibility)}
+                        to {projected_visibility_high - int(current_visibility)}</strong> more responses out of every 100 relevant queries.
+                    </p>
                 </div>
 
-                <div>
-                    <div style="font-size: 15px; color: #6B5660; margin-bottom: 12px; font-weight: 600;">Projected Potential</div>
-                    <div style="font-size: 40px; color: #27AE60; font-weight: 700; margin-bottom: 8px;">${projected_revenue_low:,}-${projected_revenue_high:,}<span style="font-size: 20px; opacity: 0.8;">/mo</span></div>
-                    <div style="font-size: 13px; color: #A78E8B;">
-                        Potential monthly lift: <strong style="color: #27AE60;">${revenue_lift_low:,}-${revenue_lift_high:,}</strong>
-                    </div>
-                </div>
-            </div>
-
-            <div style="margin-top: 24px; padding: 20px; background: #F8F8F7; border-radius: 8px;">
-                <div style="font-size: 14px; color: #4D2E3A; font-weight: 600; margin-bottom: 12px;">12-Month Potential Impact</div>
-                <div style="font-size: 28px; color: #27AE60; font-weight: 700;">
-                    ${revenue_lift_low * 12:,} - ${revenue_lift_high * 12:,} additional potential revenue
-                </div>
-                <div style="font-size: 13px; color: #6B5660; margin-top: 8px;">
-                    Based on steady improvement over 90 days, then maintaining new visibility level
+                <div style="padding: 20px; background: #F8F8F7; border-radius: 8px;">
+                    <div style="font-size: 15px; color: #6B5660; margin-bottom: 12px; font-weight: 600;">Higher Quality Traffic</div>
+                    <p style="color: #4D2E3A; margin: 0; line-height: 1.7;">
+                        AI referrals are <strong>high-intent visitors</strong> — they asked a specific question
+                        and were directed to you as a solution. Industry data suggests AI referral traffic converts
+                        at higher rates than organic search.
+                    </p>
                 </div>
             </div>
         </div>
 
         <div class="accordion-group" style="margin-top: 32px;">
             <button class="accordion-button" onclick="toggleAccordion(this)">
-                <span>📊 How to Track Actual AI-Driven Revenue</span>
+                <span>How to Track AI-Driven Traffic</span>
                 <span class="accordion-icon">▼</span>
             </button>
             <div class="accordion-content">
                 <div style="background: #E8F5E9; padding: 24px; border-radius: 8px; border-left: 4px solid #27AE60; margin-top: 16px;">
                     <p style="margin: 0 0 12px 0; color: #2E7D32; line-height: 1.7;">
-                        To measure real performance (not just projections), set up tracking in Google Analytics:
+                        To measure the real traffic impact, set up tracking in Google Analytics:
                     </p>
                     <ol style="margin: 0; padding-left: 20px; color: #2E7D32; line-height: 1.8;">
-                        <li><strong>Tag AI traffic sources:</strong> Create UTM parameters for AI platforms (ChatGPT, Perplexity, Claude)</li>
-                        <li><strong>Set up conversion tracking:</strong> Track purchases/leads from AI referrers</li>
-                        <li><strong>Create custom reports:</strong> Filter by AI traffic to see actual conversion rates</li>
-                        <li><strong>Monitor over time:</strong> Compare AI traffic before/after implementing recommendations</li>
+                        <li><strong>Identify AI referrers:</strong> Look for traffic from chat.openai.com, perplexity.ai, claude.ai, and gemini.google.com in your referral reports</li>
+                        <li><strong>Set up conversion tracking:</strong> Track which AI-referred visitors take action (purchases, sign-ups, inquiries)</li>
+                        <li><strong>Compare conversion rates:</strong> AI-referred visitors vs. organic search vs. other channels</li>
+                        <li><strong>Monitor monthly trends:</strong> Track how AI traffic grows as your visibility improves</li>
                     </ol>
                     <p style="margin: 12px 0 0 0; color: #2E7D32; font-size: 14px; line-height: 1.7;">
-                        <strong>Note:</strong> AI platforms often show as "direct" traffic or don't pass referrer data,
-                        making actual attribution challenging. These projections provide a conservative baseline expectation.
+                        <strong>Note:</strong> Some AI platforms don't pass referrer data, so traffic may appear as "direct."
+                        As tracking improves across the industry, attribution will become clearer.
                     </p>
                 </div>
             </div>
 
             <button class="accordion-button" onclick="toggleAccordion(this)">
-                <span>📌 Methodology & Assumptions</span>
+                <span>About These Projections</span>
                 <span class="accordion-icon">▼</span>
             </button>
             <div class="accordion-content">
                 <div style="background: #E3F2FD; padding: 24px; border-radius: 8px; border-left: 4px solid #1976D2; margin-top: 16px;">
-                    <ul style="margin: 0; padding-left: 20px; color: #1565C0; line-height: 1.8;">
-                        <li><strong>Traffic Estimate:</strong> 100 AI-influenced visitors per 1% visibility rate (conservative)</li>
-                        <li><strong>Conversion Rate:</strong> 2% (typical e-commerce rate for qualified traffic)</li>
-                        <li><strong>Average Order Value:</strong> $45 (beauty industry benchmark)</li>
-                        <li><strong>Improvement Timeline:</strong> 90 days for full implementation</li>
-                        <li><strong>Visibility Gain:</strong> Based on implementing Top 10 recommendations</li>
-                    </ul>
-
-                    <p style="margin: 16px 0 0 0; color: #1565C0; font-size: 14px; line-height: 1.7;">
-                        <strong>Note:</strong> These are conservative estimates. Actual results may vary based on implementation quality,
-                        brand awareness, product pricing, and market conditions. AI visibility often compounds over time as more
-                        content gets indexed and cited.
+                    <p style="margin: 0; color: #1565C0; line-height: 1.8;">
+                        <strong>Visibility targets</strong> are based on implementing the priority recommendations
+                        in this report. The +15 to +25 percentage point improvement range reflects typical
+                        results from clients who implement GEO/AEO content optimization strategies.
+                        Actual results depend on implementation quality, competitive dynamics, and how
+                        quickly AI platforms re-index updated content. We recommend re-running this test
+                        monthly to track actual progress against these targets.
                     </p>
                 </div>
             </div>
@@ -3733,14 +3731,22 @@ class HTMLReportGenerator:
             has_positive = any(kw in context_lower for kw in positive_keywords)
             has_negative = any(kw in context_lower for kw in negative_keywords)
 
-            # Get prompt text (could be 'prompt' or 'prompt_text')
+            # Get full prompt text — no truncation
             prompt_text = result.get('prompt_text', '') or result.get('prompt', '')
-            prompt_display = prompt_text[:80] + '...' if len(prompt_text) > 80 else prompt_text
+
+            # Highlight brand name in the prompt
+            import re
+            prompt_highlighted = re.sub(
+                re.escape(brand_name),
+                f'<strong style="color: #4D2E3A; background: #F7EBF0; padding: 1px 4px; border-radius: 3px;">{brand_name}</strong>',
+                prompt_text,
+                flags=re.IGNORECASE
+            ) if brand_name else prompt_text
 
             sample = {
                 'platform': result.get('platform', 'Unknown').replace('openai', 'ChatGPT').replace('anthropic', 'Claude').replace('perplexity', 'Perplexity').replace('gemini', 'Gemini'),
-                'quote': context,  # Show full context now
-                'prompt': prompt_display
+                'quote': context,
+                'prompt': prompt_highlighted
             }
 
             if has_positive and not has_negative:
@@ -3774,7 +3780,7 @@ class HTMLReportGenerator:
                         "{mention['quote']}"
                     </div>
                     <div style="font-size: 13px; color: #A7868F; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F0F0F0;">
-                        <strong style="color: {color};">{mention['platform']}</strong> • Query: <em>"{mention['prompt']}"</em>
+                        <strong style="color: {color};">{mention['platform']}</strong> • Query: <em>{mention['prompt']}</em>
                     </div>
                 </div>
                 """
@@ -4769,7 +4775,7 @@ class HTMLReportGenerator:
 
         return f"""
         <button class="accordion-button" onclick="toggleAccordion(this)">
-            <span>🚨 Why AI Visibility Matters Now (Industry Data)</span>
+            <span>Why AI Visibility Matters Now</span>
             <span class="accordion-icon">▼</span>
         </button>
         <div class="accordion-content">
@@ -4780,17 +4786,27 @@ class HTMLReportGenerator:
                 <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; margin-top: 16px;">
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center;">
                         <div>
-                            <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">53%</div>
-                            <div style="font-size: 13px; opacity: 0.9;">of B2B buyers now use AI for vendor research</div>
+                            <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">79%</div>
+                            <div style="font-size: 13px; opacity: 0.9;">of consumers have used generative AI tools for shopping-related activities</div>
                         </div>
                         <div>
-                            <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">68%</div>
-                            <div style="font-size: 13px; opacity: 0.9;">of consumers trust AI recommendations as much as search results</div>
+                            <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">70%</div>
+                            <div style="font-size: 13px; opacity: 0.9;">of those were satisfied with results and plan to continue using AI for research</div>
                         </div>
                         <div>
-                            <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">$0</div>
-                            <div style="font-size: 13px; opacity: 0.9;">cost per AI impression vs $2-5 per click on Google Ads</div>
+                            <div style="font-size: 40px; font-weight: 700; margin-bottom: 8px;">1B+</div>
+                            <div style="font-size: 13px; opacity: 0.9;">monthly ChatGPT users as of early 2025, growing rapidly</div>
                         </div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding: 16px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                    <div style="font-size: 14px; font-weight: 600; margin-bottom: 10px; opacity: 0.9;">Further Reading:</div>
+                    <div style="font-size: 13px; line-height: 2; opacity: 0.85;">
+                        <a href="https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/superagency-in-the-workplace-empowering-people-to-unlock-ais-full-potential-at-work" style="color: #F0E0E6;" target="_blank">McKinsey: AI adoption in the workplace (2025)</a><br>
+                        <a href="https://blog.google/products/shopping/google-shopping-ai-features-2025/" style="color: #F0E0E6;" target="_blank">Google: AI-powered shopping features and consumer behavior</a><br>
+                        <a href="https://www.gartner.com/en/newsroom/press-releases/2024-03-05-gartner-predicts-25-percent-decrease-in-traditional-search-by-2026" style="color: #F0E0E6;" target="_blank">Gartner: Traditional search volume predicted to decline 25% by 2026</a><br>
+                        <a href="https://sparktoro.com/blog/2024-zero-click-search-study/" style="color: #F0E0E6;" target="_blank">SparkToro: Zero-click searches and the shift to AI answers</a><br>
+                        <a href="https://firstpagesage.com/reports/generative-engine-optimization-geo-the-new-frontier-of-seo/" style="color: #F0E0E6;" target="_blank">First Page Sage: Generative Engine Optimization (GEO) guide</a>
                     </div>
                 </div>
             </div>
