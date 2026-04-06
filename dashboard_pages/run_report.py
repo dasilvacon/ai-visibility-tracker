@@ -286,6 +286,7 @@ def get_test_progress(client_name: str) -> dict:
         'log_lines': [],
         'completed': False,
         'success': None,
+        'incomplete': False,
         'prompts_done': 0,
         'total_prompts': 0
     }
@@ -293,8 +294,11 @@ def get_test_progress(client_name: str) -> dict:
     # Check if test completed
     if status_file.exists():
         status = status_file.read_text().strip()
-        result['completed'] = True
-        result['success'] = (status == 'success')
+        if status == 'incomplete':
+            result['incomplete'] = True
+        else:
+            result['completed'] = True
+            result['success'] = (status == 'success')
 
     # Read log file
     if log_file.exists():
@@ -543,6 +547,19 @@ try:
     print('GCS upload complete!')
 except Exception as e:
     print(f'GCS upload failed: {{e}}')
+"
+elif [ $EXIT_CODE -eq 2 ]; then
+    # Exit code 2 = test incomplete (needs resume to finish)
+    echo "incomplete" > {status_file}
+    echo ">>> Saving partial results to GCS (test needs resume)..."
+    python3 -c "
+from src.client_manager.gcs_sync import GCSClientSync
+try:
+    gcs = GCSClientSync()
+    gcs.upload_test_results('{client_slug_escaped}')
+    print('Partial results saved to GCS — resume to complete')
+except Exception as e:
+    print(f'Partial results save failed: {{e}}')
 "
 else
     echo "failed" > {status_file}
@@ -925,6 +942,62 @@ def render():
                 for f in [log_file, pid_file, status_file]:
                     if f.exists():
                         f.unlink()
+                st.rerun()
+
+    elif progress['incomplete']:
+        # Test was interrupted or timed out — partial results saved
+        st.markdown("### ⏸️ Test Interrupted — Resume Available")
+
+        # Show how much is done
+        st.warning("""
+        The test was interrupted before all prompts were completed. Your progress has been
+        saved — click **Resume** to pick up where you left off. No prompts will be re-tested.
+
+        Reports will only be generated once **all** prompts are complete.
+        """)
+
+        # Show log excerpt
+        if progress['log_lines']:
+            with st.expander("📋 Last Log Output"):
+                st.code('\n'.join(progress['log_lines'][-20:]))
+
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("▶️ Resume Test", type="primary", use_container_width=True):
+                # Clear status file so it can restart
+                log_file, pid_file, status_file = get_test_status_files(client_name)
+                for f in [status_file, pid_file]:
+                    if f.exists():
+                        f.unlink()
+                # Re-run the test — resume logic in main.py will skip completed prompts
+                with st.spinner("Resuming test..."):
+                    success = run_visibility_test(client_name, prompts_file, brand_config)
+                if success:
+                    st.success("✅ Test resumed! Refreshing to show progress...")
+                    time.sleep(2)
+                    st.rerun()
+                else:
+                    st.error("❌ Failed to resume test.")
+
+        with col2:
+            if st.button("🗑️ Discard & Start Fresh", use_container_width=True):
+                # Clear status files AND results
+                log_file, pid_file, status_file = get_test_status_files(client_name)
+                for f in [log_file, pid_file, status_file]:
+                    if f.exists():
+                        f.unlink()
+                # Clear partial results
+                client_slug_clean = client_name.replace(' ', '_').lower()
+                results_csv = Path(f'data/results/{client_slug_clean}/results_summary.csv')
+                if results_csv.exists():
+                    results_csv.unlink()
+                # Clear JSON result files
+                results_dir = Path(f'data/results/{client_slug_clean}')
+                if results_dir.exists():
+                    for json_file in results_dir.glob('test_*.json'):
+                        json_file.unlink()
+                st.success("Partial results cleared. Refresh to start a new test.")
+                time.sleep(1)
                 st.rerun()
 
     else:

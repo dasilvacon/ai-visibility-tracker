@@ -239,9 +239,21 @@ class VisibilityTracker:
             print("Error: No API clients could be initialized. Please check your config.json")
             sys.exit(1)
 
+    def _get_completed_tests(self) -> set:
+        """
+        Get set of (prompt_id, platform) tuples already tested in this run.
+        Used for resume capability — skips prompts that were already tested.
+
+        Returns:
+            Set of (prompt_id, platform) tuples
+        """
+        existing = self.results_tracker.load_results_summary()
+        return {(r['prompt_id'], r['platform']) for r in existing if r.get('prompt_id') and r.get('platform')}
+
     def run_tests(self, prompts_file: str, platforms: List[str] = None) -> List[Dict[str, Any]]:
         """
-        Run visibility tests on prompts.
+        Run visibility tests on prompts. Supports resume — skips prompts
+        that already have results from a previous interrupted run.
 
         Args:
             prompts_file: Path to prompts CSV file
@@ -270,15 +282,50 @@ class VisibilityTracker:
             print("Error: No valid platforms specified.")
             return []
 
+        # Check for existing results (resume support)
+        completed = self._get_completed_tests()
+        total_expected = len(prompts) * len(test_platforms)
+
+        if completed:
+            print(f"\n⚡ RESUME MODE: Found {len(completed)} existing results out of {total_expected} total")
+            print(f"   Skipping already-tested prompt+platform combinations")
+
+        remaining = 0
+        for prompt in prompts:
+            for platform in test_platforms:
+                if (prompt['prompt_id'], platform) not in completed:
+                    remaining += 1
+
+        if remaining == 0:
+            print(f"\n✓ All {total_expected} tests already completed! Nothing to do.")
+            # Return existing results so reports can be generated
+            return [{'already_complete': True}]
+
         print(f"Testing on platforms: {', '.join(test_platforms)}")
-        print(f"\nRunning {len(prompts) * len(test_platforms)} tests...\n")
+        print(f"Total: {total_expected} | Already done: {len(completed)} | Remaining: {remaining}\n")
 
         # Run tests
         all_results = []
+        skipped = 0
+        tested = 0
         for i, prompt in enumerate(prompts, 1):
+            prompt_has_work = any(
+                (prompt['prompt_id'], p) not in completed
+                for p in test_platforms
+            )
+
+            if not prompt_has_work:
+                skipped += len(test_platforms)
+                continue
+
             print(f"[{i}/{len(prompts)}] Testing prompt: {prompt['prompt_id']}")
 
             for platform in test_platforms:
+                # Skip if already tested
+                if (prompt['prompt_id'], platform) in completed:
+                    skipped += 1
+                    continue
+
                 client = self.clients[platform]
                 print(f"  → {platform}...", end=" ", flush=True)
 
@@ -300,14 +347,45 @@ class VisibilityTracker:
                 # Log result
                 test_id = self.results_tracker.log_result(result)
                 all_results.append(result)
+                tested += 1
 
                 if result['success']:
                     print(f"✓ {result['latency_seconds']}s")
                 else:
                     print(f"✗ {result.get('error', 'Unknown error')}")
 
-        print(f"\n✓ Completed {len(all_results)} tests")
+        print(f"\n✓ Completed {tested} new tests (skipped {skipped} already done)")
+        print(f"✓ Total results for this client: {len(completed) + tested}")
         return all_results
+
+    def check_test_completeness(self, prompts_file: str, platforms: List[str] = None) -> dict:
+        """
+        Check if all prompts have been tested on all platforms.
+
+        Args:
+            prompts_file: Path to prompts CSV file
+            platforms: Platforms to check (None = all available)
+
+        Returns:
+            Dict with 'complete' bool, 'total', 'done', 'missing' counts
+        """
+        prompts_db = PromptsDatabase(prompts_file)
+        prompts = prompts_db.load_prompts()
+        test_platforms = platforms or list(self.clients.keys())
+        completed = self._get_completed_tests()
+
+        total = len(prompts) * len(test_platforms)
+        done = sum(1 for p in prompts for plat in test_platforms if (p['prompt_id'], plat) in completed)
+        missing = total - done
+
+        return {
+            'complete': missing == 0,
+            'total': total,
+            'done': done,
+            'missing': missing,
+            'prompts': len(prompts),
+            'platforms': len(test_platforms)
+        }
 
     def generate_reports(self) -> None:
         """Generate reports from logged results."""
@@ -1348,16 +1426,24 @@ def main():
         # Only generate reports
         tracker.generate_reports()
     else:
-        # Run tests
+        # Run tests (with automatic resume if partial results exist)
         results = tracker.run_tests(args.prompts, args.platforms)
 
         if results:
-            # Generate reports
-            tracker.generate_reports()
+            # Only generate reports if ALL prompts are tested
+            completeness = tracker.check_test_completeness(args.prompts, args.platforms)
+            if completeness['complete']:
+                print(f"\n✓ All {completeness['total']} tests complete — generating reports")
+                tracker.generate_reports()
 
-            # Run analysis if requested
-            if args.analyze:
-                tracker.analyze_results(args.brand_config)
+                # Run analysis if requested
+                if args.analyze:
+                    tracker.analyze_results(args.brand_config)
+            else:
+                print(f"\n⚠️ Test incomplete: {completeness['done']}/{completeness['total']} done, {completeness['missing']} remaining")
+                print("Reports will NOT be generated until all prompts are tested.")
+                print("Re-run this command to resume and complete the remaining tests.")
+                sys.exit(2)  # Exit code 2 = incomplete (not failed, just needs resume)
 
 
 if __name__ == '__main__':
