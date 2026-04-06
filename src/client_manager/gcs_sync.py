@@ -449,9 +449,14 @@ class GCSClientSync:
                 print(f"No reports directory found for {client_slug}")
                 return True
 
-            # Upload all report files in the client's directory
+            # Upload actual report files only — exclude ephemeral process status files
+            # (.log, .pid, .status files are runtime process state, not reports)
+            EXCLUDED_EXTENSIONS = {'.log', '.pid', '.status'}
             files_to_upload = list(reports_dir.glob('*.*'))
-            files_to_upload = [f for f in files_to_upload if not f.name.startswith('.')]
+            files_to_upload = [
+                f for f in files_to_upload
+                if not f.name.startswith('.') and f.suffix not in EXCLUDED_EXTENSIONS
+            ]
 
             for report_file in files_to_upload:
                 gcs_path = f"{reports_prefix}{report_file.name}"
@@ -498,11 +503,17 @@ class GCSClientSync:
                     print(f"No reports found in GCS for {client_slug} (this is OK for first run)")
                     return True
 
+                # Skip ephemeral process status files (.log, .pid, .status)
+                SKIP_EXTENSIONS = {'.log', '.pid', '.status'}
+
                 for blob in blobs:
                     if blob.name.endswith('/'):
                         continue
 
                     filename = blob.name[len(reports_prefix):]
+                    if Path(filename).suffix in SKIP_EXTENSIONS:
+                        continue
+
                     destination = reports_dir / filename
 
                     blob.download_to_filename(str(destination))
@@ -521,6 +532,9 @@ class GCSClientSync:
                     print("No reports found in GCS (this is OK for first run)")
                     return True
 
+                # Skip ephemeral process status files (.log, .pid, .status)
+                SKIP_EXTENSIONS = {'.log', '.pid', '.status'}
+
                 for blob in blobs:
                     if blob.name.endswith('/'):
                         continue
@@ -533,6 +547,9 @@ class GCSClientSync:
 
                     blob_client_slug = parts[0]
                     filename = parts[1]
+
+                    if Path(filename).suffix in SKIP_EXTENSIONS:
+                        continue
 
                     reports_dir = local_path / 'reports' / blob_client_slug
                     reports_dir.mkdir(parents=True, exist_ok=True)

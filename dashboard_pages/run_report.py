@@ -982,3 +982,69 @@ def render():
 
         Contact support at: tiffany@dasilvaconsulting.com
         """)
+
+    # Admin diagnostic section (only for admin users)
+    user_role = st.session_state.get('user_role', '')
+    if user_role == 'admin':
+        with st.expander("🔧 Admin Diagnostics"):
+            client_slug = client_name.replace(' ', '_').lower()
+
+            st.markdown("**File Paths:**")
+            st.code(f"""Prompts file: {prompts_file or 'NOT FOUND'}
+Brand config: {brand_config or 'NOT FOUND'}
+Status dir: data/reports/{client_slug}/
+Client slug: {client_slug}""")
+
+            # Check for stale status files
+            log_file, pid_file, status_file = get_test_status_files(client_name)
+            st.markdown("**Test Status Files:**")
+            status_info = []
+            if status_file.exists():
+                status_info.append(f"status file EXISTS: {status_file.read_text().strip()}")
+            else:
+                status_info.append("status file: not present")
+            if pid_file.exists():
+                status_info.append(f"pid file EXISTS: {pid_file.read_text().strip()}")
+            else:
+                status_info.append("pid file: not present")
+            if log_file.exists():
+                log_size = log_file.stat().st_size
+                status_info.append(f"log file EXISTS: {log_size} bytes")
+            else:
+                status_info.append("log file: not present")
+            st.code('\n'.join(status_info))
+
+            # Show last 20 lines of log if it exists
+            if log_file.exists():
+                st.markdown("**Last 20 log lines:**")
+                try:
+                    with open(log_file, 'r') as f:
+                        lines = f.readlines()
+                        st.code(''.join(lines[-20:]))
+                except Exception as e:
+                    st.error(f"Could not read log: {e}")
+
+            # Button to clear stale status files
+            if status_file.exists() or pid_file.exists():
+                if st.button("🗑️ Clear Stale Status Files", key="clear_status"):
+                    for f in [status_file, pid_file]:
+                        if f.exists():
+                            f.unlink()
+                    st.success("Status files cleared. Refresh the page.")
+                    time.sleep(1)
+                    st.rerun()
+
+            # API keys check
+            st.markdown("**API Keys Available:**")
+            try:
+                api_keys_section = st.secrets.get('api_keys', {})
+                key_status = []
+                for key_name in ['openai', 'anthropic', 'perplexity', 'gemini', 'serpapi']:
+                    val = api_keys_section.get(key_name, '')
+                    if val and not str(val).startswith('YOUR_'):
+                        key_status.append(f"  {key_name}: ✅ configured ({len(str(val))} chars)")
+                    else:
+                        key_status.append(f"  {key_name}: ❌ missing")
+                st.code('\n'.join(key_status))
+            except Exception as e:
+                st.error(f"Could not read secrets: {e}")
