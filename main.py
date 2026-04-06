@@ -1330,7 +1330,7 @@ def main():
     parser.add_argument(
         '--platforms',
         nargs='+',
-        choices=['openai', 'anthropic', 'perplexity', 'gemini', 'deepseek', 'grok'],
+        choices=['openai', 'anthropic', 'perplexity', 'gemini', 'google_ai_overview', 'copilot', 'deepseek', 'grok'],
         help='Platforms to test (default: all available)'
     )
     parser.add_argument(
