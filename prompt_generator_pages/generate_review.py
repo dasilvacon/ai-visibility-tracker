@@ -392,6 +392,18 @@ def _render_generation_section(client_name, batch_manager):
                 for batch in batch_manager.get_active_batches(client_name):
                     batch_manager.archive_batch(batch['batch_id'], reason="Replaced by new generation")
 
+                # Delete old draft files so _load_drafts() doesn't reload them
+                draft_dir = Path('data/prompt_generation/drafts')
+                if draft_dir.exists():
+                    for old_draft in draft_dir.glob('batch_*_prompts.json'):
+                        try:
+                            with open(old_draft, 'r') as f:
+                                draft_data = json.load(f)
+                            if draft_data.get('client_name') == client_name:
+                                old_draft.unlink()
+                        except Exception:
+                            pass
+
             status_text.text("🔄 Generating prompts...")
             prompts = generator.generate_prompts(
                 total_count=total_prompts, competitor_ratio=competitor_ratio

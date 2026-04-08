@@ -364,7 +364,7 @@ def render():
                 client_name=client_name
             )
 
-            # If starting fresh, archive existing batches
+            # If starting fresh, archive existing batches and delete old drafts
             if start_fresh and existing_prompt_count > 0:
                 status_text.text("📥 Archiving existing prompts...")
                 active_batches = batch_manager.get_active_batches(client_name)
@@ -373,6 +373,18 @@ def render():
                         batch['batch_id'],
                         reason="Replaced by new generation"
                     )
+
+                # Delete old draft files so they don't reload on next page visit
+                draft_dir = Path('data/prompt_generation/drafts')
+                if draft_dir.exists():
+                    for old_draft in draft_dir.glob('batch_*_prompts.json'):
+                        try:
+                            with open(old_draft, 'r') as f:
+                                draft_data = json.load(f)
+                            if draft_data.get('client_name') == client_name:
+                                old_draft.unlink()
+                        except Exception:
+                            pass
 
             status_text.text("🔄 Generating prompts...")
 
