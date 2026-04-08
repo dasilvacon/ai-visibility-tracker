@@ -461,6 +461,12 @@ def _render_generation_section(client_name, batch_manager):
 
 def _render_review_section(client_name):
     """Render the review table with inline approve/reject/delete and export."""
+    # Skip draft reload if we just cleared everything
+    if st.session_state.get('_prompts_just_cleared'):
+        st.session_state.pop('_prompts_just_cleared', None)
+        st.info("No prompts generated yet. Use the controls above to generate your first batch.")
+        return
+
     # Load prompts from drafts if needed
     all_draft_prompts, draft_files = _load_drafts(client_name)
 
@@ -477,13 +483,12 @@ def _render_review_section(client_name):
     # Clear all prompts option
     with st.expander("Clear all prompts"):
         st.caption("Delete all generated prompts and draft files for this client. This cannot be undone.")
-        confirm_text = st.text_input(
-            f"Type **{client_name}** to confirm",
-            key="clear_prompts_confirm",
-            placeholder=client_name,
+        confirm_check = st.checkbox(
+            f"I confirm I want to delete all prompts for **{client_name}**",
+            key="clear_prompts_confirm_check",
         )
         if st.button("Delete all prompts", type="secondary", key="clear_prompts_btn",
-                      disabled=(confirm_text != client_name)):
+                      disabled=(not confirm_check)):
             # Clear session state
             st.session_state.generated_prompts = []
             if 'approval_manager' in st.session_state:
@@ -572,6 +577,7 @@ def _render_review_section(client_name):
             except Exception as e:
                 gcs_status = f" (local only — cloud cleanup failed: {e})"
 
+            st.session_state['_prompts_just_cleared'] = True
             st.success(f"All prompts for {client_name} have been deleted{gcs_status}.")
             st.rerun()
 
