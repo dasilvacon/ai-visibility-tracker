@@ -114,7 +114,12 @@ def _sync_to_gcs():
 
 
 def _load_drafts(client_name):
-    """Load prompts from persistent draft files."""
+    """Load prompts from persistent draft files.
+
+    Only loads drafts whose batch_id is in the ACTIVE batches list.
+    This prevents archived/cleared batches from being resurrected
+    when old draft files are re-downloaded from GCS on deploy.
+    """
     draft_dir = Path('data/prompt_generation/drafts')
     all_prompts = []
     draft_files = []
@@ -122,21 +127,37 @@ def _load_drafts(client_name):
     if not draft_dir.exists():
         return all_prompts, draft_files
 
+    # Build set of active batch IDs for this client
+    active_batch_ids = set()
+    try:
+        batch_manager = BatchManager()
+        for batch in batch_manager.get_active_batches(client_name):
+            active_batch_ids.add(batch.get('batch_id', ''))
+    except Exception:
+        pass  # If batch manager fails, fall back to loading all drafts
+
     for draft_file in draft_dir.glob('batch_*_prompts.json'):
         try:
             with open(draft_file, 'r') as f:
                 draft_data = json.load(f)
 
-            if draft_data.get('client_name') == client_name:
-                draft_files.append(draft_file)
-                prompts = draft_data.get('prompts', [])
-                approval_statuses = draft_data.get('approval_statuses', {})
+            if draft_data.get('client_name') != client_name:
+                continue
 
-                for prompt in prompts:
-                    prompt['approval_status'] = approval_statuses.get(
-                        prompt['prompt_id'], 'pending'
-                    )
-                    all_prompts.append(prompt)
+            # If we have batch metadata, only load drafts for ACTIVE batches
+            draft_batch_id = draft_data.get('batch_id', '')
+            if active_batch_ids and draft_batch_id not in active_batch_ids:
+                continue  # This batch was archived or cleared — skip it
+
+            draft_files.append(draft_file)
+            prompts = draft_data.get('prompts', [])
+            approval_statuses = draft_data.get('approval_statuses', {})
+
+            for prompt in prompts:
+                prompt['approval_status'] = approval_statuses.get(
+                    prompt['prompt_id'], 'pending'
+                )
+                all_prompts.append(prompt)
         except Exception:
             pass
 
