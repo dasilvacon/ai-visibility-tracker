@@ -28,7 +28,29 @@ else
     echo "⚠️  No STREAMLIT_SECRETS env var found (OK for local development)"
 fi
 
-# Run GCS sync in BACKGROUND so Streamlit starts immediately
+# Download clients.json BEFORE Streamlit starts (critical — prevents empty registry race condition)
+echo "📥 Downloading client registry from GCS (blocking)..."
+python3 -c "
+from pathlib import Path
+try:
+    from src.client_manager.gcs_sync import GCSClientSync
+    gcs_sync = GCSClientSync()
+    bucket = gcs_sync.bucket
+    local_dir = Path('data')
+    local_dir.mkdir(parents=True, exist_ok=True)
+
+    # Always download clients.json before Streamlit can create an empty one
+    registry_blob = bucket.blob('client-data/clients.json')
+    if registry_blob.exists():
+        registry_blob.download_to_filename(str(local_dir / 'clients.json'))
+        print('  ✓ clients.json downloaded from GCS')
+    else:
+        print('  ⚠️  No clients.json in GCS (first run?)')
+except Exception as e:
+    print(f'  ⚠️  Registry download failed: {e} (continuing)')
+"
+
+# Run remaining GCS sync in BACKGROUND so Streamlit starts immediately
 # This prevents startup probe timeouts while still getting data
 echo "📥 Starting background GCS sync..."
 (
@@ -47,12 +69,30 @@ try:
     downloaded = 0
     skipped = 0
 
+    # ALWAYS download clients.json first — it's the registry of all clients
+    # and may contain clients added via the web UI that aren't in the image.
+    # This MUST happen before Streamlit creates an empty one.
+    registry_blob = bucket.blob('client-data/clients.json')
+    if registry_blob.exists():
+        local_dir.mkdir(parents=True, exist_ok=True)
+        registry_blob.download_to_filename(str(local_dir / 'clients.json'))
+        print(f'  Downloaded clients.json (always-refresh)')
+        downloaded += 1
+
+    # Also always download prompt_batches.json (runtime data)
+    batches_blob = bucket.blob('prompt-data/prompt_batches.json')
+    if batches_blob.exists():
+        local_dir.mkdir(parents=True, exist_ok=True)
+        batches_blob.download_to_filename(str(local_dir / 'prompt_batches.json'))
+        print(f'  Downloaded prompt_batches.json (always-refresh)')
+
     for blob in bucket.list_blobs(prefix=prefix):
         if blob.name.endswith('/'):
             continue
         relative_path = blob.name[len(prefix):]
         if relative_path == 'clients.json':
-            destination = local_dir / 'clients.json'
+            skipped += 1  # Already handled above
+            continue
         else:
             parts = relative_path.split('/')
             if len(parts) == 2:
