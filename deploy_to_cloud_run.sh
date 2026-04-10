@@ -103,6 +103,7 @@ try:
                 if 'brand_config' in f.name: file_type = 'brand_config'
                 elif 'personas' in f.name: file_type = 'personas'
                 elif 'keywords' in f.name: file_type = 'keywords'
+                elif 'topics' in f.name: file_type = 'topics'
                 elif 'prompts' in f.name: file_type = 'prompts'
                 files[file_type] = str(f)
         if files:
