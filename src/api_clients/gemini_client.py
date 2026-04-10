@@ -5,6 +5,12 @@ Gemini supports Google Search grounding, which returns structured
 citation data (grounding_metadata) with source URLs, titles, and
 text-to-source mappings. This client captures that data for the
 Sources & Citations report tab.
+
+IMPORTANT: The grounding_metadata also contains `web_search_queries` —
+the actual sub-queries Google Search ran to build the response. This is
+real fan-out data: when a user asks a broad question, Google decomposes
+it into 8-12 specific sub-queries. Capturing these gives us ground-truth
+data about how AI engines actually search for information.
 """
 
 from typing import Dict, Any, Optional
@@ -81,12 +87,20 @@ class GeminiClient(BaseAPIClient):
             cited_urls = []
             grounding_chunks = []
             grounding_supports = []
+            web_search_queries = []  # Fan-out: the actual sub-queries Google ran
 
             if hasattr(response, 'candidates') and response.candidates:
                 candidate = response.candidates[0]
                 grounding_meta = getattr(candidate, 'grounding_metadata', None)
 
                 if grounding_meta:
+                    # ── Fan-out queries ─────────────────────────────────
+                    # These are the REAL sub-queries Google Search executed
+                    # to build the grounded response. This is ground-truth
+                    # fan-out data — the exact decomposition Google used.
+                    raw_queries = getattr(grounding_meta, 'web_search_queries', []) or []
+                    web_search_queries = [q for q in raw_queries if q]
+
                     # Extract grounding chunks (the actual sources)
                     raw_chunks = getattr(grounding_meta, 'grounding_chunks', []) or []
                     seen_domains = set()
@@ -141,7 +155,9 @@ class GeminiClient(BaseAPIClient):
                     'cited_urls': cited_urls,
                     'citation_count': len(cited_urls),
                     'grounding_chunks': grounding_chunks,
-                    'grounding_supports': grounding_supports
+                    'grounding_supports': grounding_supports,
+                    'web_search_queries': web_search_queries,
+                    'fanout_query_count': len(web_search_queries)
                 }
             }
 

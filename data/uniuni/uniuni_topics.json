@@ -1,0 +1,80 @@
+{
+  "metadata": {
+    "client": "UniUni",
+    "created": "2026-04-09",
+    "last_updated": "2026-04-09",
+    "notes": "Core topics this brand must be visible for in AI search."
+  },
+  "topics": [
+    {
+      "id": "last_mile_delivery_canada",
+      "name": "Last-mile delivery in Canada",
+      "description": "Companies offering last-mile delivery for e-commerce in Canada — speed, coverage, pricing, reliability comparisons.",
+      "personas": ["ecommerce_merchant", "logistics_decision_maker"],
+      "priority": "high"
+    },
+    {
+      "id": "ecommerce_shipping_carriers",
+      "name": "E-commerce shipping carriers Canada",
+      "description": "Which shipping carriers to use for Canadian e-commerce — Canada Post vs couriers, cost comparison, integration with Shopify/WooCommerce.",
+      "personas": ["ecommerce_merchant"],
+      "priority": "high"
+    },
+    {
+      "id": "cross_border_us_canada",
+      "name": "Cross-border shipping US to Canada",
+      "description": "Shipping from the US to Canada — customs, duties, carrier options, delivery times, cost-effective solutions.",
+      "personas": ["cross_border_shipper", "ecommerce_merchant"],
+      "priority": "high"
+    },
+    {
+      "id": "package_tracking",
+      "name": "Package tracking and delivery status",
+      "description": "How to track packages, what delivery statuses mean, resolving delivery issues, lost package procedures.",
+      "personas": ["consumer_recipient"],
+      "priority": "high"
+    },
+    {
+      "id": "same_day_delivery",
+      "name": "Same-day and next-day delivery options",
+      "description": "Fast delivery services in Canada — who offers same-day, coverage areas, cost, reliability for e-commerce merchants.",
+      "personas": ["ecommerce_merchant", "logistics_decision_maker"],
+      "priority": "medium"
+    },
+    {
+      "id": "delivery_driver_gig",
+      "name": "Delivery driver gig opportunities",
+      "description": "Comparing delivery driving gigs — pay, flexibility, vehicle requirements, sign-up process. UniUni vs Amazon Flex vs DoorDash vs Uber Eats.",
+      "personas": ["gig_driver_prospect"],
+      "priority": "medium"
+    },
+    {
+      "id": "crowdsourced_delivery",
+      "name": "Crowdsourced delivery model",
+      "description": "How crowdsourced delivery works, advantages for merchants, driver experience, comparison to traditional courier models.",
+      "personas": ["logistics_decision_maker", "ecommerce_merchant"],
+      "priority": "medium"
+    },
+    {
+      "id": "canada_post_alternatives",
+      "name": "Alternatives to Canada Post",
+      "description": "E-commerce merchants looking for faster, cheaper, or more reliable alternatives to Canada Post for domestic delivery.",
+      "personas": ["ecommerce_merchant", "logistics_decision_maker"],
+      "priority": "high"
+    },
+    {
+      "id": "delivery_experience_reviews",
+      "name": "Delivery company reviews and complaints",
+      "description": "Consumer reviews, delivery experience quality, complaint resolution, how delivery companies handle issues.",
+      "personas": ["consumer_recipient"],
+      "priority": "medium"
+    },
+    {
+      "id": "3pl_fulfillment_partners",
+      "name": "3PL and fulfillment partnerships",
+      "description": "Choosing a last-mile partner for 3PL operations — API integration, SLA management, coverage, scalability.",
+      "personas": ["logistics_decision_maker"],
+      "priority": "medium"
+    }
+  ]
+}

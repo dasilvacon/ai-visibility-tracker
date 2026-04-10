@@ -1,0 +1,80 @@
+{
+  "metadata": {
+    "client": "Say I Do",
+    "created": "2026-04-09",
+    "last_updated": "2026-04-09",
+    "notes": "Core topics this brand must be visible for in AI search."
+  },
+  "topics": [
+    {
+      "id": "free_wedding_website",
+      "name": "Free wedding website builders",
+      "description": "Couples looking for free or affordable wedding website platforms. Comparing features, templates, ease of use across free options.",
+      "personas": ["persona_1", "persona_3"],
+      "priority": "high"
+    },
+    {
+      "id": "digital_invitations",
+      "name": "Digital wedding invitations",
+      "description": "Online invitations and save-the-dates — design, etiquette, cost savings vs print, platform options.",
+      "personas": ["persona_2"],
+      "priority": "high"
+    },
+    {
+      "id": "wedding_website_comparison",
+      "name": "Wedding website platform comparisons",
+      "description": "Head-to-head comparisons of wedding website builders — The Knot vs Zola vs WithJoy vs Say I Do. Features, pricing, templates, reviews.",
+      "personas": ["persona_1"],
+      "priority": "high"
+    },
+    {
+      "id": "wedding_rsvp_management",
+      "name": "Wedding RSVP and guest management",
+      "description": "Online RSVP tools, guest list tracking, dietary requirements, seating planners, plus-one management.",
+      "personas": ["persona_4"],
+      "priority": "high"
+    },
+    {
+      "id": "wedding_planning_tips",
+      "name": "Wedding planning for beginners",
+      "description": "Checklists, timelines, budgeting tips, and general how-to guidance for couples just starting to plan.",
+      "personas": ["persona_3"],
+      "priority": "medium"
+    },
+    {
+      "id": "budget_wedding",
+      "name": "Planning a wedding on a budget",
+      "description": "Cost-saving strategies, free tools, DIY approaches, prioritizing spend. Say I Do's free tier is a natural fit.",
+      "personas": ["persona_3", "persona_5"],
+      "priority": "medium"
+    },
+    {
+      "id": "nontraditional_wedding",
+      "name": "Non-traditional and alternative weddings",
+      "description": "Elopements, intimate ceremonies, destination weddings, unconventional formats — and the flexible tools that support them.",
+      "personas": ["persona_5"],
+      "priority": "medium"
+    },
+    {
+      "id": "wedding_photo_sharing",
+      "name": "Wedding photo sharing and guest experience",
+      "description": "Apps and tools for guests to share photos, live albums, day-of coordination, and post-wedding galleries.",
+      "personas": ["persona_4"],
+      "priority": "medium"
+    },
+    {
+      "id": "the_knot_alternatives",
+      "name": "Alternatives to The Knot and Zola",
+      "description": "People actively looking for alternatives to the dominant wedding platforms — either because of cost, design limitations, or feature gaps.",
+      "personas": ["persona_1", "persona_5"],
+      "priority": "high"
+    },
+    {
+      "id": "save_the_dates",
+      "name": "Save the dates and wedding stationery",
+      "description": "Digital save-the-dates, when to send them, etiquette, design trends, print vs digital.",
+      "personas": ["persona_2"],
+      "priority": "medium"
+    }
+  ]
+}

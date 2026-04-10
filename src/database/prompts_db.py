@@ -10,6 +10,25 @@ from typing import List, Dict, Any, Optional
 class PromptsDatabase:
     """Manager for prompts CSV database."""
 
+    # Core fields every prompt CSV must have
+    CORE_FIELDS = [
+        'prompt_id',
+        'persona',
+        'category',
+        'intent_type',
+        'prompt_text',
+        'expected_visibility_score',
+        'notes'
+    ]
+
+    # Optional cluster fields added by topic cluster generator
+    CLUSTER_FIELDS = [
+        'topic_cluster_id',
+        'cluster_role',
+        'cluster_topic',
+        'fanout_angle'
+    ]
+
     def __init__(self, csv_path: str):
         """
         Initialize the prompts database.
@@ -18,19 +37,14 @@ class PromptsDatabase:
             csv_path: Path to the prompts CSV file
         """
         self.csv_path = csv_path
-        self.fieldnames = [
-            'prompt_id',
-            'persona',
-            'category',
-            'intent_type',
-            'prompt_text',
-            'expected_visibility_score',
-            'notes'
-        ]
+        self.fieldnames = self.CORE_FIELDS + self.CLUSTER_FIELDS
 
     def load_prompts(self) -> List[Dict[str, Any]]:
         """
         Load all prompts from the CSV file.
+
+        Reads all CSV columns — core fields plus any cluster/fan-out
+        fields that the topic cluster generator may have added.
 
         Returns:
             List of prompt dictionaries
@@ -51,6 +65,12 @@ class PromptsDatabase:
                     'expected_visibility_score': float(row['expected_visibility_score']),
                     'notes': row['notes']
                 }
+
+                # Include cluster fields if present in this CSV
+                for field in self.CLUSTER_FIELDS:
+                    if field in row and row[field]:
+                        prompt[field] = row[field]
+
                 prompts.append(prompt)
 
         return prompts

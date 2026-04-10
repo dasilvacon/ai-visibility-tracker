@@ -1,0 +1,108 @@
+{
+  "metadata": {
+    "client": "Ontario Caregiver Organization",
+    "created": "2026-04-09",
+    "last_updated": "2026-04-09",
+    "notes": "Core topics this brand must be visible for in AI search. Topics drive fan-out cluster generation, keyword mapping, and content gap analysis."
+  },
+  "topics": [
+    {
+      "id": "caregiver_support_ontario",
+      "name": "Caregiver support in Ontario",
+      "description": "Broad queries about where to find help, resources, and support for unpaid caregivers in Ontario.",
+      "personas": ["adult_child_50plus", "adult_child_under50", "spousal_caregiver"],
+      "priority": "high"
+    },
+    {
+      "id": "hospital_discharge",
+      "name": "Hospital discharge planning",
+      "description": "Preparing for a loved one's discharge, what to ask, checklists, home care setup, and navigating the transition from hospital to home.",
+      "personas": ["adult_child_50plus", "adult_child_under50"],
+      "priority": "high"
+    },
+    {
+      "id": "caregiver_burnout",
+      "name": "Caregiver burnout and stress",
+      "description": "Recognizing and managing burnout, compassion fatigue, emotional exhaustion, and mental health impacts of caregiving.",
+      "personas": ["adult_child_50plus", "adult_child_under50", "spousal_caregiver", "mental_health_caregiver"],
+      "priority": "high"
+    },
+    {
+      "id": "respite_care",
+      "name": "Respite care options",
+      "description": "Finding temporary relief or substitute care so the primary caregiver can take a break. In-home respite, adult day programs, short-term residential.",
+      "personas": ["adult_child_50plus", "spousal_caregiver", "parent_complex_needs"],
+      "priority": "high"
+    },
+    {
+      "id": "caring_aging_parents",
+      "name": "Caring for aging parents",
+      "description": "General guidance for adult children navigating the experience of caring for an aging parent — roles, responsibilities, family dynamics, long-term planning.",
+      "personas": ["adult_child_50plus", "adult_child_under50"],
+      "priority": "high"
+    },
+    {
+      "id": "caregiver_peer_support",
+      "name": "Peer support and support groups",
+      "description": "Finding other caregivers to talk to, peer mentorship, online and in-person support groups, shared experiences.",
+      "personas": ["adult_child_under50", "spousal_caregiver", "mental_health_caregiver", "young_caregiver"],
+      "priority": "high"
+    },
+    {
+      "id": "mental_health_caregiving",
+      "name": "Supporting someone with mental illness",
+      "description": "Caregiving for a family member with mental health challenges — crisis management, stigma, boundaries, accessing mental health services.",
+      "personas": ["mental_health_caregiver"],
+      "priority": "high"
+    },
+    {
+      "id": "young_carers",
+      "name": "Young carers and student caregivers",
+      "description": "Support for people under 26 who are caregiving — balancing school, identity, isolation, accessing age-appropriate resources.",
+      "personas": ["young_caregiver"],
+      "priority": "medium"
+    },
+    {
+      "id": "work_caregiving_balance",
+      "name": "Balancing work and caregiving",
+      "description": "Managing a career while caregiving — workplace accommodations, leave policies, time management, employer resources.",
+      "personas": ["adult_child_under50", "employer_hr"],
+      "priority": "medium"
+    },
+    {
+      "id": "caregiver_friendly_workplace",
+      "name": "Caregiver-friendly workplace policies",
+      "description": "Employer-side content — how to support employees who are caregivers, leave policies, flexible work, toolkits for HR.",
+      "personas": ["employer_hr"],
+      "priority": "medium"
+    },
+    {
+      "id": "healthcare_caregiver_inclusion",
+      "name": "Caregiver inclusion in healthcare",
+      "description": "Essential care partner policies, involving caregivers in care teams, hospital visitor policies, healthcare provider training.",
+      "personas": ["healthcare_provider"],
+      "priority": "medium"
+    },
+    {
+      "id": "complex_care_children",
+      "name": "Parenting a child with complex needs",
+      "description": "Support for parents of children with disabilities or complex medical needs — transition planning, respite, navigating systems, advocacy.",
+      "personas": ["parent_complex_needs"],
+      "priority": "medium"
+    },
+    {
+      "id": "navigating_healthcare_system",
+      "name": "Navigating the Ontario healthcare system",
+      "description": "Understanding home care, LHIN/Ontario Health Teams, community services, how to access government programs, and advocacy.",
+      "personas": ["adult_child_50plus", "adult_child_under50", "spousal_caregiver", "healthcare_provider"],
+      "priority": "high"
+    },
+    {
+      "id": "caregiver_identity",
+      "name": "Caregiver identity and self-recognition",
+      "description": "Many people don't realize they are caregivers. Content about recognizing the role, what counts as caregiving, why it matters to self-identify.",
+      "personas": ["spousal_caregiver", "young_caregiver", "adult_child_under50"],
+      "priority": "medium"
+    }
+  ]
+}

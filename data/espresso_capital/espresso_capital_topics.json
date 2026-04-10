@@ -1,0 +1,80 @@
+{
+  "metadata": {
+    "client": "Espresso Capital",
+    "created": "2026-04-09",
+    "last_updated": "2026-04-09",
+    "notes": "Core topics this brand must be visible for in AI search. Borrower and investor topics are intentionally separate — these audiences have entirely different intent and language."
+  },
+  "topics": [
+    {
+      "id": "venture_debt_overview",
+      "name": "What is venture debt",
+      "description": "Founders and CFOs researching venture debt as a concept — how it works, when to use it, pros/cons, comparison to equity financing.",
+      "personas": ["saas_founder_ceo", "startup_cfo_finance", "healthcare_tech_operator"],
+      "priority": "high"
+    },
+    {
+      "id": "venture_debt_vs_equity",
+      "name": "Venture debt vs raising equity",
+      "description": "Decision-making content — when to take debt vs give up equity, dilution math, runway extension scenarios, hybrid approaches.",
+      "personas": ["saas_founder_ceo", "vc_advisor"],
+      "priority": "high"
+    },
+    {
+      "id": "venture_debt_lenders",
+      "name": "Best venture debt lenders",
+      "description": "Comparison of venture debt providers — Espresso vs Hercules vs WTI vs TriplePoint. Speed, terms, warrants, founder-friendliness.",
+      "personas": ["saas_founder_ceo", "startup_cfo_finance", "vc_advisor"],
+      "priority": "high"
+    },
+    {
+      "id": "non_dilutive_financing",
+      "name": "Non-dilutive financing for startups",
+      "description": "All forms of non-dilutive capital — venture debt, revenue-based financing, grants, government programs. For founders who want to grow without giving up equity.",
+      "personas": ["saas_founder_ceo", "healthcare_tech_operator"],
+      "priority": "high"
+    },
+    {
+      "id": "saas_growth_financing",
+      "name": "SaaS growth financing",
+      "description": "Financing options specific to B2B SaaS — ARR-based lending, MRR covenants, growth metrics lenders look for.",
+      "personas": ["saas_founder_ceo", "startup_cfo_finance"],
+      "priority": "high"
+    },
+    {
+      "id": "venture_debt_terms",
+      "name": "Venture debt terms and structures",
+      "description": "CFO-level content — term sheets, covenants, amortization, warrants, interest rates, unitranche vs second lien, what to negotiate.",
+      "personas": ["startup_cfo_finance"],
+      "priority": "medium"
+    },
+    {
+      "id": "runway_extension",
+      "name": "Extending startup runway",
+      "description": "Strategies to extend runway between equity rounds — cutting burn, debt financing, bridge rounds, revenue acceleration.",
+      "personas": ["saas_founder_ceo", "vc_advisor"],
+      "priority": "medium"
+    },
+    {
+      "id": "private_credit_investing",
+      "name": "Private credit and venture debt funds",
+      "description": "Investor-side content — venture debt as an asset class, fund performance, yield expectations, risk profile, portfolio diversification.",
+      "personas": ["canadian_investor"],
+      "priority": "high"
+    },
+    {
+      "id": "canadian_private_credit",
+      "name": "Canadian private credit market",
+      "description": "Canada-specific private credit landscape — fund managers, regulatory environment, market size, institutional vs retail access.",
+      "personas": ["canadian_investor"],
+      "priority": "medium"
+    },
+    {
+      "id": "healthcare_saas_financing",
+      "name": "Healthcare tech and vertical SaaS financing",
+      "description": "Financing for healthcare tech and vertical SaaS companies — Espresso's most profitable verticals. Sector-specific considerations.",
+      "personas": ["healthcare_tech_operator"],
+      "priority": "medium"
+    }
+  ]
+}

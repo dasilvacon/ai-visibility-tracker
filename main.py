@@ -25,6 +25,8 @@ from tracking.results_tracker import ResultsTracker
 from reporting.report_generator import ReportGenerator
 from prompt_generator.generator import PromptGenerator
 from analysis.visibility_scorer import VisibilityScorer
+from analysis.fanout_collector import FanoutCollector
+from analysis.topic_cluster_analyzer import TopicClusterAnalyzer
 from analysis.competitor_analyzer import CompetitorAnalyzer
 from analysis.gap_analyzer import GapAnalyzer
 from analysis.source_analyzer import SourceAnalyzer
@@ -329,13 +331,18 @@ class VisibilityTracker:
                 client = self.clients[platform]
                 print(f"  → {platform}...", end=" ", flush=True)
 
-                # Add prompt metadata to result
+                # Add prompt metadata to result (including cluster fields if present)
                 metadata = {
                     'persona': prompt['persona'],
                     'category': prompt['category'],
                     'intent_type': prompt['intent_type'],
                     'notes': prompt['notes']
                 }
+
+                # Pass through topic cluster metadata for fan-out analysis
+                for cluster_field in ('topic_cluster_id', 'cluster_role', 'cluster_topic', 'fanout_angle'):
+                    if cluster_field in prompt:
+                        metadata[cluster_field] = prompt[cluster_field]
 
                 result = client.test_prompt(
                     prompt_id=prompt['prompt_id'],
@@ -356,6 +363,22 @@ class VisibilityTracker:
 
         print(f"\n✓ Completed {tested} new tests (skipped {skipped} already done)")
         print(f"✓ Total results for this client: {len(completed) + tested}")
+
+        # Collect real fan-out queries from Gemini grounding metadata
+        if self.client_slug and all_results:
+            try:
+                fanout_collector = FanoutCollector(client_slug=self.client_slug)
+                fanout_stats = fanout_collector.collect_from_results(all_results)
+                if fanout_stats['new_queries'] > 0:
+                    fanout_collector.save()
+                    print(f"\n🔍 Fan-out collection: {fanout_stats['new_queries']} real Google sub-queries captured")
+                    print(f"   Topics with fan-out data: {fanout_stats['topics_with_fanout']}")
+                    print(f"   Total unique queries: {fanout_stats['total_unique_queries']}")
+                else:
+                    print("\n🔍 Fan-out collection: No new Gemini fan-out queries in this run")
+            except Exception as e:
+                print(f"\n⚠️ Fan-out collection failed (non-critical): {e}")
+
         return all_results
 
     def check_test_completeness(self, prompts_file: str, platforms: List[str] = None) -> dict:
@@ -605,6 +628,43 @@ class VisibilityTracker:
         print("3.5. Analyzing sources and citations...")
         source_analysis = source_analyzer.analyze_sources(scored_results, brand_config=brand_config)
 
+        # Topic cluster / fan-out analysis
+        topic_cluster_analysis = None
+        has_cluster_data = any(r.get('metadata', {}).get('cluster_topic') for r in scored_results)
+        if has_cluster_data:
+            print("3.7. Analyzing topic cluster fan-out visibility...")
+            try:
+                tc_analyzer = TopicClusterAnalyzer(brand_name=brand_name)
+                topic_cluster_analysis = tc_analyzer.analyze(scored_results)
+                summary = topic_cluster_analysis.get('summary', {})
+                print(f"   ✓ {summary.get('total_topics', 0)} topics analyzed")
+                recs = topic_cluster_analysis.get('content_recommendations', [])
+                print(f"   ✓ {len(recs)} content recommendations")
+                sys_gaps = summary.get('systematic_angle_gaps', [])
+                if sys_gaps:
+                    print(f"   ⚠️  Systematic weak spots: {', '.join(sys_gaps)}")
+
+                # Also collect real fan-out queries if available
+                if self.client_slug:
+                    try:
+                        fanout_collector = FanoutCollector(client_slug=self.client_slug)
+                        fanout_stats = fanout_collector.collect_from_results(scored_results)
+                        if fanout_stats['new_queries'] > 0:
+                            fanout_collector.save()
+                            word_analysis = fanout_collector.analyze_word_additions()
+                            topic_cluster_analysis['real_fanout'] = {
+                                'stats': fanout_stats,
+                                'word_additions': word_analysis,
+                                'topics': fanout_collector.get_all_fanout_topics()
+                            }
+                            print(f"   ✓ {fanout_stats['new_queries']} real Google fan-out queries collected")
+                    except Exception as e:
+                        print(f"   ⚠️ Fan-out collection skipped: {e}")
+            except Exception as e:
+                print(f"   ⚠️ Topic cluster analysis failed: {e}")
+        else:
+            print("3.7. Topic cluster analysis: No cluster data in prompts (skipped)")
+
         # Run website verification if URLs are available
         website_verification = None
         brand_website = brand_config['brand'].get('website')
@@ -818,6 +878,7 @@ class VisibilityTracker:
             'action_plan': action_plan,
             'scored_results': scored_results,
             'source_analysis': source_analysis,
+            'topic_cluster_analysis': topic_cluster_analysis,
             'text_report_path': analysis_report_path,
             'html_report_path': html_report_path,
             'exports': exports

@@ -15,6 +15,7 @@ from .persona_manager import PersonaManager
 from .keyword_processor import KeywordProcessor
 from .prompt_builder import PromptBuilder
 from .deduplicator import PromptDeduplicator
+from .topic_cluster_generator import TopicClusterGenerator
 
 
 class PromptGenerator:
@@ -25,7 +26,8 @@ class PromptGenerator:
                  use_ai_generation: bool = True,
                  deduplicator: Optional[PromptDeduplicator] = None,
                  enable_deduplication: bool = True,
-                 brand_config: Optional[Dict[str, Any]] = None):
+                 brand_config: Optional[Dict[str, Any]] = None,
+                 topics_file: Optional[str] = None):
         """
         Initialize the prompt generator.
 
@@ -37,9 +39,13 @@ class PromptGenerator:
             deduplicator: Optional custom deduplicator instance
             enable_deduplication: Whether to enable deduplication during generation
             brand_config: Brand configuration dict (loaded from brand_config.json)
+            topics_file: Optional path to topics.json — the strategic topic
+                         definitions that drive fan-out cluster generation.
+                         Auto-detected from client data dir if not provided.
         """
         self.persona_manager = PersonaManager(personas_file)
         self.keyword_processor = KeywordProcessor(keywords_file)
+        self.topics_file = topics_file or self._auto_detect_topics_file(personas_file)
         self.brand_config = brand_config or {}
         self.prompt_builder = PromptBuilder(
             use_natural_language=True,
@@ -74,10 +80,28 @@ class PromptGenerator:
             'end_time': None
         }
 
+    @staticmethod
+    def _auto_detect_topics_file(personas_file: str) -> Optional[str]:
+        """Try to find a topics.json in the same directory as the personas file."""
+        client_dir = os.path.dirname(personas_file)
+        if not client_dir:
+            return None
+        for fname in os.listdir(client_dir):
+            if fname.endswith('_topics.json'):
+                return os.path.join(client_dir, fname)
+        return None
+
     def generate_prompts(self, total_count: int = 1000,
                         competitor_ratio: float = 0.3) -> List[Dict[str, Any]]:
         """
         Generate a full set of prompts distributed across personas.
+
+        Uses a two-layer approach:
+          Layer 1 (topic clusters): Fan-out prompt clusters generated from
+              each persona's priority_topics. These simulate how AI engines
+              decompose broad questions into specific sub-queries. Always on.
+          Layer 2 (keyword-based): Traditional keyword→prompt generation
+              fills the remaining budget for month-over-month tracking.
 
         Args:
             total_count: Total number of prompts to generate
@@ -97,8 +121,35 @@ class PromptGenerator:
         self.generation_stats['start_time'] = datetime.now()
         self.generated_prompts = []
 
-        # Get persona distribution
-        distribution = self.persona_manager.get_persona_distribution(total_count)
+        # ── Layer 1: Topic cluster fan-out prompts (always on) ──────────
+        cluster_gen = TopicClusterGenerator(
+            persona_manager=self.persona_manager,
+            keyword_processor=self.keyword_processor,
+            api_client=self.api_client if self.use_ai_generation else None,
+            brand_config=self.brand_config,
+            fanout_count=5,
+            topics_file=self.topics_file,
+        )
+        cluster_prompts = cluster_gen.generate_all_clusters()
+        self.generated_prompts.extend(cluster_prompts)
+        print(f"\n✓ Topic clusters: {len(cluster_prompts)} prompts generated")
+
+        # Store cluster summary for reporting
+        self.generation_stats['cluster_summary'] = cluster_gen.get_cluster_summary()
+        self.generation_stats['cluster_count'] = cluster_gen.stats['total_clusters']
+
+        # ── Layer 2: Keyword-based prompts (fill remaining count) ───────
+        keyword_count = max(0, total_count - len(cluster_prompts))
+        if keyword_count == 0:
+            print("Topic clusters filled the entire prompt budget.")
+            self.generation_stats['end_time'] = datetime.now()
+            self.generation_stats['total_generated'] = len(self.generated_prompts)
+            return self.generated_prompts
+
+        print(f"\nGenerating {keyword_count} keyword-based prompts...")
+
+        # Get persona distribution for the remaining keyword-based prompts
+        distribution = self.persona_manager.get_persona_distribution(keyword_count)
 
         print("Persona Distribution:")
         for persona_id, count in distribution.items():
@@ -606,9 +657,18 @@ Return ONLY the JSON array. No other text."""
         if not self.generated_prompts:
             raise ValueError("No prompts to save. Run generate_prompts() first.")
 
+        # Check if any prompts have topic cluster fields
+        has_clusters = any(p.get('topic_cluster_id') for p in self.generated_prompts)
+
         # Base fieldnames
         fieldnames = ['prompt_id', 'persona', 'category', 'intent_type',
                      'prompt_text', 'expected_visibility_score', 'notes']
+
+        # Add cluster fields if any cluster prompts exist
+        if has_clusters:
+            fieldnames.extend([
+                'topic_cluster_id', 'cluster_role', 'cluster_topic', 'fanout_angle'
+            ])
 
         # Flatten prompts for CSV export
         export_prompts = []
@@ -622,6 +682,13 @@ Return ONLY the JSON array. No other text."""
                 'expected_visibility_score': prompt['expected_visibility_score'],
                 'notes': prompt.get('notes', '')
             }
+
+            # Include cluster fields (empty strings for keyword-based prompts)
+            if has_clusters:
+                export_prompt['topic_cluster_id'] = prompt.get('topic_cluster_id', '')
+                export_prompt['cluster_role'] = prompt.get('cluster_role', '')
+                export_prompt['cluster_topic'] = prompt.get('cluster_topic', '')
+                export_prompt['fanout_angle'] = prompt.get('fanout_angle', '')
 
             export_prompts.append(export_prompt)
 
