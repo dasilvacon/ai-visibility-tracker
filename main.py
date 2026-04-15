@@ -100,7 +100,7 @@ class VisibilityTracker:
                     'api_keys': api_keys,
                     'models': {
                         'openai': 'gpt-4',
-                        'anthropic': 'claude-sonnet-4-20250514',
+                        'anthropic': 'claude-sonnet-4-6',
                         'perplexity': 'sonar',
                         'gemini': 'gemini-2.5-flash',
                         'serpapi': 'google_ai_overview',
@@ -137,7 +137,7 @@ class VisibilityTracker:
                 'api_keys': api_keys,
                 'models': {
                     'openai': 'gpt-4',
-                    'anthropic': 'claude-sonnet-4-20250514',
+                    'anthropic': 'claude-sonnet-4-6',
                     'perplexity': 'sonar',
                     'gemini': 'gemini-2.5-flash',
                     'serpapi': 'google_ai_overview',
@@ -180,7 +180,7 @@ class VisibilityTracker:
             try:
                 self.clients['anthropic'] = AnthropicClient(
                     api_key=api_keys['anthropic'],
-                    model=models.get('anthropic', 'claude-3-5-sonnet-20241022'),
+                    model=models.get('anthropic', 'claude-sonnet-4-6'),
                     config=self.config
                 )
                 print("✓ Anthropic client initialized")
