@@ -391,17 +391,14 @@ def render():
             mime="application/json"
         )
 
-    # HTML Report Export
-    with st.expander("📄 HTML Sortable Report"):
-        st.markdown("Generate an interactive HTML report with sortable/filterable tables.")
-
-        st.info("🚧 HTML export with interactive tables coming soon! For now, use CSV export.")
-
-        # Placeholder for future HTML exporter integration
-        # if st.button("Generate HTML Report", key="export_html"):
-        #     from src.prompt_generator.html_exporter import HTMLExporter
-        #     exporter = HTMLExporter()
-        #     html_file = exporter.generate_report(approved_prompts, stats)
+    # HTML Report Export — hidden until implemented. CSV and JSON exports above cover
+    # the current use cases. Re-enable this block when HTMLExporter is built.
+    # with st.expander("📄 HTML Sortable Report"):
+    #     st.markdown("Generate an interactive HTML report with sortable/filterable tables.")
+    #     if st.button("Generate HTML Report", key="export_html"):
+    #         from src.prompt_generator.html_exporter import HTMLExporter
+    #         exporter = HTMLExporter()
+    #         html_file = exporter.generate_report(approved_prompts, stats)
         #     st.success(f"✅ HTML report generated: {html_file}")
 
     st.markdown("---")

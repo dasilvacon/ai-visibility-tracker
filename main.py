@@ -96,16 +96,18 @@ class VisibilityTracker:
             api_keys = dict(st.secrets.get('api_keys', {}))
             if api_keys:
                 print("✓ Loading config from Streamlit secrets")
+                azure_cfg = dict(st.secrets.get('azure_openai', {}))
                 return {
                     'api_keys': api_keys,
                     'models': {
-                        'openai': 'gpt-4',
+                        'openai': 'gpt-5',
                         'anthropic': 'claude-sonnet-4-6',
                         'perplexity': 'sonar',
                         'gemini': 'gemini-2.5-flash',
                         'serpapi': 'google_ai_overview',
-                        'copilot': 'gpt-4'
+                        'copilot': azure_cfg.get('deployment', 'gpt-5.4-mini')
                     },
+                    'azure_openai': azure_cfg,
                     'testing': {
                         'default_temperature': 0.7,
                         'max_tokens': 1000,
@@ -133,16 +135,25 @@ class VisibilityTracker:
 
         if api_keys:
             print("✓ Loading config from environment variables")
+            # Also pull structured Azure config from env (set by run_report.py)
+            azure_cfg = {
+                k: v for k, v in {
+                    'endpoint': os.getenv('AZURE_OPENAI_ENDPOINT', ''),
+                    'deployment': os.getenv('AZURE_OPENAI_DEPLOYMENT', ''),
+                    'api_version': os.getenv('AZURE_OPENAI_API_VERSION', ''),
+                }.items() if v
+            }
             return {
                 'api_keys': api_keys,
                 'models': {
-                    'openai': 'gpt-4',
+                    'openai': 'gpt-5',
                     'anthropic': 'claude-sonnet-4-6',
                     'perplexity': 'sonar',
                     'gemini': 'gemini-2.5-flash',
                     'serpapi': 'google_ai_overview',
-                    'copilot': 'gpt-4'
+                    'copilot': azure_cfg.get('deployment') or 'gpt-5.4-mini'
                 },
+                'azure_openai': azure_cfg,
                 'testing': {
                     'default_temperature': 0.7,
                     'max_tokens': 1000,
@@ -168,7 +179,7 @@ class VisibilityTracker:
             try:
                 self.clients['openai'] = OpenAIClient(
                     api_key=api_keys['openai'],
-                    model=models.get('openai', 'gpt-4'),
+                    model=models.get('openai', 'gpt-5'),
                     config=self.config
                 )
                 print("✓ OpenAI client initialized")
@@ -192,7 +203,7 @@ class VisibilityTracker:
             try:
                 self.clients['perplexity'] = PerplexityClient(
                     api_key=api_keys['perplexity'],
-                    model=models.get('perplexity', 'pplx-70b-online'),
+                    model=models.get('perplexity', 'sonar'),
                     config=self.config
                 )
                 print("✓ Perplexity client initialized")
@@ -204,7 +215,7 @@ class VisibilityTracker:
             try:
                 self.clients['gemini'] = GeminiClient(
                     api_key=api_keys['gemini'],
-                    model=models.get('gemini', 'gemini-2.0-flash-exp'),
+                    model=models.get('gemini', 'gemini-2.5-flash'),
                     config=self.config
                 )
                 print("✓ Gemini client initialized")
@@ -230,7 +241,7 @@ class VisibilityTracker:
             try:
                 self.clients['copilot'] = CopilotClient(
                     api_key=copilot_key,
-                    model=models.get('copilot', 'gpt-4'),
+                    model=models.get('copilot', 'gpt-5.4-mini'),
                     config=self.config
                 )
                 print("✓ Microsoft Copilot client initialized")
@@ -512,9 +523,12 @@ class VisibilityTracker:
         brand_name = brand_config['brand']['name']
         brand_aliases = brand_config['brand'].get('aliases', [])
 
-        # Handle both old format (list) and new format (dict with 'expected' and 'discovered')
+        # Handle both old format (list) and new format (dict with 'expected' and 'discovered').
+        # Also extract per-competitor aliases so detection can match acronyms and
+        # common variations (e.g., "Canadian Centre for Caregiving Excellence" → "CCCE").
         competitors_raw = brand_config.get('competitors', [])
         competitors = []
+        competitor_aliases: Dict[str, List[str]] = {}
 
         if isinstance(competitors_raw, dict):
             # New format: {'expected': [...], 'discovered': [...]}
@@ -525,6 +539,9 @@ class VisibilityTracker:
             for comp in all_competitors:
                 if isinstance(comp, dict) and 'name' in comp:
                     competitors.append(comp['name'])
+                    aliases = comp.get('aliases') or []
+                    if aliases:
+                        competitor_aliases[comp['name']] = list(aliases)
                 elif isinstance(comp, str):
                     competitors.append(comp)
         elif isinstance(competitors_raw, list):
@@ -533,7 +550,11 @@ class VisibilityTracker:
                 if isinstance(comp, str):
                     competitors.append(comp)
                 elif isinstance(comp, dict):
-                    competitors.append(comp.get('name', comp.get('website', '')))
+                    name = comp.get('name', comp.get('website', ''))
+                    competitors.append(name)
+                    aliases = comp.get('aliases') or []
+                    if aliases and name:
+                        competitor_aliases[name] = list(aliases)
 
         print(f"\nBrand: {brand_name}")
         print(f"Competitors: {', '.join(competitors)}")
@@ -582,6 +603,7 @@ class VisibilityTracker:
             brand_name=brand_name,
             brand_aliases=brand_aliases,
             competitor_names=competitors,
+            competitor_aliases=competitor_aliases,
             known_sources=known_sources
         )
 
@@ -1211,8 +1233,8 @@ class VisibilityTracker:
         lines.append("SECTION 6: SOURCES & CITATIONS")
         lines.append("="*80)
         lines.append("")
-        lines.append("Where are brands being mentioned? This section shows which third-party sites")
-        lines.append("(Sephora, Reddit, beauty blogs) are citing which brands in AI responses.")
+        lines.append("Where are brands being mentioned? This section shows which third-party sites,")
+        lines.append("publications, and communities are citing which brands in AI responses.")
         lines.append("")
 
         total_sources = source_analysis.get('total_unique_sources', 0)
@@ -1268,11 +1290,11 @@ class VisibilityTracker:
                     lines.append("   → Increase Reddit presence - answer questions, engage authentically")
                     lines.append("   → Consider sponsoring relevant subreddit threads")
                 elif 'youtube' in target['source'].lower() or 'channel' in target['source'].lower():
-                    lines.append("   → Send PR packages to top beauty YouTubers")
-                    lines.append("   → Reach out for sponsored reviews or collaborations")
-                elif any(word in target['source'].lower() for word in ['blog', 'temptalia', 'review']):
-                    lines.append("   → Reach out for product review features")
-                    lines.append("   → Send PR package with your best products")
+                    lines.append("   → Identify relevant creators in your space and open an outreach conversation")
+                    lines.append("   → Explore sponsored content, interviews, or collaboration opportunities")
+                elif any(word in target['source'].lower() for word in ['blog', 'review', 'magazine', 'journal']):
+                    lines.append("   → Pitch editorial features, case studies, or guest contributions")
+                    lines.append("   → Offer subject-matter expertise or client stories relevant to their audience")
                 else:
                     lines.append("   → Reach out for backlink opportunities")
                     lines.append("   → Request product features or reviews")
@@ -1391,7 +1413,7 @@ def main():
     parser.add_argument(
         '--platforms',
         nargs='+',
-        choices=['openai', 'anthropic', 'perplexity', 'gemini', 'google_ai_overview', 'copilot', 'deepseek', 'grok'],
+        choices=['openai', 'anthropic', 'perplexity', 'gemini', 'google_ai_overview', 'copilot'],
         help='Platforms to test (default: all available)'
     )
     parser.add_argument(

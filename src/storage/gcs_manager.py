@@ -1,303 +1,47 @@
 """
-Google Cloud Storage Manager - Handle uploads and downloads of reports.
+DEPRECATED: src/storage/gcs_manager.GCSManager has been consolidated into
+src/client_manager/gcs_sync.GCSClientSync — the single source of truth for
+all GCS reads and writes.
+
+This shim exists only to keep legacy imports working. New code must use
+GCSClientSync directly:
+
+    from client_manager.gcs_sync import GCSClientSync
+    gcs = GCSClientSync()
+    gcs.get_report_content(client, filename)
+    gcs.list_client_reports(client)
+    gcs.check_report_exists(client, filename)
+
+Do not add new methods here. Migrate callers and delete this file in a
+future cleanup pass.
 """
 
-import os
-import json
-from pathlib import Path
-from typing import Optional, List
-from datetime import datetime
-from google.cloud import storage
-from google.oauth2 import service_account
-import streamlit as st
+import warnings
+from typing import Optional
+
+# Import using a path that works whether callers use `src.X` or added
+# `src/` to sys.path. Fall back to the bare import if the src-prefixed
+# form isn't importable (Streamlit adds `src/` to sys.path directly).
+try:
+    from src.client_manager.gcs_sync import GCSClientSync
+except ModuleNotFoundError:  # pragma: no cover
+    from client_manager.gcs_sync import GCSClientSync  # type: ignore
 
 
-class GCSManager:
-    """Manage Google Cloud Storage operations for visibility reports."""
+class GCSManager(GCSClientSync):
+    """Deprecated alias for GCSClientSync. Kept for backward compatibility."""
 
-    def __init__(self, bucket_name: Optional[str] = None, credentials_path: Optional[str] = None):
-        """
-        Initialize GCS Manager.
-
-        Args:
-            bucket_name: Name of the GCS bucket (reads from secrets if not provided)
-            credentials_path: Path to service account JSON (reads from secrets if not provided)
-        """
-        # Try to get config from Streamlit secrets first (for cloud deployment)
-        if hasattr(st, 'secrets') and 'gcs' in st.secrets:
-            self.bucket_name = st.secrets['gcs'].get('bucket_name')
-
-            # Check if credentials are provided as JSON string (Streamlit Cloud)
-            if 'credentials' in st.secrets['gcs']:
-                creds_dict = json.loads(st.secrets['gcs']['credentials'])
-                self.credentials = service_account.Credentials.from_service_account_info(creds_dict)
-            elif 'credentials_file' in st.secrets['gcs']:
-                creds_path = st.secrets['gcs']['credentials_file']
-                if os.path.exists(creds_path):
-                    self.credentials = service_account.Credentials.from_service_account_file(creds_path)
-                else:
-                    # File doesn't exist, use default credentials (Cloud Run service account)
-                    self.credentials = None
-            else:
-                # No credentials specified, use default (Cloud Run service account)
-                self.credentials = None
-        else:
-            # Fall back to parameters or environment variables
-            self.bucket_name = bucket_name or os.getenv('GCS_BUCKET_NAME')
-
-            if credentials_path:
-                self.credentials = service_account.Credentials.from_service_account_file(credentials_path)
-            elif os.getenv('GOOGLE_APPLICATION_CREDENTIALS'):
-                self.credentials = service_account.Credentials.from_service_account_file(
-                    os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
-                )
-            else:
-                # Try default credentials
-                self.credentials = None
-
-        if not self.bucket_name:
-            raise ValueError("GCS bucket name not configured. Set bucket_name parameter or configure secrets.")
-
-        # Initialize client
-        self.client = storage.Client(credentials=self.credentials)
-        self.bucket = self.client.bucket(self.bucket_name)
-
-    def upload_report(self, local_path: str, client_name: str, keep_history: bool = True) -> str:
-        """
-        Upload a report file to GCS.
-
-        Args:
-            local_path: Path to local file
-            client_name: Name of the client (used for folder structure)
-            keep_history: If True, also save to history folder with timestamp
-
-        Returns:
-            GCS blob path
-        """
-        local_file = Path(local_path)
-
-        if not local_file.exists():
-            raise FileNotFoundError(f"File not found: {local_path}")
-
-        # Sanitize client name for folder structure
-        client_slug = client_name.replace(' ', '_')
-
-        # Main file path (always overwrites latest)
-        main_blob_path = f"{client_slug}/{local_file.name}"
-
-        # Upload main file
-        blob = self.bucket.blob(main_blob_path)
-        blob.upload_from_filename(str(local_file))
-
-        print(f"✓ Uploaded: {main_blob_path}")
-
-        # Also save to history folder if requested
-        if keep_history:
-            timestamp = datetime.now().strftime('%Y-%m')
-            history_blob_path = f"{client_slug}/history/{timestamp}/{local_file.name}"
-            history_blob = self.bucket.blob(history_blob_path)
-            history_blob.upload_from_filename(str(local_file))
-            print(f"✓ Archived: {history_blob_path}")
-
-        return main_blob_path
-
-    def upload_client_reports(self, client_name: str, reports_dir: str = 'data/reports') -> List[str]:
-        """
-        Upload all reports for a specific client.
-
-        Args:
-            client_name: Name of the client
-            reports_dir: Local directory containing reports
-
-        Returns:
-            List of uploaded blob paths
-        """
-        reports_path = Path(reports_dir)
-        client_slug = client_name.replace(' ', '_')
-
-        # Find all report files for this client
-        patterns = [
-            f"visibility_report_{client_slug}.html",
-            f"executive_summary_{client_slug}.pdf",
-            f"visibility_analysis_{client_slug}.txt",
-            f"raw_data_{client_slug}.csv",
-            f"competitors_{client_slug}.csv",
-            f"sources_{client_slug}.csv",
-            f"action_plan_{client_slug}.csv",
-            f"personas_{client_slug}.csv",
-        ]
-
-        uploaded = []
-
-        for pattern in patterns:
-            file_path = reports_path / pattern
-            if file_path.exists():
-                try:
-                    blob_path = self.upload_report(str(file_path), client_name, keep_history=True)
-                    uploaded.append(blob_path)
-                except Exception as e:
-                    print(f"✗ Failed to upload {pattern}: {e}")
-
-        return uploaded
-
-    def download_report(self, client_name: str, filename: str, local_dir: str = '/tmp') -> str:
-        """
-        Download a report file from GCS.
-
-        Args:
-            client_name: Name of the client
-            filename: Name of the file to download
-            local_dir: Local directory to save file
-
-        Returns:
-            Path to downloaded file
-        """
-        client_slug = client_name.replace(' ', '_')
-        blob_path = f"{client_slug}/{filename}"
-
-        blob = self.bucket.blob(blob_path)
-
-        if not blob.exists():
-            raise FileNotFoundError(f"File not found in GCS: {blob_path}")
-
-        local_path = Path(local_dir) / filename
-        local_path.parent.mkdir(parents=True, exist_ok=True)
-
-        blob.download_to_filename(str(local_path))
-
-        return str(local_path)
-
-    def get_report_content(self, client_name: str, filename: str) -> bytes:
-        """
-        Get report file content directly from GCS without downloading.
-
-        Args:
-            client_name: Name of the client
-            filename: Name of the file
-
-        Returns:
-            File content as bytes
-        """
-        client_slug = client_name.replace(' ', '_').lower()
-
-        # Try per-client reports path first (new structure)
-        blob_path = f"reports/{client_slug}/{filename}"
-        blob = self.bucket.blob(blob_path)
-
-        if blob.exists():
-            return blob.download_as_bytes()
-
-        # Fallback to old flat reports/ structure
-        blob_path = f"reports/{filename}"
-        blob = self.bucket.blob(blob_path)
-
-        if blob.exists():
-            return blob.download_as_bytes()
-
-        # Fallback to client_slug/ prefix (legacy structure)
-        blob_path = f"{client_slug}/{filename}"
-        blob = self.bucket.blob(blob_path)
-
-        if not blob.exists():
-            raise FileNotFoundError(f"File not found in GCS: reports/{client_slug}/{filename}")
-
-        return blob.download_as_bytes()
-
-    def list_client_reports(self, client_name: str) -> List[dict]:
-        """
-        List all reports available for a client.
-
-        Args:
-            client_name: Name of the client
-
-        Returns:
-            List of report metadata dicts
-        """
-        client_slug = client_name.replace(' ', '_').lower()
-        reports = []
-
-        # Check per-client reports path first (new structure)
-        prefix = f'reports/{client_slug}/'
-        blobs = self.bucket.list_blobs(prefix=prefix)
-        for blob in blobs:
-            if blob.name.endswith('/'):
-                continue
-            filename = blob.name.split('/')[-1]
-            reports.append({
-                'name': filename,
-                'path': blob.name,
-                'size': blob.size,
-                'updated': blob.updated,
-                'content_type': blob.content_type
-            })
-
-        # Also check old flat reports/ structure for legacy files
-        blobs = self.bucket.list_blobs(prefix='reports/')
-        for blob in blobs:
-            if blob.name.endswith('/'):
-                continue
-            filename = blob.name.split('/')[-1]
-            # Check if this report belongs to this client and not in a subdirectory
-            if client_slug in filename.lower() and blob.name.count('/') == 1:
-                # Avoid duplicates
-                if not any(r['name'] == filename for r in reports):
-                    reports.append({
-                        'name': filename,
-                        'path': blob.name,
-                        'size': blob.size,
-                        'updated': blob.updated,
-                        'content_type': blob.content_type
-                    })
-
-        return reports
-
-    def check_report_exists(self, client_name: str, filename: str) -> bool:
-        """
-        Check if a report file exists in GCS.
-
-        Args:
-            client_name: Name of the client
-            filename: Name of the file
-
-        Returns:
-            True if file exists, False otherwise
-        """
-        client_slug = client_name.replace(' ', '_').lower()
-
-        # Check per-client reports path first (new structure)
-        blob_path = f"reports/{client_slug}/{filename}"
-        blob = self.bucket.blob(blob_path)
-        if blob.exists():
-            return True
-
-        # Fallback to old flat reports/ structure
-        blob_path = f"reports/{filename}"
-        blob = self.bucket.blob(blob_path)
-        if blob.exists():
-            return True
-
-        # Fallback to client_slug/ prefix (legacy structure)
-        blob_path = f"{client_slug}/{filename}"
-        blob = self.bucket.blob(blob_path)
-        return blob.exists()
-
-    def get_all_clients(self) -> List[str]:
-        """
-        Get list of all clients with reports in GCS.
-
-        Returns:
-            List of client names
-        """
-        blobs = self.bucket.list_blobs()
-
-        clients = set()
-        for blob in blobs:
-            # Extract client name from path (first part before /)
-            parts = blob.name.split('/')
-            if len(parts) > 1:
-                # Convert slug back to client name
-                client_slug = parts[0]
-                client_name = client_slug.replace('_', ' ')
-                clients.add(client_name)
-
-        return sorted(list(clients))
+    def __init__(
+        self,
+        bucket_name: Optional[str] = None,
+        credentials_path: Optional[str] = None,
+    ):
+        warnings.warn(
+            "GCSManager is deprecated; use GCSClientSync from "
+            "src.client_manager.gcs_sync instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        # credentials_path is ignored — GCSClientSync uses application default
+        # credentials (Cloud Run service account or gcloud auth) exclusively.
+        super().__init__(bucket_name=bucket_name or 'ai-visibility-reports-dasilva')

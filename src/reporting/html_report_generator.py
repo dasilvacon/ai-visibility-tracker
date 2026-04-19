@@ -962,13 +962,13 @@ class HTMLReportGenerator:
 
             for i, target in enumerate(recommended_targets[:10], 1):
                 # Determine action based on source type
-                action = "Reach out for features"
+                action = "Pitch editorial feature or guest contribution"
                 if 'reddit' in target['source'].lower():
                     action = "Increase Reddit presence"
                 elif 'youtube' in target['source'].lower() or 'channel' in target['source'].lower():
-                    action = "Send PR packages to YouTubers"
-                elif any(word in target['source'].lower() for word in ['blog', 'temptalia', 'review']):
-                    action = "Request product reviews"
+                    action = "Open outreach with relevant creators"
+                elif any(word in target['source'].lower() for word in ['blog', 'review', 'magazine', 'journal']):
+                    action = "Pitch editorial feature or guest post"
 
                 # Color code opportunity score
                 score = target['opportunity_score']
@@ -1018,22 +1018,22 @@ class HTMLReportGenerator:
                     elif 'youtube' in target['source'].lower():
                         targets_table += """
                             <div style="color: #6B5660; font-size: 13px; margin-top: 4px;">
-                                • Send PR packages to top beauty YouTubers<br>
-                                • Reach out for sponsored reviews or collaborations
+                                • Identify relevant creators in your space for outreach<br>
+                                • Explore sponsored content, interviews, or collaborations
                             </div>
                         """
-                    elif any(word in target['source'].lower() for word in ['blog', 'temptalia', 'review']):
+                    elif any(word in target['source'].lower() for word in ['blog', 'review', 'magazine', 'journal']):
                         targets_table += """
                             <div style="color: #6B5660; font-size: 13px; margin-top: 4px;">
-                                • Reach out for product review features<br>
-                                • Send PR package with your best products
+                                • Pitch editorial features, case studies, or guest contributions<br>
+                                • Offer subject-matter expertise relevant to their audience
                             </div>
                         """
                     else:
                         targets_table += """
                             <div style="color: #6B5660; font-size: 13px; margin-top: 4px;">
-                                • Reach out for backlink opportunities<br>
-                                • Request product features or reviews
+                                • Reach out for backlink or partnership opportunities<br>
+                                • Request editorial features or expert contributions
                             </div>
                         """
 
@@ -3251,7 +3251,7 @@ class HTMLReportGenerator:
         # Win 3: Reach out to high-value sources
         if recommended_targets:
             top_source = recommended_targets[0]
-            source_name = top_source.get('source', 'key beauty publication')
+            source_name = top_source.get('source', 'a high-value publication in your space')
             quick_wins.append({
                 'icon': '🥈',
                 'priority': 'MEDIUM IMPACT',
@@ -3262,10 +3262,10 @@ class HTMLReportGenerator:
                 'estimated_impact': '+3-5% visibility',
                 'action_steps': [
                     f'Research {source_name}\'s recent content and coverage style',
-                    'Send personalized pitch: PR package or review request',
-                    'Offer exclusive early access to new products',
+                    'Send a personalized pitch with a specific story angle or expert contribution',
+                    'Offer data, case studies, or exclusive insight relevant to their audience',
                     'Follow up after 5-7 business days',
-                    'Build long-term relationship for ongoing coverage'
+                    'Build an ongoing relationship for recurring coverage'
                 ]
             })
 

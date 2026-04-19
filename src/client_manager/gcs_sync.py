@@ -568,6 +568,123 @@ class GCSClientSync:
             print(f"✗ Failed to download reports: {e}")
             return False
 
+    # ------------------------------------------------------------------
+    # Report content read APIs — single source of truth for the dashboard.
+    # These replace the legacy src/storage/gcs_manager.py GCSManager class.
+    # Accept either a client slug or a display name; slugification is handled
+    # internally so callers don't need to know the storage convention.
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _to_slug(client: str) -> str:
+        """Normalize a client name (display or slug) to the canonical slug."""
+        if not client:
+            return ''
+        return client.replace(' ', '_').lower()
+
+    def get_report_content(self, client: str, filename: str) -> bytes:
+        """
+        Read a report file's bytes from GCS, with fallbacks for legacy layouts.
+
+        Lookup order:
+          1. reports/{client_slug}/{filename}       (current per-client layout)
+          2. reports/{filename}                     (legacy flat layout)
+          3. {client_slug}/{filename}               (oldest flat layout)
+
+        Args:
+            client: Client display name or slug
+            filename: Report filename (e.g., 'executive_summary_<slug>.pdf')
+
+        Returns:
+            File bytes
+
+        Raises:
+            FileNotFoundError if the file isn't found in any layout.
+        """
+        client_slug = self._to_slug(client)
+
+        candidates = [
+            f"reports/{client_slug}/{filename}",
+            f"reports/{filename}",
+            f"{client_slug}/{filename}",
+        ]
+
+        for blob_path in candidates:
+            blob = self.bucket.blob(blob_path)
+            if blob.exists():
+                return blob.download_as_bytes()
+
+        raise FileNotFoundError(
+            f"Report not found in GCS for {client_slug}/{filename} "
+            f"(tried: {', '.join(candidates)})"
+        )
+
+    def check_report_exists(self, client: str, filename: str) -> bool:
+        """Return True if `filename` exists for `client` under any supported layout."""
+        client_slug = self._to_slug(client)
+
+        for blob_path in (
+            f"reports/{client_slug}/{filename}",
+            f"reports/{filename}",
+            f"{client_slug}/{filename}",
+        ):
+            if self.bucket.blob(blob_path).exists():
+                return True
+        return False
+
+    def list_client_reports(self, client: str) -> list:
+        """
+        List all reports for a client, merging per-client and legacy layouts.
+
+        Args:
+            client: Client display name or slug
+
+        Returns:
+            List of dicts: {name, path, size, updated, content_type}
+        """
+        client_slug = self._to_slug(client)
+        reports = []
+        seen_names = set()
+
+        # 1. Per-client layout: reports/{slug}/
+        prefix = f'reports/{client_slug}/'
+        for blob in self.bucket.list_blobs(prefix=prefix):
+            if blob.name.endswith('/'):
+                continue
+            filename = blob.name.split('/')[-1]
+            if filename in seen_names:
+                continue
+            seen_names.add(filename)
+            reports.append({
+                'name': filename,
+                'path': blob.name,
+                'size': blob.size,
+                'updated': blob.updated,
+                'content_type': blob.content_type,
+            })
+
+        # 2. Legacy flat reports/ layout — only include files that mention this slug
+        for blob in self.bucket.list_blobs(prefix='reports/'):
+            if blob.name.endswith('/'):
+                continue
+            # skip anything already under reports/{slug}/ (already listed above)
+            if blob.name.count('/') != 1:
+                continue
+            filename = blob.name.split('/')[-1]
+            if filename in seen_names:
+                continue
+            if client_slug in filename.lower():
+                seen_names.add(filename)
+                reports.append({
+                    'name': filename,
+                    'path': blob.name,
+                    'size': blob.size,
+                    'updated': blob.updated,
+                    'content_type': blob.content_type,
+                })
+
+        return reports
+
     def sync_all_data(self) -> bool:
         """
         Upload ALL app data to GCS (convenience method for full sync).

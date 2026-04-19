@@ -748,8 +748,8 @@ def show(brand_name: str, data: dict):
     # Try GCS if local not found
     if brand_config_data is None:
         try:
-            from src.storage.gcs_manager import GCSManager
-            gcs = GCSManager()
+            from src.client_manager.gcs_sync import GCSClientSync
+            gcs = GCSClientSync()
             content = gcs.get_report_content(brand_name, f"{client_slug}_brand_config.json")
             brand_config_data = json.loads(content.decode('utf-8'))
         except Exception:

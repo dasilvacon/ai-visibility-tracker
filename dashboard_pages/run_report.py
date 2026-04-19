@@ -405,6 +405,14 @@ exit $EXIT_CODE
                 env['AZURE_OPENAI_API_KEY'] = api_keys.get('copilot', api_keys.get('azure_openai', ''))
             if api_keys.get('azure_openai_endpoint'):
                 env['AZURE_OPENAI_ENDPOINT'] = api_keys['azure_openai_endpoint']
+            # Azure OpenAI structured config (endpoint, deployment, api_version)
+            azure_cfg = st.secrets.get('azure_openai', {})
+            if azure_cfg.get('endpoint'):
+                env['AZURE_OPENAI_ENDPOINT'] = azure_cfg['endpoint']
+            if azure_cfg.get('deployment'):
+                env['AZURE_OPENAI_DEPLOYMENT'] = azure_cfg['deployment']
+            if azure_cfg.get('api_version'):
+                env['AZURE_OPENAI_API_VERSION'] = azure_cfg['api_version']
         except Exception:
             pass
 
@@ -475,13 +483,14 @@ def run_visibility_test(client_name: str, prompts_file: str, brand_config: str) 
             fieldnames = reader.fieldnames or []
             all_rows = list(reader)
 
-            # Check if file has client_name column
+            # If the file has a client_name column, filter by client.
+            # Otherwise treat the file as already per-client (the path
+            # data/{slug}/{slug}_prompts.csv encodes the client identity,
+            # so filtering on the column is redundant).
             if 'client_name' in fieldnames:
-                # Filter by client_name
                 rows = [row for row in all_rows if row.get('client_name') == client_name]
             else:
-                st.error(f"⚠️ Prompts file missing 'client_name' column. Please regenerate and export prompts for {client_name}.")
-                return False
+                rows = [row for row in all_rows if row.get('prompt_text')]
 
         if not rows:
             st.error(f"⚠️ No prompts found for {client_name}. Please generate and export prompts first.")
@@ -597,6 +606,14 @@ exit $EXIT_CODE
                 env['AZURE_OPENAI_API_KEY'] = api_keys.get('copilot', api_keys.get('azure_openai', ''))
             if api_keys.get('azure_openai_endpoint'):
                 env['AZURE_OPENAI_ENDPOINT'] = api_keys['azure_openai_endpoint']
+            # Azure OpenAI structured config (endpoint, deployment, api_version)
+            azure_cfg = st.secrets.get('azure_openai', {})
+            if azure_cfg.get('endpoint'):
+                env['AZURE_OPENAI_ENDPOINT'] = azure_cfg['endpoint']
+            if azure_cfg.get('deployment'):
+                env['AZURE_OPENAI_DEPLOYMENT'] = azure_cfg['deployment']
+            if azure_cfg.get('api_version'):
+                env['AZURE_OPENAI_API_VERSION'] = azure_cfg['api_version']
         except Exception:
             pass
 

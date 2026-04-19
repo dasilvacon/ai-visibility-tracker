@@ -82,13 +82,13 @@ class CSVExporter:
                 if 'reddit' in source_name_lower:
                     action = 'Increase Reddit presence - answer questions, engage authentically'
                 elif 'youtube' in source_name_lower or 'channel' in source_name_lower:
-                    action = 'Send PR packages to top beauty YouTubers for reviews'
-                elif any(word in source_name_lower for word in ['blog', 'temptalia', 'review', 'beauty']):
-                    action = 'Reach out for product review features'
-                elif any(word in source_name_lower for word in ['sephora', 'ulta', 'nordstrom']):
-                    action = 'Optimize product pages and request featured placement'
+                    action = 'Identify and open outreach with relevant creators in your space'
+                elif any(word in source_name_lower for word in ['blog', 'review', 'magazine', 'journal']):
+                    action = 'Pitch editorial features, case studies, or guest contributions'
+                elif any(word in source_name_lower for word in ['forum', 'community', 'group']):
+                    action = 'Engage authentically in discussions and contribute expertise'
                 else:
-                    action = 'Reach out for backlink opportunities and product features'
+                    action = 'Reach out for backlink or partnership opportunities'
 
                 writer.writerow({
                     'Source': source.get('source', ''),

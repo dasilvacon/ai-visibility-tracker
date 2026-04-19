@@ -12,6 +12,7 @@ class VisibilityScorer:
 
     def __init__(self, brand_name: str, brand_aliases: Optional[List[str]] = None,
                  competitor_names: Optional[List[str]] = None,
+                 competitor_aliases: Optional[Dict[str, List[str]]] = None,
                  known_sources: Optional[List[str]] = None,
                  industry_keywords: Optional[List[str]] = None):
         """
@@ -21,21 +22,27 @@ class VisibilityScorer:
             brand_name: Primary brand name to track
             brand_aliases: Alternative names/acronyms for the brand
             competitor_names: List of competitor brand names
+            competitor_aliases: Optional map of {competitor_name: [aliases]} so
+                detection catches acronyms and common variants (e.g., "CCCE" for
+                "Canadian Centre for Caregiving Excellence"). Competitors not
+                present in this map are matched by exact name only.
             known_sources: List of known source domains/names relevant to this client's industry
             industry_keywords: List of industry-specific keywords for relevance scoring
         """
         self.brand_name = brand_name
         self.brand_aliases = brand_aliases or []
         self.competitor_names = competitor_names or []
+        self.competitor_aliases = competitor_aliases or {}
 
         # Per-client known sources (no more hardcoded beauty/retail sites)
         self.known_sources = set(s.lower() for s in (known_sources or []))
         self.industry_keywords = [k.lower() for k in (industry_keywords or [])]
 
-        # Create pattern variations for detection
+        # Create pattern variations for detection. Each competitor gets its primary
+        # name plus any aliases provided in competitor_aliases.
         self.brand_patterns = self._create_patterns([brand_name] + self.brand_aliases)
         self.competitor_patterns = {
-            comp: self._create_patterns([comp])
+            comp: self._create_patterns([comp] + list(self.competitor_aliases.get(comp, [])))
             for comp in self.competitor_names
         }
 
@@ -130,7 +137,7 @@ class VisibilityScorer:
                 }
                 sources.append(enrich_source(source, match.start()))
 
-        # PRIORITY 1.5: Bare domain mentions (e.g., "sephora.com", "temptalia.com")
+        # PRIORITY 1.5: Bare domain mentions (e.g., "example.com", "nytimes.com")
         bare_domain_pattern = r'(?<!\w)([a-zA-Z0-9-]+\.(?:com|org|net|ca|co\.uk|com\.au|io|gov|edu))(?!\w)'
         for match in re.finditer(bare_domain_pattern, response_text):
             domain = match.group(1).lower().strip()

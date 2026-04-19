@@ -4,16 +4,20 @@
     "anthropic": "YOUR_ANTHROPIC_API_KEY_HERE",
     "perplexity": "YOUR_PERPLEXITY_API_KEY_HERE",
     "gemini": "YOUR_GOOGLE_API_KEY_HERE",
-    "deepseek": "YOUR_DEEPSEEK_API_KEY_HERE",
-    "grok": "YOUR_GROK_API_KEY_HERE"
+    "serpapi": "YOUR_SERPAPI_API_KEY_HERE",
+    "copilot": "YOUR_AZURE_OPENAI_API_KEY_HERE"
   },
   "models": {
-    "openai": "gpt-4",
+    "openai": "gpt-5",
     "anthropic": "claude-sonnet-4-6",
-    "perplexity": "pplx-70b-online",
-    "gemini": "gemini-2.0-flash-exp",
-    "deepseek": "deepseek-chat",
-    "grok": "grok-beta"
+    "perplexity": "sonar",
+    "gemini": "gemini-2.5-flash",
+    "copilot": "gpt-5.4-mini"
+  },
+  "azure_openai": {
+    "endpoint": "https://YOUR-RESOURCE.openai.azure.com/",
+    "deployment": "YOUR_DEPLOYMENT_NAME",
+    "api_version": "2024-10-01-preview"
   },
   "testing": {
     "default_temperature": 0.7,

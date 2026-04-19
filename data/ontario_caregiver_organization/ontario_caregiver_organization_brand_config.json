@@ -23,6 +23,7 @@
     "expected": [
       {
         "name": "Canadian Centre for Caregiving Excellence",
+        "aliases": ["CCCE"],
         "website": "canadiancaregiving.org",
         "category": "adjacent",
         "added_date": "2026-03-08",
@@ -30,6 +31,7 @@
       },
       {
         "name": "Alzheimer Society of Ontario",
+        "aliases": ["Alzheimer Society", "ASO"],
         "website": "alzheimer.ca",
         "category": "adjacent",
         "added_date": "2026-03-08",

@@ -63,3 +63,15 @@ build/
 gcs-credentials.json
 .gcs-credentials.json
 *-credentials.json
+
+# SR&ED tax claim documents (financial/business — never commit)
+sred-claim-package/
+sred-claim*/
+
+# Scratchpad / planning docs at repo root (keep them out of the tree)
+/REPORT_ALIGNMENT_SPEC.txt
+/SOURCES_REDESIGN_SPEC.txt
+/Brand_Landscape_Categorization_Feature_Spec.docx
+/*_SPEC.txt
+/*_SPEC.docx
+/*_Spec.docx

@@ -24,9 +24,11 @@ import sys
 if 'src' not in sys.path:
     sys.path.insert(0, 'src')
 
-# Try to import GCS manager (optional, falls back to local files)
+# Try to import GCS sync (optional, falls back to local files).
+# The old src/storage/gcs_manager.GCSManager has been consolidated into
+# src/client_manager/gcs_sync.GCSClientSync — this is the single GCS API.
 try:
-    from storage.gcs_manager import GCSManager
+    from client_manager.gcs_sync import GCSClientSync
     GCS_AVAILABLE = True
 except Exception:
     GCS_AVAILABLE = False
@@ -600,10 +602,12 @@ def logout():
 
 def get_gcs_manager():
     """
-    Get GCS manager if configured, otherwise return None.
+    Get GCS sync client if configured, otherwise return None.
 
     Returns:
-        GCSManager instance or None
+        GCSClientSync instance or None. Exposes get_report_content,
+        list_client_reports, and check_report_exists — the same read API
+        as the old GCSManager, for drop-in compatibility.
     """
     if not GCS_AVAILABLE:
         return None
@@ -611,8 +615,9 @@ def get_gcs_manager():
     try:
         # Check if GCS is configured in secrets
         if hasattr(st, 'secrets') and 'gcs' in st.secrets:
-            if 'bucket_name' in st.secrets['gcs']:
-                return GCSManager()
+            bucket = st.secrets['gcs'].get('bucket_name')
+            if bucket:
+                return GCSClientSync(bucket_name=bucket)
     except Exception:
         pass
 

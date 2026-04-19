@@ -340,9 +340,9 @@ def render_prompt_management(all_active_prompts, all_archived_prompts, client_na
                     st.success(f"✅ Restored {len(ids_to_restore)} prompts!")
                     st.rerun()
 
-        with col2:
-            if st.button("🗑️ Delete Archived Prompts Forever"):
-                st.error("⚠️ This feature is coming soon. For now, archived prompts are kept indefinitely.")
+        # Permanent-delete button is intentionally hidden. Archived prompts are kept
+        # indefinitely as a historical reference. If a permanent purge is ever needed,
+        # it should be a scripted, reviewed operation — not a one-click UI action.
 
 
 def archive_prompts_by_ids(prompt_ids, client_name, main_csv_path, archived_csv_path, reason=""):
@@ -507,8 +507,9 @@ def render_batch_management(batch_manager, client_name, active_batches, archived
                     st.session_state[f'show_prompts_{batch_id}'] = not st.session_state.get(f'show_prompts_{batch_id}', False)
 
             with col2:
-                if st.button("📊 Export", key=f"export_{batch_id}"):
-                    st.info("Export functionality coming soon!")
+                # Export button is hidden until batch-level export is implemented.
+                # Full prompt export is available from the main prompts CSV on disk.
+                pass
 
             with col3:
                 if not is_baseline:  # Don't allow archiving baseline

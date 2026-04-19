@@ -202,8 +202,8 @@ def show(brand_name: str, data: dict):
         # Fallback to GCS if local file not found
         if not pdf_loaded:
             try:
-                from src.storage.gcs_manager import GCSManager
-                gcs = GCSManager()
+                from src.client_manager.gcs_sync import GCSClientSync
+                gcs = GCSClientSync()
                 pdf_content = gcs.get_report_content(brand_name, f"executive_summary_{brand_slug}.pdf")
                 st.download_button(
                     "📄 Executive Summary (PDF)",
