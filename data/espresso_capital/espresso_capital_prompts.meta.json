@@ -1,0 +1,24 @@
+{
+  "version": "v1.0-baseline",
+  "client_slug": "espresso_capital",
+  "generated_at": "2026-04-19T17:45:53Z",
+  "generated_by": "scripts/migrate_to_v1_baseline.py",
+  "generator_version": "1.0",
+  "source_model": "legacy",
+  "prompt_count": 350,
+  "format": "legacy",
+  "personas": [
+    "Canadian Investor (Private Credit)",
+    "Healthcare / Vertical SaaS Operator",
+    "SaaS Founder / CEO",
+    "Startup CFO / VP Finance",
+    "VC / Board Advisor"
+  ],
+  "categories": [
+    "business",
+    "educational"
+  ],
+  "predecessor": null,
+  "content_hash": "sha256:0a36b79a74163477bd45678966df3138c51abdf936bff49b4e235505fb30f055",
+  "notes": "Frozen as v1.0-baseline during migration from unversioned state. Content unchanged from the prompts CSV that was live at migration time."
+}

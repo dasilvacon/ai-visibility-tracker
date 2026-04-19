@@ -31,6 +31,11 @@ data/results/
 !data/*/*_prompts.csv
 !data/*/*_keywords.csv
 
+# Prompt-set versioning archive (immutable history — always include)
+!data/prompt-archive/
+!data/prompt-archive/**/*.csv
+!data/prompt-archive/**/*.json
+
 # Reports (with exceptions for deployment)
 data/reports/*
 !data/reports/*Natasha_Denona*

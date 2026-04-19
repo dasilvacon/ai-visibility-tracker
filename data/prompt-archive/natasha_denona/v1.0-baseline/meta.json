@@ -1,0 +1,23 @@
+{
+  "version": "v1.0-baseline",
+  "client_slug": "natasha_denona",
+  "generated_at": "2026-04-19T17:45:53Z",
+  "generated_by": "scripts/migrate_to_v1_baseline.py",
+  "generator_version": "1.0",
+  "source_model": "legacy",
+  "prompt_count": 186,
+  "format": "legacy",
+  "personas": [
+    "Beauty Beginner (Aspirational)",
+    "Luxury Beauty Enthusiast",
+    "Professional Makeup Artist",
+    "Specific Need Shopper"
+  ],
+  "categories": [
+    "business",
+    "educational"
+  ],
+  "predecessor": null,
+  "content_hash": "sha256:110734fdbd56b4e986b35e4c6de355401ec1063ba3072dd0173aead6fd68a698",
+  "notes": "Frozen as v1.0-baseline during migration from unversioned state. Content unchanged from the prompts CSV that was live at migration time."
+}

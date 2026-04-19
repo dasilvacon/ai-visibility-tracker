@@ -1,0 +1,27 @@
+{
+  "version": "v1.0-baseline",
+  "client_slug": "ontario_caregiver_organization",
+  "generated_at": "2026-04-19T17:45:53Z",
+  "generated_by": "scripts/migrate_to_v1_baseline.py",
+  "generator_version": "1.0",
+  "source_model": "legacy",
+  "prompt_count": 300,
+  "format": "legacy",
+  "personas": [
+    "Adult Child Caregiver (50+)",
+    "Adult Child Caregiver (Under 50)",
+    "Employer / HR Leader",
+    "Healthcare Provider",
+    "Mental Health Caregiver",
+    "Parent of Child w/ Complex Needs",
+    "Spousal Caregiver",
+    "Young Caregiver (Under 26)"
+  ],
+  "categories": [
+    "business",
+    "educational"
+  ],
+  "predecessor": null,
+  "content_hash": "sha256:bfcd0ec28fad8086f9a6217504fbf3f02c884a5f119d44f9a805aa329326b377",
+  "notes": "Frozen as v1.0-baseline during migration from unversioned state. Content unchanged from the prompts CSV that was live at migration time."
+}

@@ -1,28 +1,54 @@
 """
 Results tracker for logging visibility test results.
+
+Every result row is stamped with the prompt-set version that was active
+when the test ran, so historical trends remain auditable across prompt
+regenerations. See docs/prompt-versioning.md for the full schema.
 """
 
 import csv
 import os
 import json
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from datetime import datetime
 
 
 class ResultsTracker:
     """Tracks and logs visibility test results."""
 
-    def __init__(self, client_slug: str, base_dir: str = "data/results"):
+    def __init__(
+        self,
+        client_slug: str,
+        base_dir: str = "data/results",
+        client_data_dir: str = "data",
+        prompts_version_meta: Optional[Dict[str, Any]] = None,
+    ):
         """
         Initialize the results tracker with per-client isolation.
 
         Args:
             client_slug: Client identifier (e.g., 'ontario_caregiver_organization')
             base_dir: Base directory for results (default: data/results)
+            client_data_dir: Base directory holding per-client active prompts
+                and their meta.json sidecar (default: data). Used to auto-load
+                the active prompts version if ``prompts_version_meta`` is None.
+            prompts_version_meta: Full meta dict for the active prompt set.
+                If None, the tracker tries to load it from
+                ``{client_data_dir}/{client_slug}/{client_slug}_prompts.meta.json``.
+                If that file is also missing, the version fields are left blank
+                (legacy / pre-migration behavior).
         """
         self.client_slug = client_slug
         self.results_dir = os.path.join(base_dir, client_slug)
         os.makedirs(self.results_dir, exist_ok=True)
+
+        # Resolve active prompt-set version metadata.
+        self.prompts_version_meta: Dict[str, Any] = (
+            prompts_version_meta
+            if prompts_version_meta is not None
+            else self._load_active_meta(client_data_dir, client_slug)
+        )
+        self.prompts_version: str = self.prompts_version_meta.get('version', '')
 
         self.csv_fieldnames = [
             'test_id',
@@ -37,8 +63,32 @@ class ResultsTracker:
             'success',
             'latency_seconds',
             'tokens_used',
-            'error'
+            'error',
+            'prompts_version',
         ]
+
+    @staticmethod
+    def _load_active_meta(client_data_dir: str, client_slug: str) -> Dict[str, Any]:
+        """
+        Try to load the active prompt-set meta.json for a client.
+
+        Returns an empty dict if the sidecar does not exist or is unreadable.
+        Being defensive here matters: during the migration window, some
+        clients may not have a meta.json yet, and we don't want that to
+        crash a test run.
+        """
+        meta_path = os.path.join(
+            client_data_dir,
+            client_slug,
+            f"{client_slug}_prompts.meta.json",
+        )
+        if not os.path.exists(meta_path):
+            return {}
+        try:
+            with open(meta_path, 'r', encoding='utf-8') as f:
+                return json.load(f) or {}
+        except (OSError, json.JSONDecodeError):
+            return {}
 
     def log_result(self, result: Dict[str, Any]) -> str:
         """
@@ -52,6 +102,13 @@ class ResultsTracker:
         """
         test_id = self._generate_test_id()
         result['test_id'] = test_id
+
+        # Stamp the result with the active prompt-set version so the
+        # JSON file is fully self-contained even if the archive meta is
+        # later edited or lost.
+        if self.prompts_version_meta:
+            result.setdefault('prompts_version', self.prompts_version)
+            result.setdefault('prompts_version_meta', self.prompts_version_meta)
 
         # Save full result as JSON
         self._save_json_result(result)
@@ -110,7 +167,8 @@ class ResultsTracker:
             'success': result.get('success', False),
             'latency_seconds': result.get('latency_seconds', ''),
             'tokens_used': metadata.get('tokens_used', ''),
-            'error': result.get('error', '')
+            'error': result.get('error', ''),
+            'prompts_version': result.get('prompts_version', self.prompts_version),
         }
 
         with open(csv_path, 'a', newline='', encoding='utf-8') as f:

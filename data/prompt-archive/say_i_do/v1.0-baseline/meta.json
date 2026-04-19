@@ -1,0 +1,24 @@
+{
+  "version": "v1.0-baseline",
+  "client_slug": "say_i_do",
+  "generated_at": "2026-04-19T17:45:53Z",
+  "generated_by": "scripts/migrate_to_v1_baseline.py",
+  "generator_version": "1.0",
+  "source_model": "legacy",
+  "prompt_count": 500,
+  "format": "legacy",
+  "personas": [
+    "The Comparison Shopper",
+    "The Digital Invites Planner",
+    "The First-Time Planner",
+    "The Guest Experience Optimizer",
+    "The Non-Traditional Couple"
+  ],
+  "categories": [
+    "business",
+    "educational"
+  ],
+  "predecessor": null,
+  "content_hash": "sha256:7c39ec74c884ba497ae9f17fdb66e517f4ea063c6df210f6f47cefeb207745fe",
+  "notes": "Frozen as v1.0-baseline during migration from unversioned state. Content unchanged from the prompts CSV that was live at migration time."
+}

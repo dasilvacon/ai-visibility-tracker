@@ -1,0 +1,24 @@
+{
+  "version": "v1.0-baseline",
+  "client_slug": "uniuni",
+  "generated_at": "2026-04-19T17:45:53Z",
+  "generated_by": "scripts/migrate_to_v1_baseline.py",
+  "generator_version": "1.0",
+  "source_model": "legacy",
+  "prompt_count": 400,
+  "format": "legacy",
+  "personas": [
+    "Cross-Border Shipper",
+    "E-Commerce Merchant",
+    "Gig Driver / Delivery Partner",
+    "Logistics / 3PL Decision Maker",
+    "Online Shopper / Package Recipient"
+  ],
+  "categories": [
+    "business",
+    "educational"
+  ],
+  "predecessor": null,
+  "content_hash": "sha256:f07690040566c5c1072191d4975b3e778c68a07e1d6610a7d6bad8c8144744c6",
+  "notes": "Frozen as v1.0-baseline during migration from unversioned state. Content unchanged from the prompts CSV that was live at migration time."
+}
