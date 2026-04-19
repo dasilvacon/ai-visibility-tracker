@@ -628,8 +628,22 @@ def regenerate_client(
         [client_data["brand_config"]["brand"]["name"]]
         + client_data["brand_config"]["brand"].get("aliases", [])
     )
+    # `competitors` has two shapes across clients:
+    #   (a) dict with "expected"/"discovered" keys (OCO, Espresso, Say I Do)
+    #   (b) flat list of {name, domain} objects        (UniUni, Natasha Denona)
+    # Normalize both to a flat list of competitor dicts before pulling names.
+    _competitors_raw = client_data["brand_config"].get("competitors", [])
+    if isinstance(_competitors_raw, dict):
+        _competitor_items = (
+            _competitors_raw.get("expected", [])
+            + _competitors_raw.get("discovered", [])
+        )
+    elif isinstance(_competitors_raw, list):
+        _competitor_items = _competitors_raw
+    else:
+        _competitor_items = []
     competitor_names = [
-        c["name"] for c in client_data["brand_config"].get("competitors", {}).get("expected", [])
+        c.get("name", "") for c in _competitor_items if isinstance(c, dict)
     ]
     forbidden = [
         a.lower().strip() for a in (brand_aliases_raw + competitor_names) if a and a.strip()
