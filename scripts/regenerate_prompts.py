@@ -213,8 +213,20 @@ def build_user_prompt(
     brand_name = brand_config["brand"]["name"]
     brand_aliases = brand_config["brand"].get("aliases", [])
     brand_desc = brand_config["brand"]["description"]
+    # `competitors` has two shapes across clients — dict (OCO/Espresso/Say I Do)
+    # or flat list (UniUni/Natasha). Normalize both before reading names.
+    _competitors_raw = brand_config.get("competitors", [])
+    if isinstance(_competitors_raw, dict):
+        _competitor_items = (
+            _competitors_raw.get("expected", [])
+            + _competitors_raw.get("discovered", [])
+        )
+    elif isinstance(_competitors_raw, list):
+        _competitor_items = _competitors_raw
+    else:
+        _competitor_items = []
     competitors = [
-        c["name"] for c in brand_config.get("competitors", {}).get("expected", [])
+        c.get("name", "") for c in _competitor_items if isinstance(c, dict) and c.get("name")
     ]
 
     # Pick 3 random tones for variety in this batch
