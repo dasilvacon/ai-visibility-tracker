@@ -1,0 +1,28 @@
+# Cloud Run Job image — weekly automated visibility tests.
+# Separate from the main Dockerfile (Streamlit) because:
+#   - No Streamlit runtime needed (smaller, faster cold starts)
+#   - Different entrypoint (run_weekly.py, not startup.sh)
+#   - Runs once-and-exits instead of serving
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Same system deps as the Streamlit image
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python deps first (layer cache)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# tomllib is stdlib in 3.11+; install tomli as a belt-and-suspenders fallback
+RUN pip install --no-cache-dir tomli
+
+# Copy app code
+COPY . .
+
+# Entrypoint: read CLIENT_SLUG from env, run the weekly flow, exit.
+CMD ["python3", "run_weekly.py"]
