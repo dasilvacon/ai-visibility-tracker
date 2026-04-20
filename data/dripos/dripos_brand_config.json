@@ -1,0 +1,123 @@
+{
+  "brand": {
+    "name": "Dripos",
+    "aliases": ["Dripos POS", "Frostbyte Technologies", "Frostbyte Technologies Inc"],
+    "domain": "dripos.com",
+    "website": "https://www.dripos.com",
+    "industry": "Coffee shop operating system (vertical SaaS + POS hardware)",
+    "description": "All-in-one software and hardware platform built exclusively for independent coffee shops. Founded as Frostbyte Technologies Inc, headquartered in NYC. Combines POS, online ordering, branded customer app, kiosk, KDS, loyalty, email/SMS marketing, gift cards, payroll, accounting, inventory, scheduling, and team management into one integrated stack. Target operator is independent coffee shops (counter service, drive-thru, coffee truck, kitchen-forward café, kiosk, pop-up/events), typically 1-5 locations with 8+ employees. Sweet-spot customers are drive-thrus (highest margin) and kitchen-forward cafés (larger ticket sizes). Differentiation: coffee-specific workflows (checklists, inventory, payroll tuned for coffee), fully integrated (no stitching tools), 24/7 US-based support. Strong domain authority (DR 72) with earned media coverage; currently #1 for 'coffee shop POS system' / 'coffee shop POS software' / 'coffee POS software.' Strict B2B focus — avoids B2C consumer coffee content entirely.",
+    "business_goals": {
+      "market_positioning": "When an independent coffee shop owner or operator is researching POS, operating software, online ordering, payroll, team management, or any component of running a coffee shop — Dripos should appear as the definitive coffee-shop-only all-in-one platform. Win on coffee-specific intent, not broader POS.",
+      "target_metrics": [
+        "AI visibility for coffee-shop-specific POS and operations queries",
+        "Share of voice vs Square, Toast, Clover in coffee-shop context (not general POS)",
+        "Mentions in 'best software for coffee shops' / 'coffee shop POS' / 'alternatives to Square/Toast/Clover' queries",
+        "Visibility across the operator journey: opening a coffee shop → running it → scaling multi-location"
+      ],
+      "freeform_notes": "Primary audience is independent coffee shop owners/operators only — no B2C consumer content. Sweet-spot buyers are 1-5 locations, 8+ employees, drive-thru or kitchen-forward. Most prospect objections are price, switching fear, and integration gaps (Dripos is intentionally platform-first, limited external integrations). Dripos-specific comparison keywords (dripos vs square / toast / clover) are high-intent and should be surfaced. Use bold, operator-to-operator tone — not generic SaaS. Avoid broad restaurant POS framing; stay in the coffee lane."
+    }
+  },
+  "competitors": [
+    {"name": "Square", "domain": "squareup.com", "category": "direct_pos"},
+    {"name": "Toast", "domain": "toasttab.com", "category": "direct_pos"},
+    {"name": "Clover", "domain": "clover.com", "category": "restaurant_pos"},
+    {"name": "Lightspeed", "domain": "lightspeedhq.com", "category": "restaurant_pos"},
+    {"name": "TouchBistro", "domain": "touchbistro.com", "category": "restaurant_pos"},
+    {"name": "SpotOn", "domain": "spoton.com", "category": "restaurant_pos"},
+    {"name": "Owner.com", "domain": "owner.com", "category": "ordering_platform"},
+    {"name": "Homebase", "domain": "joinhomebase.com", "category": "team_ops"},
+    {"name": "7shifts", "domain": "7shifts.com", "category": "team_ops"},
+    {"name": "QuickBooks", "domain": "quickbooks.intuit.com", "category": "payroll_accounting"},
+    {"name": "ADP", "domain": "adp.com", "category": "payroll_accounting"}
+  ],
+  "key_topics": [
+    "coffee shop pos systems",
+    "all-in-one coffee shop operating system",
+    "coffee shop online ordering and branded apps",
+    "coffee shop payroll and team management",
+    "coffee shop inventory and supply chain",
+    "coffee shop loyalty and customer marketing",
+    "multi-location and scaling coffee operations",
+    "drive-thru, coffee truck, and mobile coffee formats",
+    "opening a coffee shop",
+    "square/toast/clover alternatives for coffee shops"
+  ],
+  "known_sources": [
+    "reddit",
+    "g2.com",
+    "capterra.com",
+    "getapp.com",
+    "softwareadvice.com",
+    "trustpilot.com",
+    "techcrunch.com",
+    "forbes.com",
+    "bloomberg.com",
+    "businessinsider.com",
+    "fastcompany.com",
+    "restaurantdive.com",
+    "restaurantbusinessonline.com",
+    "nationsrestaurantnews.com",
+    "qsrmagazine.com",
+    "sprudge.com",
+    "dailycoffeenews.com",
+    "perfectdailygrind.com",
+    "linkedin",
+    "youtube.com",
+    "tiktok",
+    "instagram",
+    "facebook",
+    "google reviews",
+    "bbb.org"
+  ],
+  "source_categories": {
+    "news_media": [
+      "techcrunch.com",
+      "forbes.com",
+      "bloomberg.com",
+      "businessinsider.com",
+      "fastcompany.com"
+    ],
+    "trade_media_coffee": [
+      "sprudge.com",
+      "dailycoffeenews.com",
+      "perfectdailygrind.com"
+    ],
+    "trade_media_restaurant": [
+      "restaurantdive.com",
+      "restaurantbusinessonline.com",
+      "nationsrestaurantnews.com",
+      "qsrmagazine.com"
+    ],
+    "software_review_platforms": [
+      "g2.com",
+      "capterra.com",
+      "getapp.com",
+      "softwareadvice.com",
+      "trustpilot.com"
+    ],
+    "social": [
+      "reddit",
+      "linkedin",
+      "youtube.com",
+      "tiktok",
+      "instagram",
+      "facebook"
+    ]
+  },
+  "irrelevant_sources": [
+    "wikipedia.org",
+    "wikihow.com",
+    "pinterest.com"
+  ],
+  "analysis_settings": {
+    "minimum_prominence_threshold": 4.0,
+    "gap_visibility_threshold": 60.0,
+    "competitor_dominance_threshold": 50.0
+  },
+  "output_preferences": {
+    "generate_html_dashboard": true,
+    "generate_pdf_report": false,
+    "generate_excel_workbook": false,
+    "reports_directory": "data/reports"
+  }
+}

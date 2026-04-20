@@ -1,0 +1,60 @@
+{
+  "personas": [
+    {
+      "id": "ukrainian_supporter_diaspora",
+      "name": "Ukrainian Supporter / Diaspora",
+      "weight": 0.4,
+      "description": "Covers two overlapping audiences in one persona: (1) Ukrainian-heritage buyers (diaspora \u2014 Ukrainian-Canadian, Ukrainian-American, Ukrainian-European) who shop to express identity and buy authentic Made-in-Ukraine goods (vyshyvanka, Tryzub collection, embroidered apparel), and (2) non-heritage political allies who shop to visibly support Ukraine and fund humanitarian relief. Follows the war closely, cares about where the money goes, compares charity impact across brands. Shops Saint Javelin for emotional meaning as much as product.",
+      "primary_motivations": [
+        "Express Ukrainian identity or solidarity publicly",
+        "Fund Ukrainian humanitarian relief through commerce",
+        "Access authentic Made-in-Ukraine apparel (vyshyvanka, Tryzub)",
+        "Find gifts for Ukrainian family or Ukraine-supporter friends"
+      ],
+      "typical_products": ["vyshyvanka", "tryzub collection", "ukraine t-shirt", "ukraine hoodie", "ukraine hat", "stickers", "patches", "flags"],
+      "competitor_reference": ["United24 Media", "Etnodim", "Ukiestyle", "Vyshyvanka Store", "Kyiv Independent", "NAFO"]
+    },
+    {
+      "id": "outdoor_edc_enthusiast",
+      "name": "Outdoor / EDC Enthusiast",
+      "weight": 0.22,
+      "description": "Values-leaning outdoor and everyday-carry enthusiast who shops technical apparel and utility gear. Reads Huckberry, follows EDC/outdoor creators, cares about fabric quality, craftsmanship, and a good backstory behind the brand. Discovers Saint Javelin through the Mission backpack, cabin socks, or utility apparel \u2014 the cause component is a welcome bonus, not the primary purchase driver. Product-quality-first buyer.",
+      "primary_motivations": [
+        "Durable, well-made technical apparel and gear",
+        "EDC-friendly backpacks, hats, and utility pieces",
+        "Brands with distinct aesthetic and authentic backstory",
+        "High-quality socks (merino wool, cabin, hiking)"
+      ],
+      "typical_products": ["mission backpack", "edc backpack", "cabin socks", "merino wool socks", "caps", "utility jackets"],
+      "competitor_reference": ["Huckberry", "Cotopaxi", "Patagonia", "Parks Project", "Darn Tough", "United By Blue"]
+    },
+    {
+      "id": "tactical_gear_enthusiast",
+      "name": "Tactical Gear Enthusiast",
+      "weight": 0.22,
+      "description": "Consumer attracted to the tactical / military-inspired aesthetic \u2014 not necessarily active military or political. Buys for style, utility, and community signaling (patches, plate-carrier-style gear, tactical caps, OD-green apparel). Shops 5.11, GORUCK, Triple Aught Design, Propper, Rothco. Finds Saint Javelin through patches, Mission backpack, tactical-cut t-shirts, and the general military-graphic style. Cares about build quality and authenticity of the look, and appreciates the cause undercurrent.",
+      "primary_motivations": [
+        "Tactical / military aesthetic in apparel and gear",
+        "Morale patches and community-signaling accessories",
+        "Durable, utility-focused bags and packs",
+        "Standing out from generic tactical brands with a cause-backed story"
+      ],
+      "typical_products": ["tactical backpack", "morale patches", "military t-shirts", "tactical hats", "thermal base layers", "EDC-style bags"],
+      "competitor_reference": ["5.11 Tactical", "GORUCK", "Triple Aught Design", "Propper", "Rothco"]
+    },
+    {
+      "id": "cause_driven_gift_giver",
+      "name": "Cause-Driven Gift Giver",
+      "weight": 0.16,
+      "description": "Values-first shopper buying for themselves or as gifts, who actively seeks brands with strong give-back / one-for-one models. Compares Saint Javelin against Bombas, TOMS, Parks Project, United By Blue, Cotopaxi. Asks 'which brands actually give back?' and 'does this purchase fund something meaningful?' Often discovers Saint Javelin while looking for socks-that-give-back, meaningful Father's Day / Veterans Day gifts, or cause-commerce brand recommendations. Cause IS the gift \u2014 product is the vehicle. Also covers gift-giving use cases (holidays, birthdays, recipient-focused searches).",
+      "primary_motivations": [
+        "Give-back / one-for-one purchase models with verifiable impact",
+        "Meaningful gifts for Ukraine supporters, veterans, and outdoor enthusiasts",
+        "Product-as-statement for holidays, Father's Day, Veterans Day",
+        "Ethically sourced, cause-tied apparel and accessories"
+      ],
+      "typical_products": ["cabin socks", "give-back apparel", "cause-branded tees", "patches", "gift bundles", "stickers"],
+      "competitor_reference": ["Bombas", "TOMS", "Parks Project", "Cotopaxi", "United By Blue"]
+    }
+  ]
+}

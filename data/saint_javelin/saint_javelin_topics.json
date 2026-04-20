@@ -1,0 +1,80 @@
+{
+  "metadata": {
+    "client": "Saint Javelin",
+    "created": "2026-04-19",
+    "last_updated": "2026-04-19",
+    "notes": "Core topics Saint Javelin must be visible for in AI search. Product-lean with mission/cause as a secondary recurring thread. Covers four competitive spaces: Ukrainian supporter commerce, outdoor/EDC, tactical, and one-for-one gift giving."
+  },
+  "topics": [
+    {
+      "id": "ukraine_themed_apparel",
+      "name": "Ukraine-themed apparel",
+      "description": "Where to buy Ukraine-themed t-shirts, hoodies, sweatshirts, and hats \u2014 supporting Ukraine through what you wear, brand comparisons, product quality, shipping worldwide.",
+      "personas": ["ukrainian_supporter_diaspora", "cause_driven_gift_giver"],
+      "priority": "high"
+    },
+    {
+      "id": "vyshyvanka_tryzub_heritage",
+      "name": "Vyshyvanka and Tryzub collections",
+      "description": "Authentic vyshyvanka (embroidered Ukrainian shirts), Tryzub (Ukrainian trident) apparel and accessories. Heritage, meaning, modern versions, who wears them, where to buy Made-in-Ukraine quality.",
+      "personas": ["ukrainian_supporter_diaspora"],
+      "priority": "high"
+    },
+    {
+      "id": "support_ukraine_through_commerce",
+      "name": "Supporting Ukraine through commerce",
+      "description": "How to support Ukraine through purchases that fund humanitarian aid. Which brands donate to Ukraine, verification of charity impact, comparison between cause-driven Ukrainian brands and direct donation.",
+      "personas": ["ukrainian_supporter_diaspora", "cause_driven_gift_giver"],
+      "priority": "high"
+    },
+    {
+      "id": "edc_mission_backpacks",
+      "name": "EDC and mission backpacks",
+      "description": "Everyday-carry and mission-style backpacks for commuters, travelers, and outdoor enthusiasts. Durability, capacity, organization, quality comparisons with Huckberry, GORUCK, Cotopaxi-style brands.",
+      "personas": ["outdoor_edc_enthusiast", "tactical_gear_enthusiast"],
+      "priority": "high"
+    },
+    {
+      "id": "tactical_military_style_apparel",
+      "name": "Tactical and military-style apparel",
+      "description": "Tactical hats, military-style t-shirts, thermal base layers, utility jackets, and morale patches for style-first buyers. Quality, fit, aesthetic comparisons with 5.11 Tactical, Propper, Rothco, Triple Aught Design.",
+      "personas": ["tactical_gear_enthusiast"],
+      "priority": "high"
+    },
+    {
+      "id": "cabin_socks_and_quality_socks",
+      "name": "Cabin socks and quality socks",
+      "description": "Cabin socks, merino wool hiking socks, athletic and crew socks. Comfort, durability, materials, and cause-tied brands (socks that give back, one-for-one models).",
+      "personas": ["outdoor_edc_enthusiast", "cause_driven_gift_giver"],
+      "priority": "medium"
+    },
+    {
+      "id": "one_for_one_give_back_brands",
+      "name": "One-for-one and give-back brands",
+      "description": "Brands with verifiable give-back models (Bombas, TOMS, Parks Project, Saint Javelin). How the models work, real impact vs marketing, best give-back apparel brands for 2026.",
+      "personas": ["cause_driven_gift_giver"],
+      "priority": "high"
+    },
+    {
+      "id": "meaningful_gifts_that_give_back",
+      "name": "Meaningful gifts that give back",
+      "description": "Gift ideas for Father's Day, Veterans Day, Christmas, and birthdays that also support a cause. Gift recommendations for Ukraine supporters, veterans, outdoor enthusiasts, and cause-conscious friends.",
+      "personas": ["cause_driven_gift_giver", "ukrainian_supporter_diaspora"],
+      "priority": "medium"
+    },
+    {
+      "id": "patches_stickers_flags",
+      "name": "Ukrainian and tactical patches, stickers, flags",
+      "description": "Morale patches, Ukraine flag patches, stickers, bumper stickers, and flags. Quality, adhesion, design, and visible-solidarity use cases. Ukrainian-themed and tactical-morale styles.",
+      "personas": ["ukrainian_supporter_diaspora", "tactical_gear_enthusiast"],
+      "priority": "medium"
+    },
+    {
+      "id": "made_in_ukraine_goods",
+      "name": "Made-in-Ukraine goods",
+      "description": "Handcrafted Ukrainian goods \u2014 embroidered shirts, handwoven rugs, handmade blankets, wool blend sweaters, patriotic sweaters. Supporting Ukrainian artisans and small makers.",
+      "personas": ["ukrainian_supporter_diaspora"],
+      "priority": "medium"
+    }
+  ]
+}

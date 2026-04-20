@@ -1,0 +1,80 @@
+{
+  "metadata": {
+    "client": "ClearEvent",
+    "created": "2026-04-19",
+    "last_updated": "2026-04-19",
+    "notes": "Core topics ClearEvent must be visible for in AI search. Covers the event-organizer journey from discovery (event management software, alternatives to Eventbrite/Cvent) through feature-specific searches (registration, budgeting, volunteer mgmt, mobile app) to vertical-specific queries (nonprofit, corporate, conference, trade show, education). Lean toward small-to-mid event organizer queries, not enterprise."
+  },
+  "topics": [
+    {
+      "id": "event_management_software",
+      "name": "Event management software (all-in-one platforms)",
+      "description": "Comprehensive event management platforms that consolidate registration, budgeting, volunteer management, communications, and attendee experience. Best all-in-one event software, event management platforms compared, software for small-to-mid event organizers, event manager software for professionals.",
+      "personas": ["nonprofit_event_director", "corporate_event_coordinator", "community_committee_chair", "educational_institution_event_manager"],
+      "priority": "high"
+    },
+    {
+      "id": "event_registration_ticketing",
+      "name": "Event registration and ticketing software",
+      "description": "Event registration platforms, ticketing systems, online registration tools, custom registration forms, sell tickets online, ticket management. Registration for attendees, volunteers, vendors, sponsors, and VIPs. Online payment processing for events.",
+      "personas": ["nonprofit_event_director", "corporate_event_coordinator", "community_committee_chair", "educational_institution_event_manager"],
+      "priority": "high"
+    },
+    {
+      "id": "event_budget_tracking",
+      "name": "Event budget tracking and management",
+      "description": "Real-time event budget software, expense tracking, category templates, multi-currency budget management, receipt attachment, budget-to-actual reporting for event organizers and finance teams. Board-ready financial reporting for events.",
+      "personas": ["nonprofit_event_director", "corporate_event_coordinator", "community_committee_chair", "educational_institution_event_manager"],
+      "priority": "high"
+    },
+    {
+      "id": "volunteer_staff_coordination",
+      "name": "Volunteer and staff coordination for events",
+      "description": "Volunteer management software, job assignment systems, schedule conflict detection, mobile workforce visibility, event-day team communication. Turning volunteers into event-day superheroes without paid training.",
+      "personas": ["nonprofit_event_director", "community_committee_chair"],
+      "priority": "high"
+    },
+    {
+      "id": "mobile_event_apps",
+      "name": "Mobile event apps and attendee experience",
+      "description": "Mobile event apps, branded attendee portals, no-download web apps, personalized schedules, sponsor integration, real-time updates. Best event apps for attendees, event management apps for organizers.",
+      "personas": ["corporate_event_coordinator", "nonprofit_event_director", "educational_institution_event_manager"],
+      "priority": "medium"
+    },
+    {
+      "id": "recurring_annual_events",
+      "name": "Recurring and annual event management",
+      "description": "Software for annual fundraisers, recurring conferences, yearly festivals, and multi-event programs. One-click event rollover (ClearEvent's signature feature) — duplicating registration forms, schedules, budgets, and job assignments from one year to the next with auto-date adjustment.",
+      "personas": ["nonprofit_event_director", "community_committee_chair", "educational_institution_event_manager"],
+      "priority": "high"
+    },
+    {
+      "id": "conference_tradeshow_management",
+      "name": "Conference and trade show management software",
+      "description": "Conference management software, conference planning tools, trade show management, exhibition management, booth and sponsor coordination, speaker and session management, floor planning.",
+      "personas": ["corporate_event_coordinator", "educational_institution_event_manager"],
+      "priority": "medium"
+    },
+    {
+      "id": "nonprofit_fundraising_events",
+      "name": "Nonprofit fundraising event software",
+      "description": "Event software for nonprofits and associations, fundraising event platforms, donor engagement, sponsor recognition, gala and fundraiser management, nonprofit discounts and compliance reporting.",
+      "personas": ["nonprofit_event_director"],
+      "priority": "high"
+    },
+    {
+      "id": "corporate_event_management",
+      "name": "Corporate event management",
+      "description": "Corporate event management software for in-house teams and agencies. Product launches, client appreciation events, annual sales meetings, internal conferences, trade shows, training sessions, and workshops.",
+      "personas": ["corporate_event_coordinator"],
+      "priority": "medium"
+    },
+    {
+      "id": "eventbrite_cvent_alternatives",
+      "name": "Eventbrite, Cvent, and Whova alternatives",
+      "description": "Direct competitor comparisons and alternatives — when to leave Eventbrite (ticketing-only limitations), when Cvent is over-built (enterprise complexity + cost), Whova vs ClearEvent for conferences. ClearEvent as the mid-market 'accessible alternative' between basic ticketing and enterprise event tech.",
+      "personas": ["nonprofit_event_director", "corporate_event_coordinator", "community_committee_chair", "educational_institution_event_manager"],
+      "priority": "high"
+    }
+  ]
+}

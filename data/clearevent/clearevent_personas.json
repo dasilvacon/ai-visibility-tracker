@@ -1,0 +1,64 @@
+{
+  "personas": [
+    {
+      "id": "nonprofit_event_director",
+      "name": "Nonprofit Event Director / Program Coordinator",
+      "weight": 0.35,
+      "description": "Executive Director, Events Director, or Program Coordinator at a nonprofit or association with 50-500 employees and $1M-$10M annual revenue. Manages 100-2,000-attendee events with $25K-$250K budgets — annual galas, fundraisers, awareness campaigns, community festivals, member conferences. Juggles donor relationships alongside logistics, has to prove real-time ROI to boards, and coordinates 20-100 volunteers with varying tech skills. Moderately tech-savvy but not technical. Fears budget overruns, volunteer no-shows, donor dissatisfaction. Deeply wants tools that make a volunteer-run team look professional without requiring a tech department. Most prominent ClearEvent customer segment. Often arrives at ClearEvent after outgrowing Eventbrite (ticketing only) and ruling out Cvent (too expensive, too enterprise).",
+      "primary_motivations": [
+        "Replace 3-5 stitched tools (Eventbrite + Google Forms + Excel + Mailchimp) with one platform",
+        "Real-time budget visibility for board reporting and finance teams",
+        "Volunteer coordination that actually works — job assignments, schedules, mobile access",
+        "Affordable pricing with nonprofit discounts and no long-term contracts",
+        "Run the same event next year with one-click rollover"
+      ],
+      "typical_products": ["event management software for nonprofits", "fundraising event software", "event registration software for nonprofits", "volunteer management software", "event budget tracking"],
+      "competitor_reference": ["Eventbrite", "Cvent", "Wild Apricot", "RegFox", "Whova"]
+    },
+    {
+      "id": "corporate_event_coordinator",
+      "name": "Corporate Event Coordinator / Marketing Manager",
+      "weight": 0.25,
+      "description": "Marketing Manager, Event Marketing Specialist, or Brand Manager at a 100-2,000-employee corporate organization. Runs product launches, client appreciation events, trade shows, annual sales meetings, internal conferences, training sessions, and workshops. Moderately tech-savvy — comfortable with marketing tools but not IT systems. Pressured to prove marketing ROI to leadership, manage multiple vendor relationships, and absorb last-minute executive requests. Success metrics: attendance, lead generation, cost per acquisition, attendee survey scores. Values branded attendee experiences, professional execution, and platforms that don't require an IT ticket to change something. Often evaluating ClearEvent against Cvent (too expensive for mid-market), Splash (strong on corporate branding), Bizzabo (hybrid events), and Whova (conference-centric).",
+      "primary_motivations": [
+        "Branded, professional attendee experience without enterprise-level cost or complexity",
+        "Trade show, conference, and corporate event management in one platform",
+        "Real-time reporting for ROI and leadership dashboards",
+        "Mobile event app for attendees (no app download required)",
+        "Fast setup for recurring internal events (quarterly trainings, annual sales kickoffs)"
+      ],
+      "typical_products": ["corporate event management software", "trade show management software", "conference management software", "event marketing software", "mobile event app"],
+      "competitor_reference": ["Cvent", "Splash", "Bizzabo", "Whova", "Eventbrite", "Stova"]
+    },
+    {
+      "id": "community_committee_chair",
+      "name": "Community Organization Leader / Committee Chair",
+      "weight": 0.20,
+      "description": "Volunteer committee chair or board member at a community organization — annual festival, fundraising gala, civic event, local fair, rodeo, parade, or religious/cultural celebration. Often unpaid, limited time availability, non-technical by their own description ('users who do not use tech or are in constant on-the-job learning mode'). Organizes recurring community events year after year with a rotating cast of volunteers. Pain points: every year feels like starting from scratch, volunteers drop off, institutional knowledge walks out the door. Needs tools simple enough that a new committee chair can pick up where last year ended. Cost-conscious — budgets are tight and scrutinized. ClearEvent wins this persona on Rollover functionality (pick up last year's event in one click), simple UI, and the white-glove support that patiently guides non-technical users.",
+      "primary_motivations": [
+        "Simple tools that don't require technical training or a paid consultant",
+        "One-click rollover so next year's event doesn't require rebuilding everything",
+        "Volunteer coordination and communication in one place",
+        "Affordable pricing that fits a community budget",
+        "Real humans to call when something breaks — not a chatbot"
+      ],
+      "typical_products": ["event planning software", "event registration software", "event management app", "volunteer management", "recurring event software"],
+      "competitor_reference": ["Eventbrite", "EventCreate", "Ticketleap", "Wild Apricot"]
+    },
+    {
+      "id": "educational_institution_event_manager",
+      "name": "Educational Institution Event Manager",
+      "weight": 0.20,
+      "description": "Event manager, alumni relations director, or continuing-ed coordinator at a university, college, K-12 school, or training institute. Runs scholarship fundraisers, alumni events, corporate partnership events, speaker series, educational forums, conferences, campus tours, and field trips. Operates under budget constraints ('best product hands down to save money'), academic calendar pressure, and compliance/reporting requirements. Juggles multiple stakeholders: administration, faculty, students, corporate sponsors, alumni donors. Needs detailed financial tracking, clean reporting for academic leadership, and tools that serve both tuition-adjacent events (campus tours, admissions) and revenue events (corporate forums, scholarship galas). Tech-savvy enough for standard software but rarely has IT support dedicated to event tech.",
+      "primary_motivations": [
+        "Save money and consolidate tools across multiple event types (alumni, admissions, development)",
+        "Detailed financial tracking and compliance reporting for academic finance teams",
+        "Registration for scholarship fundraisers, conferences, and speaker series",
+        "Mobile attendee portal for campus tours, conferences, and alumni events",
+        "Manage recurring events (annual fundraiser, alumni weekend, annual forums)"
+      ],
+      "typical_products": ["event management software", "conference management software", "event registration platform", "event management for nonprofits", "fundraising event software"],
+      "competitor_reference": ["Eventbrite", "Cvent", "Whova", "RegFox", "Wild Apricot"]
+    }
+  ]
+}

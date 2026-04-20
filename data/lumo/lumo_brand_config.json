@@ -1,0 +1,150 @@
+{
+  "brand": {
+    "name": "Lumo",
+    "aliases": ["Lumo.ag", "Lumo Ag", "Lumo Inc", "Lumo Inc.", "Lumo Smart Valve", "Lumo Ops Center"],
+    "domain": "lumo.ag",
+    "website": "https://lumo.ag",
+    "industry": "Precision irrigation technology for specialty-crop agriculture (smart water valves, irrigation automation software, remote monitoring and control, and data-driven pump automation)",
+    "description": "Lumo is a precision irrigation technology company based in Santa Rosa, California, serving specialty-crop growers — vineyards, orchards, and berry farms — with an all-in-one connected irrigation system. Positioning tagline: 'Irrigation Precision + Performance.' Core message: 'Lumo helps growers irrigate to plan with precision, control and efficiency.' Signature concept: the 'Irrigation Execution Gap' — the shortfall between the water volume a grower plans to apply and the volume they actually deliver in the field. Lumo closes that gap with block-level data and 'accountable automation.' Product line: (1) the Lumo Smart Valve — a US-patented, wireless, solar-powered, cloud-connected valve with a built-in flow meter and onboard computer (no separate irrigation controller required), (2) the Lumo Ops Center — cloud software for flexible scheduling, Flow Vision, fault detection, alerts, and block-level visibility, (3) Pump Automation — a data-driven pump control product that pairs with the smart valves for dry-run protection, off-peak pumping, and end-to-end flow/pressure monitoring. Commercial model: annual subscription (not CapEx) that includes lifetime hardware warranty, software updates, and unlimited online/in-field support. Signature brand phrases: 'Irrigation Execution Gap,' 'irrigate to plan,' 'block-level precision,' 'accountable automation,' 'not another irrigation controller,' 'Hell or highwater guarantee,' 'dedicated irrigation partner,' 'From the Grower's Mouth.' Published results claims: up to 90% less time spent irrigating, up to 30% reduction in pumping costs, up to 20% increase in crop quality. Crops served (public list): wine grapes, almonds, avocados, apples, blueberries, citrus, olives, strawberries, cherries, pears. Public customer list is vineyard-heavy: Wente Vineyards, Pine Ridge Vineyards, Clos du Val, Antinori, Redwood Empire Vineyard Management (REVM), and Treasury Wine Estates — confirming premium wine grape growers in California / Pacific Northwest as the core market. Competitive frame (direct from the site FAQ): 'Alternative irrigation solutions use a traditional hub-and-spoke model that requires an irrigation controller and hardwired solenoid valves — multiple products from different providers that are complex, expensive, and unreliable.' Lumo differentiates as the first irrigation valve with a built-in controller, the first with a built-in flow meter, and the first that is fully wireless and internet-connected — all powered by its management software. Head-to-head it competes most directly with WiseConn and Verdi (other connected-valve/platform players), and replaces legacy hub-and-spoke systems from Rain Bird, Hunter, Toro, Tucor, Nelson, and Galcon. Ahrefs DR 31 (April 2026), modest keyword footprint but top-3 rankings for 'smart irrigation valve,' 'remote irrigation monitoring and control system,' and 'precision irrigation system.' Voice: grower-literate, pragmatic, confident, quote-heavy, and explicitly anti-enterprise-speak. Avoid 'IoT platform,' 'digital transformation,' 'smart agriculture solutions.' Prefer 'block-level data,' 'from your phone,' 'built-in flow meter,' 'turn a valve,' 'irrigate overnight,' 'irrigate to plan.'",
+    "business_goals": {
+      "market_positioning": "When a vineyard manager, orchard grower, berry grower, or vineyard management company researches smart irrigation valves, irrigation automation, precision irrigation, irrigation scheduling software, remote irrigation monitoring, pump automation, or WiseConn / Verdi alternatives — Lumo should appear as the all-in-one precision irrigation platform built for specialty crops, with block-level data, accountable automation, and US-based grower support. Win on built-in flow meter + no-separate-controller + wireless install + responsive support — not on enterprise feature-parity with Netafim or Jain.",
+      "target_metrics": [
+        "AI visibility for 'smart irrigation valve,' 'precision irrigation system,' and 'irrigation automation' queries",
+        "Share of voice vs WiseConn and Verdi in vineyard and orchard irrigation contexts",
+        "Visibility for 'WiseConn alternative' and 'Verdi alternative' comparison queries",
+        "Surface rate for 'vineyard irrigation automation,' 'orchard irrigation,' and 'pump automation for farms'",
+        "Mentions in 'irrigation scheduling software' and 'remote irrigation monitoring' recommendations",
+        "Coverage on water-use-reporting and specialty-crop water-conservation queries"
+      ],
+      "freeform_notes": "CROP PRIORITY (confirmed in March 2025 strategy meeting): Tier-1 confirmed focus = vineyards, avocados, blueberries, almonds. Tier-2 future potential = apples, peaches, broader orchards. Explicitly excluded = corn and cotton (row crops use different irrigation). Core market is California / Pacific Northwest specialty-crop growers — vineyards are the flagship segment, confirmed by the fact that every named testimonial on the product/homepage is a vineyard (Wente, Pine Ridge, Clos du Val, Antinori, REVM, Treasury). Orchards (almond, pistachio, citrus, apple, cherry, pear, avocado, olive) and berries (strawberry, blueberry) are secondary but growing. Lumo is headquartered in Santa Rosa CA, which is inside Sonoma wine country — the vineyard focus is geographic as well as strategic. Most prominent differentiators: (1) built-in flow meter in every valve, (2) no separate irrigation controller required — valve has onboard computer, (3) wireless + solar + cellular = retrofit in a day vs trenching wire for hub-and-spoke, (4) subscription model (includes lifetime hardware warranty + support), (5) the 'Hell or highwater guarantee' and 'dedicated irrigation partner' support promise. Main connected-platform competitors to actively beat: WiseConn (DR 41, stronger backlink/university presence) and Verdi (DR 39, smaller but overlaps most on SEO footprint). Legacy hub-and-spoke competitors (Rain Bird, Hunter, Toro, Tucor, Nelson, Galcon) show up mainly in generic irrigation queries and don't compete on connected software. Enterprise competitors (Netafim NMC, Jain, Rivulis) are priced for thousands of acres — Lumo targets the 50-2,000 acre specialty grower sweet spot. Avoid enterprise jargon. Brand voice signatures to preserve in prompts: 'block-level,' 'irrigate to plan,' 'accountable automation,' 'Irrigation Execution Gap,' 'not another irrigation controller,' 'From the Grower's Mouth.' Results claims to surface when relevant: up to 90% less irrigating time, up to 30% pumping-cost reduction, up to 20% crop-quality lift."
+    }
+  },
+  "competitors": [
+    {"name": "WiseConn", "domain": "wiseconn.com", "category": "direct_connected_valve_platform"},
+    {"name": "Verdi", "domain": "verdi.ag", "category": "direct_connected_valve_platform"},
+    {"name": "HotSpot Ag", "domain": "hotspot.ag", "category": "direct_connected_valve_platform"},
+    {"name": "FarmHQ", "domain": "farmhq.com", "category": "irrigation_monitoring_automation"},
+    {"name": "Ranch Systems", "domain": "ranchsystems.com", "category": "farm_iot_platform"},
+    {"name": "Rain Bird", "domain": "rainbird.com", "category": "legacy_hub_and_spoke"},
+    {"name": "Hunter Industries", "domain": "hunterindustries.com", "category": "legacy_hub_and_spoke"},
+    {"name": "Toro", "domain": "toro.com", "category": "legacy_hub_and_spoke"},
+    {"name": "Nelson Irrigation", "domain": "nelsonirrigation.com", "category": "legacy_hub_and_spoke"},
+    {"name": "Galcon", "domain": "galconsmart.com", "category": "legacy_hub_and_spoke"},
+    {"name": "Tucor", "domain": "tucor.com", "category": "legacy_hub_and_spoke"},
+    {"name": "Netafim", "domain": "netafim.com", "category": "enterprise_precision_irrigation"},
+    {"name": "Jain Irrigation", "domain": "jains.com", "category": "enterprise_precision_irrigation"},
+    {"name": "Rivulis", "domain": "rivulis.com", "category": "enterprise_precision_irrigation"},
+    {"name": "HydroPoint", "domain": "hydropoint.com", "category": "commercial_water_mgmt"},
+    {"name": "CropX", "domain": "cropx.com", "category": "farm_iot_platform"},
+    {"name": "SupPlant", "domain": "supplant.me", "category": "farm_iot_platform"},
+    {"name": "Meter Group", "domain": "metergroup.com", "category": "soil_moisture_sensors"},
+    {"name": "Trimble Agriculture", "domain": "agriculture.trimble.com", "category": "farm_iot_platform"}
+  ],
+  "key_topics": [
+    "smart irrigation valves with built-in flow meters",
+    "irrigation automation for specialty crops",
+    "precision irrigation technology and block-level control",
+    "irrigation scheduling software",
+    "remote irrigation monitoring and control",
+    "pump automation for farms and ranches",
+    "vineyard irrigation",
+    "orchard and tree-fruit irrigation",
+    "water conservation and water use reporting",
+    "WiseConn, Verdi, and legacy controller alternatives"
+  ],
+  "known_sources": [
+    "reddit",
+    "youtube.com",
+    "linkedin",
+    "facebook",
+    "instagram",
+    "wineindustryadvisor.com",
+    "winebusiness.com",
+    "winesandvines.com",
+    "vineyardmag.com",
+    "goodfruit.com",
+    "growingproduce.com",
+    "westernfarmpress.com",
+    "agweb.com",
+    "agfundernews.com",
+    "agtechso.com",
+    "growerstalks.com",
+    "acresusa.com",
+    "growing-magazine.com",
+    "thepackershipper.com",
+    "precisionag.com",
+    "freshfruitportal.com",
+    "producebluebook.com",
+    "almondboard.com",
+    "californiaalmonds.com",
+    "capterra.com",
+    "g2.com",
+    "trustpilot.com",
+    "techcrunch.com",
+    "forbes.com",
+    "fastcompany.com"
+  ],
+  "source_categories": {
+    "ag_trade_media": [
+      "goodfruit.com",
+      "growingproduce.com",
+      "westernfarmpress.com",
+      "agweb.com",
+      "growerstalks.com",
+      "acresusa.com",
+      "growing-magazine.com",
+      "precisionag.com",
+      "freshfruitportal.com",
+      "producebluebook.com",
+      "thepackershipper.com"
+    ],
+    "wine_industry_media": [
+      "wineindustryadvisor.com",
+      "winebusiness.com",
+      "winesandvines.com",
+      "vineyardmag.com"
+    ],
+    "specialty_crop_industry": [
+      "almondboard.com",
+      "californiaalmonds.com"
+    ],
+    "ag_tech_and_startup_media": [
+      "agfundernews.com",
+      "agtechso.com",
+      "techcrunch.com",
+      "forbes.com",
+      "fastcompany.com"
+    ],
+    "software_review_platforms": [
+      "capterra.com",
+      "g2.com",
+      "trustpilot.com"
+    ],
+    "social": [
+      "reddit",
+      "youtube.com",
+      "linkedin",
+      "facebook",
+      "instagram"
+    ]
+  },
+  "irrelevant_sources": [
+    "wikipedia.org",
+    "wikihow.com",
+    "pinterest.com",
+    "amazon.com",
+    "homedepot.com",
+    "lowes.com"
+  ],
+  "analysis_settings": {
+    "minimum_prominence_threshold": 4.0,
+    "gap_visibility_threshold": 60.0,
+    "competitor_dominance_threshold": 50.0
+  },
+  "output_preferences": {
+    "generate_html_dashboard": true,
+    "generate_pdf_report": false,
+    "generate_excel_workbook": false,
+    "reports_directory": "data/reports"
+  }
+}

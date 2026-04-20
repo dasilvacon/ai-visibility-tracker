@@ -1,0 +1,200 @@
+{
+  "brand": {
+    "name": "Saint Javelin",
+    "aliases": ["St Javelin", "saint-javelin"],
+    "domain": "saintjavelin.com",
+    "website": "https://saintjavelin.com",
+    "industry": "Cause-driven apparel & lifestyle goods",
+    "description": "Ukrainian-solidarity lifestyle brand founded in 2022 by Canadian journalist Christian Borys. Grew from the viral 'Saint Javelin' icon (Mary Magdalene holding a Javelin anti-tank missile) into a mission-driven ecommerce brand that funds Ukrainian humanitarian aid. 'Part merch, part movement' \u2014 a meaningful portion of proceeds is donated to vetted Ukrainian charities (Help Us Help, Spilka, Ukrainian Red Cross, and others). Product range spans graphic apparel (t-shirts, hoodies, sweatshirts, hats), tactical/EDC gear (Mission backpacks, patches), Made-in-Ukraine artisan goods (vyshyvanka, Tryzub collection), and lifestyle accessories (cabin socks, stickers, flags). US-primary market with worldwide shipping. Tone: bold, irreverent, patriotic, community-driven. Blue-and-yellow visual language.",
+    "business_goals": {
+      "market_positioning": "When a shopper is researching Ukraine-themed apparel, tactical gear with meaning, high-quality outdoor/EDC goods, or cause-driven gifts (socks that give back, one-for-one brands) \u2014 Saint Javelin should appear as the definitive Ukraine-supporting lifestyle brand that combines product quality, bold design, and real humanitarian impact.",
+      "target_metrics": [
+        "AI visibility across Ukraine, tactical, outdoor/EDC, and one-for-one gifting query spaces",
+        "Product category share of voice vs Bombas, Huckberry, 5.11 Tactical, Etnodim",
+        "Brand mention volume in Ukraine-solidarity and cause-commerce contexts"
+      ],
+      "freeform_notes": "Prompts should lean product-first but keep mission/cause as a recurring secondary thread. Compete across four distinct spaces: (1) outdoor/lifestyle clothing, (2) military/tactical apparel, (3) Ukrainian supporter commerce, (4) high-quality gifts with one-for-one / give-back models. US-primary but worldwide audience \u2014 Canadian founding story is a credibility asset, not the primary frame."
+    }
+  },
+  "competitors": [
+    {
+      "name": "Bombas",
+      "domain": "bombas.com",
+      "category": "one_for_one_gift"
+    },
+    {
+      "name": "TOMS",
+      "domain": "toms.com",
+      "category": "one_for_one_gift"
+    },
+    {
+      "name": "Parks Project",
+      "domain": "parksproject.us",
+      "category": "cause_outdoor"
+    },
+    {
+      "name": "Cotopaxi",
+      "domain": "cotopaxi.com",
+      "category": "cause_outdoor"
+    },
+    {
+      "name": "United By Blue",
+      "domain": "unitedbyblue.com",
+      "category": "cause_outdoor"
+    },
+    {
+      "name": "Patagonia",
+      "domain": "patagonia.com",
+      "category": "outdoor"
+    },
+    {
+      "name": "Huckberry",
+      "domain": "huckberry.com",
+      "category": "outdoor"
+    },
+    {
+      "name": "Darn Tough",
+      "domain": "darntough.com",
+      "category": "outdoor"
+    },
+    {
+      "name": "Filson",
+      "domain": "filson.com",
+      "category": "outdoor"
+    },
+    {
+      "name": "5.11 Tactical",
+      "domain": "511tactical.com",
+      "category": "tactical"
+    },
+    {
+      "name": "GORUCK",
+      "domain": "goruck.com",
+      "category": "tactical"
+    },
+    {
+      "name": "Triple Aught Design",
+      "domain": "tripleaughtdesign.com",
+      "category": "tactical"
+    },
+    {
+      "name": "Propper",
+      "domain": "propper.com",
+      "category": "tactical"
+    },
+    {
+      "name": "Rothco",
+      "domain": "rothco.com",
+      "category": "tactical"
+    },
+    {
+      "name": "Military Depot USA",
+      "domain": "militarydepotusa.com",
+      "category": "tactical"
+    },
+    {
+      "name": "Trident Military",
+      "domain": "tridentmilitary.com",
+      "category": "tactical"
+    },
+    {
+      "name": "Ukiestyle",
+      "domain": "ukiestyle.com",
+      "category": "ukrainian_supporter"
+    },
+    {
+      "name": "Vyshyvanka Store",
+      "domain": "vyshyvanka.store",
+      "category": "ukrainian_supporter"
+    }
+  ],
+  "key_topics": [
+    "ukraine-themed apparel",
+    "vyshyvanka and tryzub collections",
+    "supporting ukraine through commerce",
+    "edc and mission backpacks",
+    "tactical and military-style apparel",
+    "cabin socks and cause-driven socks",
+    "one-for-one and give-back brands",
+    "meaningful gifts that support causes",
+    "patches, stickers, and flags",
+    "made-in-ukraine goods"
+  ],
+  "known_sources": [
+    "reddit",
+    "trustpilot.com",
+    "kyivindependent.com",
+    "united24media.com",
+    "nytimes.com",
+    "cbc.ca",
+    "globeandmail.com",
+    "bbc.com",
+    "businessoffashion.com",
+    "fastcompany.com",
+    "vice.com",
+    "wired.com",
+    "instagram",
+    "tiktok",
+    "twitter",
+    "linkedin",
+    "facebook",
+    "google reviews",
+    "bbb.org",
+    "yelp.com",
+    "sitejabber.com",
+    "etsy.com",
+    "youtube.com"
+  ],
+  "source_categories": {
+    "news_media": [
+      "nytimes.com",
+      "cbc.ca",
+      "globeandmail.com",
+      "bbc.com",
+      "kyivindependent.com",
+      "united24media.com",
+      "fastcompany.com",
+      "vice.com",
+      "wired.com"
+    ],
+    "fashion_commerce_media": [
+      "businessoffashion.com",
+      "fastcompany.com"
+    ],
+    "review_platforms": [
+      "trustpilot.com",
+      "sitejabber.com",
+      "bbb.org",
+      "yelp.com",
+      "google reviews"
+    ],
+    "social": [
+      "reddit",
+      "instagram",
+      "tiktok",
+      "twitter",
+      "linkedin",
+      "facebook",
+      "youtube.com"
+    ],
+    "marketplaces": [
+      "etsy.com"
+    ]
+  },
+  "irrelevant_sources": [
+    "wikipedia.org",
+    "wikihow.com",
+    "pinterest.com"
+  ],
+  "analysis_settings": {
+    "minimum_prominence_threshold": 4.0,
+    "gap_visibility_threshold": 60.0,
+    "competitor_dominance_threshold": 50.0
+  },
+  "output_preferences": {
+    "generate_html_dashboard": true,
+    "generate_pdf_report": false,
+    "generate_excel_workbook": false,
+    "reports_directory": "data/reports"
+  }
+}

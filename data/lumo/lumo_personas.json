@@ -1,0 +1,64 @@
+{
+  "personas": [
+    {
+      "id": "vineyard_manager_viticulturist",
+      "name": "Vineyard Manager / Viticulturist",
+      "weight": 0.45,
+      "description": "In-house vineyard manager, viticulturist, or ranch manager at a winery or vineyard estate in California, Oregon, or Washington, OR a partner/agronomist at a third-party vineyard management company that oversees multiple client properties (e.g., Redwood Empire Vineyard Management). Manages anywhere from 40 acres (boutique estate) to 1,000+ acres (ranch-scale vineyard management company). Speaks the language of blocks, sets, DU (distribution uniformity), vine stress, ET, fruit quality, irrigator labor, and water-use reporting. Pain points: relying on hub-and-spoke controllers plus hardwired solenoid valves that are expensive to install, prone to failure, and leave the manager blind to actual flow and pressure. Walks blocks manually to find leaks, clogs, and pump issues. No confidence that scheduled irrigations were actually executed — the 'Irrigation Execution Gap.' Core motivations: block-level precision, confidence that irrigation ran as planned, ability to irrigate overnight/at off-peak, fewer hours spent driving between blocks turning valves, and better wine grape quality through fine-tuned vine stress. Lumo's flagship persona — every named public testimonial (Wente, Pine Ridge, Clos du Val, Antinori, REVM, Treasury) sits here. Often finds Lumo after hitting the limits of a hub-and-spoke retrofit or hearing about it from a peer vineyard.",
+      "primary_motivations": [
+        "Close the gap between what I scheduled and what actually got irrigated in each block",
+        "Eliminate the daily drive to blocks to turn valves and check for leaks",
+        "Fine-tune vine stress and distribution uniformity to improve wine grape quality",
+        "Irrigate overnight at off-peak energy rates without anyone on site",
+        "Retrofit onto existing drip infrastructure without trenching new wire"
+      ],
+      "typical_products": ["smart irrigation valve", "vineyard irrigation automation", "precision irrigation system", "irrigation scheduling software", "remote irrigation monitoring"],
+      "competitor_reference": ["WiseConn", "Verdi", "HotSpot Ag", "Tucor", "Rain Bird", "Galcon", "Netafim"]
+    },
+    {
+      "id": "almond_orchard_grower",
+      "name": "Almond & Orchard Grower",
+      "weight": 0.25,
+      "description": "Grower or ranch manager at an almond, pistachio, apple, cherry, pear, or walnut orchard — primarily in California's Central Valley (for almonds/pistachios) or Washington/Oregon (for apples, cherries, pears). Operations are larger-acreage than vineyards (500–5,000+ acres is common), pump infrastructure is mission-critical, and water cost is a significant line item on the P&L. Often juggling SGMA (Sustainable Groundwater Management Act) compliance, rising pumping energy costs, and labor shortage pressure. Pain points: hub-and-spoke controller systems fail silently, pumps run dry, peak-hour energy charges eat margin. Needs pump automation as much as valve automation — real-time flow/pressure data, dry-run protection, and the ability to irrigate off-peak safely. Almonds are on Lumo's Tier-1 priority crop list (along with vineyards, avocados, and blueberries). Usually finds Lumo after researching 'orchard irrigation automation' or 'pump automation for farms,' or through an ag-tech consultant. Evaluates vs WiseConn (the most common direct comparison) and Netafim or Jain for enterprise-scale projects.",
+      "primary_motivations": [
+        "Automate irrigation across 1,000+ acres without a full rip-and-replace",
+        "Protect pump infrastructure from dry runs, pressure spikes, and cavitation",
+        "Run irrigation off-peak to cut pumping energy costs by 20-30%",
+        "Meet water-use reporting requirements for SGMA and local groundwater agencies",
+        "Consolidate block-level flow and pressure data in one dashboard"
+      ],
+      "typical_products": ["orchard irrigation", "pump automation", "almond irrigation", "irrigation automation system", "remote irrigation monitoring and control"],
+      "competitor_reference": ["WiseConn", "Netafim", "Jain Irrigation", "Rain Bird", "Hunter Industries", "Nelson Irrigation", "Ranch Systems"]
+    },
+    {
+      "id": "berry_grower",
+      "name": "Berry Grower (Blueberry & Strawberry)",
+      "weight": 0.15,
+      "description": "Blueberry or strawberry grower — Pacific Northwest highbush blueberries or California coastal strawberries. Smaller acreage than orchards (50–500 acres typical), extremely sensitive to water stress and fruit-quality timing, and often running drip + micro-sprinkler combinations. Blueberries are on Lumo's Tier-1 priority crop list (confirmed March 2025 strategy). Pain points: plants need precise volume-based irrigation (not duration-based), overwatering causes root rot, underwatering tanks yield and fruit size, and many operations still run on basic timers or manual scheduling. Needs a system that schedules by volume (gallons delivered to the block) rather than minutes, with real-time flow data to catch clogged emitters before they hit a row. Frequently technology-curious but time-poor — the grower or owner is often the irrigation scheduler too. Typically evaluates Lumo vs Galcon, basic drip-irrigation timers, or DIY Rachio-style consumer controllers — and chooses Lumo when volume-based scheduling and per-block flow data matter.",
+      "primary_motivations": [
+        "Schedule irrigation by volume (gallons) instead of duration (minutes)",
+        "Catch clogged emitters or low-flow issues before they damage a row",
+        "Automate the specific drip + micro-sprinkler setup used on berries",
+        "Protect fruit quality and yield through precise water timing",
+        "Replace a patchwork of timers and spreadsheets with one dashboard"
+      ],
+      "typical_products": ["drip irrigation automation", "strawberry irrigation", "blueberry irrigation", "smart irrigation valve", "volume-based irrigation scheduling"],
+      "competitor_reference": ["Galcon", "Rain Bird", "Hunter Industries", "Netafim", "WiseConn", "Verdi"]
+    },
+    {
+      "id": "avocado_subtropical_grower",
+      "name": "Avocado & Subtropical Tree Grower",
+      "weight": 0.15,
+      "description": "Avocado, citrus, or olive grower — primarily in Southern California (Ventura, San Diego, Riverside counties) and the Central Valley. Avocados are on Lumo's Tier-1 priority crop list (March 2025). Operations range from 40-acre family groves to 1,000+ acre ranches. Pain points: avocados are extremely water-intensive, vulnerable to salinity, and easily damaged by over- or under-irrigation. California water restrictions, rising well-pumping costs, and labor shortages compound the problem. Typically uses micro-sprinklers or fan-jets with hub-and-spoke controllers — and most legacy systems don't give per-tree or per-block flow visibility. Needs reliable automation that works across rolling terrain (common in avocado groves) with no trenched wire. Values pump automation and leak detection because avocado trees can die quickly under even brief water stress in heat events. Evaluates Lumo vs WiseConn, Hunter, or older Rain Bird IQ installations, and often discovers Lumo through agronomist recommendations or grower associations (e.g., California Avocado Commission).",
+      "primary_motivations": [
+        "Reliable automation that works across rolling avocado grove terrain",
+        "React instantly to heat events to prevent tree and fruit loss",
+        "Eliminate salinity-related damage by precisely metering water volumes",
+        "Detect leaks and clogs automatically across long drip/micro-sprinkler runs",
+        "Meet increasingly strict California water-use reporting requirements"
+      ],
+      "typical_products": ["avocado irrigation", "citrus irrigation", "orchard irrigation automation", "smart water valve", "remote irrigation monitoring"],
+      "competitor_reference": ["WiseConn", "Hunter Industries", "Rain Bird", "Netafim", "Jain Irrigation", "Toro"]
+    }
+  ]
+}

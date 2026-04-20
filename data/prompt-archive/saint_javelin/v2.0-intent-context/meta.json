@@ -1,18 +1,17 @@
 {
   "version": "v2.0-intent-context",
-  "client_slug": "uniuni",
-  "generated_at": "2026-04-19T19:11:56Z",
+  "client_slug": "saint_javelin",
+  "generated_at": "2026-04-19T20:17:06Z",
   "generated_by": "scripts/regenerate_prompts.py",
   "generator_version": "2.0",
   "source_model": "claude-sonnet-4-6",
-  "prompt_count": 482,
+  "prompt_count": 499,
   "format": "intent_context_v2",
   "personas": [
-    "Cross-Border Shipper",
-    "E-Commerce Merchant",
-    "Gig Driver / Delivery Partner",
-    "Logistics / 3PL Decision Maker",
-    "Online Shopper / Package Recipient"
+    "Cause-Driven Gift Giver",
+    "Outdoor / EDC Enthusiast",
+    "Tactical Gear Enthusiast",
+    "Ukrainian Supporter / Diaspora"
   ],
   "categories": [
     "commercial",
@@ -21,7 +20,7 @@
     "research",
     "support"
   ],
-  "predecessor": "v1.0-baseline",
-  "content_hash": "sha256:fb93997adb332c4119fddfbdad43538b7258ad4df3bf030be3d44793b550db03",
+  "predecessor": null,
+  "content_hash": "sha256:8eea252601d0acb3abe314de18d562a7c2ea2b50d5905e47e8187b565c085099",
   "notes": "Tight Intent+Context v2 regeneration via claude-sonnet-4-6."
 }

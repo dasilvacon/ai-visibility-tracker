@@ -1,0 +1,26 @@
+{
+  "version": "v2.0-intent-context",
+  "client_slug": "clearevent",
+  "generated_at": "2026-04-19T21:14:28Z",
+  "generated_by": "scripts/regenerate_prompts.py",
+  "generator_version": "2.0",
+  "source_model": "claude-sonnet-4-6",
+  "prompt_count": 497,
+  "format": "intent_context_v2",
+  "personas": [
+    "Community Organization Leader / Committee Chair",
+    "Corporate Event Coordinator / Marketing Manager",
+    "Educational Institution Event Manager",
+    "Nonprofit Event Director / Program Coordinator"
+  ],
+  "categories": [
+    "commercial",
+    "educational",
+    "navigational",
+    "research",
+    "support"
+  ],
+  "predecessor": null,
+  "content_hash": "sha256:87f837f4980a2952f8635fb91d07e660dc90a706949ab6cfd14415c99c4bc4a9",
+  "notes": "Tight Intent+Context v2 regeneration via claude-sonnet-4-6."
+}

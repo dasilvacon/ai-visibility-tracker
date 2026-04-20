@@ -1,0 +1,87 @@
+{
+  "metadata": {
+    "client": "Lumo",
+    "created": "2026-04-19",
+    "last_updated": "2026-04-19",
+    "notes": "Core topics Lumo must be visible for in AI search. Covers the specialty-crop grower journey from upper-funnel precision-irrigation education through feature-specific searches (smart valves, scheduling software, pump automation, monitoring) to crop-specific and competitor-alternative queries. Tier-1 priority crops (vineyards, avocados, blueberries, almonds) drive the crop-specific topics. Excludes row crops (corn, cotton) per March 2025 strategy meeting."
+  },
+  "topics": [
+    {
+      "id": "smart_irrigation_valves",
+      "name": "Smart irrigation valves with built-in flow meters",
+      "description": "Connected, wireless, solar-powered irrigation valves with built-in flow meters and onboard controllers — the product category Lumo pioneered. Smart water valve, smart irrigation valve, wireless irrigation valve, solar-powered irrigation valve, cloud-connected valve, valve with built-in flow meter, valve with onboard controller. Directly competitive with WiseConn and Verdi; replaces legacy hub-and-spoke solenoid valves.",
+      "personas": ["vineyard_manager_viticulturist", "almond_orchard_grower", "berry_grower", "avocado_subtropical_grower"],
+      "priority": "high"
+    },
+    {
+      "id": "precision_irrigation_technology",
+      "name": "Precision irrigation technology and block-level control",
+      "description": "Precision irrigation, precision agriculture irrigation, block-level irrigation data, block-level precision, the 'Irrigation Execution Gap,' irrigate-to-plan, distribution uniformity (DU), accountable automation. What precision irrigation is, how it works, why it matters for specialty crops, benefits vs conventional irrigation.",
+      "personas": ["vineyard_manager_viticulturist", "almond_orchard_grower", "berry_grower", "avocado_subtropical_grower"],
+      "priority": "high"
+    },
+    {
+      "id": "irrigation_automation_farms",
+      "name": "Irrigation automation for specialty crops",
+      "description": "Irrigation automation systems for vineyards, orchards, and berry farms. 24/7 remote control, hands-free irrigation, replacing manual valve-turning, automated set scheduling, automated field operations. Farm irrigation automation vs hub-and-spoke controller + solenoid valve setups.",
+      "personas": ["vineyard_manager_viticulturist", "almond_orchard_grower", "berry_grower", "avocado_subtropical_grower"],
+      "priority": "high"
+    },
+    {
+      "id": "irrigation_scheduling_software",
+      "name": "Irrigation scheduling software",
+      "description": "Irrigation scheduling software, irrigation management software, volume-based scheduling, flexible scheduling (short pulses, long drinks), schedule by gallons instead of minutes, schedule from any device, mobile irrigation app for growers. The Lumo Ops Center category.",
+      "personas": ["vineyard_manager_viticulturist", "almond_orchard_grower", "berry_grower", "avocado_subtropical_grower"],
+      "priority": "high"
+    },
+    {
+      "id": "remote_monitoring_control",
+      "name": "Remote irrigation monitoring and control",
+      "description": "Remote irrigation monitoring, remote irrigation control, real-time flow monitoring, real-time pressure monitoring, Flow Vision, fault detection, leak detection, automatic alerts by phone or email, catching clogs and low-flow issues early.",
+      "personas": ["vineyard_manager_viticulturist", "almond_orchard_grower", "berry_grower", "avocado_subtropical_grower"],
+      "priority": "high"
+    },
+    {
+      "id": "pump_automation",
+      "name": "Pump automation for farms and ranches",
+      "description": "Data-driven pump automation, automated pump control for irrigation, dry-run protection, pump cavitation protection, pressure-spike protection, off-peak pumping to reduce energy costs. Lumo's Pump Automation product. Especially relevant for 1,000+ acre orchards and ranches with significant pump infrastructure.",
+      "personas": ["almond_orchard_grower", "avocado_subtropical_grower", "vineyard_manager_viticulturist"],
+      "priority": "high"
+    },
+    {
+      "id": "vineyard_irrigation",
+      "name": "Vineyard irrigation",
+      "description": "Vineyard irrigation, irrigation for wine grapes, precision irrigation for vineyards, block-level vineyard water management, vineyard irrigation automation, fine-tuning vine stress, DU across vineyard blocks. Tier-1 priority crop and flagship Lumo vertical (Santa Rosa HQ, all public testimonials are vineyards).",
+      "personas": ["vineyard_manager_viticulturist"],
+      "priority": "high"
+    },
+    {
+      "id": "orchard_tree_fruit_irrigation",
+      "name": "Orchard and tree-fruit irrigation",
+      "description": "Irrigation for almonds, pistachios, citrus, avocados, apples, cherries, pears, olives. Tree-fruit irrigation scheduling, orchard water management, micro-sprinkler and drip automation for tree crops. Avocado irrigation and almond irrigation are Tier-1 priority crops. Apple and cherry are Tier-2 future targets.",
+      "personas": ["almond_orchard_grower", "avocado_subtropical_grower"],
+      "priority": "high"
+    },
+    {
+      "id": "berry_irrigation",
+      "name": "Berry irrigation (blueberry and strawberry)",
+      "description": "Drip irrigation for blueberries, drip irrigation for strawberries, volume-based berry irrigation, micro-sprinkler setups for berries, precision irrigation for highbush blueberries, strawberry field irrigation automation. Blueberries are a Tier-1 priority crop (March 2025 strategy).",
+      "personas": ["berry_grower"],
+      "priority": "medium"
+    },
+    {
+      "id": "water_conservation_reporting",
+      "name": "Water conservation and water-use reporting",
+      "description": "Water conservation in agriculture, SGMA (Sustainable Groundwater Management Act) compliance, water-use reporting requirements, reducing irrigation water use, sustainable specialty-crop farming, water-smart farming. Especially relevant for California almond, avocado, and vineyard growers facing increasingly strict groundwater rules.",
+      "personas": ["almond_orchard_grower", "avocado_subtropical_grower", "vineyard_manager_viticulturist"],
+      "priority": "medium"
+    },
+    {
+      "id": "wiseconn_verdi_alternatives",
+      "name": "WiseConn, Verdi, and legacy controller alternatives",
+      "description": "Direct competitor comparisons — Lumo vs WiseConn (the closest connected-valve competitor, DR 41), Lumo vs Verdi (smaller but SEO-overlapping), alternatives to Rain Bird / Hunter / Tucor / Galcon / Nelson hub-and-spoke controller systems, alternatives to enterprise Netafim NMC or Jain setups for mid-size specialty growers. When to leave a legacy controller system, what to replace it with.",
+      "personas": ["vineyard_manager_viticulturist", "almond_orchard_grower", "berry_grower", "avocado_subtropical_grower"],
+      "priority": "high"
+    }
+  ]
+}

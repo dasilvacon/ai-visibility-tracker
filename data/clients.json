@@ -54,7 +54,51 @@
       },
       "created_at": "2026-03-24T18:58:44.722903",
       "updated_at": "2026-03-24T19:05:00.000000"
+    },
+    {
+      "name": "Saint Javelin",
+      "slug": "saint_javelin",
+      "files": {
+        "keywords": "data/saint_javelin/saint_javelin_keywords.csv",
+        "personas": "data/saint_javelin/saint_javelin_personas.json",
+        "brand_config": "data/saint_javelin/saint_javelin_brand_config.json"
+      },
+      "created_at": "2026-04-19T19:30:00.000000",
+      "updated_at": "2026-04-19T19:30:00.000000"
+    },
+    {
+      "name": "Dripos",
+      "slug": "dripos",
+      "files": {
+        "keywords": "data/dripos/dripos_keywords.csv",
+        "personas": "data/dripos/dripos_personas.json",
+        "brand_config": "data/dripos/dripos_brand_config.json"
+      },
+      "created_at": "2026-04-19T21:00:00.000000",
+      "updated_at": "2026-04-19T21:00:00.000000"
+    },
+    {
+      "name": "ClearEvent",
+      "slug": "clearevent",
+      "files": {
+        "keywords": "data/clearevent/clearevent_keywords.csv",
+        "personas": "data/clearevent/clearevent_personas.json",
+        "brand_config": "data/clearevent/clearevent_brand_config.json"
+      },
+      "created_at": "2026-04-19T21:30:00.000000",
+      "updated_at": "2026-04-19T21:30:00.000000"
+    },
+    {
+      "name": "Lumo",
+      "slug": "lumo",
+      "files": {
+        "keywords": "data/lumo/lumo_keywords.csv",
+        "personas": "data/lumo/lumo_personas.json",
+        "brand_config": "data/lumo/lumo_brand_config.json"
+      },
+      "created_at": "2026-04-19T22:00:00.000000",
+      "updated_at": "2026-04-19T22:00:00.000000"
     }
   ],
-  "last_updated": "2026-03-24T19:05:00.000000"
+  "last_updated": "2026-04-19T22:00:00.000000"
 }

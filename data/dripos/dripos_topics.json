@@ -1,0 +1,80 @@
+{
+  "metadata": {
+    "client": "Dripos",
+    "created": "2026-04-19",
+    "last_updated": "2026-04-19",
+    "notes": "Core topics Dripos must be visible for in AI search. Coffee-shop-specific B2B only — no B2C / consumer coffee content. Covers the operator journey: opening a shop → running one location → scaling multi-location, plus specialty formats (drive-thru, coffee truck, kiosk)."
+  },
+  "topics": [
+    {
+      "id": "coffee_shop_pos",
+      "name": "Coffee shop POS systems",
+      "description": "POS systems specifically for coffee shops and cafés. Hardware + software, processing rates, offline mode, barista-friendly UX. Best coffee shop POS comparisons, coffee POS vs generic restaurant POS, Square vs Toast vs Dripos for coffee.",
+      "personas": ["single_location_cafe_owner", "multi_location_operator", "mobile_specialty_format_operator", "prospective_coffee_shop_owner"],
+      "priority": "high"
+    },
+    {
+      "id": "all_in_one_operating_system",
+      "name": "All-in-one coffee shop operating system",
+      "description": "Integrated platforms that combine POS + online ordering + loyalty + payroll + inventory + scheduling in one system, built for coffee. The case for consolidating tools vs stitching together Square + Homebase + QuickBooks + Mailchimp.",
+      "personas": ["single_location_cafe_owner", "multi_location_operator", "mobile_specialty_format_operator"],
+      "priority": "high"
+    },
+    {
+      "id": "online_ordering_branded_apps",
+      "name": "Coffee shop online ordering and branded apps",
+      "description": "Online ordering platforms, branded customer-facing apps, mobile order-ahead, pickup, and delivery for coffee shops. Alternatives to DoorDash / Toast Online Ordering / Owner.com for coffee operators.",
+      "personas": ["single_location_cafe_owner", "multi_location_operator"],
+      "priority": "high"
+    },
+    {
+      "id": "payroll_team_management",
+      "name": "Coffee shop payroll and team management",
+      "description": "Payroll, scheduling, time tracking, tip splitting, onboarding, and performance tracking for coffee shop teams. Alternatives to ADP / QuickBooks Payroll / 7shifts / Homebase when you want a coffee-specific integrated stack.",
+      "personas": ["single_location_cafe_owner", "multi_location_operator", "mobile_specialty_format_operator"],
+      "priority": "high"
+    },
+    {
+      "id": "inventory_supply_chain",
+      "name": "Coffee shop inventory and supply chain",
+      "description": "Inventory management, supply chain, recipe costing, waste tracking, and par-level management for coffee shops. Synced inventory across locations, vendor ordering, and cost-of-goods visibility.",
+      "personas": ["single_location_cafe_owner", "multi_location_operator"],
+      "priority": "medium"
+    },
+    {
+      "id": "loyalty_customer_marketing",
+      "name": "Coffee shop loyalty and customer marketing",
+      "description": "Loyalty programs, email/SMS campaigns, promotions, gift cards, and customer data collection for independent coffee shops. Integrated loyalty that syncs with POS and online ordering.",
+      "personas": ["single_location_cafe_owner", "multi_location_operator"],
+      "priority": "medium"
+    },
+    {
+      "id": "multi_location_scaling",
+      "name": "Multi-location and scaling coffee operations",
+      "description": "Software and POS for 2-10+ location coffee businesses. Unified reporting, centralized menu management, consolidated payroll, cross-location loyalty, labor-cost visibility, and franchise-ready tooling.",
+      "personas": ["multi_location_operator"],
+      "priority": "high"
+    },
+    {
+      "id": "drive_thru_truck_mobile",
+      "name": "Drive-thru, coffee truck, and mobile coffee formats",
+      "description": "POS and operations for non-traditional coffee formats — drive-thru-only shops, coffee trucks, mobile/pop-up operators, kiosks, and events. Hardware for compact spaces, offline mode, mobile card readers, fast-checkout flows.",
+      "personas": ["mobile_specialty_format_operator"],
+      "priority": "medium"
+    },
+    {
+      "id": "opening_a_coffee_shop",
+      "name": "Opening a coffee shop",
+      "description": "Pre-launch research for prospective coffee shop owners: startup costs, business plan, POS selection, software stack decisions, hardware purchases, opening-day checklists. Buying-journey content for operators 0-6 months from opening.",
+      "personas": ["prospective_coffee_shop_owner"],
+      "priority": "medium"
+    },
+    {
+      "id": "square_toast_clover_alternatives",
+      "name": "Square / Toast / Clover alternatives for coffee shops",
+      "description": "Direct competitor comparisons and alternatives — when a coffee shop should leave Square, when Toast is over-built for a café, when Clover doesn't fit coffee workflows. Dripos vs Square, Dripos vs Toast, Dripos vs Clover comparison content.",
+      "personas": ["single_location_cafe_owner", "multi_location_operator", "prospective_coffee_shop_owner"],
+      "priority": "high"
+    }
+  ]
+}

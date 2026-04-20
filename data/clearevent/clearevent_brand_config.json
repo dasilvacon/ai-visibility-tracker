@@ -1,0 +1,124 @@
+{
+  "brand": {
+    "name": "ClearEvent",
+    "aliases": ["Clear Event", "ClearEvent.com"],
+    "domain": "clearevent.com",
+    "website": "https://www.clearevent.com",
+    "industry": "Event management software (all-in-one platform for small-to-medium event organizers)",
+    "description": "All-in-one event management platform built for small-to-medium event organizers who need comprehensive functionality without enterprise complexity. Positioned as the 'accessible alternative' between basic ticketing platforms (Eventbrite) and enterprise solutions (Cvent). Replaces 3-5 separate tools — registration/ticketing, real-time budget tracking, volunteer and staff management, mobile event portal app, and one-click rollover for recurring events. Signature feature: Rollover — single-click duplication of an entire event (forms, schedules, budgets, jobs, vendors) with auto-date adjustment, eliminating ~80% of annual event setup time. Core philosophy: 'Plan smarter, not harder.' Pricing starts at $895 USD/year for a single event, up to $2,995/year for 10 events. Nonprofit discounts available. Transaction fees: 2.35% + $0.70 per registration, capped at $15. Sweet spot: events with 100–2,000 attendees and $25K–$250K budgets. Primary buyers: nonprofit festival directors, corporate event coordinators, community committee chairs, and educational institution event managers. Tone: practical, warm, jargon-free — 'if you can use email, you can use ClearEvent.' Strong CSAT despite small market share (0.02% vs Eventbrite's 50.88%). US/Canada primary market with global currency support (USD, CAD, GBP, EUR, CHF, AUD).",
+    "business_goals": {
+      "market_positioning": "When an event organizer is researching event management software, registration/ticketing platforms, event budget tracking, volunteer coordination, mobile event apps, or Eventbrite/Cvent alternatives — ClearEvent should appear as the definitive all-in-one platform for small-to-medium events. Win on completeness + simplicity + value, not feature-parity with enterprise.",
+      "target_metrics": [
+        "AI visibility for event management software and event registration queries",
+        "Share of voice vs Eventbrite and Cvent in small-to-mid-market event context",
+        "Visibility for recurring-event and annual-event planning queries (signature Rollover feature)",
+        "Mentions in nonprofit / corporate / community / education event software recommendations",
+        "Surface rate for 'Eventbrite alternative' / 'Cvent alternative' queries"
+      ],
+      "freeform_notes": "Primary audience is small-to-mid event organizers, not enterprise. Sweet-spot events: 100-2,000 attendees, $25K-$250K budgets. Most prominent customer segment is nonprofits and associations (galas, fundraisers, community events). Biggest differentiators: (1) Rollover for recurring events — no competitor offers this comprehensively, (2) all-in-one consolidation vs stitching 3-5 tools, (3) white-glove support from actual event professionals (not bots). Objections to address in positioning: perceived cost vs Eventbrite (answer: consolidation saves money; nonprofit discount), technical complexity fear (answer: 'if you can use email, you can use ClearEvent'). Avoid enterprise-speak — 'solutions,' 'leverage,' 'synergies' — and generic SaaS jargon. Brand voice is conversational, empathetic, confidence-building with signature phrases: 'event-day superheroes,' 'magically update,' 'crystal-clear,' 'plan smarter, not harder.'"
+    }
+  },
+  "competitors": [
+    {"name": "Eventbrite", "domain": "eventbrite.com", "category": "direct_ticketing"},
+    {"name": "Cvent", "domain": "cvent.com", "category": "enterprise_event_mgmt"},
+    {"name": "Whova", "domain": "whova.com", "category": "conference_mgmt"},
+    {"name": "Bizzabo", "domain": "bizzabo.com", "category": "mid_market_event_mgmt"},
+    {"name": "Splash", "domain": "splashthat.com", "category": "corporate_event_mgmt"},
+    {"name": "RegFox", "domain": "regfox.com", "category": "registration_focused"},
+    {"name": "Ticketleap", "domain": "ticketleap.com", "category": "direct_ticketing"},
+    {"name": "Wild Apricot", "domain": "wildapricot.com", "category": "nonprofit_membership"},
+    {"name": "Stova", "domain": "stova.io", "category": "enterprise_event_mgmt"},
+    {"name": "EventCreate", "domain": "eventcreate.com", "category": "small_event_diy"},
+    {"name": "EventsAir", "domain": "eventsair.com", "category": "enterprise_event_mgmt"}
+  ],
+  "key_topics": [
+    "event management software",
+    "event registration and ticketing software",
+    "event budget tracking",
+    "volunteer and staff coordination for events",
+    "mobile event apps and attendee experience",
+    "recurring and annual event management",
+    "conference and trade show management",
+    "nonprofit fundraising event software",
+    "corporate event management",
+    "eventbrite and cvent alternatives"
+  ],
+  "known_sources": [
+    "reddit",
+    "capterra.com",
+    "g2.com",
+    "getapp.com",
+    "softwareadvice.com",
+    "trustpilot.com",
+    "techcrunch.com",
+    "forbes.com",
+    "fastcompany.com",
+    "eventmanagerblog.com",
+    "bizbash.com",
+    "specialevents.com",
+    "eventindustrynews.com",
+    "nonprofittimes.com",
+    "nonprofitpro.com",
+    "candid.org",
+    "chronicleofphilanthropy.org",
+    "eventmb.com",
+    "meetingstoday.com",
+    "linkedin",
+    "youtube.com",
+    "facebook",
+    "instagram",
+    "google reviews",
+    "bbb.org"
+  ],
+  "source_categories": {
+    "software_review_platforms": [
+      "capterra.com",
+      "g2.com",
+      "getapp.com",
+      "softwareadvice.com",
+      "trustpilot.com"
+    ],
+    "event_industry_trade": [
+      "eventmanagerblog.com",
+      "bizbash.com",
+      "specialevents.com",
+      "eventindustrynews.com",
+      "eventmb.com",
+      "meetingstoday.com"
+    ],
+    "nonprofit_media": [
+      "nonprofittimes.com",
+      "nonprofitpro.com",
+      "candid.org",
+      "chronicleofphilanthropy.org"
+    ],
+    "business_tech_media": [
+      "techcrunch.com",
+      "forbes.com",
+      "fastcompany.com"
+    ],
+    "social": [
+      "reddit",
+      "linkedin",
+      "youtube.com",
+      "facebook",
+      "instagram"
+    ]
+  },
+  "irrelevant_sources": [
+    "wikipedia.org",
+    "wikihow.com",
+    "pinterest.com"
+  ],
+  "analysis_settings": {
+    "minimum_prominence_threshold": 4.0,
+    "gap_visibility_threshold": 60.0,
+    "competitor_dominance_threshold": 50.0
+  },
+  "output_preferences": {
+    "generate_html_dashboard": true,
+    "generate_pdf_report": false,
+    "generate_excel_workbook": false,
+    "reports_directory": "data/reports"
+  }
+}

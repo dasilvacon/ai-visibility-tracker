@@ -1,0 +1,60 @@
+{
+  "personas": [
+    {
+      "id": "single_location_cafe_owner",
+      "name": "Single-Location Café Owner",
+      "weight": 0.35,
+      "description": "Independent owner-operator of a single coffee shop — counter-service or full-kitchen café. Typically 1-8 employees, running on Square or a legacy POS, actively frustrated by stitching together multiple tools (POS + scheduling + payroll + loyalty). Researches POS and software upgrades during slow seasons. Cares about total cost of ownership (processing rates, base fees, hardware), speed of switching, and whether their baristas can learn the system quickly. Reads Sprudge, follows coffee operators on Instagram, active in coffee shop owner subreddits and Facebook groups. Cause of switching is usually: Square is too generic, Toast is too restaurant-y, or the current stack is fragmented.",
+      "primary_motivations": [
+        "Replace a generic POS (Square) or restaurant POS (Toast) with something built for coffee",
+        "Stop paying for 4-5 separate tools when one could do it",
+        "Reduce processing rates and surprise fees",
+        "Get fast, US-based support when something breaks mid-rush"
+      ],
+      "typical_products": ["coffee shop pos", "cafe pos software", "coffee shop software", "coffee shop loyalty program", "branded coffee app", "online ordering"],
+      "competitor_reference": ["Square", "Toast", "Clover", "TouchBistro", "Lightspeed"]
+    },
+    {
+      "id": "multi_location_operator",
+      "name": "Multi-Location / Growth-Stage Operator",
+      "weight": 0.30,
+      "description": "Owner or operations lead running 2-5 coffee shop locations, often with a mix of formats (one flagship café + a drive-thru + a kiosk, or 3-4 drive-thrus). 8+ employees per location. This is Dripos's most profitable customer segment. Needs unified reporting across locations, synced inventory, consolidated payroll, central loyalty, and labor-cost visibility. Pain point: their current stack works at 1 location but breaks at 3 — data doesn't roll up, menu changes have to be made 4 times, payroll is a nightmare. Has an ops manager or finance lead involved in the decision. Often evaluating Toast or Lightspeed's multi-location tooling against Dripos.",
+      "primary_motivations": [
+        "Unified reporting, menu management, and inventory across all locations",
+        "Consolidated payroll, scheduling, and labor-cost tracking",
+        "Central customer loyalty that works across every shop",
+        "A platform that scales from 2 to 10+ locations without re-platforming"
+      ],
+      "typical_products": ["multi-location pos", "coffee shop operating system", "coffee shop payroll", "coffee shop inventory management", "coffee shop scheduling software", "coffee shop management software"],
+      "competitor_reference": ["Toast", "Lightspeed", "SpotOn", "Square for Restaurants", "7shifts", "Homebase"]
+    },
+    {
+      "id": "mobile_specialty_format_operator",
+      "name": "Mobile / Specialty Format Operator",
+      "weight": 0.15,
+      "description": "Coffee truck, drive-thru-only, kiosk, or pop-up/events operator. Different hardware and workflow needs than a brick-and-mortar café: needs offline mode, fast checkout, compact hardware, tablet-first POS, and often mobile card readers. Drive-thru operators in particular want line-busting kiosks or second-window hardware. Pop-up and event operators want quick setup and teardown. Cares intensely about reliability during peak rush and whether the POS works without wifi. Buys on format-fit first, feature-depth second.",
+      "primary_motivations": [
+        "POS hardware that fits a coffee truck, drive-thru window, or pop-up",
+        "Offline mode and mobile card reader support",
+        "Fast-checkout workflows tuned for drive-thru or high-volume mobile setups",
+        "Kitchen display systems and second-screen setups for drive-thru"
+      ],
+      "typical_products": ["coffee truck pos", "drive-through pos system", "mobile pos system", "coffee shop kiosk", "kitchen display system", "pos hardware"],
+      "competitor_reference": ["Square", "Clover", "Toast", "Lightspeed"]
+    },
+    {
+      "id": "prospective_coffee_shop_owner",
+      "name": "Prospective Coffee Shop Owner",
+      "weight": 0.20,
+      "description": "Future coffee shop owner in the planning or build-out phase — hasn't opened yet, or is 0-6 months from opening. Researching 'opening a coffee shop,' startup costs, what software to use, what POS to buy. Often first-time small business owner. Reads business plans, listens to operator podcasts, follows coffee shop startup creators on TikTok. Buys POS and software 2-4 weeks before opening, heavily influenced by recommendations from established operators and AI-powered comparison content. Cost-sensitive (not yet generating revenue) but values a platform they won't have to rip out at 3 locations.",
+      "primary_motivations": [
+        "Pick the right POS and software before opening day",
+        "Understand total cost of ownership (hardware, software, processing)",
+        "Avoid the mistake of choosing a POS they'll have to switch in 2 years",
+        "Get operational guidance from coffee-specific sources, not generic restaurant advice"
+      ],
+      "typical_products": ["opening a coffee shop", "coffee shop pos cost", "coffee shop pos pricing", "best coffee shop pos", "coffee shop software", "cafe pos system"],
+      "competitor_reference": ["Square", "Toast", "Clover", "Owner.com"]
+    }
+  ]
+}
