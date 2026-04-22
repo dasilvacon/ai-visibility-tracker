@@ -1,0 +1,17 @@
+# Cloud Build config for the weekly job image.
+# Used because `gcloud builds submit --tag` assumes a file literally named
+# "Dockerfile", and we need to build from "Dockerfile.job" to keep it
+# separate from the main Streamlit Dockerfile.
+
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile.job'
+      - '-t'
+      - '${_IMAGE}'
+      - '.'
+
+images:
+  - '${_IMAGE}'

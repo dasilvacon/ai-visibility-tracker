@@ -532,9 +532,26 @@ class VisibilityTracker:
 
         if isinstance(competitors_raw, dict):
             # New format: {'expected': [...], 'discovered': [...]}
+            # `expected` is the human-curated competitor list we trust for
+            # scoring and reporting. `discovered` is auto-populated each run by
+            # a regex in CompetitorAnalyzer.find_all_brands_mentioned — it's
+            # noisy (geographic terms like "Ukraine", product-category nouns
+            # like "Palette", verbs like "Give" all get captured). Feeding
+            # `discovered` straight back into the scorer turns those false
+            # positives into "competitors" that dominate the competitive
+            # landscape table.
+            #
+            # Fix: only use discovered entries that have been manually reviewed
+            # and flipped to promoted_to_expected=True. Everything else stays
+            # in brand_config as a staging area for Tiffany's review but does
+            # NOT feed the scorer.
             expected = competitors_raw.get('expected', [])
             discovered = competitors_raw.get('discovered', [])
-            all_competitors = expected + discovered
+            promoted_discovered = [
+                c for c in discovered
+                if isinstance(c, dict) and c.get('promoted_to_expected') is True
+            ]
+            all_competitors = expected + promoted_discovered
 
             for comp in all_competitors:
                 if isinstance(comp, dict) and 'name' in comp:
@@ -1257,7 +1274,7 @@ class VisibilityTracker:
                 lines.append(f"   Your brand: {source['mentions_your_brand']} mentions ({source['brand_mention_rate']}%)")
                 lines.append(f"   Competitors: {source['competitor_count']} mentions ({source['competitor_rate']}%)")
                 if source.get('top_competitor'):
-                    lines.append(f"   Top competitor: {source['top_competitor']} ({source['top_competitor_mentions']} mentions)")
+                    lines.append(f"   Top competitor: {source.get('top_competitor')} ({source.get('top_competitor_mentions', 0)} mentions)")
                 if source.get('example_urls'):
                     lines.append(f"   Example: {source['example_urls'][0]}")
                 lines.append("")
@@ -1281,7 +1298,7 @@ class VisibilityTracker:
                 lines.append(f"   Your brand: {target['mentions_your_brand']} mentions ({target['brand_mention_rate']}%)")
                 lines.append(f"   Competitors: {target['competitor_count']} mentions ({target['competitor_rate']}%)")
                 if target.get('top_competitor'):
-                    lines.append(f"   Top competitor: {target['top_competitor']} ({target['top_competitor_mentions']} mentions)")
+                    lines.append(f"   Top competitor: {target.get('top_competitor')} ({target.get('top_competitor_mentions', 0)} mentions)")
 
                 # Suggested action
                 lines.append("")

@@ -32,8 +32,11 @@ JOB_IMAGE="gcr.io/${PROJECT_ID}/ai-visibility-weekly-job"
 SERVICE_ACCOUNT="${WEEKLY_RUNNER_SA:-weekly-runner@${PROJECT_ID}.iam.gserviceaccount.com}"
 SCHEDULER_SA="${SCHEDULER_SA:-scheduler-invoker@${PROJECT_ID}.iam.gserviceaccount.com}"
 
-# 4h task timeout — enough for ~500 prompts × 3 platforms with retries
-TASK_TIMEOUT="14400s"
+# 10h task timeout — 500 prompts × 5 platforms ≈ 7h at ~50s/prompt, 3h buffer.
+# DO NOT lower this without first adding resume-from-last-prompt to main.py —
+# Cloud Run retries restart from scratch, so splitting a 7h workload into two
+# 4h attempts completes zero work (learned 2026-04-21).
+TASK_TIMEOUT="36000s"
 MEMORY="2Gi"
 CPU="2"
 
@@ -91,7 +94,10 @@ echo -e "${GREEN}✓ APIs enabled${NC}"
 # ---------- build the job image ----------
 echo ""
 echo -e "${BLUE}→ Building job image (3-5 minutes)...${NC}"
-gcloud builds submit --tag ${JOB_IMAGE} --file=Dockerfile.job .
+gcloud builds submit \
+    --config=cloudbuild.job.yaml \
+    --substitutions=_IMAGE=${JOB_IMAGE} \
+    .
 echo -e "${GREEN}✓ Image built: ${JOB_IMAGE}${NC}"
 
 # ---------- deploy one job + scheduler per client ----------
@@ -115,7 +121,7 @@ for entry in "${CLIENTS[@]}"; do
             --memory=${MEMORY} \
             --cpu=${CPU} \
             --task-timeout=${TASK_TIMEOUT} \
-            --max-retries=1 \
+            --max-retries=0 \
             --service-account=${SERVICE_ACCOUNT} \
             --set-env-vars="CLIENT_SLUG=${SLUG},GOOGLE_CLOUD_PROJECT=${PROJECT_ID}" \
             --set-secrets="/app/.streamlit/secrets.toml=streamlit-secrets:latest"
@@ -127,7 +133,7 @@ for entry in "${CLIENTS[@]}"; do
             --memory=${MEMORY} \
             --cpu=${CPU} \
             --task-timeout=${TASK_TIMEOUT} \
-            --max-retries=1 \
+            --max-retries=0 \
             --service-account=${SERVICE_ACCOUNT} \
             --set-env-vars="CLIENT_SLUG=${SLUG},GOOGLE_CLOUD_PROJECT=${PROJECT_ID}" \
             --set-secrets="/app/.streamlit/secrets.toml=streamlit-secrets:latest"

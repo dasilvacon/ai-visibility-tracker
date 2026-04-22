@@ -125,6 +125,16 @@ def download_client_data(slug: str) -> dict:
     if not prompts.exists():
         raise FileNotFoundError(f"Missing prompts: {prompts}")
 
+    # Also pull any existing test-results for this client.
+    # - First runs: no-op (nothing in GCS yet, function returns cleanly).
+    # - Regen runs: main.py's resume logic sees all tests complete → skips the
+    #   7h prompt loop and jumps to generate_reports + analyze_results,
+    #   which regenerates HTML/PDF/CSVs from the existing test data.
+    try:
+        gcs.download_test_results(client_slug=slug, local_dir=str(DATA_DIR))
+    except Exception as e:
+        log(f"⚠️  download_test_results failed (continuing with fresh run): {e}")
+
     return {"brand_config": str(brand_config), "prompts": str(prompts)}
 
 
