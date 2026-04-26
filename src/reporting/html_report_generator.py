@@ -130,13 +130,21 @@ class HTMLReportGenerator:
         return action_plan, gap_analysis
 
     def _get_performance_label(self, rate: float) -> str:
-        """Get performance label following DaSilva tone guidelines."""
+        """Get performance label following DaSilva tone guidelines.
+
+        Tiers chosen so that any non-zero visibility gets credit. The old
+        threshold returned "Not showing up" for anything under 20%, which
+        labeled real (10-17%) visibility as "not showing up" — actively
+        misleading. Now only true zero gets that label.
+        """
         if rate >= 60:
             return "Strong"
         elif rate >= 40:
             return "Needs work"
         elif rate >= 20:
             return "Weak"
+        elif rate > 0:
+            return "Barely visible"
         else:
             return "Not showing up"
 
@@ -248,13 +256,18 @@ class HTMLReportGenerator:
         # Calculate 90-day target (close 50% of gap - realistic)
         target_visibility = min(visibility_rate + (competitor_rate - visibility_rate) * 0.5, 100)
 
-        # Strategic recommendation based on data
+        # Strategic recommendation based on data.
+        # All percentage formatting uses one decimal place so the Executive
+        # Summary numbers reconcile with the Competitive Landscape section
+        # (which has always used :.1f). Mixing :.0f and :.1f for the same
+        # underlying metric made clients see "9% vs 8.7%" in different
+        # sections and lose trust.
         if chatgpt_rate < 20 and visibility_rate < 30:
-            primary_rec = f"Focus on ChatGPT first - it's 73% of AI users and you're at {chatgpt_rate:.0f}% there. Infrastructure fixes take 2-4 weeks."
+            primary_rec = f"Focus on ChatGPT first - it's 73% of AI users and you're at {chatgpt_rate:.1f}% there. Infrastructure fixes take 2-4 weeks."
         elif visibility_rate >= 60:
-            primary_rec = f"You have strong visibility ({visibility_rate:.0f}%). Focus on improving prominence (currently {prominence:.1f}/10) to become the top recommendation."
+            primary_rec = f"You have strong visibility ({visibility_rate:.1f}%). Focus on improving prominence (currently {prominence:.1f}/10) to become the top recommendation."
         else:
-            primary_rec = f"Most exciting is the untapped potential in AI visibility. You're at {visibility_rate:.0f}% while {top_comp['name']} is at {top_comp['mention_rate']:.0f}% - that gap represents your first-mover advantage."
+            primary_rec = f"Most exciting is the untapped potential in AI visibility. You're at {visibility_rate:.1f}% while {top_comp['name']} is at {top_comp['mention_rate']:.1f}% - that gap represents your first-mover advantage."
 
         # Build citation metric HTML if available
         citation_html = ""
@@ -274,8 +287,8 @@ class HTMLReportGenerator:
         <!-- The Business Impact -->
         <div class="insight" style="background: linear-gradient(135deg, #4D2E3A15 0%, #4D2E3A25 100%); border-left: 4px solid #4D2E3A; padding: 32px; border-radius: 8px; margin: 32px 0;">
             <p style="font-size: 18px; line-height: 1.7; margin: 0; color: #4D2E3A; font-weight: 500;">
-                {brand_name} is at <strong>{visibility_rate:.0f}%</strong> AI visibility while your top competitor ({top_comp['name']}) appears in <strong>{top_comp['mention_rate']:.0f}%</strong> of queries.
-                That <strong>{gap_percentage:.0f}% gap</strong> means potential customers asking AI for recommendations in your space are being directed to competitors instead of you.
+                {brand_name} is at <strong>{visibility_rate:.1f}%</strong> AI visibility while your top competitor ({top_comp['name']}) appears in <strong>{top_comp['mention_rate']:.1f}%</strong> of queries.
+                That <strong>{gap_percentage:.1f}% gap</strong> means potential customers asking AI for recommendations in your space are being directed to competitors instead of you.
             </p>
             <p style="font-size: 16px; line-height: 1.7; margin: 24px 0 0 0; color: #6B5660;">
                 <strong>Primary recommendation:</strong> {primary_rec}
@@ -286,12 +299,12 @@ class HTMLReportGenerator:
         <div class="metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin: 40px 0;">
             <div class="metric-card {'strong' if visibility_rate >= 60 else 'needs-work' if visibility_rate >= 30 else 'weak'}">
                 <div class="metric-label">Visibility Rate <span style="background: #E8E4EC; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 4px;">{momentum_icon} {momentum_label}</span></div>
-                <div class="metric-value">{visibility_rate:.0f}%</div>
+                <div class="metric-value">{visibility_rate:.1f}%</div>
                 <div class="metric-status">{'Strong presence' if visibility_rate >= 60 else 'Room for growth' if visibility_rate >= 30 else 'First-mover opportunity'}</div>
             </div>
             <div class="metric-card {'strong' if asov >= 40 else 'needs-work' if asov >= 20 else 'weak'}">
                 <div class="metric-label">AI Share of Voice</div>
-                <div class="metric-value">{asov:.0f}%</div>
+                <div class="metric-value">{asov:.1f}%</div>
                 <div class="metric-status">{'Market leader' if asov >= 40 else 'Competitive' if asov >= 20 else 'Growth opportunity'}</div>
             </div>
             <div class="metric-card {'strong' if prominence >= 7 else 'needs-work' if prominence >= 4 else 'weak'}">
@@ -2729,7 +2742,7 @@ class HTMLReportGenerator:
             <tr>
                 <td><span class="number">{i}</span></td>
                 <td><strong>{comp['name']}</strong></td>
-                <td>{comp['mention_rate']:.0f}%</td>
+                <td>{comp['mention_rate']:.1f}%</td>
                 <td>{comp['mentions']} mentions</td>
                 <td>{label}</td>
             </tr>
@@ -3859,7 +3872,23 @@ class HTMLReportGenerator:
             </div>
             """
 
-        # Analyze sentiment keywords in responses
+        # Sentiment classification — primary path is LLM-based via Claude
+        # Sonnet 4.6 (handles negation, comparison, "X eliminates Y" patterns
+        # that the keyword classifier got systematically wrong on Lumo and OCO).
+        # If the API is unreachable for any reason, we fall back to the legacy
+        # keyword classifier so the report still renders.
+        try:
+            from src.analysis.llm_sentiment import LLMSentimentClassifier
+            llm_classifier = LLMSentimentClassifier(
+                brand_name=brand_name,
+                client_slug=getattr(self, 'client_slug', None),
+            )
+        except Exception:
+            llm_classifier = None
+
+        # Legacy keyword fallback (used only when LLM classifier returns None
+        # for a particular snippet — typically API key missing or transient
+        # network failure).
         positive_keywords = ['excellent', 'best', 'top', 'premium', 'high-quality', 'recommended', 'favorite',
                             'amazing', 'exceptional', 'outstanding', 'superior', 'leading', 'innovative',
                             'professional', 'luxurious', 'highly', 'perfect', 'great', 'love']
@@ -3894,6 +3923,26 @@ class HTMLReportGenerator:
             context = context.replace('**', '').replace('###', '').replace('##', '').strip()
             # Keep single * for bullets but remove standalone ones
 
+            # Strip Google AI Overview's stringified-dict artifacts. Their raw
+            # API surfaces results as Python-list-of-dicts strings like
+            # `- {'snippet': 'Dripos: This is...'}` and that leaked verbatim
+            # into client-facing sentiment quote cards. Unwrap to just the
+            # snippet text.
+            import re as _re
+            context = _re.sub(
+                r"\{'snippet':\s*'([^']*?)'(?:,\s*'snippet_links':[^}]*?)?\}",
+                r'\1',
+                context,
+            )
+            # Also handle the double-quoted variant
+            context = _re.sub(
+                r'\{"snippet":\s*"([^"]*?)"(?:,\s*"snippet_links":[^}]*?)?\}',
+                r'\1',
+                context,
+            )
+            # Strip the leading "- " that often precedes those dicts
+            context = _re.sub(r'(^|\n)\s*-\s+', r'\1', context).strip()
+
             # Try to start at sentence boundary if possible
             if start > 0:
                 # Look for sentence start (. or newline followed by capital letter)
@@ -3911,10 +3960,23 @@ class HTMLReportGenerator:
                 else:
                     context = context + '...'
 
-            # Determine sentiment based on keywords in the context
-            context_lower = context.lower()
-            has_positive = any(kw in context_lower for kw in positive_keywords)
-            has_negative = any(kw in context_lower for kw in negative_keywords)
+            # Determine sentiment — try the LLM classifier first.
+            sentiment = None
+            if llm_classifier is not None:
+                sentiment = llm_classifier.classify(context)
+
+            # Fall back to keyword classification if the LLM was unavailable
+            # for this snippet (None signals "couldn't classify").
+            if sentiment is None:
+                context_lower = context.lower()
+                has_positive = any(kw in context_lower for kw in positive_keywords)
+                has_negative = any(kw in context_lower for kw in negative_keywords)
+                if has_positive and not has_negative:
+                    sentiment = 'positive'
+                elif has_negative and not has_positive:
+                    sentiment = 'negative'
+                else:
+                    sentiment = 'neutral'
 
             # Get full prompt text — no truncation
             prompt_text = result.get('prompt_text', '') or result.get('prompt', '')
@@ -3934,12 +3996,27 @@ class HTMLReportGenerator:
                 'prompt': prompt_highlighted
             }
 
-            if has_positive and not has_negative:
+            if sentiment == 'positive':
                 positive_mentions.append(sample)
-            elif has_negative and not has_positive:
+            elif sentiment == 'negative':
                 negative_mentions.append(sample)
             else:
                 neutral_mentions.append(sample)
+
+        # Persist the classifier cache so subsequent regens don't re-classify
+        # unchanged snippets. Failure to flush is non-fatal — worst case we
+        # re-pay for those calls next regen.
+        if llm_classifier is not None:
+            try:
+                llm_classifier.flush()
+                stats = llm_classifier.stats()
+                print(
+                    f"  Sentiment classifier: {stats['calls']} new calls, "
+                    f"{stats['cache_hits']} cache hits, "
+                    f"{stats['fallbacks']} fallbacks (cache size: {stats['cache_size']})"
+                )
+            except Exception:
+                pass
 
         # Calculate distribution
         total_analyzed = len(positive_mentions) + len(neutral_mentions) + len(negative_mentions)
@@ -5159,19 +5236,6 @@ class HTMLReportGenerator:
                     Based on competitive analysis, these are the highest-impact areas where you can catch up to leaders in your space:
                 </p>
                 {opportunities_html}
-            </div>
-        </div>
-
-        <div class="accordion-group" style="margin-top: 24px;">
-            <button class="accordion-button" onclick="toggleAccordion(this)">
-                <span>📊 Want the Detailed Tactical Plan?</span>
-                <span class="accordion-icon">▼</span>
-            </button>
-            <div class="accordion-content">
-                <p style="color: #6B5660; line-height: 1.6; margin: 16px 0;">
-                    This report shows you the strategic overview. DaSilva Consulting has a detailed, proprietary action plan
-                    with specific content briefs, technical SEO requirements, and distribution strategies for each opportunity.
-                </p>
             </div>
         </div>
         """

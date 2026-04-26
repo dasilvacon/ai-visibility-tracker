@@ -272,6 +272,17 @@ class CompetitorAnalyzer:
             reverse=True
         )
 
+        # Filter out the brand itself from the competitor ranking — historically
+        # the brand sometimes appeared in its own competitor list (e.g. Saint
+        # Javelin showed Saint Javelin at 12.2% as a "competitor"). The brand
+        # gets its own dedicated row in the bar chart via `brand_visibility_rate`
+        # so it shouldn't also appear in this list.
+        brand_name_lower = self.brand_name.lower().strip()
+        ranked_competitors = [
+            (comp, stats) for comp, stats in ranked_competitors
+            if comp.lower().strip() != brand_name_lower
+        ]
+
         competitive_metrics['top_competitors'] = [
             {
                 'name': comp,
