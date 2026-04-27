@@ -32,11 +32,15 @@ JOB_IMAGE="gcr.io/${PROJECT_ID}/ai-visibility-weekly-job"
 SERVICE_ACCOUNT="${WEEKLY_RUNNER_SA:-weekly-runner@${PROJECT_ID}.iam.gserviceaccount.com}"
 SCHEDULER_SA="${SCHEDULER_SA:-scheduler-invoker@${PROJECT_ID}.iam.gserviceaccount.com}"
 
-# 10h task timeout — 500 prompts × 5 platforms ≈ 7h at ~50s/prompt, 3h buffer.
+# 14h task timeout — 500 prompts × 5 platforms ≈ 7h at ~50s/prompt, plus
+# substantial buffer for the upload step (NB's first fresh pass crashed
+# right at 10h with main.py done but the GCS upload still running — we
+# learned 2026-04-27 that with 3000+ test result files in tests/ the
+# weekly snapshot upload can take 30+ minutes).
 # DO NOT lower this without first adding resume-from-last-prompt to main.py —
 # Cloud Run retries restart from scratch, so splitting a 7h workload into two
 # 4h attempts completes zero work (learned 2026-04-21).
-TASK_TIMEOUT="36000s"
+TASK_TIMEOUT="50400s"
 MEMORY="2Gi"
 CPU="2"
 
