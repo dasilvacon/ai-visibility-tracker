@@ -42,19 +42,34 @@ class HistoricalTracker:
                            client_name: str,
                            visibility_summary: Dict[str, Any],
                            platform_results: Optional[Dict[str, Dict]] = None,
-                           month: Optional[str] = None) -> None:
+                           month: Optional[str] = None,
+                           week: Optional[str] = None) -> None:
         """
-        Save monthly scores for a client.
+        Save scores for a client at both monthly AND weekly granularity.
+
+        We store under two key formats in the same client dict:
+          - "YYYY-MM"    → monthly rollup (overwrites previous run in same month)
+          - "YYYY-WNN"   → weekly snapshot (one entry per ISO week — preserved
+                           across multiple runs because each week gets its own key)
+
+        This is intentionally additive: the dashboard's monthly trends still
+        work, AND we can now compute week-over-week deltas for the "what
+        changed this week" panel.
 
         Args:
             client_name: Name of the client
             visibility_summary: Summary dict from VisibilityScorer.get_visibility_summary()
             platform_results: Optional dict of platform-specific results
             month: Optional month string (YYYY-MM), defaults to current month
+            week: Optional ISO week string (YYYY-WNN), defaults to current week
         """
-        # Get month key
+        now = datetime.now()
+        # Get keys
         if month is None:
-            month = datetime.now().strftime("%Y-%m")
+            month = now.strftime("%Y-%m")
+        if week is None:
+            year, iso_week, _ = now.isocalendar()
+            week = f"{year}-W{iso_week:02d}"
 
         # Load existing history
         history = self._load_history()
@@ -70,13 +85,21 @@ class HistoricalTracker:
         total_mentions = brand_mentions + competitor_mentions
         share_of_voice = (brand_mentions / total_mentions * 100) if total_mentions > 0 else 0
 
-        # Extract key metrics
-        monthly_data = {
-            'test_date': datetime.now().isoformat(),
+        # Extract key metrics. Note: prominence_rate maps to
+        # average_prominence_score (0-10) when available — the older field
+        # name `average_citation_position` was a misnomer (it's a score, not
+        # a position) and was always 0 if missing.
+        prominence = (
+            visibility_summary.get('average_prominence_score')
+            or visibility_summary.get('average_citation_position', 0)
+        )
+
+        snapshot = {
+            'test_date': now.isoformat(),
             'total_prompts': visibility_summary.get('total_prompts_tested', 0),
             'metrics': {
                 'visibility_rate': round(visibility_summary.get('brand_visibility_rate', 0), 2),
-                'prominence_rate': visibility_summary.get('average_citation_position', 0),
+                'prominence_rate': round(float(prominence), 2),
                 'share_of_voice': round(share_of_voice, 2)
             },
             'detailed_stats': {
@@ -89,25 +112,120 @@ class HistoricalTracker:
 
         # Add platform-specific data if provided
         if platform_results:
-            monthly_data['by_platform'] = {}
+            snapshot['by_platform'] = {}
             for platform, results in platform_results.items():
                 platform_brand_mentions = results.get('brand_mentions', 0)
                 platform_competitor_mentions = results.get('competitor_mentions', 0)
                 platform_total = platform_brand_mentions + platform_competitor_mentions
                 platform_sov = (platform_brand_mentions / platform_total * 100) if platform_total > 0 else 0
 
-                monthly_data['by_platform'][platform] = {
+                snapshot['by_platform'][platform] = {
                     'visibility': round(results.get('visibility_rate', 0), 2),
-                    'prominence': results.get('avg_position', 0),
-                    'share_of_voice': round(platform_sov, 2)
+                    'prominence': round(float(results.get('avg_prominence', results.get('avg_position', 0)) or 0), 2),
+                    'share_of_voice': round(platform_sov, 2),
+                    'total_prompts': results.get('total_prompts', 0),
+                    'brand_mentions': platform_brand_mentions,
                 }
 
-        # Save to history
-        history[client_slug][month] = monthly_data
+        # Save to history under BOTH keys so monthly charts AND weekly deltas work.
+        # Monthly key gets overwritten on each run within the same month (latest
+        # snapshot for the month); weekly key is preserved per ISO week.
+        history[client_slug][month] = snapshot
+        history[client_slug][week] = snapshot
 
         # Write back to file
         with open(self.history_file, 'w') as f:
             json.dump(history, f, indent=2)
+
+    def get_weekly_snapshots(self, client_name: str) -> List[Dict[str, Any]]:
+        """
+        Return all weekly snapshots for a client, sorted oldest-to-newest.
+
+        Each entry has the snapshot dict + the `week` key it was stored under.
+        Used by the 'what changed this week' panel and per-week trend charts.
+        """
+        client_slug = client_name.lower().replace(' ', '_')
+        client_history = self._load_history().get(client_slug, {})
+
+        weekly = []
+        for key, value in client_history.items():
+            # ISO week format: YYYY-WNN (the W is uppercase, position 5)
+            if len(key) == 8 and key[4] == '-' and key[5] == 'W':
+                weekly.append({'week': key, **value})
+
+        # Sort by week key — works because YYYY-WNN sorts naturally
+        weekly.sort(key=lambda e: e['week'])
+        return weekly
+
+    def get_week_over_week_delta(self, client_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Compare the most recent week to the prior week for the 'what changed
+        this week' alert panel. Returns None if we don't have at least 2
+        weekly snapshots yet.
+
+        Returned shape:
+            {
+                'current_week':  'YYYY-WNN',
+                'previous_week': 'YYYY-WNN',
+                'metrics': {
+                    'visibility_rate': {'current': X, 'previous': Y, 'delta': Z, 'pct_change': P},
+                    'prominence_rate': {...},
+                    'share_of_voice': {...},
+                },
+                'new_competitors':  [...]   # in current, not in previous
+                'lost_competitors': [...]   # in previous, not in current
+                'platforms_changed': {platform: {'visibility_delta': X}, ...}
+            }
+        """
+        weekly = self.get_weekly_snapshots(client_name)
+        if len(weekly) < 2:
+            return None
+
+        previous, current = weekly[-2], weekly[-1]
+        prev_metrics = previous.get('metrics', {})
+        curr_metrics = current.get('metrics', {})
+
+        def _delta(metric_key: str) -> Dict[str, float]:
+            curr = float(curr_metrics.get(metric_key, 0) or 0)
+            prev = float(prev_metrics.get(metric_key, 0) or 0)
+            delta = curr - prev
+            pct = (delta / prev * 100) if prev else 0.0
+            return {
+                'current': round(curr, 2),
+                'previous': round(prev, 2),
+                'delta': round(delta, 2),
+                'pct_change': round(pct, 1),
+            }
+
+        # Compute new and lost competitors (set diff between weekly snapshots)
+        prev_comps = set(previous.get('detailed_stats', {}).get('competitors_encountered', []) or [])
+        curr_comps = set(current.get('detailed_stats', {}).get('competitors_encountered', []) or [])
+
+        # Platform-level deltas (only for platforms present in both snapshots)
+        platforms_changed = {}
+        prev_platforms = previous.get('by_platform', {}) or {}
+        curr_platforms = current.get('by_platform', {}) or {}
+        for plat in set(prev_platforms) | set(curr_platforms):
+            p = prev_platforms.get(plat, {})
+            c = curr_platforms.get(plat, {})
+            platforms_changed[plat] = {
+                'visibility_current': round(float(c.get('visibility', 0) or 0), 2),
+                'visibility_previous': round(float(p.get('visibility', 0) or 0), 2),
+                'visibility_delta': round(float(c.get('visibility', 0) or 0) - float(p.get('visibility', 0) or 0), 2),
+            }
+
+        return {
+            'current_week': current.get('week'),
+            'previous_week': previous.get('week'),
+            'metrics': {
+                'visibility_rate': _delta('visibility_rate'),
+                'prominence_rate': _delta('prominence_rate'),
+                'share_of_voice': _delta('share_of_voice'),
+            },
+            'new_competitors': sorted(curr_comps - prev_comps),
+            'lost_competitors': sorted(prev_comps - curr_comps),
+            'platforms_changed': platforms_changed,
+        }
 
     def _load_history(self) -> Dict:
         """Load history from file."""

@@ -763,6 +763,47 @@ class VisibilityTracker:
         gap_analysis['prioritized_audiences'] = prioritized_audiences
         gap_analysis['prioritized_content_gaps'] = prioritized_content_gaps
 
+        # Compute per-platform breakdown for time-series tracking. We aggregate
+        # scored_results by platform so HistoricalTracker can store snapshot
+        # data per platform — used by the dashboard's platform trend lines
+        # and the "what changed this week" panel.
+        platform_results: Dict[str, Dict[str, Any]] = {}
+        try:
+            from collections import defaultdict
+            buckets = defaultdict(lambda: {
+                'total_prompts': 0,
+                'brand_mentions': 0,
+                'competitor_mentions': 0,
+                'prominence_sum': 0.0,
+                'prominence_count': 0,
+            })
+            for r in scored_results:
+                platform = r.get('platform', 'unknown')
+                vis = r.get('visibility', {}) or {}
+                buckets[platform]['total_prompts'] += 1
+                if vis.get('brand_mentioned'):
+                    buckets[platform]['brand_mentions'] += 1
+                if vis.get('competitors_mentioned'):
+                    buckets[platform]['competitor_mentions'] += 1
+                prom = vis.get('prominence_score')
+                if prom is not None:
+                    buckets[platform]['prominence_sum'] += float(prom)
+                    buckets[platform]['prominence_count'] += 1
+
+            for platform, b in buckets.items():
+                vis_rate = (b['brand_mentions'] / b['total_prompts'] * 100) if b['total_prompts'] else 0.0
+                avg_prom = (b['prominence_sum'] / b['prominence_count']) if b['prominence_count'] else 0.0
+                platform_results[platform] = {
+                    'total_prompts': b['total_prompts'],
+                    'brand_mentions': b['brand_mentions'],
+                    'competitor_mentions': b['competitor_mentions'],
+                    'visibility_rate': vis_rate,
+                    'avg_prominence': avg_prom,
+                }
+        except Exception as e:
+            print(f"⚠️  Could not compute per-platform breakdown: {e}")
+            platform_results = {}
+
         # Save historical tracking data and get trend data for momentum labels
         trend_data = None
         if self.client_slug:
@@ -772,13 +813,19 @@ class VisibilityTracker:
                 hist_tracker.save_monthly_scores(
                     client_name=brand_name,
                     visibility_summary=visibility_summary,
-                    platform_results=None  # Platform breakdown not available in main.py
+                    platform_results=platform_results or None,
                 )
-                print("✓ Historical tracking data saved")
+                print(f"✓ Historical tracking data saved (with {len(platform_results)} platforms)")
                 # Get trend data for momentum labels in report
                 trend_data = hist_tracker.get_latest_vs_previous(brand_name)
                 if trend_data:
                     print(f"   ✓ Trend comparison: {trend_data.get('trend', 'new')}")
+                # Also log week-over-week delta if we have it (informational only — the
+                # report consumers don't use this yet; the dashboard panel will)
+                wow = hist_tracker.get_week_over_week_delta(brand_name)
+                if wow:
+                    vis_d = wow['metrics']['visibility_rate']['delta']
+                    print(f"   ✓ Week-over-week visibility delta: {vis_d:+.1f}%")
             except Exception as e:
                 print(f"⚠️  Could not save historical data: {str(e)}")
 

@@ -68,6 +68,90 @@ def render():
         """)
         return
 
+    # ============================================================
+    # WHAT CHANGED THIS WEEK
+    # ============================================================
+    # Lead component — turns the dashboard from "static snapshot" into
+    # "what's new this week." Only renders if we have at least 2 weekly
+    # snapshots in the data (otherwise there's no week-over-week to show).
+    wow = tracker.get_week_over_week_delta(client_name)
+
+    if wow:
+        st.markdown("## 🔔 What Changed This Week")
+        st.caption(
+            f"Comparing **{wow['current_week']}** to **{wow['previous_week']}**. "
+            "Green = improvement, red = drop, gray = unchanged."
+        )
+
+        # Three big delta cards at the top
+        m = wow['metrics']
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            d = m['visibility_rate']
+            st.metric(
+                "Visibility Rate",
+                f"{d['current']:.1f}%",
+                f"{d['delta']:+.1f}% pts",
+                delta_color="normal",
+            )
+            st.caption(f"Was {d['previous']:.1f}% last week")
+
+        with col2:
+            d = m['prominence_rate']
+            st.metric(
+                "Prominence Score",
+                f"{d['current']:.1f}/10",
+                f"{d['delta']:+.1f}",
+                delta_color="normal",
+            )
+            st.caption(f"Was {d['previous']:.1f}/10 last week")
+
+        with col3:
+            d = m['share_of_voice']
+            st.metric(
+                "Share of Voice",
+                f"{d['current']:.1f}%",
+                f"{d['delta']:+.1f}% pts",
+                delta_color="normal",
+            )
+            st.caption(f"Was {d['previous']:.1f}% last week")
+
+        # Notable changes — surface non-metric signals worth flagging
+        notable = []
+        if wow['new_competitors']:
+            notable.append(
+                f"🆕 **New competitors detected:** {', '.join(wow['new_competitors'])}"
+            )
+        if wow['lost_competitors']:
+            notable.append(
+                f"⏬ **Stopped appearing alongside:** {', '.join(wow['lost_competitors'])}"
+            )
+
+        # Platform shifts (only call out platforms with notable swings)
+        platform_swings = []
+        for plat, d in (wow.get('platforms_changed') or {}).items():
+            delta = d['visibility_delta']
+            if abs(delta) >= 2:  # ≥2 percentage points
+                arrow = "↑" if delta > 0 else "↓"
+                platform_swings.append(
+                    f"{arrow} **{plat}**: {d['visibility_previous']:.1f}% → {d['visibility_current']:.1f}% "
+                    f"({delta:+.1f} pts)"
+                )
+        if platform_swings:
+            notable.append("📡 **Platform shifts:** " + " · ".join(platform_swings))
+
+        if notable:
+            for line in notable:
+                st.markdown(line)
+        else:
+            st.caption("No new competitors or significant platform shifts this week.")
+
+        st.markdown("---")
+
+    # ============================================================
+    # MONTHLY COMPARISON (existing)
+    # ============================================================
     # Show summary stats
     st.markdown("## 📊 Latest vs. Previous Month")
 
@@ -230,6 +314,93 @@ def render():
                     st.write(f"**{d['month']}:** {d['value']}%")
 
     st.markdown("---")
+
+    # ============================================================
+    # WEEKLY TREND + PER-PLATFORM BREAKDOWN
+    # ============================================================
+    weekly_snapshots = tracker.get_weekly_snapshots(client_name)
+    if len(weekly_snapshots) >= 2:
+        st.markdown("## 📅 Weekly Visibility Trend")
+        st.caption(
+            "Week-over-week visibility for the last "
+            f"{len(weekly_snapshots)} weeks of data we have. "
+            "More granular than the monthly chart above — "
+            "shows what's moving inside the month."
+        )
+
+        # Composite chart: visibility rate per week with platform overlays
+        fig = go.Figure()
+
+        weeks = [s['week'] for s in weekly_snapshots]
+        overall_visibility = [s['metrics']['visibility_rate'] for s in weekly_snapshots]
+
+        fig.add_trace(go.Scatter(
+            x=weeks,
+            y=overall_visibility,
+            mode='lines+markers',
+            name='Overall',
+            line=dict(color=DARK_PURPLE, width=4),
+            marker=dict(size=12),
+        ))
+
+        # Find every platform that appears in any week's snapshot
+        all_platforms = set()
+        for s in weekly_snapshots:
+            for p in (s.get('by_platform') or {}):
+                all_platforms.add(p)
+
+        # Distinct colors per platform — readable on light bg
+        platform_palette = [
+            '#10b981', '#3b82f6', '#f59e0b',
+            '#ef4444', '#8b5cf6', '#06b6d4',
+        ]
+        for i, plat in enumerate(sorted(all_platforms)):
+            # For weeks where this platform is missing, plot as None so the
+            # line breaks instead of dropping to zero (visually misleading)
+            ys = [
+                (s.get('by_platform') or {}).get(plat, {}).get('visibility')
+                for s in weekly_snapshots
+            ]
+            fig.add_trace(go.Scatter(
+                x=weeks,
+                y=ys,
+                mode='lines+markers',
+                name=plat.replace('_', ' ').title(),
+                line=dict(color=platform_palette[i % len(platform_palette)], width=2, dash='dot'),
+                marker=dict(size=7),
+                connectgaps=False,
+            ))
+
+        fig.update_layout(
+            xaxis_title="ISO Week",
+            yaxis_title="Visibility Rate (%)",
+            yaxis_range=[0, max(100, max(overall_visibility) + 10) if overall_visibility else 100],
+            height=440,
+            hovermode='x unified',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+        # Data table for the curious
+        with st.expander("📊 View Weekly Data Table"):
+            import pandas as pd
+            rows = []
+            for s in weekly_snapshots:
+                row = {
+                    'Week': s['week'],
+                    'Visibility %': s['metrics']['visibility_rate'],
+                    'Prominence': s['metrics']['prominence_rate'],
+                    'SOV %': s['metrics']['share_of_voice'],
+                    'Total Prompts': s.get('total_prompts', 0),
+                }
+                for p in sorted(all_platforms):
+                    pdata = (s.get('by_platform') or {}).get(p, {})
+                    row[f"{p} %"] = pdata.get('visibility', '—')
+                rows.append(row)
+            st.dataframe(pd.DataFrame(rows), use_container_width=True)
+
+        st.markdown("---")
 
     # All Months List
     st.markdown("## 📅 All Test Runs")
