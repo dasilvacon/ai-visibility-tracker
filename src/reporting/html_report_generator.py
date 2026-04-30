@@ -2646,6 +2646,8 @@ class HTMLReportGenerator:
 
         <div id="sentiment" class="tab-content">
             {self._build_sentiment_analysis_tab(brand_name, scored_results)}
+
+            {self._build_ai_positioning_profile(brand_name, scored_results)}
         </div>
 
         <div id="competitive-intel" class="tab-content">
@@ -4478,6 +4480,205 @@ class HTMLReportGenerator:
                     {advice}
                 </p>
             </div>
+        """
+
+    def _build_ai_positioning_profile(
+        self,
+        brand_name: str,
+        scored_results: List[Dict[str, Any]],
+        competitor_names: Optional[List[str]] = None,
+    ) -> str:
+        """
+        Phase 4: AI Positioning Profile — surface the actual language AI uses
+        about the brand and its top competitors, the phrases AI repeats
+        verbatim, and the co-mention "neighborhood" each brand sits in.
+
+        Everything here is deterministic text extraction over response text —
+        no inferred narrative. Each surfaced phrase / descriptor is tied to
+        an occurrence count so the user can see the underlying evidence.
+        """
+        import html as _html
+
+        try:
+            from src.analysis.positioning_analyzer import analyze_positioning
+        except Exception as e:
+            return f'<!-- positioning_analyzer import failed: {e} -->'
+
+        if not scored_results:
+            return ''
+
+        result = analyze_positioning(
+            scored_results,
+            brand_name,
+            competitor_names=competitor_names,
+            top_competitors_to_profile=4,
+        )
+
+        brand_profile = result['brand_profile']
+        comp_profiles = result['competitor_profiles']
+        network = result['co_mention_network']
+        sample_size = result['sample_size']
+
+        # If we don't have any usable signal, suppress the whole section.
+        # The new section should never render an empty box.
+        if (
+            brand_profile['mention_count'] == 0
+            and not comp_profiles
+            and not network
+        ):
+            return ''
+
+        # ---- Per-brand profile card ----
+        def _render_profile_card(name: str, profile: Dict[str, Any], is_brand: bool) -> str:
+            descriptors = profile.get('descriptors', {}) or {}
+            phrases = profile.get('phrases', []) or []
+            mention_count = profile.get('mention_count', 0)
+
+            # Top descriptors as colored chips, sorted by count
+            sorted_desc = sorted(descriptors.items(), key=lambda kv: -kv[1])
+            chip_color = '#4D2E3A' if is_brand else '#6B5660'
+            chip_bg = '#E8D4DA' if is_brand else '#EFEAEA'
+            chips = ''
+            for word, count in sorted_desc[:10]:
+                chips += (
+                    f'<span style="display: inline-block; padding: 4px 10px; '
+                    f'margin: 0 6px 6px 0; background: {chip_bg}; color: {chip_color}; '
+                    f'border-radius: 12px; font-size: 12px; font-weight: 500;">'
+                    f'{_html.escape(word)} <span style="opacity: 0.7;">×{count}</span>'
+                    f'</span>'
+                )
+            if not chips:
+                chips = '<span style="color: #6B5660; font-size: 13px; font-style: italic;">No positioning descriptors detected near {n} mention(s) this run.</span>'.format(
+                    n=mention_count
+                )
+
+            # Top recurring phrases — quoted to make clear this is verbatim
+            phrase_rows = ''
+            if phrases:
+                for p in phrases[:5]:
+                    phrase_rows += (
+                        f'<li style="margin-bottom: 6px; font-size: 13px; line-height: 1.5; color: #4D2E3A;">'
+                        f'<span style="color: #6B5660;">[×{p["count"]}]</span> '
+                        f'<em>"{_html.escape(p["phrase"])}"</em>'
+                        f'</li>'
+                    )
+                phrases_html = f'<ul style="margin: 8px 0 0 0; padding-left: 20px;">{phrase_rows}</ul>'
+            else:
+                phrases_html = (
+                    '<div style="color: #6B5660; font-size: 13px; font-style: italic; margin-top: 8px;">'
+                    'No phrases recurred ≥3 times this run.'
+                    '</div>'
+                )
+
+            border = '4px solid #4D2E3A' if is_brand else '1px solid #D4C5CE'
+            label_prefix = '👤 You · ' if is_brand else '🏷️ Competitor · '
+
+            return f"""
+            <div style="background: #FFFFFF; padding: 20px; border-radius: 8px; border-left: {border}; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                    <div style="font-size: 16px; font-weight: 700; color: #4D2E3A;">{label_prefix}{_html.escape(name)}</div>
+                    <div style="font-size: 12px; color: #6B5660;">Mentioned in {mention_count} response window(s) this run</div>
+                </div>
+                <div style="font-size: 12px; font-weight: 600; color: #6B5660; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Positioning Words AI Used</div>
+                <div>{chips}</div>
+                <div style="font-size: 12px; font-weight: 600; color: #6B5660; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 16px; margin-bottom: 4px;">Phrases AI Repeated</div>
+                {phrases_html}
+            </div>
+            """
+
+        # ---- Brand card + top-competitor cards ----
+        brand_card = _render_profile_card(brand_name, brand_profile, is_brand=True)
+
+        # Profile up to 3 competitors side by side. Sort by mention_count desc
+        # so the most-cited competitors come first.
+        comp_items = sorted(
+            comp_profiles.items(),
+            key=lambda kv: -(kv[1].get('mention_count') or 0),
+        )[:3]
+        comp_cards = ''.join(_render_profile_card(name, prof, is_brand=False) for name, prof in comp_items)
+
+        # ---- Co-mention network ----
+        network_html = ''
+        if network:
+            # Show only brands that appeared at least 3 times (else the rates
+            # are noisy)
+            ranked_brands = sorted(
+                network.items(),
+                key=lambda kv: -sum(n['co_count'] for n in kv[1]),
+            )
+            rows = ''
+            shown = 0
+            for brand, neighbors in ranked_brands:
+                if shown >= 6:
+                    break
+                # Skip brands with too little data — avoid noisy rows
+                if not neighbors or sum(n['co_count'] for n in neighbors) < 2:
+                    continue
+                neighbor_chips = ''
+                for n in neighbors[:5]:
+                    neighbor_chips += (
+                        f'<span style="display: inline-block; padding: 3px 10px; margin: 0 6px 4px 0; '
+                        f'background: #F3EFF2; color: #4D2E3A; border-radius: 12px; font-size: 12px;">'
+                        f'{_html.escape(n["neighbor"])} <span style="opacity: 0.6;">×{n["co_count"]} ({n["co_rate"]:.0f}%)</span>'
+                        f'</span>'
+                    )
+                is_you = brand == brand_name
+                row_label = f'👤 {_html.escape(brand)}' if is_you else _html.escape(brand)
+                row_bg = '#E8D4DA' if is_you else 'transparent'
+                rows += f"""
+                <tr style="border-bottom: 1px solid #E8E4E3; background: {row_bg};">
+                    <td style="padding: 12px; font-weight: {'700' if is_you else '500'}; color: #4D2E3A; vertical-align: top; white-space: nowrap;">{row_label}</td>
+                    <td style="padding: 12px;">{neighbor_chips}</td>
+                </tr>
+                """
+                shown += 1
+
+            if rows:
+                network_html = f"""
+                <div style="margin-top: 24px; background: #FFFFFF; padding: 20px; border-radius: 8px; border: 1px solid #D4C5CE;">
+                    <h4 style="margin: 0 0 4px 0; color: #4D2E3A; font-size: 16px; font-weight: 700;">🕸️ Co-Mention Network</h4>
+                    <p style="margin: 0 0 12px 0; font-size: 12px; color: #6B5660; font-style: italic;">
+                        For each brand that appeared in this run's responses, who else AI mentioned in the same response.
+                        The percentage is the share of that brand's appearances where the neighbor also appeared.
+                    </p>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #F3EFF2; border-bottom: 2px solid #D4C5CE;">
+                                <th style="text-align: left; padding: 10px 12px; font-weight: 600; color: #4D2E3A; font-size: 13px;">Brand</th>
+                                <th style="text-align: left; padding: 10px 12px; font-weight: 600; color: #4D2E3A; font-size: 13px;">Most Often Co-Mentioned With</th>
+                            </tr>
+                        </thead>
+                        <tbody>{rows}</tbody>
+                    </table>
+                </div>
+                """
+
+        # ---- Stitch together ----
+        return f"""
+        <div style="background: linear-gradient(135deg, #F0E0E5 0%, #F8EFEF 100%); border-radius: 12px; padding: 32px; margin-top: 32px; border: 1px solid #C9A7B3;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;">
+                <h3 style="margin: 0; color: #4D2E3A; font-size: 22px; font-weight: 700;">📐 AI Positioning Profile</h3>
+                <div style="font-size: 12px; color: #6B5660;">
+                    Based on the actual text of <strong>{sample_size}</strong> responses this run.
+                </div>
+            </div>
+            <p style="margin: 0 0 20px 0; font-size: 13px; color: #6B5660; line-height: 1.6;">
+                These are the actual words and phrases AI used when describing each brand in this run's responses.
+                Counts (×N) tell you how many times each pattern recurred. Phrases shown in italics are verbatim
+                — they are language AI internalized about that brand. Use this to understand how AI is positioning
+                you and your competitors today, and where the gaps are language-wise.
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                {brand_card}
+                {comp_cards}
+            </div>
+            {network_html}
+            <p style="margin: 20px 0 0 0; font-size: 12px; color: #6B5660; font-style: italic; line-height: 1.5;">
+                <strong>What this doesn't tell you:</strong> sentiment, intent, or whether AI's framing is accurate.
+                A high count means AI repeats that phrase often — not that the phrase is true. Use it as evidence of
+                what AI has internalized, then verify against your own positioning.
+            </p>
+        </div>
         """
 
     def _build_prompt_viewer(self, brand_name: str, scored_results: List[Dict[str, Any]]) -> str:
