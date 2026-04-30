@@ -2,9 +2,74 @@
 HTML report generator for visibility analysis - DaSilva Consulting Brand.
 """
 
-from typing import Dict, List, Any, Optional
 import os
+import re
 from datetime import datetime
+from typing import Dict, List, Any, Optional
+
+
+def _unwrap_snippet_dicts(text: str) -> str:
+    """
+    Strip Google AI Overview's stringified-dict artifacts from response text.
+
+    AI responses sometimes contain raw Python-style list-of-dicts:
+        - {'snippet': 'Brand: This is the description.'}
+        - {'snippet': 'Other: ...', 'snippet_links': [...]}
+
+    These were leaking verbatim into client-facing sentiment quote cards.
+    The previous fix (the simpler version that lived inline in
+    _build_sentiment_analysis_tab) only matched COMPLETE dicts where the
+    inner string had no escaped apostrophes — so quotes containing
+    `country\'s` failed to match, and quotes truncated by the 200-300 char
+    context window also failed because they had no closing brace.
+
+    This function handles three cases:
+      1. Complete dicts, including ones with escaped quotes inside the
+         payload — uses an escape-aware regex (`(?:[^'\\]|\\.)*?`).
+      2. Right-edge truncation (the dict's closing got cut off by the
+         context-window slice) — strips the leading `{'snippet': '` so
+         the inner text remains.
+      3. Left-edge truncation (the dict's opening got cut off) — strips
+         a trailing `'}` if it appears at the start of the text or
+         immediately before a comma-separated next-dict marker.
+
+    Run this on the FULL response_text before slicing the context window
+    so that complete dicts get matched cleanly. Then run a second pass
+    on the sliced context to handle edge truncations.
+    """
+    if not text:
+        return text
+
+    # Pass 1 — complete dicts with escape-aware quote matching.
+    # The optional `snippet_links` field is a Python list of dicts like
+    # `[{'text': 'X', 'link': 'https://...'}]`; the outer regex needs to
+    # consume the list AND the closing brace of the outer dict, otherwise
+    # we leave behind `]}` cosmetic crumbs.
+    text = re.sub(
+        r"\{'snippet':\s*'((?:[^'\\]|\\.)*?)'(?:,\s*'snippet_links':\s*\[[^\]]*\])?\s*\}",
+        r'\1',
+        text,
+    )
+    text = re.sub(
+        r'\{"snippet":\s*"((?:[^"\\]|\\.)*?)"(?:,\s*"snippet_links":\s*\[[^\]]*\])?\s*\}',
+        r'\1',
+        text,
+    )
+
+    # Pass 2 — right-edge truncation: strip leading `{'snippet': '` that
+    # never got a closing match (because end-of-context cut it off)
+    text = re.sub(r"\{'snippet':\s*'", '', text)
+    text = re.sub(r'\{"snippet":\s*"', '', text)
+
+    # Pass 3 — left-edge truncation: strip trailing `'}` that's left over
+    # from a previous dict whose opening got sliced away
+    text = re.sub(r"'\}(?:,\s*'snippet_links':[^}]*?\})?(?=\s*$|\s*,\s*\{)", '', text)
+    text = re.sub(r'"\}(?:,\s*"snippet_links":[^}]*?\})?(?=\s*$|\s*,\s*\{)', '', text)
+
+    # Strip leading "- " bullet markers (these often precede the dicts)
+    text = re.sub(r'(^|\n)\s*-\s+', r'\1', text)
+
+    return text
 
 
 class HTMLReportGenerator:
@@ -281,6 +346,70 @@ class HTMLReportGenerator:
             </div>
             """
 
+        # Build data-driven "What This Means" cards. The old version had two
+        # static info-cards ("ChatGPT Opportunity" and "Quality Over Quantity")
+        # that read identically across every client report regardless of the
+        # data. They now flex to the actual visibility numbers.
+
+        # Card A: ChatGPT-specific framing — adapts to actual chatgpt_rate
+        if chatgpt_rate < 20:
+            chatgpt_card = f"""
+                <div class="info-card" style="background: #F0F7FF; border-left: 4px solid #3b82f6;">
+                    <div class="info-card-title" style="color: #1e40af;">Biggest single platform opportunity: ChatGPT</div>
+                    <div class="info-card-content">
+                        <p>ChatGPT represents <strong>73% of all AI users</strong>. You&#39;re currently at <strong>{chatgpt_rate:.1f}%</strong> visibility there — the largest single platform with the most upside if we close the gap.</p>
+                    </div>
+                </div>
+            """
+        elif chatgpt_rate >= 50:
+            chatgpt_card = f"""
+                <div class="info-card" style="background: #F0FFF4; border-left: 4px solid #10b981;">
+                    <div class="info-card-title" style="color: #065f46;">Strong on ChatGPT — extend the lead</div>
+                    <div class="info-card-content">
+                        <p>You&#39;re at <strong>{chatgpt_rate:.1f}%</strong> visibility on ChatGPT — that&#39;s strong on the largest AI platform (73% of AI users). Document what&#39;s working there and replicate the pattern on Perplexity and Gemini, where there&#39;s more room to grow.</p>
+                    </div>
+                </div>
+            """
+        else:
+            chatgpt_card = f"""
+                <div class="info-card" style="background: #F0F7FF; border-left: 4px solid #3b82f6;">
+                    <div class="info-card-title" style="color: #1e40af;">Building on ChatGPT</div>
+                    <div class="info-card-content">
+                        <p>You&#39;re at <strong>{chatgpt_rate:.1f}%</strong> visibility on ChatGPT — present but not yet dominant. ChatGPT is 73% of AI users, so this is the platform with the most leverage if we focus content efforts there next.</p>
+                    </div>
+                </div>
+            """
+
+        # Card B: Competitive gap framing — adapts to actual gap_percentage
+        if gap_percentage > 20:
+            gap_card = f"""
+                <div class="info-card" style="background: #FFF1D6; border-left: 4px solid #f59e0b; margin-top: 16px;">
+                    <div class="info-card-title" style="color: #92400e;">The competitive gap is real and addressable</div>
+                    <div class="info-card-content">
+                        <p>{top_comp['name']} appears in <strong>{top_comp['mention_rate']:.1f}%</strong> of category queries vs your <strong>{visibility_rate:.1f}%</strong>. That <strong>{gap_percentage:.1f}-point gap</strong> means most AI users researching your category are being pointed at {top_comp['name']} instead of you.</p>
+                        <p style="margin-top: 12px;">The 90-day target — closing 50% of the gap — gets you to <strong>{target_visibility:.1f}%</strong> visibility, achievable with focused content on the priority topics identified in this report.</p>
+                    </div>
+                </div>
+            """
+        elif gap_percentage > 0:
+            gap_card = f"""
+                <div class="info-card" style="background: #F0FFF4; border-left: 4px solid #10b981; margin-top: 16px;">
+                    <div class="info-card-title" style="color: #065f46;">Within striking distance of the leader</div>
+                    <div class="info-card-content">
+                        <p>{top_comp['name']} leads at <strong>{top_comp['mention_rate']:.1f}%</strong> vs your <strong>{visibility_rate:.1f}%</strong> — a {gap_percentage:.1f}-point gap. That&#39;s small enough to close in 60-90 days with focused content work on the top opportunity areas identified later in this report.</p>
+                    </div>
+                </div>
+            """
+        else:
+            gap_card = f"""
+                <div class="info-card" style="background: #F0FFF4; border-left: 4px solid #10b981; margin-top: 16px;">
+                    <div class="info-card-title" style="color: #065f46;">You lead the category</div>
+                    <div class="info-card-content">
+                        <p>You appear in <strong>{visibility_rate:.1f}%</strong> of queries — ahead of every tracked competitor (top is {top_comp['name']} at {top_comp['mention_rate']:.1f}%). The opportunity now is depth: improving prominence (currently <strong>{prominence:.1f}/10</strong>) so you&#39;re not just mentioned but recommended as the top choice.</p>
+                    </div>
+                </div>
+            """
+
         return f"""
         <h2 style="margin-top: 48px;">Executive Summary</h2>
 
@@ -315,28 +444,15 @@ class HTMLReportGenerator:
             {citation_html}
         </div>
 
-        <!-- What This Means (Educational, not fear-based) -->
+        <!-- What This Means (data-driven — varies based on actual chatgpt_rate and gap) -->
         <div class="accordion-group" style="margin-top: 32px;">
             <button class="accordion-button" onclick="toggleAccordion(this)">
                 <span>💡 What This Means For Your Business</span>
                 <span class="accordion-icon">▼</span>
             </button>
             <div class="accordion-content">
-                <div class="info-card" style="background: #F0F7FF; border-left: 4px solid #3b82f6;">
-                    <div class="info-card-title" style="color: #1e40af;">Most Exciting: ChatGPT Opportunity</div>
-                    <div class="info-card-content">
-                        <p>ChatGPT represents <strong>73% of all AI users</strong> - the largest single opportunity. You're currently at <strong>{chatgpt_rate:.0f}%</strong> visibility there.</p>
-                        <p style="margin-top: 12px;"><strong>First-mover advantage is real:</strong> Infrastructure fixes take 2-4 weeks to implement. Early adopters establish authority with AI assistants before competitors recognize this shift.</p>
-                    </div>
-                </div>
-
-                <div class="info-card" style="background: #F0FFF4; border-left: 4px solid #10b981; margin-top: 16px;">
-                    <div class="info-card-title" style="color: #065f46;">Quality Over Quantity</div>
-                    <div class="info-card-content">
-                        <p>AI-sourced traffic shows higher engagement despite lower volume. Prospects are <strong>pre-qualified through AI research</strong> — they've already asked intelligent questions and received recommendations.</p>
-                        <p style="margin-top: 12px;">When someone asks an AI assistant about your industry and your competitor gets mentioned but you don't, that's a <strong>missed opportunity with a high-intent prospect</strong>. Unlike traditional search, AI users are often ready to act on the recommendation they receive.</p>
-                    </div>
-                </div>
+                {chatgpt_card}
+                {gap_card}
             </div>
 
             <button class="accordion-button" onclick="toggleAccordion(this)">
@@ -1180,15 +1296,54 @@ class HTMLReportGenerator:
             </div>
             """
         else:
-            html += """
-            <div style="background: #D4E8D4; padding: 24px; border-radius: 8px; margin-top: 32px;">
-                <h3 style="color: #2D5F2D; margin-bottom: 12px;">✓ No Source Gaps Found</h3>
-                <p style="color: #2D5F2D; font-size: 16px; line-height: 1.7; margin: 0;">
-                    Good news! You're present in all sources where competitors appear.
-                    Focus on strengthening your existing source relationships.
-                </p>
-            </div>
-            """
+            # No high-priority gap targets — but that doesn't mean we're
+            # winning. The old boilerplate said "Good news! You're present
+            # in all sources where competitors appear" even when the actual
+            # co-citation rate was 1-7%. Replaced with a data-driven
+            # branch that tells the truth based on the underlying numbers.
+            sources_with_you = source_analysis.get('sources_with_brand_co_mentions', []) if source_analysis else []
+            total_sources = source_analysis.get('total_unique_sources', 0) if source_analysis else 0
+            you_count = source_analysis.get('sources_with_brand_co_mentions_count', 0) if source_analysis else 0
+            gap_count = source_analysis.get('gap_opportunities_count', 0) if source_analysis else 0
+
+            if sources_with_you:
+                co_rates = [float(s.get('brand_mention_rate', 0) or 0) for s in sources_with_you]
+                avg_co_rate = sum(co_rates) / len(co_rates) if co_rates else 0.0
+            else:
+                avg_co_rate = 0.0
+
+            if you_count == 0:
+                html += f"""
+                <div style="background: #FCDADA; padding: 24px; border-radius: 8px; margin-top: 32px;">
+                    <h3 style="color: #6B3A3A; margin-bottom: 12px;">⚠ Source Co-Citation Gap</h3>
+                    <p style="color: #4D2E3A; font-size: 16px; line-height: 1.7; margin: 0;">
+                        Your brand wasn't co-cited with any of the {total_sources} sources AI used in these responses.
+                        Competitors are capturing all the source-anchored authority right now. The priority is
+                        establishing presence on the platforms and publications AI cites most often in your category.
+                    </p>
+                </div>
+                """
+            elif avg_co_rate < 10:
+                html += f"""
+                <div style="background: #FFF1D6; padding: 24px; border-radius: 8px; margin-top: 32px;">
+                    <h3 style="color: #6B5660; margin-bottom: 12px;">📊 Source Co-Citation Picture</h3>
+                    <p style="color: #4D2E3A; font-size: 16px; line-height: 1.7; margin: 0 0 12px 0;">
+                        Your brand appears alongside {you_count} of the {total_sources} sources AI cites in your category — but at a low average co-citation rate of <strong>{avg_co_rate:.1f}%</strong>.
+                    </p>
+                    <p style="color: #4D2E3A; font-size: 15px; line-height: 1.7; margin: 0;">
+                        Translation: you're &quot;present&quot; but barely. When AI cites these sources, it usually doesn&#39;t mention you alongside them. Strengthening your relationship with these sources — through guest posts, expert quotes, original research, or paid sponsorship — should meaningfully increase your AI co-citation rate.
+                    </p>
+                </div>
+                """
+            else:
+                html += f"""
+                <div style="background: #D4E8D4; padding: 24px; border-radius: 8px; margin-top: 32px;">
+                    <h3 style="color: #2D5F2D; margin-bottom: 12px;">✓ Solid Source Co-Citation</h3>
+                    <p style="color: #2D5F2D; font-size: 16px; line-height: 1.7; margin: 0;">
+                        Your brand is co-cited at an average <strong>{avg_co_rate:.1f}%</strong> rate across the {you_count} sources you appear in — that&#39;s strong source-anchored authority. Focus on extending coverage to the {gap_count} sources where only competitors currently appear.
+                    </p>
+                </div>
+                """
 
         return html
 
@@ -3904,6 +4059,13 @@ class HTMLReportGenerator:
         for result in brand_mentions:
             # Try both field names (response_text from scorer, response from other sources)
             response_text = result.get('response_text', '') or result.get('response', '')
+
+            # Strip Google AI Overview dict artifacts from the FULL response
+            # text first. Doing this before the context-window slice means
+            # complete dicts get matched cleanly (the previous post-slice
+            # version failed when the slice cut a dict mid-string).
+            response_text = _unwrap_snippet_dicts(response_text)
+
             response_lower = response_text.lower()
             brand_lower = brand_name.lower()
 
@@ -3923,25 +4085,11 @@ class HTMLReportGenerator:
             context = context.replace('**', '').replace('###', '').replace('##', '').strip()
             # Keep single * for bullets but remove standalone ones
 
-            # Strip Google AI Overview's stringified-dict artifacts. Their raw
-            # API surfaces results as Python-list-of-dicts strings like
-            # `- {'snippet': 'Dripos: This is...'}` and that leaked verbatim
-            # into client-facing sentiment quote cards. Unwrap to just the
-            # snippet text.
-            import re as _re
-            context = _re.sub(
-                r"\{'snippet':\s*'([^']*?)'(?:,\s*'snippet_links':[^}]*?)?\}",
-                r'\1',
-                context,
-            )
-            # Also handle the double-quoted variant
-            context = _re.sub(
-                r'\{"snippet":\s*"([^"]*?)"(?:,\s*"snippet_links":[^}]*?)?\}',
-                r'\1',
-                context,
-            )
-            # Strip the leading "- " that often precedes those dicts
-            context = _re.sub(r'(^|\n)\s*-\s+', r'\1', context).strip()
+            # Second-pass dict cleanup on the sliced context. Even after the
+            # full-text pass above, the slice itself might cut one dict apart
+            # (e.g. start mid-payload). _unwrap_snippet_dicts handles
+            # right-edge and left-edge truncation cases.
+            context = _unwrap_snippet_dicts(context).strip()
 
             # Try to start at sentence boundary if possible
             if start > 0:
@@ -4145,18 +4293,87 @@ class HTMLReportGenerator:
             <p style="color: #6B5660; margin-bottom: 20px;">Mentions with critical or negative language:</p>
             {negative_examples}
 
-            <div style="background: #F8F8F7; padding: 24px; border-radius: 8px; margin-top: 48px;">
-                <h3 style="margin-top: 0;">What This Means</h3>
-                <p style="color: #4D2E3A; line-height: 1.7; margin: 0;">
-                    <strong>Why sentiment matters:</strong> AI language models are trained on existing content. If most mentions use positive, authoritative language,
-                    AI is more likely to recommend you. If mentions are neutral or negative, you need to create content that shifts the narrative.
-                </p>
-                <p style="color: #4D2E3A; line-height: 1.7; margin: 16px 0 0 0;">
-                    <strong>How to improve:</strong> Publish thought leadership, case studies, and educational content that positions you as an expert.
-                    Get featured in authoritative publications. Build a library of content that AI can reference when answering queries in your category.
+            {self._build_sentiment_takeaway(brand_name, positive_pct, neutral_pct, negative_pct,
+                                              len(positive_mentions), len(neutral_mentions), len(negative_mentions))}
+        </div>
+        """
+
+    def _build_sentiment_takeaway(self, brand_name: str,
+                                  positive_pct: float, neutral_pct: float, negative_pct: float,
+                                  positive_n: int, neutral_n: int, negative_n: int) -> str:
+        """
+        Data-driven 'What This Means' for the sentiment section.
+
+        Replaces the boilerplate "Publish thought leadership, case studies..."
+        paragraph that appeared verbatim in every report. The advice now
+        flexes to the actual sentiment distribution: high-negative cases
+        get reputation-management framing, high-positive-but-low-volume
+        cases get "extend the win" framing, neutral-dominant cases get
+        differentiation framing, etc.
+        """
+        total = positive_n + neutral_n + negative_n
+        baseline = (
+            "<p style=\"color: #4D2E3A; line-height: 1.7; margin: 0;\">"
+            "<strong>Why sentiment matters:</strong> AI language models are trained on existing content. "
+            "The way AI describes you mirrors how the web describes you — when most mentions are factual, "
+            "AI&#39;s output will be factual; when mentions skew positive, AI is more likely to recommend you. "
+            "Sentiment isn&#39;t fixed; it shifts as new content gets indexed."
+            "</p>"
+        )
+
+        if total == 0:
+            advice = (
+                f"<strong>How to improve:</strong> {brand_name} wasn&#39;t mentioned in enough responses to "
+                "characterize sentiment. The prerequisite to managing sentiment is being mentioned at all. "
+                "Focus on visibility first — get into AI&#39;s answer set, then we can shape the language."
+            )
+        elif negative_pct >= 15:
+            advice = (
+                f"<strong>How to improve:</strong> {negative_pct:.0f}% of your AI mentions read as negative "
+                f"({negative_n} of {total} analyzed) — that&#39;s actively working against you. Audit the negative "
+                "examples above: are they about pricing, missing features, unfavorable comparisons? Each pattern "
+                "needs a counter-narrative published somewhere AI can pick up — comparison pages you control, "
+                "case studies that address the specific objection, or third-party reviews that reframe the issue."
+            )
+        elif positive_pct >= 50:
+            advice = (
+                f"<strong>How to improve:</strong> AI describes {brand_name} favorably {positive_pct:.0f}% of the time "
+                f"({positive_n} of {total} mentions). The tone is on your side — the opportunity is volume. "
+                "Get mentioned in more responses by expanding into adjacent query types and growing your presence "
+                "on the high-citation sources we identified earlier in this report."
+            )
+        elif positive_pct >= 25:
+            advice = (
+                f"<strong>How to improve:</strong> About {positive_pct:.0f}% of mentions are positive and {neutral_pct:.0f}% are factual/neutral. "
+                "AI is mentioning you, but mostly as one option among many rather than the recommended choice. "
+                "To shift more mentions toward positive, build content that gives AI specific reasons to favor you: "
+                "third-party validation (awards, certifications, expert reviews), original research you can be cited for, "
+                "and 'best for [use case]' content where you&#39;re positioned as the answer."
+            )
+        elif positive_pct >= 10:
+            advice = (
+                f"<strong>How to improve:</strong> Most of your AI mentions ({neutral_pct:.0f}%) are descriptive/neutral — "
+                "AI is mentioning you factually but not characterizing you as the recommended option. To win more "
+                "positive characterization, create comparison content (&quot;X vs Y&quot;), use-case-specific landing pages "
+                "(&quot;best for [scenario]&quot;), and named-author content that AI can cite as expert authority."
+            )
+        else:
+            advice = (
+                f"<strong>How to improve:</strong> Only {positive_pct:.0f}% of mentions read as positive — AI describes "
+                f"{brand_name} factually but rarely enthusiastically. The likeliest cause is missing content: AI doesn&#39;t "
+                "have material to anchor a positive narrative. Top priorities are published expert authority (named author "
+                "bylines), original research or data you can be cited for, and structured comparison/&quot;best for&quot; pages "
+                "that give AI a clear positive frame to use."
+            )
+
+        return f"""
+            <div style=\"background: #F8F8F7; padding: 24px; border-radius: 8px; margin-top: 48px;\">
+                <h3 style=\"margin-top: 0;\">What This Means</h3>
+                {baseline}
+                <p style=\"color: #4D2E3A; line-height: 1.7; margin: 16px 0 0 0;\">
+                    {advice}
                 </p>
             </div>
-        </div>
         """
 
     def _build_prompt_viewer(self, brand_name: str, scored_results: List[Dict[str, Any]]) -> str:
