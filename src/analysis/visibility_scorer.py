@@ -705,13 +705,21 @@ class VisibilityScorer:
         avg_prominence = sum(prominence_scores) / len(prominence_scores) if prominence_scores else 0
 
         # Competitor analysis
+        # Two distinct counters — both matter, and they're NOT the same:
+        #   competitor_mention_count        = # of prompts where ANY competitor appeared (capped at 1 per prompt)
+        #   total_competitor_mention_events = sum of competitor name occurrences across ALL prompts
+        #                                     (a response naming 3 competitors contributes 3 to this)
+        # The second one is what Share-of-Voice math compares against brand mentions
+        # (apples-to-apples: brand counted per-response, competitors counted per-occurrence).
         all_competitors = set()
         competitor_mention_count = 0
+        total_competitor_mention_events = 0
         for r in scored_results:
             competitors = r.get('visibility', {}).get('competitors_mentioned', [])
             all_competitors.update(competitors)
             if competitors:
                 competitor_mention_count += 1
+            total_competitor_mention_events += len(competitors)
 
         # Position analysis
         positions = []
@@ -729,6 +737,10 @@ class VisibilityScorer:
             'average_prominence_score': round(avg_prominence, 2),
             'competitors_encountered': list(all_competitors),
             'competitor_mention_rate': competitor_mention_count / total_prompts * 100,
+            # Total competitor name occurrences (used by historical_tracker for SOV).
+            # This was missing before — historical_tracker silently defaulted to 0,
+            # which made SOV always = 100% whenever brand had any mentions.
+            'total_competitor_mentions': total_competitor_mention_events,
             'average_citation_position': round(avg_position, 0) if avg_position else None,
             'high_prominence_count': sum(1 for s in prominence_scores if s >= 7),
             'medium_prominence_count': sum(1 for s in prominence_scores if 4 <= s < 7),

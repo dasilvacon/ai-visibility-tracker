@@ -217,34 +217,61 @@ def render():
     # Create tabs for each metric
     tab1, tab2, tab3 = st.tabs(["Visibility Rate", "Prominence Rate", "Share of Voice"])
 
+    # Helper for the three monthly charts below. Centralizes:
+    #   - the "only 1 month" callout (so a single dot doesn't look broken)
+    #   - the categorical x-axis (prevents Plotly auto-parsing "2026-04" as
+    #     datetime and zooming to millisecond precision around one point)
+    def _render_monthly_chart(trend_data, *, y_title, y_range=None, reverse_y=False, value_fmt):
+        if not trend_data:
+            return
+
+        if len(trend_data) == 1:
+            d = trend_data[0]
+            st.info(
+                f"📅 Only **{d['month']}** has data so far — "
+                f"value is **{value_fmt(d['value'])}**. "
+                "Trend chart will populate as additional monthly runs accumulate."
+            )
+            return
+
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=[d['month'] for d in trend_data],
+            y=[d['value'] for d in trend_data],
+            mode='lines+markers',
+            line=dict(color=DARK_PURPLE, width=3),
+            marker=dict(size=10),
+        ))
+
+        layout = dict(
+            xaxis_title="Month",
+            yaxis_title=y_title,
+            xaxis=dict(type='category'),  # force discrete labels, no datetime parsing
+            height=400,
+            hovermode='x unified',
+        )
+        if y_range is not None:
+            layout['yaxis_range'] = y_range
+        if reverse_y:
+            layout['yaxis_autorange'] = 'reversed'
+
+        fig.update_layout(**layout)
+        st.plotly_chart(fig, use_container_width=True)
+
     with tab1:
         st.markdown("### Visibility Rate Over Time")
         st.caption("% of prompts where your brand is mentioned")
 
         trend_data = tracker.get_trend_data(client_name, 'visibility_rate')
 
+        _render_monthly_chart(
+            trend_data,
+            y_title="Visibility Rate (%)",
+            y_range=[0, 100],
+            value_fmt=lambda v: f"{v}%",
+        )
+
         if trend_data:
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(
-                x=[d['month'] for d in trend_data],
-                y=[d['value'] for d in trend_data],
-                mode='lines+markers',
-                name='Visibility Rate',
-                line=dict(color=DARK_PURPLE, width=3),
-                marker=dict(size=10)
-            ))
-
-            fig.update_layout(
-                xaxis_title="Month",
-                yaxis_title="Visibility Rate (%)",
-                yaxis_range=[0, 100],
-                height=400,
-                hovermode='x unified'
-            )
-
-            st.plotly_chart(fig, use_container_width=True)
-
-            # Show data table
             with st.expander("📊 View Data Table"):
                 for d in reversed(trend_data):
                     st.write(f"**{d['month']}:** {d['value']}%")
@@ -255,28 +282,14 @@ def render():
 
         trend_data = tracker.get_trend_data(client_name, 'prominence_rate')
 
+        _render_monthly_chart(
+            trend_data,
+            y_title="Average Position",
+            reverse_y=True,
+            value_fmt=lambda v: f"#{int(v)}" if v else "N/A",
+        )
+
         if trend_data:
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(
-                x=[d['month'] for d in trend_data],
-                y=[d['value'] for d in trend_data],
-                mode='lines+markers',
-                name='Prominence Rate',
-                line=dict(color=DARK_PURPLE, width=3),
-                marker=dict(size=10)
-            ))
-
-            fig.update_layout(
-                xaxis_title="Month",
-                yaxis_title="Average Position",
-                yaxis_autorange='reversed',  # Lower is better
-                height=400,
-                hovermode='x unified'
-            )
-
-            st.plotly_chart(fig, use_container_width=True)
-
-            # Show data table
             with st.expander("📊 View Data Table"):
                 for d in reversed(trend_data):
                     st.write(f"**{d['month']}:** Position #{int(d['value'])}")
@@ -287,28 +300,40 @@ def render():
 
         trend_data = tracker.get_trend_data(client_name, 'share_of_voice')
 
-        if trend_data:
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(
-                x=[d['month'] for d in trend_data],
-                y=[d['value'] for d in trend_data],
-                mode='lines+markers',
-                name='Share of Voice',
-                line=dict(color=DARK_PURPLE, width=3),
-                marker=dict(size=10)
-            ))
+        # Data-integrity guard: a long-standing bug in historical_tracker meant
+        # competitor_mentions silently defaulted to 0, so SOV was stored as
+        # exactly 100% whenever the brand had any mentions. Detect and flag
+        # those bad rows so we don't display them as "correct trend."
+        suspicious_months = []
+        for month_key, snap in history.items():
+            # Only consider monthly keys (YYYY-MM), not weekly (YYYY-WNN)
+            if not (len(month_key) == 7 and month_key[4] == '-'):
+                continue
+            sov = snap.get('metrics', {}).get('share_of_voice')
+            comp_mentions = snap.get('detailed_stats', {}).get('competitor_mentions', 0)
+            if sov == 100 and comp_mentions == 0:
+                suspicious_months.append(month_key)
 
-            fig.update_layout(
-                xaxis_title="Month",
-                yaxis_title="Share of Voice (%)",
-                yaxis_range=[0, 100],
-                height=400,
-                hovermode='x unified'
+        if suspicious_months:
+            st.warning(
+                "⚠️ **Heads up — historical SOV bug:** "
+                f"{len(suspicious_months)} stored snapshot(s) "
+                f"({', '.join(sorted(suspicious_months))}) were calculated with a "
+                "broken formula that always produced 100%. They've been excluded "
+                "from the chart below. The fix is deployed — next weekly run will "
+                "populate a correct value, and you can delete the bad entries "
+                "from the **All Test Runs** section below."
             )
+            trend_data = [d for d in trend_data if d['month'] not in suspicious_months]
 
-            st.plotly_chart(fig, use_container_width=True)
+        _render_monthly_chart(
+            trend_data,
+            y_title="Share of Voice (%)",
+            y_range=[0, 100],
+            value_fmt=lambda v: f"{v}%",
+        )
 
-            # Show data table
+        if trend_data:
             with st.expander("📊 View Data Table"):
                 for d in reversed(trend_data):
                     st.write(f"**{d['month']}:** {d['value']}%")
