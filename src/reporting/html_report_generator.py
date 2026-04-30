@@ -1072,124 +1072,228 @@ class HTMLReportGenerator:
             </div>
             """
 
-        # Table 2: Gap opportunities - sources to target (wrapped in accordion)
-        if recommended_targets:
-            targets_table = """
-            <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-                <thead>
-                    <tr style="background: #FFF4E6; border-bottom: 2px solid #F0C674;">
-                        <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Source</th>
-                        <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Opportunity Score</th>
-                        <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Your Brand %</th>
-                        <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Top Competitor</th>
-                        <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Competitor %</th>
-                        <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-            """
+        # Phase 3: Tiered targets table — replaces the hardcoded "Action"
+        # column with auto-classified source type, an outreach tier (1/2/3)
+        # based on internal data only, and the actual snippet showing what
+        # the source said about the competitor.
+        sources_by_tier = source_analysis.get('sources_by_tier', {1: [], 2: [], 3: []}) if source_analysis else {1: [], 2: [], 3: []}
 
-            for i, target in enumerate(recommended_targets[:10], 1):
-                # Determine action based on source type
-                action = "Pitch editorial feature or guest contribution"
-                if 'reddit' in target['source'].lower():
-                    action = "Increase Reddit presence"
-                elif 'youtube' in target['source'].lower() or 'channel' in target['source'].lower():
-                    action = "Open outreach with relevant creators"
-                elif any(word in target['source'].lower() for word in ['blog', 'review', 'magazine', 'journal']):
-                    action = "Pitch editorial feature or guest post"
+        # Pretty labels for source types
+        SOURCE_TYPE_LABELS = {
+            'aggregator':  ('🏷️ Aggregator',  'Listing / review platforms (G2, Capterra, Trustpilot)'),
+            'community':   ('💬 Community',   'Forums, Reddit, Quora, Stack Exchange'),
+            'reference':   ('📚 Reference',   'Wikipedia, encyclopedias, reference works'),
+            'video':       ('🎥 Video',       'YouTube, Vimeo, TikTok'),
+            'authority':   ('🏛️ Authority',   '.gov / .edu / official institutions'),
+            'editorial':   ('📰 Editorial',   'News outlets, magazines, large publishers'),
+            'comparison':  ('🔀 Comparison',  '"Best of" lists, vs. articles, alternatives pages'),
+            'unknown':     ('❓ Unclassified', 'Could not be auto-classified from URL alone'),
+        }
 
-                # Color code opportunity score
-                score = target['opportunity_score']
-                score_color = "#27AE60" if score >= 70 else ("#F39C12" if score >= 40 else "#E74C3C")
+        TIER_META = {
+            1: {'label': 'Tier 1 — Critical Gaps',
+                'desc':  'Source appeared 5+ times AND named 2+ competitors. Highest-leverage outreach.',
+                'color': '#B33A3A', 'bg': '#FBEAEA'},
+            2: {'label': 'Tier 2 — Active Gaps',
+                'desc':  'Source appeared 2–4 times AND named at least one competitor.',
+                'color': '#B57E1A', 'bg': '#FFF4E6'},
+            3: {'label': 'Tier 3 — Watch List',
+                'desc':  'Single appearances or marginal coverage — worth tracking but not priority.',
+                'color': '#5C6B7A', 'bg': '#EEF1F4'},
+        }
 
-                targets_table += f"""
-                <tr style="border-bottom: 1px solid #E8E4E3;">
-                    <td style="padding: 12px; color: #4D2E3A; font-weight: 500;">
-                        {i}. {target['source']}
-                    </td>
-                    <td style="padding: 12px; text-align: center; color: {score_color}; font-weight: 700;">
-                        {score:.0f}/100
-                    </td>
-                    <td style="padding: 12px; text-align: center; color: #E74C3C; font-weight: 600;">
-                        {target['brand_mention_rate']}%
-                    </td>
-                    <td style="padding: 12px; color: #6B5660;">
-                        {target.get('top_competitor', '—')}
-                    </td>
-                    <td style="padding: 12px; text-align: center; color: #27AE60; font-weight: 600;">
-                        {target['competitor_rate']}%
-                    </td>
-                    <td style="padding: 12px; color: #4D2E3A; font-size: 13px;">
-                        → {action}
-                    </td>
-                </tr>
-                """
+        # Phase 3: render the tiered targets section if ANY tier has sources.
+        # We don't gate on `recommended_targets` (which uses a relevance_score
+        # cutoff) because the tier system is the new prioritization model.
+        any_tier_has_sources = any(sources_by_tier.get(t) for t in (1, 2, 3))
 
-                # Add example URL and specific action steps
-                if target.get('example_urls'):
-                    targets_table += f"""
+        if any_tier_has_sources:
+            tiered_html = ""
+            for tier in (1, 2, 3):
+                tier_sources = sources_by_tier.get(tier, [])
+                if not tier_sources:
+                    continue
+
+                # Cap each tier so the report doesn't balloon. T1 + T2 are
+                # most actionable, so we surface more of them.
+                cap = {1: 15, 2: 15, 3: 10}[tier]
+                meta = TIER_META[tier]
+
+                rows = ""
+                for i, target in enumerate(tier_sources[:cap], 1):
+                    src_type = target.get('source_type', 'unknown')
+                    type_label, type_desc = SOURCE_TYPE_LABELS.get(src_type, SOURCE_TYPE_LABELS['unknown'])
+
+                    # Top competitor + their co-mention count at this source
+                    top_comp = target.get('top_competitor') or '—'
+                    top_comp_count = target.get('top_competitor_count', 0)
+
+                    # Other competitors at this source (if more than one)
+                    comp_co = target.get('competitor_co_mentions', {}) or {}
+                    other_comps = sorted(
+                        [(n, c) for n, c in comp_co.items() if n != top_comp],
+                        key=lambda kv: -kv[1],
+                    )[:3]
+                    others_str = ''
+                    if other_comps:
+                        others_str = ' · also: ' + ', '.join(f'{n} ({c})' for n, c in other_comps)
+
+                    # Pull the most informative snippet (first sample if any)
+                    snippet = ''
+                    samples = target.get('context_samples') or []
+                    if samples:
+                        s = samples[0].strip()
+                        # Trim to ~280 chars; we already escape via html lib in prompt viewer
+                        # but here we're concatenating into a static template, so escape inline.
+                        import html as _html
+                        s_escaped = _html.escape(s[:280] + ('…' if len(s) > 280 else ''))
+                        snippet = f"""
+                            <div style="margin-top: 8px; padding: 10px 12px; background: #FFFFFF; border-left: 3px solid #C9A7B3; border-radius: 4px; font-size: 13px; color: #4D2E3A; line-height: 1.5; font-style: italic;">
+                                "{s_escaped}"
+                            </div>
+                        """
+
+                    example_url_html = ''
+                    if target.get('example_urls'):
+                        ex = target['example_urls'][0]
+                        example_url_html = (
+                            f'<div style="margin-top: 6px; font-size: 12px; color: #6B5660;">'
+                            f'Example URL: <a href="{ex}" target="_blank" style="color: #D4698B;">{ex[:90]}{"…" if len(ex) > 90 else ""}</a>'
+                            f'</div>'
+                        )
+
+                    rows += f"""
                     <tr style="border-bottom: 1px solid #E8E4E3;">
-                        <td colspan="6" style="padding: 8px 12px 12px 32px;">
-                            <div style="color: #A7868F; font-size: 13px; margin-bottom: 6px;">
-                                Example: <a href="{target['example_urls'][0]}" target="_blank" style="color: #D4698B;">{target['example_urls'][0][:80]}...</a>
-                            </div>
-                    """
-
-                    # Add specific action steps based on source type
-                    if 'reddit' in target['source'].lower():
-                        targets_table += """
-                            <div style="color: #6B5660; font-size: 13px; margin-top: 4px;">
-                                • Answer questions authentically in relevant subreddits<br>
-                                • Consider sponsoring relevant threads or AMAs
-                            </div>
-                        """
-                    elif 'youtube' in target['source'].lower():
-                        targets_table += """
-                            <div style="color: #6B5660; font-size: 13px; margin-top: 4px;">
-                                • Identify relevant creators in your space for outreach<br>
-                                • Explore sponsored content, interviews, or collaborations
-                            </div>
-                        """
-                    elif any(word in target['source'].lower() for word in ['blog', 'review', 'magazine', 'journal']):
-                        targets_table += """
-                            <div style="color: #6B5660; font-size: 13px; margin-top: 4px;">
-                                • Pitch editorial features, case studies, or guest contributions<br>
-                                • Offer subject-matter expertise relevant to their audience
-                            </div>
-                        """
-                    else:
-                        targets_table += """
-                            <div style="color: #6B5660; font-size: 13px; margin-top: 4px;">
-                                • Reach out for backlink or partnership opportunities<br>
-                                • Request editorial features or expert contributions
-                            </div>
-                        """
-
-                    targets_table += """
+                        <td style="padding: 14px 12px; vertical-align: top;">
+                            <div style="font-weight: 600; color: #4D2E3A; font-size: 14px;">{i}. <a href="https://{target['source']}" target="_blank" style="color: #4D2E3A; text-decoration: none; border-bottom: 1px dotted #A78E8B;">{target['source']}</a></div>
+                            <div style="margin-top: 4px; font-size: 12px; color: #6B5660;" title="{type_desc}">{type_label}</div>
+                            {example_url_html}
+                        </td>
+                        <td style="padding: 14px 12px; vertical-align: top; text-align: center; color: #4D2E3A; font-weight: 600;">
+                            {target['total_appearances']}
+                        </td>
+                        <td style="padding: 14px 12px; vertical-align: top; color: #4D2E3A;">
+                            <strong>{top_comp}</strong>{f' ({top_comp_count})' if top_comp_count else ''}
+                            <span style="color: #6B5660; font-size: 12px;">{others_str}</span>
+                            {snippet}
+                        </td>
+                        <td style="padding: 14px 12px; vertical-align: top; color: #4D2E3A; font-size: 13px; line-height: 1.5;">
+                            {target.get('recommended_action', '')}
                         </td>
                     </tr>
                     """
 
-            targets_table += """
-                </tbody>
-            </table>
-            """
+                tier_table = f"""
+                <table style="width: 100%; border-collapse: collapse; margin-top: 12px;">
+                    <thead>
+                        <tr style="background: {meta['bg']}; border-bottom: 2px solid {meta['color']};">
+                            <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Source</th>
+                            <th style="text-align: center; padding: 12px; font-weight: 600; color: #4D2E3A;">Times Cited</th>
+                            <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Competitors Featured (with snippet)</th>
+                            <th style="text-align: left; padding: 12px; font-weight: 600; color: #4D2E3A;">Recommended Outreach</th>
+                        </tr>
+                    </thead>
+                    <tbody>{rows}</tbody>
+                </table>
+                """
+
+                tiered_html += f"""
+                <div style="margin-top: 24px;">
+                    <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; flex-wrap: wrap;">
+                        <h4 style="margin: 0; color: {meta['color']}; font-size: 16px; font-weight: 700;">{meta['label']}</h4>
+                        <span style="font-size: 12px; color: #6B5660;">({len(tier_sources)} source{'s' if len(tier_sources) != 1 else ''}{'; showing top ' + str(cap) if len(tier_sources) > cap else ''})</span>
+                    </div>
+                    <p style="margin: 0 0 4px 0; font-size: 13px; color: #6B5660; font-style: italic;">{meta['desc']}</p>
+                    {tier_table}
+                </div>
+                """
 
             html += f"""
             <div class="accordion-group" style="margin-top: 32px;">
                 <button class="accordion-button" onclick="toggleAccordion(this)">
-                    <span>⚠️ Sources You're Missing - Targeting Opportunities ({len(recommended_targets)} sources)</span>
+                    <span>⚠️ Outreach Targets — Where Competitors Appear Without You ({sum(len(sources_by_tier.get(t, [])) for t in (1, 2, 3))} sources across 3 tiers)</span>
                     <span class="accordion-icon">▼</span>
                 </button>
                 <div class="accordion-content">
-                    <p style="color: #6B5660; margin: 16px 0;">
-                        These sources cite your competitors but not you. Reach out for features, reviews, or backlinks.
+                    <p style="color: #6B5660; margin: 16px 0; line-height: 1.7;">
+                        These are sources AI cited where your competitors appear and {brand_name} does not. Tiers are
+                        based on internal evidence — how many times the source was cited and how many competitors it
+                        named — not on external domain-authority data. Source types are auto-classified from the URL;
+                        verify before pitching.
                     </p>
-                    {targets_table}
+                    {tiered_html}
                 </div>
             </div>
             """
+
+            # Phase 3: per-competitor lens — for each top competitor, show
+            # the sources where they appear (and whether the brand is also there).
+            competitor_lens = source_analysis.get('competitor_lens', {}) if source_analysis else {}
+            if competitor_lens:
+                # Pick the top 5 competitors by total source coverage
+                top_comps = sorted(
+                    competitor_lens.items(),
+                    key=lambda kv: -sum(s['comp_co_mention_count'] for s in kv[1]),
+                )[:5]
+
+                lens_blocks = ''
+                for comp_name, comp_sources in top_comps:
+                    if not comp_sources:
+                        continue
+                    top_5 = comp_sources[:5]
+                    rows = ''
+                    for s in top_5:
+                        type_label, _ = SOURCE_TYPE_LABELS.get(s['source_type'], SOURCE_TYPE_LABELS['unknown'])
+                        you_status = (
+                            '<span style="color: #27AE60; font-weight: 600;">You also appear</span>'
+                            if s['brand_also_present']
+                            else '<span style="color: #E74C3C; font-weight: 600;">You absent</span>'
+                        )
+                        ex_url = s.get('example_url') or f"https://{s['domain']}"
+                        rows += f"""
+                        <tr style="border-bottom: 1px solid #E8E4E3;">
+                            <td style="padding: 10px 12px; color: #4D2E3A; font-size: 13px;">
+                                <a href="{ex_url}" target="_blank" style="color: #4D2E3A; text-decoration: none; border-bottom: 1px dotted #A78E8B;">{s['domain']}</a>
+                                <div style="font-size: 11px; color: #6B5660; margin-top: 2px;">{type_label}</div>
+                            </td>
+                            <td style="padding: 10px 12px; text-align: center; color: #6B5660; font-size: 13px;">{s['comp_co_mention_count']}</td>
+                            <td style="padding: 10px 12px; font-size: 13px;">{you_status}</td>
+                        </tr>
+                        """
+                    lens_blocks += f"""
+                    <div style="margin-top: 16px; background: #FFFFFF; border: 1px solid #E8E4E3; border-radius: 6px; padding: 16px;">
+                        <div style="font-weight: 600; color: #4D2E3A; margin-bottom: 8px; font-size: 15px;">
+                            🎯 {comp_name}
+                        </div>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #F3EFF2;">
+                                    <th style="text-align: left; padding: 8px 12px; font-size: 12px; color: #4D2E3A; font-weight: 600;">Source</th>
+                                    <th style="text-align: center; padding: 8px 12px; font-size: 12px; color: #4D2E3A; font-weight: 600;">Times Cited Together</th>
+                                    <th style="text-align: left; padding: 8px 12px; font-size: 12px; color: #4D2E3A; font-weight: 600;">{brand_name} Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>{rows}</tbody>
+                        </table>
+                    </div>
+                    """
+
+                html += f"""
+                <div class="accordion-group" style="margin-top: 24px;">
+                    <button class="accordion-button" onclick="toggleAccordion(this)">
+                        <span>🔍 Per-Competitor View — Where Each Top Competitor Is Getting Cited</span>
+                        <span class="accordion-icon">▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p style="color: #6B5660; margin: 16px 0; line-height: 1.7;">
+                            For your top competitors, this shows the specific sources AI cited them on, and whether
+                            {brand_name} was named in the same context. Use this to prioritize which competitor's
+                            citation footprint to attack first.
+                        </p>
+                        {lens_blocks}
+                    </div>
+                </div>
+                """
 
             # Add expandable table with ALL sources
             all_sources = source_analysis.get('all_sources', [])

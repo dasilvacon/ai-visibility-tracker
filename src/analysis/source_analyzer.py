@@ -7,8 +7,149 @@ Uses enriched source data with context snippets for accurate co-mention tracking
 """
 
 import json
+import re
 from collections import defaultdict
 from typing import Dict, List, Any, Optional
+
+
+# ---------------------------------------------------------------------------
+# Phase 3: source type classification
+# ---------------------------------------------------------------------------
+# Honest, internal-only classification: we look at the domain string and the
+# example URL paths to bucket each source into a coarse type. We do NOT use
+# external APIs (Moz, Ahrefs, etc.), so we cannot speak to domain authority
+# or traffic — we just classify what *kind of site* this is so the outreach
+# action can be meaningful instead of generic.
+#
+# Categories are intentionally coarse — finer-grained classification would
+# require a maintained taxonomy and would still be wrong sometimes.
+
+# Domain substring → source type. Order matters: we check in this order and
+# take the first match. More specific patterns come first.
+_SOURCE_TYPE_PATTERNS = [
+    # Aggregators / review platforms
+    ('aggregator', [
+        'g2.com', 'capterra.com', 'trustpilot.com', 'getapp.com',
+        'softwareadvice.com', 'sourceforge.net', 'crunchbase.com',
+        'producthunt.com', 'getapp.', 'goodfirms.co', 'clutch.co',
+    ]),
+    # Forum / community
+    ('community', [
+        'reddit.com', 'quora.com', 'stackexchange.com', 'stackoverflow.com',
+        'ycombinator.com', 'discourse.', 'community.', 'forum.', '.forum',
+        'discord.com', 'discord.gg', 'slack.com',
+    ]),
+    # Reference / encyclopedic
+    ('reference', [
+        'wikipedia.org', 'britannica.com', 'wiktionary.org', 'investopedia.com',
+        '.wiki', 'wiki.', 'encyclopedia.',
+    ]),
+    # Video platforms
+    ('video', [
+        'youtube.com', 'youtu.be', 'vimeo.com', 'tiktok.com',
+    ]),
+    # Government / academic
+    ('authority', [
+        '.gov', '.gov.', '.edu', '.edu.', '.ac.', 'who.int', 'cdc.gov',
+        'nih.gov', 'pubmed.', 'scholar.google',
+    ]),
+    # News / editorial outlets — partial list of strong signals
+    ('editorial', [
+        'nytimes.com', 'washingtonpost.com', 'theguardian.com', 'bbc.',
+        'cnn.com', 'reuters.com', 'bloomberg.com', 'wsj.com', 'forbes.com',
+        'businessinsider.com', 'techcrunch.com', 'wired.com', 'vox.com',
+        'theverge.com', 'engadget.com', 'mashable.com', 'entrepreneur.com',
+        'inc.com', 'fastcompany.com', 'cbc.ca', 'globeandmail.com',
+        'thestar.com', 'cosmopolitan.com', 'glamour.com', 'allure.com',
+        'harpersbazaar.com', 'vogue.com', 'elle.com',
+    ]),
+    # Comparison / "best X" listicle blogs (fuzzy match)
+    ('comparison', [
+        '/best-', '/top-', '-vs-', 'comparison', 'alternatives',
+        'review/', '/review',
+    ]),
+]
+
+
+def classify_source_type(domain: str, example_urls: Optional[List[str]] = None) -> str:
+    """
+    Classify a domain into a coarse source type for outreach planning.
+
+    Args:
+        domain: The bare domain (e.g. "reddit.com", "g2.com")
+        example_urls: Optional list of full URLs for richer matching (so we
+                      can detect comparison/listicle pages by path patterns)
+
+    Returns:
+        One of: 'aggregator', 'community', 'reference', 'video', 'authority',
+                'editorial', 'comparison', 'unknown'
+    """
+    domain = (domain or '').lower().strip()
+    if not domain:
+        return 'unknown'
+
+    haystacks = [domain] + [u.lower() for u in (example_urls or [])]
+
+    for source_type, patterns in _SOURCE_TYPE_PATTERNS:
+        for pat in patterns:
+            for hay in haystacks:
+                if pat in hay:
+                    return source_type
+
+    return 'unknown'
+
+
+# Outreach action templates per source type. These are starting points — the
+# operator will need to tailor the actual pitch — but they are honest about
+# what each type of source is and what realistically gets you mentioned there.
+OUTREACH_ACTIONS = {
+    'aggregator':  'Get listed/claim profile, request reviews from existing customers, monitor competitor profile updates.',
+    'community':   'Engage authentically as a brand or via informed users; never spam. Watch for naturally relevant threads.',
+    'reference':   'Improve external citations to your site. Reference pages cite primary sources — earn placement on those.',
+    'video':       'Identify the channel and pitch a collaboration, sponsored mention, or appearance.',
+    'authority':   'Pitch as an expert source for related stories or reports. Provide data/quotes journalists need.',
+    'editorial':   'Pitch a feature, guest contribution, or expert quote tied to a current angle the publication covers.',
+    'comparison':  'Reach out to the author with a one-pager on your differentiators. Offer a demo, case study, or data.',
+    'unknown':     'Investigate the source manually before action — type was not auto-classifiable from the URL.',
+}
+
+
+def assign_outreach_tier(source: Dict[str, Any]) -> int:
+    """
+    Assign a 1/2/3 outreach tier based ONLY on internal data — appearance
+    frequency, competitor coverage, citation position. We never claim to
+    know domain authority because we don't.
+
+    Tier 1 (Critical): source appears ≥5 times AND ≥2 competitors named AND brand absent
+    Tier 2 (Active):   source appears 2–4 times AND ≥1 competitor named AND brand absent
+    Tier 3 (Watch):    everything else worth surfacing (single appearances, etc.)
+
+    Args:
+        source: A source dict from analyze_sources output. Must contain
+                total_appearances, brand_co_mentions, competitor_co_mentions
+                (a dict competitor → count) or competitor_count.
+
+    Returns:
+        Integer 1, 2, or 3.
+    """
+    total = source.get('total_appearances', 0) or 0
+    brand = source.get('brand_co_mentions', 0) or 0
+
+    competitor_co_mentions = source.get('competitor_co_mentions') or {}
+    if isinstance(competitor_co_mentions, dict):
+        unique_competitors = len(competitor_co_mentions)
+    else:
+        # Fall back to coarse count if the dict isn't preserved
+        unique_competitors = 1 if (source.get('competitor_count') or 0) > 0 else 0
+
+    if brand > 0:
+        # Source already cites you — not an outreach gap; rank it lower
+        return 3
+    if total >= 5 and unique_competitors >= 2:
+        return 1
+    if total >= 2 and unique_competitors >= 1:
+        return 2
+    return 3
 
 
 class SourceAnalyzer:
@@ -171,7 +312,10 @@ class SourceAnalyzer:
                     if sample not in context_samples and len(context_samples) < 5:
                         context_samples.append(sample)
 
-            sources_list.append({
+            # Phase 3: classify source type and assign outreach tier
+            source_type = classify_source_type(source_domain, stats['example_urls'])
+
+            entry = {
                 'source': source_domain,
                 'domain': source_domain,
                 'total_appearances': total,
@@ -186,6 +330,9 @@ class SourceAnalyzer:
                 'example_urls': stats['example_urls'],
                 'source_category': source_category,
                 'relevance_score': relevance_score,
+                # Phase 3 additions:
+                'source_type': source_type,                            # auto-classified
+                'recommended_action': OUTREACH_ACTIONS.get(source_type, OUTREACH_ACTIONS['unknown']),
                 # Legacy fields for backwards compatibility
                 'mentions_your_brand': brand_co_mentions,
                 'brand_mention_rate': round(brand_co_mention_rate, 1),
@@ -194,8 +341,11 @@ class SourceAnalyzer:
                 'should_target': total_competitor_co_mentions > 0 and brand_co_mentions == 0,
                 'opportunity_score': self._calculate_opportunity_score(
                     total, brand_co_mentions, total_competitor_co_mentions
-                )
-            })
+                ),
+            }
+            # Tier depends on the entry itself — assign last so it can read from it
+            entry['outreach_tier'] = assign_outreach_tier(entry)
+            sources_list.append(entry)
 
         # Sort by relevance score (most relevant first)
         sources_list.sort(key=lambda x: x['relevance_score'], reverse=True)
@@ -213,6 +363,45 @@ class SourceAnalyzer:
         # Recommended targets: top gap opportunities
         recommended_targets = gap_opportunities[:10]
 
+        # Phase 3: per-competitor lens — for each competitor we observed,
+        # which sources are they getting cited on (and where the brand
+        # is absent)? Sorted by source frequency.
+        competitor_lens = defaultdict(list)
+        for src in sources_list:
+            for comp_name, count in src.get('competitor_co_mentions', {}).items():
+                competitor_lens[comp_name].append({
+                    'domain': src['domain'],
+                    'source_type': src.get('source_type', 'unknown'),
+                    'outreach_tier': src.get('outreach_tier', 3),
+                    'comp_co_mention_count': count,
+                    'brand_also_present': src['brand_co_mentions'] > 0,
+                    'example_url': (src.get('example_urls') or [None])[0],
+                    'context_samples': src.get('context_samples', []),
+                })
+        # Sort each competitor's source list by their co-mention count, descending
+        for comp_name in competitor_lens:
+            competitor_lens[comp_name].sort(
+                key=lambda s: (-s['comp_co_mention_count'], s['domain'])
+            )
+
+        # Group sources by outreach tier (for the new tiered targets table).
+        # We populate from EVERY source flagged should_target=True (i.e. competitor
+        # mentions present AND brand absent), not from the relevance-gated
+        # gap_opportunities subset. The tier itself encodes prioritization;
+        # gating on relevance_score on top would double-count the same signal
+        # and silently drop strong Tier 1 candidates that aren't in the client's
+        # configured known_sources list.
+        sources_by_tier = {1: [], 2: [], 3: []}
+        for src in sources_list:
+            if not src.get('should_target'):
+                continue
+            sources_by_tier[src.get('outreach_tier', 3)].append(src)
+        # Sort each tier by total_appearances desc (then by competitor count)
+        for tier_num in sources_by_tier:
+            sources_by_tier[tier_num].sort(
+                key=lambda s: (-s['total_appearances'], -s.get('competitor_count', 0), s['domain'])
+            )
+
         return {
             'all_sources': sources_list,
             'sources_with_brand_co_mentions': sources_with_brand_co_mentions,
@@ -220,6 +409,9 @@ class SourceAnalyzer:
             'gap_opportunities': gap_opportunities,
             'sources_with_competitors_only': gap_opportunities,  # Legacy alias
             'recommended_targets': recommended_targets,
+            # Phase 3 additions:
+            'sources_by_tier': sources_by_tier,
+            'competitor_lens': dict(competitor_lens),
             'total_unique_sources': len(sources_list),
             'sources_with_brand_co_mentions_count': len(sources_with_brand_co_mentions),
             'sources_mentioning_brand': len(sources_with_brand_co_mentions),  # Legacy alias
