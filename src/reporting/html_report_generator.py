@@ -4387,11 +4387,36 @@ class HTMLReportGenerator:
         personas = set()
         platforms = set()
 
-        # Track best/worst for Quick Insights
-        best_response = {'prominence': 0, 'prompt': '', 'response': ''}
-        worst_miss = {'prompt': '', 'competitors': []}
-        themes_winning = []
-        themes_missing = []
+        # Phase 2: Data-grounded Quick Insights.
+        #
+        # The previous version had hard-coded "What's Working / What's Missing"
+        # strings that appeared identically in every report regardless of the
+        # client's actual data — and "Worst Miss" was just the first miss in
+        # iteration order, not the worst. Both were misleading.
+        #
+        # Now everything below is computed from the scored_results themselves.
+        # Per-prompt buckets we'll fill in the loop below:
+        best_response = {'prominence': 0, 'prompt': '', 'platform': '', 'persona': ''}
+
+        # All "missed" prompts (brand absent + at least one competitor named),
+        # ranked later by # of competitors named (more competitors = bigger gap).
+        missed_prompts = []  # list of {prompt, persona, platform, competitors}
+
+        # Category-level rollup: for each category, count prompts + brand mentions.
+        # Used to derive "What's Working" (top-visibility categories) and
+        # "What's Missing" (bottom-visibility categories with competitor coverage).
+        from collections import defaultdict
+        category_stats = defaultdict(lambda: {
+            'prompts': 0,
+            'brand_mentions': 0,
+            'competitor_names_seen': defaultdict(int),
+        })
+
+        # Persona-level rollup (used for the persona panel below).
+        persona_stats = defaultdict(lambda: {'prompts': 0, 'brand_mentions': 0})
+
+        # Platform-level rollup (used for the platform panel below).
+        platform_stats = defaultdict(lambda: {'prompts': 0, 'brand_mentions': 0})
 
         for result in scored_results:
             visibility = result.get('visibility', {})
@@ -4416,27 +4441,44 @@ class HTMLReportGenerator:
             }
             platform = platform_mapping.get(platform_raw.lower(), platform_raw.upper())
 
-            # Track best response (Fix #1 - Quick Insights)
+            # Phase 2: Track best response with platform + persona context
+            # (so the highlight isn't just a floating prompt with no provenance).
             if brand_mentioned and prominence > best_response['prominence']:
                 best_response = {
                     'prominence': prominence,
                     'prompt': prompt_text,
-                    'response': response_text[:200]
+                    'platform': platform,
+                    'persona': persona,
                 }
 
-            # Track worst miss (Fix #1 - Quick Insights)
+            # Phase 2: Collect ALL misses, then rank by competitor count later.
+            # Previously this kept only the first miss in iteration order, which
+            # is meaningless — a "worst miss" should be the gap where AI named
+            # the most competitors while leaving the brand out.
             if not brand_mentioned and competitors:
-                if not worst_miss['prompt']:
-                    worst_miss = {
-                        'prompt': prompt_text,
-                        'competitors': competitors
-                    }
+                missed_prompts.append({
+                    'prompt': prompt_text,
+                    'persona': persona,
+                    'platform': platform,
+                    'competitors': competitors,
+                })
 
-            # Track themes (Fix #1 - Quick Insights)
-            if brand_mentioned and prominence >= 6:
-                themes_winning.append(prompt_text)
-            elif not brand_mentioned:
-                themes_missing.append(prompt_text)
+            # Phase 2: Roll up by category / persona / platform for the
+            # "what's working / what's missing" panels.
+            cat = (metadata.get('category') or 'Uncategorized').strip() or 'Uncategorized'
+            category_stats[cat]['prompts'] += 1
+            if brand_mentioned:
+                category_stats[cat]['brand_mentions'] += 1
+            for c in competitors:
+                category_stats[cat]['competitor_names_seen'][c] += 1
+
+            persona_stats[persona]['prompts'] += 1
+            if brand_mentioned:
+                persona_stats[persona]['brand_mentions'] += 1
+
+            platform_stats[platform]['prompts'] += 1
+            if brand_mentioned:
+                platform_stats[platform]['brand_mentions'] += 1
 
             # Determine mention status
             if brand_mentioned and competitors:
@@ -4554,37 +4596,288 @@ class HTMLReportGenerator:
             </tr>
             """
 
-        # Build Quick Insights section (Fix #1)
-        quick_insights_html = ""
+        # ============================================================
+        # Phase 2: Data-grounded Quick Insights
+        # ============================================================
+        # Everything in this block is derived from scored_results — no
+        # hardcoded copy, no inferred claims. If we don't have enough data
+        # to support a panel, we don't show it.
+
+        # 1. Worst miss = the prompt where the most competitors got named
+        #    while the brand was absent. Tie-break by alphabetical prompt
+        #    text for stable ordering across re-runs.
+        worst_miss = None
+        if missed_prompts:
+            worst_miss = max(
+                missed_prompts,
+                key=lambda m: (len(m['competitors']), -ord(m['prompt'][0]) if m['prompt'] else 0),
+            )
+
+        # 2. Category rollups (only consider categories with enough sample
+        #    size for the percentage to mean something — < 3 prompts per
+        #    category is noise).
+        MIN_CATEGORY_SAMPLE = 3
+        category_view = []
+        for cat, stats in category_stats.items():
+            if stats['prompts'] < MIN_CATEGORY_SAMPLE:
+                continue
+            vis_rate = stats['brand_mentions'] / stats['prompts'] * 100
+            top_competitors = sorted(
+                stats['competitor_names_seen'].items(),
+                key=lambda kv: kv[1], reverse=True,
+            )[:3]
+            category_view.append({
+                'category': cat,
+                'visibility_rate': vis_rate,
+                'prompt_count': stats['prompts'],
+                'brand_mentions': stats['brand_mentions'],
+                'top_competitors': top_competitors,
+            })
+
+        # Sort once for "What's Working" (highest vis rate) and "What's Missing"
+        # (lowest vis rate, but only categories where competitors DID show up,
+        # because if no one's being mentioned the category is just untracked
+        # by AI — not a "miss" per se).
+        working_categories = sorted(category_view, key=lambda c: -c['visibility_rate'])[:3]
+        missing_categories = [
+            c for c in category_view
+            if c['visibility_rate'] < 50 and c['top_competitors']
+        ]
+        missing_categories = sorted(missing_categories, key=lambda c: c['visibility_rate'])[:3]
+
+        # 3. Persona view — rank personas by visibility rate, only show those
+        #    with enough sample to be meaningful.
+        MIN_PERSONA_SAMPLE = 3
+        persona_view = []
+        for p, stats in persona_stats.items():
+            if stats['prompts'] < MIN_PERSONA_SAMPLE:
+                continue
+            persona_view.append({
+                'persona': p,
+                'visibility_rate': stats['brand_mentions'] / stats['prompts'] * 100,
+                'prompt_count': stats['prompts'],
+                'brand_mentions': stats['brand_mentions'],
+            })
+        persona_view.sort(key=lambda p: -p['visibility_rate'])
+
+        # 4. Platform view — every platform we tested (small enough to always show).
+        platform_view = []
+        for p, stats in platform_stats.items():
+            if stats['prompts'] == 0:
+                continue
+            platform_view.append({
+                'platform': p,
+                'visibility_rate': stats['brand_mentions'] / stats['prompts'] * 100,
+                'prompt_count': stats['prompts'],
+                'brand_mentions': stats['brand_mentions'],
+            })
+        platform_view.sort(key=lambda p: -p['visibility_rate'])
+
+        # ---- Build HTML ----
+        # Helper: an "evidence chip" showing N/N counts so every claim is
+        # tied to its underlying sample size. This is the trust-builder —
+        # nothing in this section is asserted without a count behind it.
+        def _chip(label, count, total):
+            pct = (count / total * 100) if total else 0
+            return (
+                f'<span style="display: inline-block; padding: 2px 10px; '
+                f'background: #F0E0E5; border-radius: 12px; font-size: 12px; '
+                f'color: #4D2E3A; font-weight: 500;">'
+                f'{label}: <strong>{count}/{total}</strong> ({pct:.0f}%)</span>'
+            )
+
+        def _short(text, n=80):
+            text = (text or '').strip()
+            if len(text) <= n:
+                return html.escape(text)
+            return html.escape(text[:n].rstrip()) + '…'
+
+        # Best Response panel — only render if there actually is one
+        best_panel_html = ""
         if best_response['prominence'] > 0:
+            best_panel_html = f"""
+                <div style="background: rgba(255,255,255,0.7); padding: 20px; border-radius: 8px; border-left: 4px solid #27AE60;">
+                    <div style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #27AE60; font-weight: 600; margin-bottom: 8px;">✨ Strongest Visibility Moment</div>
+                    <div style="font-size: 14px; color: #1C1C1C; margin-bottom: 8px; line-height: 1.5;"><strong>"{_short(best_response['prompt'])}"</strong></div>
+                    <div style="font-size: 13px; color: #6B5660; line-height: 1.6;">
+                        Prominence <strong style="color: #27AE60;">{best_response['prominence']:.1f}/10</strong>
+                        on <strong>{html.escape(best_response['platform'])}</strong>
+                        for the <strong>{html.escape(best_response['persona'])}</strong> persona.
+                    </div>
+                </div>
+            """
+
+        # Worst Miss panel
+        worst_panel_html = ""
+        if worst_miss:
+            top_comps = worst_miss['competitors'][:3]
+            extra = len(worst_miss['competitors']) - len(top_comps)
+            comp_str = ', '.join(html.escape(c) for c in top_comps)
+            if extra > 0:
+                comp_str += f' +{extra} more'
+            worst_panel_html = f"""
+                <div style="background: rgba(255,255,255,0.7); padding: 20px; border-radius: 8px; border-left: 4px solid #E74C3C;">
+                    <div style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #E74C3C; font-weight: 600; margin-bottom: 8px;">⚠️ Biggest Visibility Gap</div>
+                    <div style="font-size: 14px; color: #1C1C1C; margin-bottom: 8px; line-height: 1.5;"><strong>"{_short(worst_miss['prompt'])}"</strong></div>
+                    <div style="font-size: 13px; color: #6B5660; line-height: 1.6;">
+                        AI named <strong>{len(worst_miss['competitors'])}</strong> competitor{'s' if len(worst_miss['competitors']) != 1 else ''} on
+                        <strong>{html.escape(worst_miss['platform'])}</strong> ({html.escape(worst_miss['persona'])}) but did not mention {html.escape(brand_name)}: {comp_str}.
+                    </div>
+                </div>
+            """
+
+        # What's Working — only render if we have data-supported categories
+        working_html = ""
+        if working_categories:
+            rows = []
+            for c in working_categories:
+                rows.append(
+                    f'<li style="margin-bottom: 6px;"><strong>{html.escape(c["category"])}</strong> — '
+                    f'mentioned in {c["brand_mentions"]} of {c["prompt_count"]} prompts '
+                    f'({c["visibility_rate"]:.0f}%)</li>'
+                )
+            working_html = f"""
+                <div style="background: rgba(255,255,255,0.7); padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 13px; font-weight: 600; color: #4D2E3A; margin-bottom: 8px;">🔑 Categories Where You Appear Most</div>
+                    <ul style="margin: 0; padding-left: 18px; font-size: 13px; color: #1C1C1C; line-height: 1.6;">
+                        {''.join(rows)}
+                    </ul>
+                </div>
+            """
+        elif category_view:
+            working_html = """
+                <div style="background: rgba(255,255,255,0.7); padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 13px; font-weight: 600; color: #4D2E3A; margin-bottom: 6px;">🔑 Categories Where You Appear Most</div>
+                    <div style="font-size: 13px; color: #6B5660;">No category had enough prompts (≥3) for a meaningful comparison this run.</div>
+                </div>
+            """
+
+        # What's Missing — categories with low visibility AND active competitors
+        missing_html = ""
+        if missing_categories:
+            rows = []
+            for c in missing_categories:
+                comps = ', '.join(html.escape(name) for name, _cnt in c['top_competitors'])
+                rows.append(
+                    f'<li style="margin-bottom: 6px;"><strong>{html.escape(c["category"])}</strong> — '
+                    f'mentioned in {c["brand_mentions"]} of {c["prompt_count"]} prompts '
+                    f'({c["visibility_rate"]:.0f}%); competitors named: {comps}</li>'
+                )
+            missing_html = f"""
+                <div style="background: rgba(255,255,255,0.7); padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 13px; font-weight: 600; color: #4D2E3A; margin-bottom: 8px;">🚨 Categories Where Competitors Win</div>
+                    <ul style="margin: 0; padding-left: 18px; font-size: 13px; color: #1C1C1C; line-height: 1.6;">
+                        {''.join(rows)}
+                    </ul>
+                </div>
+            """
+        elif category_view:
+            missing_html = """
+                <div style="background: rgba(255,255,255,0.7); padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 13px; font-weight: 600; color: #4D2E3A; margin-bottom: 6px;">🚨 Categories Where Competitors Win</div>
+                    <div style="font-size: 13px; color: #6B5660;">No category had below-50% brand visibility with active competitor mentions.</div>
+                </div>
+            """
+
+        # By Persona panel — only render if we have ≥2 personas with sample
+        persona_panel_html = ""
+        if len(persona_view) >= 2:
+            rows = []
+            for p in persona_view:
+                bar_pct = min(p['visibility_rate'], 100)
+                rows.append(f"""
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 13px;">
+                        <div style="flex: 0 0 220px; color: #1C1C1C;">{html.escape(p['persona'])}</div>
+                        <div style="flex: 1; background: #F0E0E5; border-radius: 6px; height: 18px; position: relative; overflow: hidden;">
+                            <div style="width: {bar_pct}%; height: 100%; background: #4D2E3A;"></div>
+                        </div>
+                        <div style="flex: 0 0 110px; color: #6B5660; text-align: right;">
+                            {p['visibility_rate']:.0f}% ({p['brand_mentions']}/{p['prompt_count']})
+                        </div>
+                    </div>
+                """)
+            persona_panel_html = f"""
+                <div style="background: rgba(255,255,255,0.7); padding: 20px; border-radius: 8px; margin-top: 16px;">
+                    <div style="font-size: 13px; font-weight: 600; color: #4D2E3A; margin-bottom: 12px;">👥 Visibility by Persona</div>
+                    {''.join(rows)}
+                    <div style="font-size: 12px; color: #6B5660; margin-top: 8px; font-style: italic;">
+                        Personas with fewer than {MIN_PERSONA_SAMPLE} tested prompts are excluded — sample too small to compare.
+                    </div>
+                </div>
+            """
+
+        # By Platform panel — always show if we have ≥2 platforms
+        platform_panel_html = ""
+        if len(platform_view) >= 2:
+            rows = []
+            for p in platform_view:
+                bar_pct = min(p['visibility_rate'], 100)
+                rows.append(f"""
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 13px;">
+                        <div style="flex: 0 0 220px; color: #1C1C1C;">{html.escape(p['platform'])}</div>
+                        <div style="flex: 1; background: #F0E0E5; border-radius: 6px; height: 18px; position: relative; overflow: hidden;">
+                            <div style="width: {bar_pct}%; height: 100%; background: #4D2E3A;"></div>
+                        </div>
+                        <div style="flex: 0 0 110px; color: #6B5660; text-align: right;">
+                            {p['visibility_rate']:.0f}% ({p['brand_mentions']}/{p['prompt_count']})
+                        </div>
+                    </div>
+                """)
+            platform_panel_html = f"""
+                <div style="background: rgba(255,255,255,0.7); padding: 20px; border-radius: 8px; margin-top: 16px;">
+                    <div style="font-size: 13px; font-weight: 600; color: #4D2E3A; margin-bottom: 12px;">📡 Visibility by Platform</div>
+                    {''.join(rows)}
+                </div>
+            """
+
+        # Top-row grid (best + worst). Only render the wrapper if at least
+        # one of them has data — otherwise the panel is just decoration.
+        top_row_html = ""
+        if best_panel_html or worst_panel_html:
+            # If only one panel exists, span the row to avoid an empty cell
+            grid_cols = "repeat(2, 1fr)" if best_panel_html and worst_panel_html else "1fr"
+            top_row_html = f"""
+                <div style="display: grid; grid-template-columns: {grid_cols}; gap: 20px; margin-bottom: 20px;">
+                    {best_panel_html}
+                    {worst_panel_html}
+                </div>
+            """
+
+        # Bottom-row grid (working + missing categories). Same logic.
+        bottom_row_html = ""
+        if working_html or missing_html:
+            grid_cols = "repeat(2, 1fr)" if working_html and missing_html else "1fr"
+            bottom_row_html = f"""
+                <div style="display: grid; grid-template-columns: {grid_cols}; gap: 20px;">
+                    {working_html}
+                    {missing_html}
+                </div>
+            """
+
+        # Stitch the full Quick Insights container, only if we have something to show
+        quick_insights_html = ""
+        any_panel = top_row_html or bottom_row_html or persona_panel_html or platform_panel_html
+        if any_panel:
+            total_tested = len(scored_results)
+            total_brand_mentions = sum(
+                1 for r in scored_results if r.get('visibility', {}).get('brand_mentioned')
+            )
             quick_insights_html = f"""
         <div style="background: linear-gradient(135deg, #E8D4DA 0%, #F0E0E5 100%); border-radius: 12px; padding: 32px; margin-bottom: 32px; border: 1px solid #C9A7B3;">
-            <h3 style="margin: 0 0 20px 0; color: #4D2E3A; font-size: 22px; font-weight: 700;">🎯 Quick Insights</h3>
-
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px;">
-                <div style="background: rgba(255,255,255,0.7); padding: 20px; border-radius: 8px; border-left: 4px solid #27AE60;">
-                    <div style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #27AE60; font-weight: 600; margin-bottom: 8px;">✨ Your Best Response</div>
-                    <div style="font-size: 14px; color: #1C1C1C; margin-bottom: 8px; line-height: 1.5;"><strong>"{best_response['prompt'][:80]}..."</strong></div>
-                    <div style="font-size: 13px; color: #6B5660;">Prominence: <strong style="color: #27AE60;">{best_response['prominence']}/10</strong> - You're a top mention</div>
-                </div>
-
-                <div style="background: rgba(255,255,255,0.7); padding: 20px; border-radius: 8px; border-left: 4px solid #E74C3C;">
-                    <div style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #E74C3C; font-weight: 600; margin-bottom: 8px;">⚠️ Worst Miss</div>
-                    <div style="font-size: 14px; color: #1C1C1C; margin-bottom: 8px; line-height: 1.5;"><strong>"{worst_miss['prompt'][:80] if worst_miss['prompt'] else 'N/A'}..."</strong></div>
-                    <div style="font-size: 13px; color: #6B5660;">Competitors mentioned: <strong>{', '.join(worst_miss['competitors'][:2]) if worst_miss['competitors'] else 'None'}</strong></div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; flex-wrap: wrap; gap: 12px;">
+                <h3 style="margin: 0; color: #4D2E3A; font-size: 22px; font-weight: 700;">🎯 Quick Insights</h3>
+                <div style="font-size: 12px; color: #6B5660;">
+                    Based on <strong>{total_brand_mentions}/{total_tested}</strong> prompts where {html.escape(brand_name)} was mentioned this run.
                 </div>
             </div>
-
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-                <div style="background: rgba(255,255,255,0.7); padding: 16px; border-radius: 8px;">
-                    <div style="font-size: 13px; font-weight: 600; color: #4D2E3A; margin-bottom: 6px;">🔑 What's Working</div>
-                    <div style="font-size: 13px; color: #1C1C1C; line-height: 1.6;">You show up for "luxury" and "professional" queries</div>
-                </div>
-                <div style="background: rgba(255,255,255,0.7); padding: 16px; border-radius: 8px;">
-                    <div style="font-size: 13px; font-weight: 600; color: #4D2E3A; margin-bottom: 6px;">🚨 What's Missing</div>
-                    <div style="font-size: 13px; color: #1C1C1C; line-height: 1.6;">Beginner content, how-to guides, tutorials</div>
-                </div>
-            </div>
+            <p style="margin: 0 0 20px 0; font-size: 13px; color: #6B5660; line-height: 1.5;">
+                Every figure below is computed directly from this run's responses. Sample sizes are shown so you can judge confidence —
+                categories or personas with fewer than 3 tested prompts are excluded as too small to compare meaningfully.
+            </p>
+            {top_row_html}
+            {bottom_row_html}
+            {persona_panel_html}
+            {platform_panel_html}
         </div>
         """
 
