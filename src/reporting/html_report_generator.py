@@ -316,10 +316,19 @@ class HTMLReportGenerator:
 
         # Calculate visibility gap (factual — no dollar estimates without real data)
         total_results = visibility_summary.get('total_prompts_tested', 362)
-        gap_percentage = competitor_rate - visibility_rate
 
-        # Calculate 90-day target (close 50% of gap - realistic)
-        target_visibility = min(visibility_rate + (competitor_rate - visibility_rate) * 0.5, 100)
+        # Anchor the gap math to the SINGLE top competitor that the headline
+        # copy names — not visibility_summary['competitor_mention_rate'] (which
+        # is the aggregate rate across all competitors). Mixing the two metrics
+        # produced incoherent headlines like "you 8.5%, top comp 3.6%, gap -4.4%"
+        # where the math doesn't add up.
+        top_comp_rate = top_comp.get('mention_rate', 0)
+        gap_percentage = top_comp_rate - visibility_rate
+
+        # Calculate 90-day target (close 50% of gap - realistic). When the brand
+        # already leads (gap_percentage <= 0), there's nothing to "close" — the
+        # target is to maintain visibility_rate.
+        target_visibility = min(visibility_rate + max(gap_percentage, 0) * 0.5, 100)
 
         # Strategic recommendation based on data.
         # All percentage formatting uses one decimal place so the Executive
@@ -410,14 +419,36 @@ class HTMLReportGenerator:
                 </div>
             """
 
+        # Headline framing — must agree with gap_card below. The previous version
+        # was unconditional and said "potential customers being directed to
+        # competitors instead of you" even when the brand was the category leader.
+        if gap_percentage > 0:
+            headline_copy = (
+                f"That <strong>{gap_percentage:.1f}-point gap</strong> means "
+                f"more AI users researching your category are being pointed at "
+                f"{top_comp['name']} than at you."
+            )
+        elif gap_percentage > -2:
+            headline_copy = (
+                f"You're roughly tied with {top_comp['name']} — within "
+                f"<strong>{abs(gap_percentage):.1f} points</strong>. The "
+                f"opportunity is to pull ahead on prominence and content depth."
+            )
+        else:
+            headline_copy = (
+                f"You're ahead of {top_comp['name']} by <strong>"
+                f"{abs(gap_percentage):.1f} points</strong> on visibility rate. "
+                f"The work now is on prominence (currently {prominence:.1f}/10), "
+                f"not presence."
+            )
+
         return f"""
         <h2 style="margin-top: 48px;">Executive Summary</h2>
 
         <!-- The Business Impact -->
         <div class="insight" style="background: linear-gradient(135deg, #4D2E3A15 0%, #4D2E3A25 100%); border-left: 4px solid #4D2E3A; padding: 32px; border-radius: 8px; margin: 32px 0;">
             <p style="font-size: 18px; line-height: 1.7; margin: 0; color: #4D2E3A; font-weight: 500;">
-                {brand_name} is at <strong>{visibility_rate:.1f}%</strong> AI visibility while your top competitor ({top_comp['name']}) appears in <strong>{top_comp['mention_rate']:.1f}%</strong> of queries.
-                That <strong>{gap_percentage:.1f}% gap</strong> means potential customers asking AI for recommendations in your space are being directed to competitors instead of you.
+                {brand_name} is at <strong>{visibility_rate:.1f}%</strong> AI visibility while your top competitor ({top_comp['name']}) appears in <strong>{top_comp['mention_rate']:.1f}%</strong> of queries. {headline_copy}
             </p>
             <p style="font-size: 16px; line-height: 1.7; margin: 24px 0 0 0; color: #6B5660;">
                 <strong>Primary recommendation:</strong> {primary_rec}
