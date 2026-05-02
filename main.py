@@ -584,17 +584,50 @@ class VisibilityTracker:
             print("Error: No test results found. Run tests first.")
             return {}
 
-        # Load full results (with response text)
+        # Load full results (with response text). Phase 3 (per-competitor
+        # source lens) and Phase 4 (positioning profile) BOTH need response_text
+        # on each scored result. If load_full_result silently fails, both
+        # sections render to nothing and there's no signal in logs.
         print("Loading detailed responses...")
         full_results = []
+        load_failures = 0
+        first_failure_id = None
         for result in results:
             test_id = result.get('test_id')
-            if test_id:
-                try:
-                    full_result = self.results_tracker.load_full_result(test_id)
-                    full_results.append(full_result)
-                except:
-                    pass
+            if not test_id:
+                continue
+            try:
+                full_result = self.results_tracker.load_full_result(test_id)
+                full_results.append(full_result)
+            except FileNotFoundError:
+                load_failures += 1
+                if first_failure_id is None:
+                    first_failure_id = test_id
+            except Exception as e:
+                load_failures += 1
+                if first_failure_id is None:
+                    first_failure_id = test_id
+                print(f"⚠️  load_full_result({test_id}) raised {type(e).__name__}: {e}")
+
+        if load_failures:
+            print(
+                f"⚠️  {load_failures}/{len(results)} test results failed to load "
+                f"(first failure: {first_failure_id}). "
+                f"Phase 3 source-tier and Phase 4 positioning sections "
+                f"need response_text — they will render empty for these results."
+            )
+
+        # Diagnostic: how many of the loaded full_results have response_text?
+        # This is the single most important Phase 3+4 health signal.
+        with_response = sum(
+            1 for r in full_results
+            if (r.get('response_text') or r.get('response'))
+        )
+        print(
+            f"   Loaded {len(full_results)} full results, "
+            f"{with_response} have response_text "
+            f"({100*with_response/max(len(full_results),1):.0f}%)"
+        )
 
         if not full_results:
             print("Error: No detailed results found.")

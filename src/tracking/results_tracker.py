@@ -203,19 +203,35 @@ class ResultsTracker:
         """
         Load full result from JSON file.
 
+        Looks first at the canonical path `{results_dir}/{test_id}.json`,
+        then falls back to a recursive search under `results_dir`. The
+        fallback is needed because run_weekly.py's snapshot upload + download
+        cycle can leave test JSONs scattered across nested
+        `weekly/{week}/...` subdirs (path-concatenation accumulation).
+        Without the fallback, Phase 3 and Phase 4 sections silently render
+        empty whenever a result's JSON ended up in one of those subdirs.
+
         Args:
             test_id: The test ID to load
 
         Returns:
             Full result dictionary
         """
+        # Canonical location first — fast path
         json_path = os.path.join(self.results_dir, f"{test_id}.json")
+        if os.path.exists(json_path):
+            with open(json_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
 
-        if not os.path.exists(json_path):
-            raise FileNotFoundError(f"Result not found: {test_id}")
+        # Fallback: recursive scan of results_dir for any matching file.
+        # This handles legacy snapshots and the runaway weekly/ paths.
+        target_name = f"{test_id}.json"
+        for root, _dirs, files in os.walk(self.results_dir):
+            if target_name in files:
+                with open(os.path.join(root, target_name), 'r', encoding='utf-8') as f:
+                    return json.load(f)
 
-        with open(json_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        raise FileNotFoundError(f"Result not found: {test_id}")
 
     def get_results_by_platform(self, platform: str) -> List[Dict[str, Any]]:
         """
