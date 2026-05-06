@@ -100,7 +100,15 @@ class VisibilityTracker:
                 return {
                     'api_keys': api_keys,
                     'models': {
-                        'openai': 'gpt-5',
+                        # gpt-4.1: non-reasoning model. We tried gpt-5 (reasoning)
+                        # and it consumed the entire max_completion_tokens budget
+                        # on hidden chain-of-thought, leaving zero tokens for
+                        # visible output. 100% of openai responses came back
+                        # empty (finish_reason='length', completion_tokens=1000,
+                        # response_text=''). gpt-4.1 returns full text directly,
+                        # which is what brand-visibility tracking actually needs:
+                        # the answer a real ChatGPT.com user would see.
+                        'openai': 'gpt-4.1',
                         'anthropic': 'claude-sonnet-4-6',
                         'perplexity': 'sonar',
                         'gemini': 'gemini-2.5-flash',
@@ -146,7 +154,10 @@ class VisibilityTracker:
             return {
                 'api_keys': api_keys,
                 'models': {
-                    'openai': 'gpt-5',
+                    # See note at line ~103 — gpt-4.1 (non-reasoning) instead
+                    # of gpt-5 (reasoning) so we get visible response text
+                    # rather than empty completions.
+                    'openai': 'gpt-4.1',
                     'anthropic': 'claude-sonnet-4-6',
                     'perplexity': 'sonar',
                     'gemini': 'gemini-2.5-flash',
@@ -1569,10 +1580,77 @@ def main():
         help='Path to brand configuration JSON file (default: data/brand_config_template.json)'
     )
 
+    # Local-iteration helpers (Patch 6).
+    #
+    # --regenerate-only: skip prompt-running and any API calls. Just re-load
+    # existing test data from disk, re-run scoring + analysis, and rebuild
+    # the HTML report. Cuts the iteration loop on copy/layout changes from
+    # ~45-90 min (deploy weekly job → wait → pull) to under a minute.
+    #
+    # --client SLUG: auto-resolves --brand-config to data/{slug}/{slug}_brand_config.json
+    # so we don't have to type the full path every time.
+    parser.add_argument(
+        '--regenerate-only',
+        action='store_true',
+        help=(
+            'Re-generate analysis + report from existing local test data only. '
+            'No API calls, no GCS, no prompt-running. Use this for fast '
+            'iteration on report copy/layout changes. Pair with --client SLUG.'
+        )
+    )
+    parser.add_argument(
+        '--client',
+        default=None,
+        help=(
+            'Client slug (e.g. "ontario_caregiver_organization"). When set, '
+            'auto-resolves --brand-config to data/{slug}/{slug}_brand_config.json. '
+            'Convenient with --regenerate-only.'
+        )
+    )
+
     args = parser.parse_args()
+
+    # If --client was passed, auto-resolve brand-config path
+    if args.client:
+        resolved_brand_config = f'data/{args.client}/{args.client}_brand_config.json'
+        if not os.path.exists(resolved_brand_config):
+            print(f"✗ --client {args.client!r}: brand config not found at {resolved_brand_config}")
+            print(f"  Available clients in data/:")
+            try:
+                for entry in sorted(os.listdir('data')):
+                    candidate = f'data/{entry}/{entry}_brand_config.json'
+                    if os.path.exists(candidate):
+                        print(f"    {entry}")
+            except FileNotFoundError:
+                pass
+            sys.exit(1)
+        args.brand_config = resolved_brand_config
 
     # Initialize tracker with brand config for per-client isolation
     tracker = VisibilityTracker(args.config, brand_config_path=args.brand_config)
+
+    # --regenerate-only short-circuits all the prompt-running paths. We just
+    # want analysis + report from whatever's already on disk.
+    if args.regenerate_only:
+        print(f"📊 Regenerating report from local data (no API calls)")
+        print(f"   brand_config: {args.brand_config}")
+        if not args.client:
+            print(f"   ⚠️  --client not set — make sure --brand-config points at the right client")
+
+        result = tracker.analyze_results(args.brand_config)
+        if not result:
+            print("\n✗ analyze_results returned empty. Common causes:")
+            print("   • No test data in data/results/{slug}/results_summary.csv")
+            print("   • brand_config path is wrong")
+            sys.exit(1)
+
+        # Surface where the HTML landed so the user can open it immediately
+        reports_dir = tracker.config.get('output', {}).get('reports_directory', 'data/reports')
+        client_slug = args.client or 'unknown'
+        print(f"\n✓ Report regenerated. Look in:")
+        print(f"   {reports_dir}/{client_slug}/  (per-client dir, if isolation is on)")
+        print(f"   {reports_dir}/                (legacy shared dir)")
+        sys.exit(0)
 
     if args.generate_prompts or args.full_pipeline:
         # Generate prompts
