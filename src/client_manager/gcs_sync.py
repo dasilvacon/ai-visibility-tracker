@@ -363,11 +363,38 @@ class GCSClientSync:
                     print(f"No test results found in GCS for {client_slug} (this is OK for first run)")
                     return True
 
+                # Patch 7: skip weekly snapshot directories.
+                #
+                # Weekly snapshots are immutable historical copies of test data
+                # uploaded under test-results/{slug}/weekly/{YYYY-WW}/. Each
+                # week's run_weekly.py snapshot step uploaded EVERY local file
+                # recursively (including previous nested weekly/ folders), which
+                # accumulated path-concatenation duplicates each cycle:
+                #   .../weekly/2026-W18/weekly/2026-W18/weekly/2026-W17/.../test_*.json
+                #
+                # Downloading all of those at startup OOM-killed the 2Gi
+                # container for clients with longer history (7 of 9 weekly jobs
+                # failed in the 2026-05-06 run because of this).
+                #
+                # The current state is fully captured in:
+                #   - results_summary.csv (top-level)
+                #   - tests/test_*.json (per-test files)
+                # Snapshots are useful for time-travel/audit but not for the
+                # next run. So we skip them on download. The full fix is in
+                # run_weekly.py upload step (don't re-upload existing
+                # snapshots) — this is a band-aid that unblocks production
+                # without rewriting the upload logic.
+                snapshot_skipped = 0
                 for blob in blobs:
                     if blob.name.endswith('/'):
                         continue
 
                     relative_path = blob.name[len(results_prefix):]
+
+                    # Skip weekly snapshot bloat
+                    if relative_path.startswith('weekly/') or '/weekly/' in relative_path:
+                        snapshot_skipped += 1
+                        continue
 
                     if relative_path.startswith('tests/'):
                         filename = Path(relative_path).name
@@ -380,7 +407,7 @@ class GCSClientSync:
                     downloaded_count += 1
 
                 if downloaded_count > 0:
-                    print(f"✓ Downloaded {downloaded_count} test result files for {client_slug}")
+                    print(f"✓ Downloaded {downloaded_count} test result files for {client_slug} (skipped {snapshot_skipped} weekly-snapshot files to avoid OOM)")
 
             else:
                 # Download for all clients
