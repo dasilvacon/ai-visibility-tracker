@@ -389,8 +389,21 @@ class HTMLReportGenerator:
                 </div>
             """
 
-        # Card B: Competitive gap framing — adapts to actual gap_percentage
-        if gap_percentage > 20:
+        # Card B: Competitive gap framing — adapts to actual gap_percentage.
+        # The "tied" branch is symmetric (abs(gap) < 2): if you're within 2
+        # points either direction of the top competitor, "tied" is the honest
+        # framing. Previous version sent Lumo (+0.2 gap) into the "trail"
+        # branch with harsh copy, which read alarmist for what's a wash.
+        if abs(gap_percentage) < 2:
+            gap_card = f"""
+                <div class="info-card" style="background: #F0FFF4; border-left: 4px solid #10b981; margin-top: 16px;">
+                    <div class="info-card-title" style="color: #065f46;">Roughly tied with the leader</div>
+                    <div class="info-card-content">
+                        <p>{top_comp['name']} is at <strong>{top_comp['mention_rate']:.1f}%</strong> vs your <strong>{visibility_rate:.1f}%</strong> — a {abs(gap_percentage):.1f}-point difference, effectively a wash. The opportunity now is to pull ahead on prominence (currently <strong>{prominence:.1f}/10</strong>) and content depth so AI starts recommending you as the top choice rather than just listing you alongside.</p>
+                    </div>
+                </div>
+            """
+        elif gap_percentage > 20:
             gap_card = f"""
                 <div class="info-card" style="background: #FFF1D6; border-left: 4px solid #f59e0b; margin-top: 16px;">
                     <div class="info-card-title" style="color: #92400e;">The competitive gap is real and addressable</div>
@@ -419,20 +432,23 @@ class HTMLReportGenerator:
                 </div>
             """
 
-        # Headline framing — must agree with gap_card below. The previous version
-        # was unconditional and said "potential customers being directed to
-        # competitors instead of you" even when the brand was the category leader.
-        if gap_percentage > 0:
-            headline_copy = (
-                f"That <strong>{gap_percentage:.1f}-point gap</strong> means "
-                f"more AI users researching your category are being pointed at "
-                f"{top_comp['name']} than at you."
-            )
-        elif gap_percentage > -2:
+        # Headline framing — must agree with gap_card above.
+        # Tied threshold is symmetric (abs(gap) < 2) so a tiny lead like
+        # Lumo's +0.2 doesn't trigger alarmist "more users being pointed at
+        # competitor" copy. Previous version of this branch was asymmetric
+        # (only fired when behind by < 2), which sent +0.2-point leaders to
+        # the trail branch.
+        if abs(gap_percentage) < 2:
             headline_copy = (
                 f"You're roughly tied with {top_comp['name']} — within "
                 f"<strong>{abs(gap_percentage):.1f} points</strong>. The "
                 f"opportunity is to pull ahead on prominence and content depth."
+            )
+        elif gap_percentage > 0:
+            headline_copy = (
+                f"That <strong>{gap_percentage:.1f}-point gap</strong> means "
+                f"more AI users researching your category are being pointed at "
+                f"{top_comp['name']} than at you."
             )
         else:
             headline_copy = (
@@ -4228,22 +4244,49 @@ class HTMLReportGenerator:
             # right-edge and left-edge truncation cases.
             context = _unwrap_snippet_dicts(context).strip()
 
-            # Try to start at sentence boundary if possible
-            if start > 0:
-                # Look for sentence start (. or newline followed by capital letter)
-                sentences_before = context[:200].split('. ')
-                if len(sentences_before) > 1:
-                    context = '. '.join(sentences_before[1:])
-                else:
-                    context = '...' + context
+            # Trim to sentence boundaries WITHOUT losing the brand mention.
+            # Previous version did:
+            #   sentences_before = context[:200].split('. ')
+            #   context = '. '.join(sentences_before[1:])
+            # which replaced the entire 500-char context with only the back
+            # half of the first 200 chars — silently dropping the brand
+            # mention and the 300 chars after it. Result: ~26% of "Positive
+            # Mentions" / "Neutral Mentions" / "Negative Mentions" example
+            # quotes shown to clients did NOT contain the brand name at all.
+            #
+            # New approach: locate the brand mention inside the slice, split
+            # context into prefix (everything before the brand) and suffix
+            # (the brand mention + everything after), trim each independently
+            # at sentence boundaries, then re-concatenate. Brand mention is
+            # always preserved.
+            brand_pos_in_context = context.lower().find(brand_lower)
+            if brand_pos_in_context >= 0:
+                prefix = context[:brand_pos_in_context]
+                suffix = context[brand_pos_in_context:]
 
-            # Try to end at sentence boundary
-            if end < len(response_text):
-                sentences = context.split('. ')
-                if len(sentences) > 1:
-                    context = '. '.join(sentences[:-1]) + '.'
-                else:
-                    context = context + '...'
+                if start > 0:
+                    # Trim prefix at the first sentence boundary so the quote
+                    # opens cleanly. If no period in the prefix, prepend "...".
+                    sentences_before = prefix.split('. ')
+                    if len(sentences_before) > 1:
+                        prefix = '. '.join(sentences_before[1:])
+                    else:
+                        prefix = '...' + prefix
+
+                if end < len(response_text):
+                    # Trim suffix at the last complete sentence boundary so
+                    # the quote ends cleanly. If no period in the suffix,
+                    # append "...".
+                    sentences_after = suffix.split('. ')
+                    if len(sentences_after) > 1:
+                        suffix = '. '.join(sentences_after[:-1]) + '.'
+                    else:
+                        suffix = suffix + '...'
+
+                context = prefix + suffix
+            # else: brand mention got mangled by markdown cleanup or
+            # _unwrap_snippet_dicts — leave context as-is rather than risk
+            # dropping it entirely. Downstream classifier will still work.
 
             # Determine sentiment — try the LLM classifier first.
             sentiment = None
