@@ -606,22 +606,39 @@ class VisibilityScorer:
                     position_in_response = match.start() / text_length
                     break
 
-            # If no context found from domain, use first 200 chars as general context
+            # Track whether the domain was actually found in the response prose.
+            # If it wasn't (common for Perplexity / Google AI Overview where
+            # citations are returned as separate metadata, not interleaved with
+            # prose), we have NO spatial relationship between the citation and
+            # any brand mention — so any brand_in_context claim would be a
+            # false positive.
+            domain_was_in_prose = bool(context_snippet)
+
+            # If no context found from domain, use first 200 chars as general
+            # context for DISPLAY purposes only — we still want to show the
+            # client some text from the response. But we must not use this
+            # snippet for the brand-in-context check (see below).
             if not context_snippet and response_text:
                 context_snippet = response_text[:200].strip()
 
-            # Check if brand appears near this citation
-            for pattern in self.brand_patterns:
-                if context_snippet and pattern.search(context_snippet):
-                    brand_in_context = True
-                    break
-
-            # Check which competitors appear near this citation
-            for comp_name, patterns in self.competitor_patterns.items():
-                for pattern in patterns:
+            # Check if brand appears near this citation.
+            # IMPORTANT: only check when the domain was actually found in the
+            # prose. Otherwise context_snippet is just the response opening
+            # and has no spatial relationship to the citation. Previous
+            # behavior produced 60-90% false-positive rates on Brand Co-Cited
+            # markers across all clients (most visible on Perplexity rows).
+            if domain_was_in_prose:
+                for pattern in self.brand_patterns:
                     if context_snippet and pattern.search(context_snippet):
-                        competitors_in_context.append(comp_name)
+                        brand_in_context = True
                         break
+
+                # Check which competitors appear near this citation
+                for comp_name, patterns in self.competitor_patterns.items():
+                    for pattern in patterns:
+                        if context_snippet and pattern.search(context_snippet):
+                            competitors_in_context.append(comp_name)
+                            break
 
             sources.append({
                 'type': source_type,
