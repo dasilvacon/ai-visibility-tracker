@@ -274,7 +274,8 @@ class VisibilityTracker:
         existing = self.results_tracker.load_results_summary()
         return {(r['prompt_id'], r['platform']) for r in existing if r.get('prompt_id') and r.get('platform')}
 
-    def run_tests(self, prompts_file: str, platforms: List[str] = None) -> List[Dict[str, Any]]:
+    def run_tests(self, prompts_file: str, platforms: List[str] = None,
+                  force_rerun: bool = False) -> List[Dict[str, Any]]:
         """
         Run visibility tests on prompts. Supports resume — skips prompts
         that already have results from a previous interrupted run.
@@ -282,6 +283,11 @@ class VisibilityTracker:
         Args:
             prompts_file: Path to prompts CSV file
             platforms: List of platforms to test (None = all available)
+            force_rerun: If True, ignore existing test data and re-run every
+                prompt against every platform. Use when underlying test data
+                is bad (e.g. previous run used a broken model and stored
+                empty responses). Adds full API spend cost — only use when
+                needed.
 
         Returns:
             List of test results
@@ -306,8 +312,14 @@ class VisibilityTracker:
             print("Error: No valid platforms specified.")
             return []
 
-        # Check for existing results (resume support)
-        completed = self._get_completed_tests()
+        # Check for existing results (resume support).
+        # When force_rerun=True we skip the resume check entirely and
+        # re-run every (prompt, platform) combination from scratch.
+        if force_rerun:
+            print(f"\n⚠️  FORCE RERUN: ignoring existing test data and re-running every prompt × platform")
+            completed = set()
+        else:
+            completed = self._get_completed_tests()
         total_expected = len(prompts) * len(test_platforms)
 
         if completed:
@@ -1598,6 +1610,19 @@ def main():
             'iteration on report copy/layout changes. Pair with --client SLUG.'
         )
     )
+    # Patch 8: bypass the resume-from-existing-tests logic. Use when the
+    # underlying test data is bad (e.g. previous run used a broken model
+    # config and stored empty responses). Adds full API spend cost.
+    # Also accepts FORCE_RERUN=true env var for use in Cloud Run Jobs.
+    parser.add_argument(
+        '--force-rerun',
+        action='store_true',
+        help=(
+            'Re-run every prompt × platform from scratch, ignoring existing '
+            'test data. Use only when underlying data is bad — adds full '
+            'API spend cost. Also activatable via FORCE_RERUN=true env var.'
+        )
+    )
     parser.add_argument(
         '--client',
         default=None,
@@ -1685,7 +1710,11 @@ def main():
         tracker.generate_reports()
     else:
         # Run tests (with automatic resume if partial results exist)
-        results = tracker.run_tests(args.prompts, args.platforms)
+        # FORCE_RERUN env var (or --force-rerun flag) bypasses resume and
+        # re-runs every prompt — used when underlying test data is bad and
+        # we need fresh API responses.
+        force_rerun = args.force_rerun or os.environ.get('FORCE_RERUN', '').lower() in ('1', 'true', 'yes')
+        results = tracker.run_tests(args.prompts, args.platforms, force_rerun=force_rerun)
 
         if results:
             # Only generate reports if ALL prompts are tested
