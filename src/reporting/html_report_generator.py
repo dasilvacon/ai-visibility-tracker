@@ -337,7 +337,7 @@ class HTMLReportGenerator:
         # underlying metric made clients see "9% vs 8.7%" in different
         # sections and lose trust.
         if chatgpt_rate < 20 and visibility_rate < 30:
-            primary_rec = f"Focus on ChatGPT first - it's 73% of AI users and you're at {chatgpt_rate:.1f}% there. Infrastructure fixes take 2-4 weeks."
+            primary_rec = f"Focus on ChatGPT first - it has the largest user base of the AI platforms we track and you're at {chatgpt_rate:.1f}% there. Infrastructure fixes take 2-4 weeks."
         elif visibility_rate >= 60:
             primary_rec = f"You have strong visibility ({visibility_rate:.1f}%). Focus on improving prominence (currently {prominence:.1f}/10) to become the top recommendation."
         else:
@@ -364,9 +364,9 @@ class HTMLReportGenerator:
         if chatgpt_rate < 20:
             chatgpt_card = f"""
                 <div class="info-card" style="background: #F0F7FF; border-left: 4px solid #3b82f6;">
-                    <div class="info-card-title" style="color: #1e40af;">Biggest single platform opportunity: ChatGPT</div>
+                    <div class="info-card-title" style="color: #1e40af;">Highest-volume platform: ChatGPT</div>
                     <div class="info-card-content">
-                        <p>ChatGPT represents <strong>73% of all AI users</strong>. You&#39;re currently at <strong>{chatgpt_rate:.1f}%</strong> visibility there — the largest single platform with the most upside if we close the gap.</p>
+                        <p>ChatGPT has the largest user base of the AI platforms tracked. You&#39;re currently at <strong>{chatgpt_rate:.1f}%</strong> visibility there — the largest single platform with the most upside if we close the gap.</p>
                     </div>
                 </div>
             """
@@ -375,7 +375,7 @@ class HTMLReportGenerator:
                 <div class="info-card" style="background: #F0FFF4; border-left: 4px solid #10b981;">
                     <div class="info-card-title" style="color: #065f46;">Strong on ChatGPT — extend the lead</div>
                     <div class="info-card-content">
-                        <p>You&#39;re at <strong>{chatgpt_rate:.1f}%</strong> visibility on ChatGPT — that&#39;s strong on the largest AI platform (73% of AI users). Document what&#39;s working there and replicate the pattern on Perplexity and Gemini, where there&#39;s more room to grow.</p>
+                        <p>You&#39;re at <strong>{chatgpt_rate:.1f}%</strong> visibility on ChatGPT — that&#39;s strong on the largest AI platform we track. Document what&#39;s working there and replicate the pattern on Perplexity and Gemini, where there&#39;s more room to grow.</p>
                     </div>
                 </div>
             """
@@ -384,7 +384,7 @@ class HTMLReportGenerator:
                 <div class="info-card" style="background: #F0F7FF; border-left: 4px solid #3b82f6;">
                     <div class="info-card-title" style="color: #1e40af;">Building on ChatGPT</div>
                     <div class="info-card-content">
-                        <p>You&#39;re at <strong>{chatgpt_rate:.1f}%</strong> visibility on ChatGPT — present but not yet dominant. ChatGPT is 73% of AI users, so this is the platform with the most leverage if we focus content efforts there next.</p>
+                        <p>You&#39;re at <strong>{chatgpt_rate:.1f}%</strong> visibility on ChatGPT — present but not yet dominant. ChatGPT has the largest user base of the platforms we track, so this is the platform with the most leverage if we focus content efforts there next.</p>
                     </div>
                 </div>
             """
@@ -476,7 +476,7 @@ class HTMLReportGenerator:
             <div class="metric-card {'strong' if visibility_rate >= 60 else 'needs-work' if visibility_rate >= 30 else 'weak'}">
                 <div class="metric-label">Visibility Rate <span style="background: #E8E4EC; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 4px;">{momentum_icon} {momentum_label}</span></div>
                 <div class="metric-value">{visibility_rate:.1f}%</div>
-                <div class="metric-status">{'Strong presence' if visibility_rate >= 60 else 'Room for growth' if visibility_rate >= 30 else 'First-mover opportunity'}</div>
+                <div class="metric-status">{'Strong presence' if visibility_rate >= 60 else 'Room for growth' if visibility_rate >= 30 else ('Category leader' if (top_comp.get('mention_rate', 0) or 0) < visibility_rate else 'Challenger position')}</div>
             </div>
             <div class="metric-card {'strong' if asov >= 40 else 'needs-work' if asov >= 20 else 'weak'}">
                 <div class="metric-label">AI Share of Voice</div>
@@ -605,15 +605,20 @@ class HTMLReportGenerator:
         avg_visitor_value = 5  # Conservative visitor value
         chatgpt_monthly_opportunity = int(chatgpt_opportunity_visitors * avg_visitor_value / 100) * 100
 
-        # Determine strategic framing
-        status_label = "First-mover opportunity" if chatgpt_you < 15 else "Growth opportunity"
+        # Determine strategic framing — honest about position
+        if chatgpt_you < chatgpt_comp - 10:
+            status_label = "Challenger position"
+        elif chatgpt_you < chatgpt_comp:
+            status_label = "Growth opportunity"
+        else:
+            status_label = "Competitive position"
 
         return f"""
         <div style="background: linear-gradient(135deg, #E8D7A0 0%, #D4C89F 100%); padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #C8BC8F;">
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
                 <span style="font-size: 32px;">✨</span>
                 <h3 style="margin: 0; color: #4D2E3A; font-size: 20px; font-weight: 700;">
-                    Most Exciting: ChatGPT Opportunity
+                    Highest-volume platform: ChatGPT
                 </h3>
             </div>
 
@@ -649,21 +654,14 @@ class HTMLReportGenerator:
 
             <div style="background: rgba(255,255,255,0.5); padding: 20px; border-radius: 8px; margin-top: 20px;">
                 <p style="margin: 0 0 16px 0; color: #4D2E3A; font-size: 15px; line-height: 1.7;">
-                    <strong>Why focus here first:</strong> ChatGPT represents 73% of all AI assistant usage
+                    <strong>Why focus here first:</strong> ChatGPT has the largest user base of the AI platforms we track
                     (100M+ weekly users). The gap between your {chatgpt_you:.0f}% visibility and competitors' {chatgpt_comp:.0f}%
                     represents untapped potential on the platform that matters most.
                 </p>
                 <p style="margin: 0; color: #4D2E3A; font-size: 15px; line-height: 1.7;">
-                    <strong>The opportunity:</strong> This gap represents approximately <strong>${chatgpt_monthly_opportunity:,}/month</strong>
-                    in qualified traffic (conservative estimate). The infrastructure fixes take 2-4 weeks to implement,
-                    and improvements appear in ChatGPT responses within 1-2 weeks after that.
-                </p>
-            </div>
-
-            <div style="margin-top: 16px; padding: 12px; background: rgba(74,68,88,0.08); border-radius: 6px;">
-                <p style="margin: 0; font-size: 13px; color: #4D2E3A; line-height: 1.6;">
-                    <strong>Our methodology:</strong> These estimates are based on ~800 monthly queries × 73% ChatGPT usage × ${avg_visitor_value} visitor value.
-                    We follow <a href="https://www.similarweb.com/corp/reports/the-2026-generative-ai-brand-visibility-index/" target="_blank" style="color: #4A4458;">SimilarWeb's 2026 AI Visibility Index</a> methodology for conservative, evidence-based projections. Meaningful improvements typically take 60-90 days of consistent work.
+                    <strong>The opportunity:</strong> Closing this gap on ChatGPT typically takes 2-4 weeks of
+                    infrastructure work (FAQ schema, structured content), with measurable improvements appearing
+                    in ChatGPT responses within 1-2 weeks after that.
                 </p>
             </div>
         </div>
@@ -909,7 +907,18 @@ class HTMLReportGenerator:
 
         # Use API citation counts if available, otherwise fall back to text extraction
         display_total = total_unique_domains if has_api_citations else total_sources
-        display_brand = len(citations_with_brand) if has_api_citations else brand_sources
+        # Only count co-citations as meaningful when brand appears in >=5% of responses
+        # (raw "any co-mention" count was producing false positives where the brand
+        # appeared once across hundreds of responses on a single domain).
+        if has_api_citations:
+            meaningful_co_citations = 0
+            for _domain, _brand_co in citations_with_brand.items():
+                _total = cited_domains.get(_domain, 0)
+                if _total > 0 and (_brand_co / _total) >= 0.05:
+                    meaningful_co_citations += 1
+            display_brand = meaningful_co_citations
+        else:
+            display_brand = brand_sources
 
         # Determine which platforms provided citation data
         platforms_with_citations = [p for p in cited_by_platform.keys() if cited_by_platform[p]]
@@ -970,7 +979,19 @@ class HTMLReportGenerator:
                 pages_count = len(cited_pages.get(domain, set()))
                 brand_co = citations_with_brand.get(domain, 0)
                 brand_pct = round(brand_co / count * 100) if count > 0 else 0
-                brand_color = '#27AE60' if brand_co > 0 else '#E74C3C'
+
+                # Stricter co-citation reporting: only call it "Yes" when the
+                # brand actually co-occurs in a meaningful share of responses.
+                # Below 5% is statistical noise and was producing false positives.
+                if brand_pct >= 5:
+                    brand_label = f'Yes ({brand_pct}%)'
+                    brand_color = '#27AE60'
+                elif brand_co > 0:
+                    brand_label = f'Rare ({brand_pct}%)'
+                    brand_color = '#A7868F'
+                else:
+                    brand_label = 'No'
+                    brand_color = '#E74C3C'
 
                 # Which platforms cite this domain
                 citing_platforms = []
@@ -986,7 +1007,7 @@ class HTMLReportGenerator:
                     <td style="padding: 12px; text-align: center; color: #6B5660; font-weight: 600; font-size: 18px;">{count}</td>
                     <td style="padding: 12px; text-align: center; color: #6B5660;">{pages_count}</td>
                     <td style="padding: 12px; text-align: center; color: {brand_color}; font-weight: 600;">
-                        {'Yes (' + str(brand_pct) + '%)' if brand_co > 0 else 'No'}
+                        {brand_label}
                     </td>
                     <td style="padding: 12px; color: #6B5660; font-size: 13px;">{'  '.join(citing_platforms)}</td>
                 </tr>
@@ -1062,6 +1083,25 @@ class HTMLReportGenerator:
             """
 
         # Table 1: Sources with your brand (wrapped in accordion)
+        # TEMPORARILY HIDDEN — the underlying brand_in_context detection still
+        # produces listicle false positives. When AI returns a list of companies
+        # (e.g. "top fulfillment companies in Canada") that names both the brand
+        # and a cited domain in the same paragraph, the 200-char proximity window
+        # in visibility_scorer.py treats them as co-cited, even though the source
+        # itself doesn't actually mention the brand. Real fix needs sentence-
+        # boundary detection or much tighter proximity logic. Until then, hiding
+        # this panel is more honest than showing data we can't stand behind.
+        sources_with_brand = []
+
+        # Filter out false-positive co-mentions: a source must have brand co-mention
+        # rate >= 5% to count as a meaningful "where you're being mentioned" result.
+        # (Kept for reference — re-enable along with the panel once detection
+        # is reliable.)
+        # sources_with_brand = [
+        #     s for s in sources_with_brand
+        #     if (s.get('brand_mention_rate') or s.get('brand_co_mention_rate') or 0) >= 5
+        # ]
+
         if sources_with_brand:
             sources_table = """
             <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
@@ -1076,7 +1116,10 @@ class HTMLReportGenerator:
                 <tbody>
             """
 
-            for source in sources_with_brand[:10]:
+            # Show all filtered sources — the accordion is collapsed by default,
+            # so a long list doesn't visually dominate, and a "10 of 45" mismatch
+            # between the heading and the visible rows confused readers.
+            for source in sources_with_brand:
                 status = "✓ Active"
                 status_color = "#27AE60"
 
@@ -1134,7 +1177,7 @@ class HTMLReportGenerator:
             'authority':   ('🏛️ Authority',   '.gov / .edu / official institutions'),
             'editorial':   ('📰 Editorial',   'News outlets, magazines, large publishers'),
             'comparison':  ('🔀 Comparison',  '"Best of" lists, vs. articles, alternatives pages'),
-            'unknown':     ('❓ Unclassified', 'Could not be auto-classified from URL alone'),
+            'unknown':     ('🌐 Other web source', 'General web source (blog, niche site, smaller publisher)'),
         }
 
         TIER_META = {
@@ -1452,9 +1495,15 @@ class HTMLReportGenerator:
             # in all sources where competitors appear" even when the actual
             # co-citation rate was 1-7%. Replaced with a data-driven
             # branch that tells the truth based on the underlying numbers.
-            sources_with_you = source_analysis.get('sources_with_brand_co_mentions', []) if source_analysis else []
+            raw_sources_with_you = source_analysis.get('sources_with_brand_co_mentions', []) if source_analysis else []
+            # Apply the same 5% threshold so the "you're present in N sources" claim
+            # reflects meaningful co-citations, not single false-positive matches.
+            sources_with_you = [
+                s for s in raw_sources_with_you
+                if (s.get('brand_mention_rate') or s.get('brand_co_mention_rate') or 0) >= 5
+            ]
             total_sources = source_analysis.get('total_unique_sources', 0) if source_analysis else 0
-            you_count = source_analysis.get('sources_with_brand_co_mentions_count', 0) if source_analysis else 0
+            you_count = len(sources_with_you)
             gap_count = source_analysis.get('gap_opportunities_count', 0) if source_analysis else 0
 
             if sources_with_you:
@@ -1514,6 +1563,34 @@ class HTMLReportGenerator:
 
         visibility_rate = visibility_summary.get('brand_visibility_rate', 0)
         performance_label = self._get_performance_label(visibility_rate)
+
+        # Compute data-collection date range from result timestamps so the
+        # report makes clear when the underlying API responses were captured
+        # (separate from the report-generation date).
+        collection_range_label = ""
+        try:
+            timestamps = []
+            for r in scored_results or []:
+                ts = r.get('timestamp') or r.get('tested_at')
+                if not ts:
+                    continue
+                # Stored as 'YYYY-MM-DD HH:MM:SS' or ISO string — both parse cleanly via fromisoformat after a small swap
+                try:
+                    dt = datetime.fromisoformat(str(ts).replace(' ', 'T').split('+')[0])
+                    timestamps.append(dt)
+                except Exception:
+                    continue
+            if timestamps:
+                start = min(timestamps)
+                end = max(timestamps)
+                if start.date() == end.date():
+                    collection_range_label = f"Data collected {start.strftime('%B %d, %Y')}"
+                else:
+                    collection_range_label = (
+                        f"Data collected {start.strftime('%b %d, %Y')} – {end.strftime('%b %d, %Y')}"
+                    )
+        except Exception:
+            collection_range_label = ""
 
         html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -2665,7 +2742,7 @@ class HTMLReportGenerator:
         <div class="header">
             <h1>AI Visibility Report</h1>
             <div class="brand-name">{brand_name}</div>
-            <div class="timestamp">Report generated {datetime.now().strftime('%B %d, %Y at %I:%M %p')}</div>
+            <div class="timestamp">{collection_range_label + ' &middot; ' if collection_range_label else ''}Report generated {datetime.now().strftime('%B %d, %Y')}</div>
             <div class="dasilva-credit">DaSilva Consulting</div>
         </div>
 
@@ -2921,7 +2998,7 @@ class HTMLReportGenerator:
 
         # Map platform names to friendly names with 2026 context
         platform_mapping = {
-            'openai': ('ChatGPT (OpenAI)', '73% of AI users — largest discovery platform'),
+            'openai': ('ChatGPT (OpenAI)', 'Largest discovery platform of the AI tools tracked'),
             'anthropic': ('Claude (Anthropic)', '15% of AI users — growing in professional use'),
             'perplexity': ('Perplexity', '~5% — research-focused with direct citations'),
             'gemini': ('Gemini (Google)', '~7% — integrated into Google Search'),
@@ -2976,7 +3053,7 @@ class HTMLReportGenerator:
             <h2>Platform Performance</h2>
             <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.65; margin-bottom: 32px;">
                 <strong>What this shows:</strong> Each AI platform has different training data, algorithms, and user bases.
-                ChatGPT represents 73% of all AI users, so focus there first. This section breaks down your visibility
+                ChatGPT has the largest user base of the AI platforms we track, so it tends to drive the most volume. This section breaks down your visibility
                 on each platform to help you prioritize where to invest your content efforts.
             </p>
             <div class="platform-grid">
@@ -5309,60 +5386,74 @@ class HTMLReportGenerator:
             </div>
         </div>
 
-        <div class="filters-container">
-            <div class="filter-group">
-                <label>Show:</label>
-                <select id="status-filter" onchange="filterTable()">
-                    <option value="all">All ({len(prompts_data)})</option>
-                    <option value="mentioned">Brand Mentions</option>
-                    <option value="not_mentioned" selected>Your Losses (Problems First)</option>
-                    <option value="with_competitors">With Competitors</option>
-                </select>
+        <div class="accordion-group" style="margin-bottom: 16px;">
+            <button class="accordion-button" onclick="toggleAccordion(this)">
+                <span>📋 Browse all {len(prompts_data)} prompt responses (collapsed by default)</span>
+                <span class="accordion-icon">▼</span>
+            </button>
+            <div class="accordion-content">
+                <p style="color: #6B5660; margin: 16px 0; font-size: 13px; line-height: 1.6;">
+                    Full prompt-by-prompt detail. The filter defaults to <em>Your Losses</em> so the
+                    most actionable prompts surface first; switch to <em>All</em> to see every
+                    response. Use the persona / platform / search controls to narrow further.
+                </p>
+
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label>Show:</label>
+                        <select id="status-filter" onchange="filterTable()">
+                            <option value="all">All ({len(prompts_data)})</option>
+                            <option value="mentioned">Brand Mentions</option>
+                            <option value="not_mentioned" selected>Your Losses (Problems First)</option>
+                            <option value="with_competitors">With Competitors</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Persona:</label>
+                        <select id="persona-filter" onchange="filterTable()">
+                            <option value="all">All</option>
+                            {persona_options}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Platform:</label>
+                        <select id="platform-filter" onchange="filterTable()">
+                            <option value="all">All</option>
+                            {platform_options}
+                        </select>
+                    </div>
+
+                    <div class="filter-group search-group">
+                        <label>Search:</label>
+                        <input type="text" id="search-box" placeholder="Search prompts..." onkeyup="filterTable()">
+                    </div>
+                </div>
+
+                <div class="table-stats">
+                    Showing <span id="visible-count">{len(prompts_data)}</span> of {len(prompts_data)} prompts
+                </div>
+
+                <div class="table-container">
+                    <table id="prompts-table" class="prompts-table">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable(0)" style="cursor:pointer;">Prompt ↕</th>
+                                <th onclick="sortTable(1)" style="cursor:pointer;">Persona ↕</th>
+                                <th onclick="sortTable(2)" style="cursor:pointer;">Platform ↕</th>
+                                <th onclick="sortTable(3)" style="cursor:pointer;">Mentioned? ↕</th>
+                                <th onclick="sortTable(4)" style="cursor:pointer;">Prominence ↕</th>
+                                <th>Competitors</th>
+                                <th>Response</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {rows_html}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
-            <div class="filter-group">
-                <label>Persona:</label>
-                <select id="persona-filter" onchange="filterTable()">
-                    <option value="all">All</option>
-                    {persona_options}
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <label>Platform:</label>
-                <select id="platform-filter" onchange="filterTable()">
-                    <option value="all">All</option>
-                    {platform_options}
-                </select>
-            </div>
-
-            <div class="filter-group search-group">
-                <label>Search:</label>
-                <input type="text" id="search-box" placeholder="Search prompts..." onkeyup="filterTable()">
-            </div>
-        </div>
-
-        <div class="table-stats">
-            Showing <span id="visible-count">{len(prompts_data)}</span> of {len(prompts_data)} prompts
-        </div>
-
-        <div class="table-container">
-            <table id="prompts-table" class="prompts-table">
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0)" style="cursor:pointer;">Prompt ↕</th>
-                        <th onclick="sortTable(1)" style="cursor:pointer;">Persona ↕</th>
-                        <th onclick="sortTable(2)" style="cursor:pointer;">Platform ↕</th>
-                        <th onclick="sortTable(3)" style="cursor:pointer;">Mentioned? ↕</th>
-                        <th onclick="sortTable(4)" style="cursor:pointer;">Prominence ↕</th>
-                        <th>Competitors</th>
-                        <th>Response</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows_html}
-                </tbody>
-            </table>
         </div>
 
         <div style="margin-top: 24px; padding: 12px 16px; background: rgba(167, 134, 143, 0.1); border-radius: 4px; font-size: 11px; color: #6B5660; line-height: 1.6;">
@@ -5910,6 +6001,11 @@ class HTMLReportGenerator:
 
     def _build_why_this_matters(self, brand_name: str, visibility_summary: Dict[str, Any]) -> str:
         """Build compelling 'Why This Matters' section with industry stats."""
+
+        # Hidden by default — the generic B2C stats (79% shopping, 1B users, etc.)
+        # don't apply to most clients (B2B, regulated, niche). Re-enable per-client
+        # with copy that matches their industry if needed.
+        return ""
 
         brand_vis = visibility_summary.get('brand_visibility_rate', 0)
 

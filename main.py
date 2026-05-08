@@ -51,6 +51,13 @@ class VisibilityTracker:
             brand_config_path: Path to brand config file (for per-client isolation)
         """
         self.config = self._load_config(config_path)
+        # Bridge api_keys from config → os.environ so subordinate modules that
+        # read directly from env vars (e.g. src/analysis/llm_sentiment.py reads
+        # ANTHROPIC_API_KEY) work whether keys came from config.json, Streamlit
+        # secrets, or env vars. Without this bridge, local --regenerate-only
+        # runs silently fall back to the brittle keyword sentiment classifier
+        # because the LLM client can't see the key in os.environ.
+        self._export_api_keys_to_env()
         self.clients = {}
         self._initialize_clients()
 
@@ -82,6 +89,41 @@ class VisibilityTracker:
 
         os.makedirs(self.reports_dir, exist_ok=True)
         self.report_generator = ReportGenerator(self.reports_dir)
+
+    def _export_api_keys_to_env(self) -> None:
+        """Bridge api_keys from self.config to os.environ.
+
+        Some downstream modules (notably src/analysis/llm_sentiment.py) read
+        keys directly from os.environ rather than receiving them as args.
+        When config comes from config.json or Streamlit secrets, those env
+        vars aren't set — so the LLM classifier silently falls back to a
+        keyword scan that mislabels factual quotes as negative. Exporting
+        keys here means every code path sees the same credentials.
+
+        Existing env vars are NOT overwritten — env wins, so production
+        Cloud Run behavior (where run_report.py sets env explicitly) is
+        unchanged.
+        """
+        api_keys = self.config.get('api_keys', {}) or {}
+        env_var_map = {
+            'openai': 'OPENAI_API_KEY',
+            'anthropic': 'ANTHROPIC_API_KEY',
+            'perplexity': 'PERPLEXITY_API_KEY',
+            'gemini': 'GEMINI_API_KEY',
+            'serpapi': 'SERPAPI_API_KEY',
+            'copilot': 'AZURE_OPENAI_API_KEY',
+            'azure_openai': 'AZURE_OPENAI_API_KEY',
+        }
+        exported = []
+        for cfg_key, env_key in env_var_map.items():
+            value = api_keys.get(cfg_key)
+            if not value or str(value).startswith('YOUR_'):
+                continue
+            if not os.environ.get(env_key):
+                os.environ[env_key] = str(value)
+                exported.append(env_key)
+        if exported:
+            print(f"✓ Exported {len(exported)} API key(s) to env: {', '.join(exported)}")
 
     def _load_config(self, config_path: str) -> Dict[str, Any]:
         """Load configuration from JSON file or Streamlit secrets."""
