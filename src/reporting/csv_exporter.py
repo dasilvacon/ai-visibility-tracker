@@ -214,7 +214,7 @@ class CSVExporter:
                     'Opportunity Name': opp.get('target', ''),
                     'Current Visibility %': f"{opp.get('current_visibility', 0):.1f}%",
                     'Competitor Avg %': f"{opp.get('competitor_avg', 0):.1f}%",
-                    'Gap': f"{opp.get('gap', 0):.1f}%",
+                    'Gap': f"{opp.get('gap', opp.get('gap_points', max(0, opp.get('competitor_avg', 0) - opp.get('current_visibility', 0)))):.1f}%",
                     'Estimated Monthly Impact': f"~{opp.get('missed_monthly', 0)} mentions",
                     'Specific Actions': actions_text,
                     'Where to Implement': opp.get('where_to_implement', ''),

@@ -1,5 +1,11 @@
 # Project Architecture — READ THIS FIRST BEFORE DOING ANYTHING
 
+## Measurement Standard — MANDATORY
+- Read `docs/MEASUREMENT_STANDARD.md` before touching API clients, prompts or reports.
+- "The call succeeded" is NOT proof the data is right. Never tell Tiffany a platform is fine
+  unless it passes every check in that file. Say which checks you ran and which you did not.
+- Log every decision and change in `docs/DECISIONS.md` (newest first).
+
 ## Git Workflow — MANDATORY
 - **ALWAYS check your branch first:** `git branch`
 - **NEVER work directly on `main`.** Switch to `dev` first: `git checkout dev`
@@ -55,7 +61,7 @@ This causes cross-client data contamination (e.g., Natasha Denona personas appea
 - `run_report.py` passes keys as environment variables to the `main.py` subprocess
 - `main.py` reads them via `os.getenv()` as a fallback — this is intentional
 
-## Current Active Client
+## OCO File Reference (OCO is one of several current clients, see Client List)
 - **Ontario Caregiver Organization (OCO)**
 - Brand config: `data/ontario_caregiver_organization/ontario_caregiver_organization_brand_config.json`
 - Personas file: `data/ontario_caregiver_organization/ontario_caregiver_organization_personas.json`
@@ -87,10 +93,14 @@ This causes cross-client data contamination (e.g., Natasha Denona personas appea
 - Results are written to `data/results/results_summary.csv` relative to cwd
 - If cwd is wrong, results write to one path and get read from another → "No test results found"
 
-## Other Clients
-- Dripos (coffee shop POS)
-- UniUni (Canadian logistics)
-- Natasha Denona (beauty — historical, no longer active)
+## Client List (confirmed by Tiffany 2026-11-17)
+- **Current, in tracker:** Natasha Denona, Espresso Capital, ClearEvent, Dripos, Ontario Caregiver Organization
+- **Retired, keep stored data, do not run:** UniUni, Say I Do, Lumo, Saint Javelin
+- **Current, not yet set up in tracker:** Powercart, Sofvie, BOMS, DaSilva Consulting
+- **Never add:** DMZ clients (Access2Pay, Homekin, Enabled Talent, Ezofis)
+- The registry has no "retired" setting. Removing a client through the app deletes its
+  prompt drafts from GCS. Do NOT remove a client that way without Tiffany's confirmation.
+- Latest status is in `docs/DECISIONS.md`.
 
 ## Do Not Do These Things
 - Do not work on the `main` branch — always use `dev`

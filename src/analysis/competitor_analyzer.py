@@ -588,11 +588,35 @@ class CompetitorAnalyzer:
         # Sort by frequency
         sorted_brands = sorted(all_brands.items(), key=lambda x: x[1], reverse=True)
 
+        # Words that are places or sentence fragments, not brands
+        not_a_brand_words = {
+            'in', 'on', 'at', 'to', 'of', 'from', 'across', 'within', 'outside', 'near', 'via', 'per',
+            'canada', 'canadian', 'ontario', 'quebec', 'alberta', 'manitoba', 'saskatchewan',
+            'british', 'columbia', 'nova', 'scotia', 'toronto', 'vancouver', 'montreal', 'calgary',
+            'ottawa', 'usa', 'america', 'american', 'united', 'states', 'kingdom', 'europe',
+            'european', 'australia', 'australian', 'north', 'south', 'east', 'west',
+            'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august',
+            'september', 'october', 'november', 'december',
+        }
+        # Single words that are just part of a tracked name ("Post" from "Canada Post")
+        tracked_name_words = set()
+        for tracked in list(listed_competitor_set) + [brand_name_lower]:
+            parts = tracked.split()
+            if len(parts) > 1:
+                tracked_name_words.update(parts)
+
         # Filter out low-quality matches and calculate mention rates
         unlisted_brands = []
         for brand, count in sorted_brands:
             # Skip if only mentioned once (likely noise)
             if count < 2:
+                continue
+            brand_words = brand.lower().split()
+            if all(w in not_a_brand_words for w in brand_words):
+                continue
+            if brand_words and brand_words[0] in ('in', 'on', 'at', 'to', 'of', 'from', 'across'):
+                continue
+            if len(brand_words) == 1 and brand_words[0] in tracked_name_words:
                 continue
 
             mention_rate = (count / total_responses * 100) if total_responses > 0 else 0

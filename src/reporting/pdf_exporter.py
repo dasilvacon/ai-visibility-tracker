@@ -209,7 +209,7 @@ class PDFExporter:
         # Executive summary paragraph
         gap = top_comp_rate - vis_rate
         summary_text = f"""
-        <b>Summary:</b> {brand_name} appears in {vis_rate:.1f}% of AI responses about luxury eyeshadow.
+        <b>Summary:</b> {brand_name} appears in {vis_rate:.1f}% of the AI responses tested.
         {top_comp_name} leads at {top_comp_rate:.1f}%, creating a {gap:.1f}-point gap.
         Based on {queries_tested} queries tested across multiple personas and use cases,
         there are clear opportunities to improve visibility through targeted content creation.

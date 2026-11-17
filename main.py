@@ -1270,7 +1270,7 @@ class VisibilityTracker:
 
         lines.append("📊 HOW TO READ THIS REPORT")
         lines.append("")
-        lines.append("Your Visibility Rate: How often you appear when people ask AI about luxury eyeshadow")
+        lines.append("Your Visibility Rate: How often you are named across the prompts tested in this run")
         lines.append("Competitor Rate: How often your competitors appear")
         lines.append("Gap: The difference (negative = you're losing ground)")
         lines.append("Missed Mentions: Estimated additional times per month you'd appear if you close the gap")

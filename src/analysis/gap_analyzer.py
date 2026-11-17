@@ -551,13 +551,14 @@ class GapAnalyzer:
             List of actual prompt texts where competitors appeared but brand didn't
         """
         examples = []
+        seen_prompts = set()  # one example per distinct prompt (same prompt runs on several platforms)
 
         for result in scored_results:
             metadata = result.get('metadata', {})
             visibility = result.get('visibility', {})
             prompt_text = result.get('prompt_text', '').strip()
 
-            if not prompt_text:
+            if not prompt_text or prompt_text in seen_prompts:
                 continue
 
             # Must have competitors mentioned but NOT brand
@@ -576,6 +577,7 @@ class GapAnalyzer:
             if matches:
                 # Get which competitor was mentioned
                 competitors = visibility.get('competitors_mentioned', [])
+                seen_prompts.add(prompt_text)
                 examples.append({
                     'prompt': prompt_text,
                     'competitors': competitors

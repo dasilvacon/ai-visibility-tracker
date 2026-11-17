@@ -50,12 +50,12 @@ CPU="2"
 CLIENTS=(
   "ontario_caregiver_organization|0 7 * * 1|Mon 07:00 UTC (03:00 ET)"
   "dripos|0 9 * * 1|Mon 09:00 UTC (05:00 ET)"
-  "lumo|0 11 * * 1|Mon 11:00 UTC (07:00 ET)"
-  "uniuni|0 13 * * 1|Mon 13:00 UTC (09:00 ET)"
+  # RETIRED 2026-11-17 (not a current client): "lumo|0 11 * * 1|Mon 11:00 UTC (07:00 ET)"
+  # RETIRED 2026-11-17 (not a current client): "uniuni|0 13 * * 1|Mon 13:00 UTC (09:00 ET)"
   "espresso_capital|0 15 * * 1|Mon 15:00 UTC (11:00 ET)"
-  "say_i_do|0 17 * * 1|Mon 17:00 UTC (13:00 ET)"
+  # RETIRED 2026-11-17 (not a current client): "say_i_do|0 17 * * 1|Mon 17:00 UTC (13:00 ET)"
   "clearevent|0 19 * * 1|Mon 19:00 UTC (15:00 ET)"
-  "saint_javelin|0 21 * * 1|Mon 21:00 UTC (17:00 ET)"
+  # RETIRED 2026-11-17 (not a current client): "saint_javelin|0 21 * * 1|Mon 21:00 UTC (17:00 ET)"
   "natasha_denona|0 23 * * 1|Mon 23:00 UTC (19:00 ET)"
 )
 
