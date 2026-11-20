@@ -294,7 +294,7 @@ class PDFExporter:
 
             action_text = f"""
             <b>{i}. {opp.get('target', 'Opportunity')} [{priority} PRIORITY]</b><br/>
-            <i>Gap: {gap:.1f}% | Impact: ~{opp.get('missed_monthly', 0)} monthly mentions</i><br/>
+            <i>Gap: {gap:.1f}%</i><br/>
             """
 
             # Add top 2 actions

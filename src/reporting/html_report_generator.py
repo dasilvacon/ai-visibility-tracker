@@ -558,7 +558,7 @@ class HTMLReportGenerator:
                 <div>
                     <h4 style="color: #4D2E3A; margin: 0 0 12px 0; font-size: 16px;">Our Methodology</h4>
                     <p style="color: #4D2E3A; line-height: 1.7; margin: 0;">
-                        We test {total_results} real prompts across multiple AI platforms (ChatGPT, Claude, Perplexity, Gemini) using personas that match your target audience. Each prompt simulates a real question someone in your industry might ask. We analyze every response for brand mentions, competitor mentions, source citations, sentiment, and prominence. This approach follows the methodology outlined in <a href="https://www.similarweb.com/blog/marketing/geo/what-is-geo/" target="_blank" style="color: #4A4458;">SimilarWeb's 2026 GEO Guide</a> and <a href="https://www.airops.com/blog/ai-visibility-metrics" target="_blank" style="color: #4A4458;">AirOps' AI Visibility Metrics framework</a>.
+                        This report is built from {total_results} saved AI answers. Each prompt is a question a buyer might ask. Each prompt ran several times on each platform, with web search on, because AI answers change from one run to the next. Every answer is checked for brand mentions, competitor mentions, the links the AI used, sentiment and prominence. The section "How This Was Measured" lists the platforms, models and number of runs.
                     </p>
                 </div>
             </div>
@@ -810,14 +810,47 @@ class HTMLReportGenerator:
         """
 
     def _build_sources_tab(self, brand_name: str, source_analysis: Dict[str, Any],
-                           scored_results: list = None) -> str:
+                           scored_results: list = None,
+                           competitive_analysis: Dict[str, Any] = None) -> str:
         """Build the Sources & Citations tab showing where brands are being mentioned.
 
         Uses two data sources:
         1. PRIMARY: Structured cited_urls from API responses (Perplexity, Gemini, Google AI Overviews)
         2. SECONDARY: Text-extracted source mentions from source_analysis
+
+        Competitor-owned domains are filtered out of the cited domains panels —
+        clients shouldn't see "your top citation source is FedEx.com" because
+        chasing coverage on a competitor's own site isn't an actionable lever.
         """
         scored_results = scored_results or []
+
+        # Build competitor domain matchers from competitive_analysis. We treat
+        # the lowercased competitor name (spaces stripped) as a substring against
+        # the cited domain hostname — e.g. "Canada Post" matches both
+        # "canadapost.ca" and "canadapost-postescanada.ca".
+        competitor_domain_patterns = set()
+        if competitive_analysis:
+            for comp in competitive_analysis.get('top_competitors', []) or []:
+                name = (comp.get('name') or '').strip().lower()
+                if not name:
+                    continue
+                # Strip spaces and common suffixes for substring match
+                slug = name.replace(' ', '').replace('-', '').replace('.', '')
+                if slug and len(slug) >= 4:  # skip too-short slugs that'd cause false matches
+                    competitor_domain_patterns.add(slug)
+                # Also add bare brand-name word for multi-word competitors
+                first_word = name.split()[0] if name.split() else ''
+                if first_word and len(first_word) >= 5:
+                    competitor_domain_patterns.add(first_word)
+
+        def _is_competitor_domain(domain: str) -> bool:
+            if not domain or not competitor_domain_patterns:
+                return False
+            host = domain.lower()
+            for pattern in competitor_domain_patterns:
+                if pattern in host:
+                    return True
+            return False
 
         # Aggregate cited_urls from all scored results (the real API citation data)
         from collections import Counter, defaultdict
@@ -826,6 +859,7 @@ class HTMLReportGenerator:
         cited_by_platform = defaultdict(lambda: Counter())  # platform -> domain -> count
         citations_with_brand = Counter()  # domain -> count where brand was co-mentioned
         per_prompt_citations = []         # list of {prompt, platform, cited_urls}
+        competitor_domains_filtered = 0   # count of competitor-owned domains hidden
 
         for result in scored_results:
             platform = result.get('platform', '')
@@ -839,6 +873,14 @@ class HTMLReportGenerator:
                 domain = source.get('domain', '')
                 full_url = source.get('full_url', '')
                 if not domain:
+                    continue
+
+                # Skip competitor-owned domains entirely. Showing fedex.com or
+                # canadapost.ca as a "top cited domain" misleads clients into
+                # thinking those are outreach targets — but they're competitor
+                # properties, not citation opportunities for the brand.
+                if _is_competitor_domain(domain):
+                    competitor_domains_filtered += 1
                     continue
 
                 cited_domains[domain] += 1
@@ -930,6 +972,15 @@ class HTMLReportGenerator:
             'anthropic': 'Claude'
         }
 
+        competitor_filter_note = ""
+        if competitor_domains_filtered > 0:
+            competitor_filter_note = f"""
+            <p style="font-size: 13px; line-height: 1.6; color: #6B5660; margin: -16px 0 24px 0; font-style: italic;">
+                Note: {competitor_domains_filtered} citation{'s' if competitor_domains_filtered != 1 else ''} to competitor-owned domains
+                (e.g. fedex.com, canadapost.ca) were excluded — chasing coverage on a competitor's own site isn't an actionable lever.
+            </p>
+            """
+
         html = f"""
         <h2>Sources & Citations</h2>
         <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 32px;">
@@ -937,6 +988,7 @@ class HTMLReportGenerator:
             linking to specific URLs that inform their responses. This section shows <strong>exactly which
             domains and pages</strong> AI is citing, and whether {brand_name} appears alongside those citations.
         </p>
+        {competitor_filter_note}
 
         <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr);">
             <div class="metric-card">
@@ -2758,6 +2810,7 @@ class HTMLReportGenerator:
             {self._build_top_executive_summary(brand_name, visibility_summary, competitive_analysis, scored_results, trend_data, citation_stats)}
 
             {self._build_methodology_section(brand_name, visibility_summary.get('total_prompts_tested', len(scored_results)))}
+            {getattr(self, 'measurement_html', '')}
 
             {self._build_visibility_by_platform(scored_results)}
 
@@ -2785,7 +2838,7 @@ class HTMLReportGenerator:
         <div id="sources" class="tab-content">
             {self._build_citation_analysis(citation_stats) if citation_stats else ''}
 
-            {self._build_sources_tab(brand_name, source_analysis, scored_results) if source_analysis else '<p>No source analysis available.</p>'}
+            {self._build_sources_tab(brand_name, source_analysis, scored_results, competitive_analysis) if source_analysis else '<p>No source analysis available.</p>'}
         </div>
 
         <div class="footer">
@@ -3352,7 +3405,7 @@ class HTMLReportGenerator:
                         </p>
                         <div style="display: flex; gap: 16px; align-items: center;">
                             <span style="background: #E8F5E9; color: #27AE60; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 600;">
-                                {win.get('estimated_impact', 'High Impact')}
+                                {win.get('estimated_impact', '')}
                             </span>
                             <span style="color: #A78E8B; font-size: 13px;">
                                 {win.get('timeline', 'This month')}
@@ -4108,7 +4161,7 @@ class HTMLReportGenerator:
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;">
                         <div style="padding: 12px; background: #E8F5E9; border-radius: 4px;">
-                            <strong style="color: #2E7D32; font-size: 13px;">💰 Estimated Impact:</strong>
+                            <strong style="color: #2E7D32; font-size: 13px;">Based on:</strong>
                             <p style="margin: 4px 0 0 0; color: #2E7D32; font-size: 14px; font-weight: 600;">{win['estimated_impact']}</p>
                         </div>
                         <div style="padding: 12px; background: #E3F2FD; border-radius: 4px;">
@@ -6204,7 +6257,7 @@ class HTMLReportGenerator:
                 </div>
                 
                 <div style="background: white; padding: 16px; border-radius: 6px; margin-top: 16px;">
-                    <strong style="color: #4D2E3A;">📈 Estimated Impact:</strong>
+                    <strong style="color: #4D2E3A;">Based on:</strong>
                     <p style="margin: 6px 0 0 0; color: #6B5660; font-size: 14px;">{win['estimated_impact']}</p>
                 </div>
             </div>

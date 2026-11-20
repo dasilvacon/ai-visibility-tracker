@@ -164,7 +164,6 @@ class GapAnalyzer:
         for gap in persona_gaps:
             impact_score = (100 - gap['visibility_rate']) * (gap['sample_size'] / len(scored_results)) * 100
             gap_points = max(0, competitor_avg - gap['visibility_rate'])
-            missed_monthly = round((gap_points * gap['sample_size'] / 100) * 4 / 5) * 5  # Round to nearest 5
 
             # Get actual example prompts
             example_prompts = self._get_example_prompts_for_gap('Persona', gap['persona'], scored_results)
@@ -178,7 +177,6 @@ class GapAnalyzer:
                 'gap_points': round(gap_points, 1),
                 'sample_size': gap['sample_size'],
                 'impact_score': round(impact_score, 1),
-                'missed_monthly': max(5, missed_monthly),  # Minimum 5
                 'recommendation': self._generate_persona_recommendation(gap, scored_results),
                 'value_prop': self._get_persona_value_prop(gap['persona']),
                 'specific_actions': self._generate_specific_actions('Persona', gap['persona']),
@@ -192,7 +190,6 @@ class GapAnalyzer:
         for gap in category_gaps:
             impact_score = (100 - gap['visibility_rate']) * (gap['sample_size'] / len(scored_results)) * 100
             gap_points = max(0, competitor_avg - gap['visibility_rate'])
-            missed_monthly = round((gap_points * gap['sample_size'] / 100) * 4 / 5) * 5
 
             # Get actual example prompts
             example_prompts = self._get_example_prompts_for_gap('Category', gap['category'], scored_results)
@@ -206,7 +203,6 @@ class GapAnalyzer:
                 'gap_points': round(gap_points, 1),
                 'sample_size': gap['sample_size'],
                 'impact_score': round(impact_score, 1),
-                'missed_monthly': max(5, missed_monthly),
                 'recommendation': self._generate_category_recommendation(gap),
                 'specific_actions': self._generate_specific_actions('Category', gap['category']),
                 'where_to_implement': 'Blog, Resource center, FAQ pages',
@@ -219,7 +215,6 @@ class GapAnalyzer:
         for gap in intent_gaps:
             impact_score = (100 - gap['visibility_rate']) * (gap['sample_size'] / len(scored_results)) * 100
             gap_points = max(0, competitor_avg - gap['visibility_rate'])
-            missed_monthly = round((gap_points * gap['sample_size'] / 100) * 4 / 5) * 5
 
             # Get actual example prompts
             example_prompts = self._get_example_prompts_for_gap('Intent Type', gap['intent_type'], scored_results)
@@ -233,7 +228,6 @@ class GapAnalyzer:
                 'gap_points': round(gap_points, 1),
                 'sample_size': gap['sample_size'],
                 'impact_score': round(impact_score, 1),
-                'missed_monthly': max(5, missed_monthly),
                 'recommendation': self._generate_intent_recommendation(gap),
                 'specific_actions': self._generate_specific_actions('Intent', gap['intent_type']),
                 'where_to_implement': 'Landing pages, Blog, Product descriptions',
@@ -933,7 +927,7 @@ class GapAnalyzer:
                 'content_brief': f"Write comprehensive how-to guides with clear step-by-step instructions, images/screenshots, and expected outcomes. Format with numbered steps, bullet points for tips, and FAQ section at bottom.",
                 'distribution': 'Blog + YouTube video + social snippets + email newsletter feature',
                 'seo_technical': 'Add HowTo schema markup to help AI platforms parse your content structure',
-                'estimated_impact': f"Close {int(how_to_count * 0.4)} gap queries (~{int(how_to_count * 0.4 * 4)} monthly impressions)",
+                'estimated_impact': f"{how_to_count} how-to prompts in this run named a competitor and not you",
                 'timeline': 'Week 1-2'
             })
 
@@ -956,7 +950,7 @@ class GapAnalyzer:
                 'content_brief': f"Create dedicated FAQ pages organized by topic. Each Q&A should be 150-300 words with clear, direct answers. Include 'People also ask' sections linking related questions.",
                 'distribution': 'Dedicated FAQ pages + embed Q&As in relevant product/service pages + create social Q&A posts',
                 'seo_technical': 'Implement FAQPage schema markup so AI can easily extract Q&A pairs',
-                'estimated_impact': f"Close {int(question_count * 0.35)} gap queries (~{int(question_count * 0.35 * 4)} monthly impressions)",
+                'estimated_impact': f"{question_count} question prompts in this run named a competitor and not you",
                 'timeline': 'Week 2-3'
             })
 
@@ -979,7 +973,7 @@ class GapAnalyzer:
                 'content_brief': f"Create honest comparison articles: '[Your Brand] vs {top_competitors[0]}', '[Your Brand] vs {top_competitors[1] if len(top_competitors) > 1 else top_competitors[0]}'. Include: side-by-side feature table, pricing comparison, pros/cons for each, use-case recommendations ('Choose X if...'), and user testimonials.",
                 'distribution': 'Dedicated comparison landing pages + blog posts + social media graphics with key comparisons',
                 'seo_technical': 'Use comparison tables with Product schema for each brand compared',
-                'estimated_impact': f"Close {int(comparison_count * 0.45)} gap queries (~{int(comparison_count * 0.45 * 4)} monthly impressions)",
+                'estimated_impact': f"{comparison_count} comparison prompts in this run named a competitor and not you",
                 'timeline': 'Week 3-4'
             })
 

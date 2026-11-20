@@ -44,8 +44,7 @@ def show(brand_name: str, data: dict):
         st.metric("Low Priority", low_priority, help="Nice-to-have improvements")
 
     with col4:
-        total_impact = action_df['Estimated Monthly Impact'].str.extract(r'(\d+)').astype(float).sum()[0]
-        st.metric("Total Potential Impact", f"~{int(total_impact)} mentions/mo")
+        st.metric("Total Actions", len(action_df), help="Number of actions in this plan")
 
     st.markdown("---")
 
@@ -71,7 +70,7 @@ def show(brand_name: str, data: dict):
     with col3:
         sort_by = st.selectbox(
             "Sort by:",
-            ["Priority", "Estimated Impact", "Gap", "Opportunity Name"]
+            ["Priority", "Gap", "Opportunity Name"]
         )
 
     # Apply filters
@@ -85,9 +84,6 @@ def show(brand_name: str, data: dict):
         priority_order = {'HIGH': 0, 'MEDIUM': 1, 'LOW': 2}
         filtered_df['_sort_key'] = filtered_df['Priority'].map(priority_order)
         filtered_df = filtered_df.sort_values('_sort_key').drop('_sort_key', axis=1)
-    elif sort_by == "Estimated Impact":
-        filtered_df['_sort_key'] = filtered_df['Estimated Monthly Impact'].str.extract(r'(\d+)').astype(float)
-        filtered_df = filtered_df.sort_values('_sort_key', ascending=False).drop('_sort_key', axis=1)
     elif sort_by == "Gap":
         filtered_df['_sort_key'] = filtered_df['Gap'].str.rstrip('%').astype(float)
         filtered_df = filtered_df.sort_values('_sort_key', ascending=False).drop('_sort_key', axis=1)
@@ -131,7 +127,7 @@ def show(brand_name: str, data: dict):
                 with col2:
                     st.metric("Competitor Avg", row['Competitor Avg %'])
                 with col3:
-                    st.metric("Potential Impact", row['Estimated Monthly Impact'])
+                    st.metric("Gap", row['Gap'])
 
                 # Gap visualization
                 your_vis = float(row['Current Visibility %'].rstrip('%'))
@@ -233,7 +229,7 @@ def show(brand_name: str, data: dict):
         for idx, row in filtered_df.iterrows():
             task_list += f"## {row['Priority']} - {row['Opportunity Name'].title()}\n\n"
             task_list += f"**Category:** {row['Category']}\n"
-            task_list += f"**Impact:** {row['Estimated Monthly Impact']}\n\n"
+            task_list += f"**Gap:** {row['Gap']}\n\n"
             task_list += "**Actions:**\n"
             actions = row['Specific Actions'].split(' | ')
             for action in actions:

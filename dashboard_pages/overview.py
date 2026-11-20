@@ -163,7 +163,7 @@ def show(brand_name: str, data: dict):
                 with col2:
                     st.metric("Competitor Avg", row['Competitor Avg %'])
                 with col3:
-                    st.metric("Estimated Impact", row['Estimated Monthly Impact'])
+                    st.metric("Gap", row['Gap'])
 
                 # Show specific actions
                 actions = row['Specific Actions'].split(' | ')

@@ -186,7 +186,6 @@ class CSVExporter:
                 'Current Visibility %',
                 'Competitor Avg %',
                 'Gap',
-                'Estimated Monthly Impact',
                 'Specific Actions',
                 'Where to Implement',
                 'Target Keywords',
@@ -215,7 +214,6 @@ class CSVExporter:
                     'Current Visibility %': f"{opp.get('current_visibility', 0):.1f}%",
                     'Competitor Avg %': f"{opp.get('competitor_avg', 0):.1f}%",
                     'Gap': f"{opp.get('gap', opp.get('gap_points', max(0, opp.get('competitor_avg', 0) - opp.get('current_visibility', 0)))):.1f}%",
-                    'Estimated Monthly Impact': f"~{opp.get('missed_monthly', 0)} mentions",
                     'Specific Actions': actions_text,
                     'Where to Implement': opp.get('where_to_implement', ''),
                     'Target Keywords': ', '.join(opp.get('target_keywords', [])),
@@ -418,7 +416,6 @@ class CSVExporter:
                 'Your Visibility %',
                 'Competitor Avg %',
                 'Gap',
-                'Estimated Monthly Impact',
                 'Why They Matter',
                 'Recommended Actions',
                 'Example Questions Missed'
@@ -446,7 +443,6 @@ class CSVExporter:
                     'Your Visibility %': f"{visibility_rate:.1f}%",
                     'Competitor Avg %': f"{comp_avg:.1f}%",
                     'Gap': f"{gap:.1f}%",
-                    'Estimated Monthly Impact': audience_data.get('missed_monthly', 'N/A'),
                     'Why They Matter': audience_data.get('value_prop', 'Key audience segment'),
                     'Recommended Actions': actions_text if actions_text else 'Create targeted content for this persona',
                     'Example Questions Missed': ' | '.join(stats['missed_prompts'])

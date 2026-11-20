@@ -9,6 +9,7 @@ import os
 import sys
 import json
 import argparse
+from datetime import datetime
 from typing import List, Dict, Any
 
 # Add src to path
@@ -37,6 +38,29 @@ from analysis.sentiment_analyzer import SentimentAnalyzer
 from reporting.html_report_generator import HTMLReportGenerator
 from reporting.csv_exporter import CSVExporter
 from reporting.pdf_exporter import PDFExporter
+
+
+# Models used when the app runs on Cloud Run (keys come from secrets or env).
+# Measurement Standard check 2: each must be the model the consumer product
+# currently uses. Change only with Tiffany's approval, and write the model
+# name and date in docs/DECISIONS.md.
+DEFAULT_MODELS = {
+    'openai': 'gpt-6-sol',
+    'anthropic': 'claude-opus-5-5',
+    'perplexity': 'sonar',
+    'gemini': 'gemini-2.5-flash',
+    'serpapi': 'google_ai_overview',
+}
+
+# Copilot is switched off. The old client called a GPT mini model on Azure
+# with no Bing search, so labelling its answers "Copilot" was not true
+# (Measurement Standard check 3). Turn back on only with a source that
+# captures real Copilot answers.
+COPILOT_ENABLED = False
+
+# Measurement Standard check 5: each prompt runs at least 5 times per
+# platform per wave, and reports show a rate (named in X of 5).
+DEFAULT_RUNS_PER_PROMPT = 5
 
 
 class VisibilityTracker:
@@ -141,22 +165,7 @@ class VisibilityTracker:
                 azure_cfg = dict(st.secrets.get('azure_openai', {}))
                 return {
                     'api_keys': api_keys,
-                    'models': {
-                        # gpt-4.1: non-reasoning model. We tried gpt-5 (reasoning)
-                        # and it consumed the entire max_completion_tokens budget
-                        # on hidden chain-of-thought, leaving zero tokens for
-                        # visible output. 100% of openai responses came back
-                        # empty (finish_reason='length', completion_tokens=1000,
-                        # response_text=''). gpt-4.1 returns full text directly,
-                        # which is what brand-visibility tracking actually needs:
-                        # the answer a real ChatGPT.com user would see.
-                        'openai': 'gpt-4.1',
-                        'anthropic': 'claude-sonnet-4-6',
-                        'perplexity': 'sonar',
-                        'gemini': 'gemini-2.5-flash',
-                        'serpapi': 'google_ai_overview',
-                        'copilot': azure_cfg.get('deployment', 'gpt-5.4-mini')
-                    },
+                    'models': dict(DEFAULT_MODELS),
                     'azure_openai': azure_cfg,
                     'testing': {
                         'default_temperature': 0.7,
@@ -195,17 +204,7 @@ class VisibilityTracker:
             }
             return {
                 'api_keys': api_keys,
-                'models': {
-                    # See note at line ~103 — gpt-4.1 (non-reasoning) instead
-                    # of gpt-5 (reasoning) so we get visible response text
-                    # rather than empty completions.
-                    'openai': 'gpt-4.1',
-                    'anthropic': 'claude-sonnet-4-6',
-                    'perplexity': 'sonar',
-                    'gemini': 'gemini-2.5-flash',
-                    'serpapi': 'google_ai_overview',
-                    'copilot': azure_cfg.get('deployment') or 'gpt-5.4-mini'
-                },
+                'models': dict(DEFAULT_MODELS),
                 'azure_openai': azure_cfg,
                 'testing': {
                     'default_temperature': 0.7,
@@ -232,7 +231,7 @@ class VisibilityTracker:
             try:
                 self.clients['openai'] = OpenAIClient(
                     api_key=api_keys['openai'],
-                    model=models.get('openai', 'gpt-5'),
+                    model=models.get('openai', DEFAULT_MODELS['openai']),
                     config=self.config
                 )
                 print("✓ OpenAI client initialized")
@@ -244,7 +243,7 @@ class VisibilityTracker:
             try:
                 self.clients['anthropic'] = AnthropicClient(
                     api_key=api_keys['anthropic'],
-                    model=models.get('anthropic', 'claude-sonnet-4-6'),
+                    model=models.get('anthropic', DEFAULT_MODELS['anthropic']),
                     config=self.config
                 )
                 print("✓ Anthropic client initialized")
@@ -290,7 +289,7 @@ class VisibilityTracker:
 
         # Microsoft Copilot (via Azure OpenAI)
         copilot_key = api_keys.get('copilot') or api_keys.get('azure_openai') or os.getenv('AZURE_OPENAI_API_KEY', '')
-        if copilot_key and not copilot_key.startswith('YOUR_'):
+        if COPILOT_ENABLED and copilot_key and not copilot_key.startswith('YOUR_'):
             try:
                 self.clients['copilot'] = CopilotClient(
                     api_key=copilot_key,
@@ -313,11 +312,39 @@ class VisibilityTracker:
         Returns:
             Set of (prompt_id, platform) tuples
         """
-        existing = self.results_tracker.load_results_summary()
-        return {(r['prompt_id'], r['platform']) for r in existing if r.get('prompt_id') and r.get('platform')}
+        return set(self._get_completed_run_counts().keys())
+
+    def _get_completed_run_counts(self) -> Dict[tuple, int]:
+        """
+        Count successful runs already saved for each (prompt_id, platform).
+
+        Failed calls are not counted, so a resumed wave retries them.
+        """
+        counts: Dict[tuple, int] = {}
+        for r in self.results_tracker.load_results_summary():
+            if not (r.get('prompt_id') and r.get('platform')):
+                continue
+            if str(r.get('success', '')).lower() != 'true':
+                continue
+            key = (r['prompt_id'], r['platform'])
+            counts[key] = counts.get(key, 0) + 1
+        return counts
+
+    def _get_failed_attempt_counts(self) -> Dict[tuple, int]:
+        """Count failed calls already saved for each (prompt_id, platform)."""
+        counts: Dict[tuple, int] = {}
+        for r in self.results_tracker.load_results_summary():
+            if not (r.get('prompt_id') and r.get('platform')):
+                continue
+            if str(r.get('success', '')).lower() == 'true':
+                continue
+            key = (r['prompt_id'], r['platform'])
+            counts[key] = counts.get(key, 0) + 1
+        return counts
 
     def run_tests(self, prompts_file: str, platforms: List[str] = None,
-                  force_rerun: bool = False) -> List[Dict[str, Any]]:
+                  force_rerun: bool = False,
+                  runs_per_prompt: int = None) -> List[Dict[str, Any]]:
         """
         Run visibility tests on prompts. Supports resume — skips prompts
         that already have results from a previous interrupted run.
@@ -357,22 +384,34 @@ class VisibilityTracker:
         # Check for existing results (resume support).
         # When force_rerun=True we skip the resume check entirely and
         # re-run every (prompt, platform) combination from scratch.
+        if runs_per_prompt is None:
+            runs_per_prompt = int(os.environ.get('RUNS_PER_PROMPT', DEFAULT_RUNS_PER_PROMPT))
+        runs_per_prompt = max(1, runs_per_prompt)
+
+        # A call that fails is retried on the next pass, up to this many
+        # failures per prompt and platform. After that the platform is
+        # reported as incomplete instead of retrying forever.
+        max_failed_attempts = 3
+
         if force_rerun:
             print(f"\n⚠️  FORCE RERUN: ignoring existing test data and re-running every prompt × platform")
-            completed = set()
+            run_counts = {}
+            failed_counts = {}
         else:
-            completed = self._get_completed_tests()
-        total_expected = len(prompts) * len(test_platforms)
+            run_counts = self._get_completed_run_counts()
+            failed_counts = self._get_failed_attempt_counts()
+        total_expected = len(prompts) * len(test_platforms) * runs_per_prompt
+        done_so_far = sum(
+            min(run_counts.get((p['prompt_id'], pl), 0), runs_per_prompt)
+            for p in prompts for pl in test_platforms
+        )
 
-        if completed:
-            print(f"\n⚡ RESUME MODE: Found {len(completed)} existing results out of {total_expected} total")
-            print(f"   Skipping already-tested prompt+platform combinations")
+        if done_so_far:
+            print(f"\n⚡ RESUME MODE: Found {done_so_far} completed runs out of {total_expected} total")
+            print(f"   Skipping runs that are already saved")
 
-        remaining = 0
-        for prompt in prompts:
-            for platform in test_platforms:
-                if (prompt['prompt_id'], platform) not in completed:
-                    remaining += 1
+        remaining = total_expected - done_so_far
+        print(f"Runs per prompt per platform: {runs_per_prompt}")
 
         if remaining == 0:
             print(f"\n✓ All {total_expected} tests already completed! Nothing to do.")
@@ -380,7 +419,7 @@ class VisibilityTracker:
             return [{'already_complete': True}]
 
         print(f"Testing on platforms: {', '.join(test_platforms)}")
-        print(f"Total: {total_expected} | Already done: {len(completed)} | Remaining: {remaining}\n")
+        print(f"Total: {total_expected} | Already done: {done_so_far} | Remaining: {remaining}\n")
 
         # Run tests
         all_results = []
@@ -388,57 +427,71 @@ class VisibilityTracker:
         tested = 0
         for i, prompt in enumerate(prompts, 1):
             prompt_has_work = any(
-                (prompt['prompt_id'], p) not in completed
+                run_counts.get((prompt['prompt_id'], p), 0) < runs_per_prompt
                 for p in test_platforms
             )
 
             if not prompt_has_work:
-                skipped += len(test_platforms)
+                skipped += len(test_platforms) * runs_per_prompt
                 continue
 
             print(f"[{i}/{len(prompts)}] Testing prompt: {prompt['prompt_id']}")
 
             for platform in test_platforms:
-                # Skip if already tested
-                if (prompt['prompt_id'], platform) in completed:
-                    skipped += 1
+                runs_done = run_counts.get((prompt['prompt_id'], platform), 0)
+                skipped += min(runs_done, runs_per_prompt)
+                if runs_done >= runs_per_prompt:
                     continue
 
                 client = self.clients[platform]
-                print(f"  → {platform}...", end=" ", flush=True)
 
-                # Add prompt metadata to result (including cluster fields if present)
-                metadata = {
-                    'persona': prompt['persona'],
-                    'category': prompt['category'],
-                    'intent_type': prompt['intent_type'],
-                    'notes': prompt['notes']
-                }
+                for run_number in range(runs_done + 1, runs_per_prompt + 1):
+                    if failed_counts.get((prompt['prompt_id'], platform), 0) >= max_failed_attempts:
+                        print(f"  → {platform}: {max_failed_attempts} failed calls already, not retrying")
+                        break
+                    print(f"  → {platform} run {run_number}/{runs_per_prompt}...", end=" ", flush=True)
 
-                # Pass through topic cluster metadata for fan-out analysis
-                for cluster_field in ('topic_cluster_id', 'cluster_role', 'cluster_topic', 'fanout_angle'):
-                    if cluster_field in prompt:
-                        metadata[cluster_field] = prompt[cluster_field]
+                    # Add prompt metadata to result (including cluster fields if present)
+                    metadata = {
+                        'persona': prompt['persona'],
+                        'category': prompt['category'],
+                        'intent_type': prompt['intent_type'],
+                        'notes': prompt['notes'],
+                        'run_number': run_number,
+                        'runs_per_prompt': runs_per_prompt,
+                    }
 
-                result = client.test_prompt(
-                    prompt_id=prompt['prompt_id'],
-                    prompt_text=prompt['prompt_text'],
-                    expected_score=prompt['expected_visibility_score'],
-                    metadata=metadata
-                )
+                    # Pass through topic cluster metadata for fan-out analysis
+                    for cluster_field in ('topic_cluster_id', 'cluster_role', 'cluster_topic', 'fanout_angle'):
+                        if cluster_field in prompt:
+                            metadata[cluster_field] = prompt[cluster_field]
 
-                # Log result
-                test_id = self.results_tracker.log_result(result)
-                all_results.append(result)
-                tested += 1
+                    result = client.test_prompt(
+                        prompt_id=prompt['prompt_id'],
+                        prompt_text=prompt['prompt_text'],
+                        expected_score=prompt['expected_visibility_score'],
+                        metadata=metadata
+                    )
+                    result['run_number'] = run_number
+                    result['runs_per_prompt'] = runs_per_prompt
 
-                if result['success']:
-                    print(f"✓ {result['latency_seconds']}s")
-                else:
-                    print(f"✗ {result.get('error', 'Unknown error')}")
+                    # Log result
+                    test_id = self.results_tracker.log_result(result)
+                    all_results.append(result)
+                    tested += 1
+
+                    if result['success']:
+                        print(f"✓ {result['latency_seconds']}s")
+                    else:
+                        print(f"✗ {result.get('error', 'Unknown error')}")
+                        fkey = (prompt['prompt_id'], platform)
+                        failed_counts[fkey] = failed_counts.get(fkey, 0) + 1
+                        # Stop this prompt's runs on this platform for now;
+                        # the next pass picks up where it left off.
+                        break
 
         print(f"\n✓ Completed {tested} new tests (skipped {skipped} already done)")
-        print(f"✓ Total results for this client: {len(completed) + tested}")
+        print(f"✓ Total completed runs for this client: {done_so_far + tested}")
 
         # Collect real fan-out queries from Gemini grounding metadata
         if self.client_slug and all_results:
@@ -471,19 +524,38 @@ class VisibilityTracker:
         prompts_db = PromptsDatabase(prompts_file)
         prompts = prompts_db.load_prompts()
         test_platforms = platforms or list(self.clients.keys())
-        completed = self._get_completed_tests()
+        runs_per_prompt = max(1, int(os.environ.get('RUNS_PER_PROMPT', DEFAULT_RUNS_PER_PROMPT)))
+        run_counts = self._get_completed_run_counts()
+        failed_counts = self._get_failed_attempt_counts()
 
-        total = len(prompts) * len(test_platforms)
-        done = sum(1 for p in prompts for plat in test_platforms if (p['prompt_id'], plat) in completed)
+        total = len(prompts) * len(test_platforms) * runs_per_prompt
+        done = 0
+        retryable = 0
+        incomplete_platforms = set()
+        for p in prompts:
+            for plat in test_platforms:
+                key = (p['prompt_id'], plat)
+                have = min(run_counts.get(key, 0), runs_per_prompt)
+                done += have
+                if have < runs_per_prompt:
+                    incomplete_platforms.add(plat)
+                    if failed_counts.get(key, 0) < 3:
+                        retryable += runs_per_prompt - have
         missing = total - done
 
         return {
-            'complete': missing == 0,
+            # "complete" means there is nothing left to run. Platforms that
+            # stayed short after retries are named in incomplete_platforms
+            # and are left out of the report by the measurement checks.
+            'complete': retryable == 0,
             'total': total,
             'done': done,
             'missing': missing,
+            'retryable': retryable,
+            'incomplete_platforms': sorted(incomplete_platforms),
             'prompts': len(prompts),
-            'platforms': len(test_platforms)
+            'platforms': len(test_platforms),
+            'runs_per_prompt': runs_per_prompt
         }
 
     def generate_reports(self) -> None:
@@ -698,6 +770,20 @@ class VisibilityTracker:
             print("Error: No detailed results found.")
             print(f"  Results dir: {self.results_tracker.results_dir}")
             print(f"  Summary results loaded: {len(results)}")
+            return {}
+
+        # Measurement Standard: drop platforms that do not pass the checks
+        # and keep a record of which were left out and why.
+        from analysis.run_rates import apply_measurement_checks, build_prompt_rates, save_outputs, render_html
+        full_results, measurement_checks = apply_measurement_checks(full_results)
+        print("\nMeasurement checks:")
+        for _plat, _info in measurement_checks['platforms'].items():
+            if _info['included_in_report']:
+                print(f"   ✓ {_plat}: in report ({_info['answers_with_links']} of {_info['answers']} answers include links)")
+            else:
+                print(f"   ✗ {_plat}: left out. {' '.join(_info['reasons_left_out'])}")
+        if not full_results:
+            print("Error: No platform passed the measurement checks. No report generated.")
             return {}
 
         print(f"Analyzing {len(full_results)} test results...")
@@ -1021,6 +1107,13 @@ class VisibilityTracker:
         print("7. Generating HTML report with competitive features...")
         html_generator = HTMLReportGenerator(self.reports_dir)
 
+        prompt_rates = build_prompt_rates(scored_results, brand_name, competitors)
+        measurement_exports = save_outputs(
+            self.reports_dir, brand_name, measurement_checks, prompt_rates,
+            datetime.now().strftime('%Y-%m')
+        )
+        html_generator.measurement_html = render_html(measurement_checks, prompt_rates, brand_name)
+
         html_report_path = html_generator.generate_report(
             brand_name=brand_name,
             visibility_summary=visibility_summary,
@@ -1273,7 +1366,6 @@ class VisibilityTracker:
         lines.append("Your Visibility Rate: How often you are named across the prompts tested in this run")
         lines.append("Competitor Rate: How often your competitors appear")
         lines.append("Gap: The difference (negative = you're losing ground)")
-        lines.append("Missed Mentions: Estimated additional times per month you'd appear if you close the gap")
         lines.append("")
         lines.append("🔴 HIGH PRIORITY = Biggest gaps + most queries = biggest opportunity")
         lines.append("🟡 MEDIUM PRIORITY = Good opportunities to tackle after HIGH items")
@@ -1300,7 +1392,6 @@ class VisibilityTracker:
 
                 lines.append(f"{i}. {content_type} {priority_label}")
                 lines.append(f"   Gap: You show up {opp['current_visibility']:.1f}% | Competitors show up {opp.get('competitor_avg', 0):.1f}%")
-                lines.append(f"   Missing: ~{opp.get('missed_monthly', 0)} mentions per month")
                 lines.append("")
 
                 # Show actual examples from test
@@ -1349,7 +1440,6 @@ class VisibilityTracker:
 
                 lines.append(f"{i}. {opp['target']} {priority_label}")
                 lines.append(f"   Gap: You show up {opp['current_visibility']:.1f}% | Competitors show up {opp.get('competitor_avg', 0):.1f}%")
-                lines.append(f"   Missing: ~{opp.get('missed_monthly', 0)} mentions per month")
                 if opp.get('value_prop'):
                     lines.append(f"   Why they matter: {opp.get('value_prop')}")
                 lines.append("")
@@ -1575,7 +1665,7 @@ def main():
     parser.add_argument(
         '--platforms',
         nargs='+',
-        choices=['openai', 'anthropic', 'perplexity', 'gemini', 'google_ai_overview', 'copilot'],
+        choices=['openai', 'anthropic', 'perplexity', 'gemini', 'google_ai_overview'],
         help='Platforms to test (default: all available)'
     )
     parser.add_argument(
@@ -1762,7 +1852,9 @@ def main():
             # Only generate reports if ALL prompts are tested
             completeness = tracker.check_test_completeness(args.prompts, args.platforms)
             if completeness['complete']:
-                print(f"\n✓ All {completeness['total']} tests complete — generating reports")
+                print(f"\n✓ {completeness['done']} of {completeness['total']} runs complete — generating reports")
+                if completeness['incomplete_platforms']:
+                    print(f"⚠️ Incomplete platforms (left out of the report): {', '.join(completeness['incomplete_platforms'])}")
                 tracker.generate_reports()
 
                 # Run analysis if requested

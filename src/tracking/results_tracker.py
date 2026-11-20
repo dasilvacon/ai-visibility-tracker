@@ -65,6 +65,7 @@ class ResultsTracker:
             'tokens_used',
             'error',
             'prompts_version',
+            'run_number',
         ]
 
     @staticmethod
@@ -169,10 +170,20 @@ class ResultsTracker:
             'tokens_used': metadata.get('tokens_used', ''),
             'error': result.get('error', ''),
             'prompts_version': result.get('prompts_version', self.prompts_version),
+            'run_number': result.get('run_number', ''),
         }
 
+        # A summary file written before a column was added keeps its own
+        # header. Write rows to match that header so columns stay lined up.
+        fieldnames = self.csv_fieldnames
+        if file_exists:
+            with open(csv_path, 'r', newline='', encoding='utf-8') as existing:
+                header = next(csv.reader(existing), None)
+            if header:
+                fieldnames = header
+
         with open(csv_path, 'a', newline='', encoding='utf-8') as f:
-            writer = csv.DictWriter(f, fieldnames=self.csv_fieldnames)
+            writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore')
 
             if not file_exists:
                 writer.writeheader()
