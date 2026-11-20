@@ -2,7 +2,7 @@
   "version": "v3.0-buyer-decision",
   "client_slug": "dasilva_consulting",
   "generated_at": "2026-11-20T00:00:00Z",
-  "generated_by": "written by hand (Claude draft, Tiffany approval pending)",
+  "generated_by": "written by hand (Claude draft, approved by Tiffany 2026-11-20)",
   "prompt_count": 53,
   "format": "buyer_decision_v3",
   "personas": [

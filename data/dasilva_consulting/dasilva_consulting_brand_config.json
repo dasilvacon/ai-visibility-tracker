@@ -14,7 +14,7 @@
     "business_goals": {
       "market_positioning": "",
       "target_metrics": [],
-      "freeform_notes": "Draft config written 2026-11-20. Competitor list is a proposal awaiting Tiffany's approval."
+      "freeform_notes": "Competitor list and prompt list approved by Tiffany 2026-11-20."
     }
   },
   "competitors": [
@@ -24,22 +24,22 @@
       "aliases": [
         "Andy Romain"
       ],
-      "category": "proposed"
+      "category": "approved by Tiffany 2026-11-20"
     },
     {
       "name": "Marc Nashaat",
       "domain": "marcnashaat.com",
-      "category": "proposed"
+      "category": "approved by Tiffany 2026-11-20"
     },
     {
       "name": "Jason Faber",
       "domain": "jasonfaber.ca",
-      "category": "proposed"
+      "category": "approved by Tiffany 2026-11-20"
     },
     {
       "name": "Jess Joyce",
       "domain": "jessjoyce.com",
-      "category": "proposed"
+      "category": "approved by Tiffany 2026-11-20"
     },
     {
       "name": "Kingmaker Search",
@@ -47,7 +47,7 @@
       "aliases": [
         "Tameem Rahman"
       ],
-      "category": "proposed"
+      "category": "approved by Tiffany 2026-11-20"
     }
   ],
   "key_topics": [
