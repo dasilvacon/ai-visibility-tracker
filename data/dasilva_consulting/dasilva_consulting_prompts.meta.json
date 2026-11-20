@@ -1,0 +1,22 @@
+{
+  "version": "v3.0-buyer-decision",
+  "client_slug": "dasilva_consulting",
+  "generated_at": "2026-11-20T00:00:00Z",
+  "generated_by": "written by hand (Claude draft, Tiffany approval pending)",
+  "prompt_count": 53,
+  "format": "buyer_decision_v3",
+  "personas": [
+    "B2B Marketing Leader",
+    "Ecommerce Founder or Marketing Lead",
+    "Event or Training Organizer",
+    "Nonprofit or Organization Marketing Manager"
+  ],
+  "categories": [
+    "commercial",
+    "navigational",
+    "research"
+  ],
+  "predecessor": null,
+  "content_hash": "sha256:4a38f57fb6b1d28543f49885ff2fbe88fc20de8f0bb1da46c922d4a97892494d",
+  "notes": "45 buyer-decision prompts plus 8 branded prompts. Target from docs/DECISIONS.md 2026-11-17: 40 to 60 plus 5 to 10 branded."
+}

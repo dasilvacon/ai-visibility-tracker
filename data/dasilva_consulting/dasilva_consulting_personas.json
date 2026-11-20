@@ -1,0 +1,28 @@
+{
+  "personas": [
+    {
+      "id": "b2b_marketing_leader",
+      "name": "B2B Marketing Leader",
+      "weight": 0.5,
+      "description": "Head of marketing or founder at a B2B or SaaS company choosing who runs SEO, AI optimization or paid search."
+    },
+    {
+      "id": "ecommerce_lead",
+      "name": "Ecommerce Founder or Marketing Lead",
+      "weight": 0.25,
+      "description": "Founder or marketing lead at an ecommerce brand, often on Shopify."
+    },
+    {
+      "id": "org_marketing_manager",
+      "name": "Nonprofit or Organization Marketing Manager",
+      "weight": 0.1,
+      "description": "Marketing or communications manager at a nonprofit or public organization."
+    },
+    {
+      "id": "event_training_organizer",
+      "name": "Event or Training Organizer",
+      "weight": 0.15,
+      "description": "Person booking a speaker, instructor or workshop on SEO or AI for marketers."
+    }
+  ]
+}
