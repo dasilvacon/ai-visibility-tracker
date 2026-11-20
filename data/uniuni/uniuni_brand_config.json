@@ -3,100 +3,290 @@
     "name": "UniUni",
     "domain": "uniuni.com",
     "industry": "Logistics & Last-Mile Delivery",
-    "description": "Canadian last-mile delivery company founded in 2019, using a crowd-sourced driver model (similar to Uber) for affordable, fast parcel delivery. Operates in 180+ cities across 9 Canadian provinces with major US expansion underway. Ranked #4 on Globe and Mail's Top Growing Firms with 12,854% three-year growth. Offers e-commerce shipping, cross-border US-to-Canada delivery, and same-day/next-day options."
-  },
-  "competitors": [
-    {
-      "name": "Intelcom",
-      "domain": "intelcom.ca"
-    },
-    {
-      "name": "GoBolt",
-      "domain": "gobolt.com"
-    },
-    {
-      "name": "Purolator",
-      "domain": "purolator.com"
-    },
-    {
-      "name": "Canpar",
-      "domain": "canpar.com"
-    },
-    {
-      "name": "TForce Logistics",
-      "domain": "tforcelogistics.com"
-    },
-    {
-      "name": "Veho",
-      "domain": "shipveho.com"
-    },
-    {
-      "name": "Canada Post",
-      "domain": "canadapost-postescanada.ca"
-    },
-    {
-      "name": "FedEx",
-      "domain": "fedex.com"
+    "description": "Canadian last-mile delivery company founded in 2019, using a crowd-sourced driver model (similar to Uber) for affordable, fast parcel delivery. Operates in 180+ cities across 9 Canadian provinces with major US expansion underway. Ranked #4 on Globe and Mail's Top Growing Firms with 12,854% three-year growth. Offers e-commerce shipping, cross-border US-to-Canada delivery, and same-day/next-day options.",
+    "business_goals": {
+      "revenue_targets": "",
+      "market_positioning": "",
+      "target_metrics": [],
+      "freeform_notes": ""
     }
-  ],
-  "key_topics": [
-    "last-mile delivery",
-    "e-commerce shipping Canada",
-    "cross-border delivery US to Canada",
-    "same-day delivery",
-    "parcel tracking",
-    "crowdsourced delivery",
-    "affordable shipping"
-  ],
-  "known_sources": [
-    "reddit",
-    "trustpilot.com",
-    "glassdoor.com",
-    "indeed.com",
-    "betakit.com",
-    "techcrunch.com",
-    "freightwaves.com",
-    "supplychainbrain.com",
-    "dcvelocity.com",
-    "canadianshipper.com",
-    "financialpost.com",
-    "globeandmail.com",
-    "linkedin",
-    "twitter",
-    "facebook",
-    "google reviews",
-    "bbb.org",
-    "yelp.com",
-    "sitejabber.com"
-  ],
-  "source_categories": {
-    "logistics_media": [
+  },
+  "competitors": {
+    "expected": [
+      {
+        "name": "Intelcom",
+        "website": "",
+        "category": "direct",
+        "added_date": "2026-05-08",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "GoBolt",
+        "website": "",
+        "category": "direct",
+        "added_date": "2026-05-08",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Purolator",
+        "website": "",
+        "category": "adjacent",
+        "added_date": "2026-05-08",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Canpar",
+        "website": "",
+        "category": "adjacent",
+        "added_date": "2026-05-08",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "TForce Logistics",
+        "website": "",
+        "category": "aspirational",
+        "added_date": "2026-05-08",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Veho",
+        "website": "",
+        "category": "aspirational",
+        "added_date": "2026-05-08",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Canada Post",
+        "website": "",
+        "category": "aspirational",
+        "added_date": "2026-05-08",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "FedEx",
+        "website": "",
+        "category": "aspirational",
+        "added_date": "2026-05-08",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Chit Chats",
+        "website": "chitchats.com",
+        "category": "direct",
+        "added_date": "2026-05-08",
+        "notes": "SMB cross-border (CA-to-US). Added after UniUni meeting May 8 — they explicitly asked us to track this competitor."
+      },
+      {
+        "name": "Stallion Express",
+        "website": "stallionexpress.ca",
+        "category": "direct",
+        "added_date": "2026-05-08",
+        "notes": "SMB cross-border (CA-to-US). Added after UniUni meeting May 8."
+      }
+    ],
+    "discovered": [
+      {
+        "name": "Uber Eats",
+        "first_seen": "2026-05-08",
+        "mention_count": 520,
+        "mention_rate": 10.3,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Chit Chats",
+        "first_seen": "2026-05-08",
+        "mention_count": 447,
+        "mention_rate": 8.9,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Amazon Flex",
+        "first_seen": "2026-05-08",
+        "mention_count": 435,
+        "mention_rate": 8.6,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "UPS",
+        "first_seen": "2026-05-08",
+        "mention_count": 322,
+        "mention_rate": 6.4,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Uber Direct",
+        "first_seen": "2026-05-08",
+        "mention_count": 311,
+        "mention_rate": 6.2,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Stallion Express",
+        "first_seen": "2026-05-08",
+        "mention_count": 302,
+        "mention_rate": 6.0,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Canada",
+        "first_seen": "2026-05-08",
+        "mention_count": 300,
+        "mention_rate": 6.0,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Post",
+        "first_seen": "2026-05-08",
+        "mention_count": 277,
+        "mention_rate": 5.5,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "In Canada",
+        "first_seen": "2026-05-08",
+        "mention_count": 260,
+        "mention_rate": 5.2,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Shopify",
+        "first_seen": "2026-05-08",
+        "mention_count": 251,
+        "mention_rate": 5.0,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Summary Table",
+        "first_seen": "2026-05-08",
+        "mention_count": 230,
+        "mention_rate": 4.6,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Go Logistics",
+        "first_seen": "2026-05-08",
+        "mention_count": 226,
+        "mention_rate": 4.5,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Ottawa Logistics",
+        "first_seen": "2026-05-08",
+        "mention_count": 207,
+        "mention_rate": 4.1,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Toronto",
+        "first_seen": "2026-05-08",
+        "mention_count": 193,
+        "mention_rate": 3.8,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Delivered Duty Paid",
+        "first_seen": "2026-05-08",
+        "mention_count": 191,
+        "mention_rate": 3.8,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      }
+    ]
+  },
+  "metadata": {
+    "created_at": "2026-05-08T05:18:57.906468Z",
+    "last_modified": "2026-05-08T06:45:53.034567Z",
+    "schema_version": "2.0"
+  },
+  "legacy_settings": {
+    "key_topics": [
+      "last-mile delivery",
+      "e-commerce shipping Canada",
+      "cross-border delivery US to Canada",
+      "same-day delivery",
+      "parcel tracking",
+      "crowdsourced delivery",
+      "affordable shipping"
+    ],
+    "known_sources": [
+      "reddit",
+      "trustpilot.com",
+      "glassdoor.com",
+      "indeed.com",
+      "betakit.com",
+      "techcrunch.com",
       "freightwaves.com",
       "supplychainbrain.com",
       "dcvelocity.com",
-      "canadianshipper.com"
-    ],
-    "review_platforms": [
-      "trustpilot.com",
-      "sitejabber.com",
-      "bbb.org",
-      "yelp.com"
-    ],
-    "business_media": [
-      "betakit.com",
+      "canadianshipper.com",
       "financialpost.com",
-      "globeandmail.com"
-    ],
-    "social": [
-      "reddit",
+      "globeandmail.com",
       "linkedin",
       "twitter",
-      "facebook"
+      "facebook",
+      "google reviews",
+      "bbb.org",
+      "yelp.com",
+      "sitejabber.com"
+    ],
+    "source_categories": {
+      "logistics_media": [
+        "freightwaves.com",
+        "supplychainbrain.com",
+        "dcvelocity.com",
+        "canadianshipper.com"
+      ],
+      "review_platforms": [
+        "trustpilot.com",
+        "sitejabber.com",
+        "bbb.org",
+        "yelp.com"
+      ],
+      "business_media": [
+        "betakit.com",
+        "financialpost.com",
+        "globeandmail.com"
+      ],
+      "social": [
+        "reddit",
+        "linkedin",
+        "twitter",
+        "facebook"
+      ]
+    },
+    "irrelevant_sources": [
+      "wikipedia.org",
+      "wikihow.com",
+      "pinterest.com"
     ]
-  },
-  "irrelevant_sources": [
-    "wikipedia.org",
-    "wikihow.com",
-    "pinterest.com"
-  ]
+  }
 }

@@ -1,12 +1,12 @@
 {
-  "version": "v1.0-baseline",
+  "version": "v2.0-intent-context",
   "client_slug": "natasha_denona",
-  "generated_at": "2026-04-19T17:45:53Z",
-  "generated_by": "scripts/migrate_to_v1_baseline.py",
-  "generator_version": "1.0",
-  "source_model": "legacy",
-  "prompt_count": 186,
-  "format": "legacy",
+  "generated_at": "2026-04-26T12:57:20Z",
+  "generated_by": "scripts/regenerate_prompts.py",
+  "generator_version": "2.0",
+  "source_model": "claude-sonnet-4-6",
+  "prompt_count": 500,
+  "format": "intent_context_v2",
   "personas": [
     "Beauty Beginner (Aspirational)",
     "Luxury Beauty Enthusiast",
@@ -14,10 +14,13 @@
     "Specific Need Shopper"
   ],
   "categories": [
-    "business",
-    "educational"
+    "commercial",
+    "educational",
+    "navigational",
+    "research",
+    "support"
   ],
-  "predecessor": null,
-  "content_hash": "sha256:110734fdbd56b4e986b35e4c6de355401ec1063ba3072dd0173aead6fd68a698",
-  "notes": "Frozen as v1.0-baseline during migration from unversioned state. Content unchanged from the prompts CSV that was live at migration time."
+  "predecessor": "v1.0-baseline",
+  "content_hash": "sha256:3db0179ace685a3120f4132502f721c438376729c37601e0b046135caa301847",
+  "notes": "Tight Intent+Context v2 regeneration via claude-sonnet-4-6."
 }

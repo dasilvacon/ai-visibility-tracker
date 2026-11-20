@@ -23,7 +23,9 @@
     "expected": [
       {
         "name": "Canadian Centre for Caregiving Excellence",
-        "aliases": ["CCCE"],
+        "aliases": [
+          "CCCE"
+        ],
         "website": "canadiancaregiving.org",
         "category": "adjacent",
         "added_date": "2026-03-08",
@@ -31,7 +33,10 @@
       },
       {
         "name": "Alzheimer Society of Ontario",
-        "aliases": ["Alzheimer Society", "ASO"],
+        "aliases": [
+          "Alzheimer Society",
+          "ASO"
+        ],
         "website": "alzheimer.ca",
         "category": "adjacent",
         "added_date": "2026-03-08",
@@ -52,7 +57,143 @@
         "notes": ""
       }
     ],
-    "discovered": [],
+    "discovered": [
+      {
+        "name": "Ontario Health",
+        "first_seen": "2026-05-08",
+        "mention_count": 210,
+        "mention_rate": 9.5,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Caregiver Action Network",
+        "first_seen": "2026-05-08",
+        "mention_count": 130,
+        "mention_rate": 5.9,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Family Caregiver Alliance",
+        "first_seen": "2026-05-08",
+        "mention_count": 125,
+        "mention_rate": 5.6,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Respite Care",
+        "first_seen": "2026-05-08",
+        "mention_count": 116,
+        "mention_rate": 5.2,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Alzheimer Society",
+        "first_seen": "2026-05-08",
+        "mention_count": 110,
+        "mention_rate": 5.0,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Area Agency",
+        "first_seen": "2026-05-08",
+        "mention_count": 103,
+        "mention_rate": 4.6,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Support Groups",
+        "first_seen": "2026-05-08",
+        "mention_count": 102,
+        "mention_rate": 4.6,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Eldercare Locator",
+        "first_seen": "2026-05-08",
+        "mention_count": 96,
+        "mention_rate": 4.3,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Peer Support",
+        "first_seen": "2026-05-08",
+        "mention_count": 87,
+        "mention_rate": 3.9,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Health Care Connect",
+        "first_seen": "2026-05-08",
+        "mention_count": 85,
+        "mention_rate": 3.8,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Care",
+        "first_seen": "2026-05-08",
+        "mention_count": 83,
+        "mention_rate": 3.7,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Personal Care",
+        "first_seen": "2026-05-08",
+        "mention_count": 83,
+        "mention_rate": 3.7,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Canada Caregiver Credit",
+        "first_seen": "2026-05-08",
+        "mention_count": 80,
+        "mention_rate": 3.6,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "Caregiver Support",
+        "first_seen": "2026-05-08",
+        "mention_count": 79,
+        "mention_rate": 3.6,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      },
+      {
+        "name": "In Ontario",
+        "first_seen": "2026-05-08",
+        "mention_count": 71,
+        "mention_rate": 3.2,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-05-08"
+      }
+    ],
     "category_overrides": {
       "Ontario Ministry of Health": "government",
       "Health Canada": "government",
@@ -145,7 +286,7 @@
   "irrelevant_sources": [],
   "metadata": {
     "created_at": "2026-03-08T16:23:46.146537Z",
-    "last_modified": "2026-03-08T16:23:46.146627Z",
+    "last_modified": "2026-05-08T04:19:08.067592Z",
     "schema_version": "2.0"
   },
   "legacy_settings": {}

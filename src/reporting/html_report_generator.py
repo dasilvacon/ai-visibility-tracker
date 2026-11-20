@@ -810,14 +810,47 @@ class HTMLReportGenerator:
         """
 
     def _build_sources_tab(self, brand_name: str, source_analysis: Dict[str, Any],
-                           scored_results: list = None) -> str:
+                           scored_results: list = None,
+                           competitive_analysis: Dict[str, Any] = None) -> str:
         """Build the Sources & Citations tab showing where brands are being mentioned.
 
         Uses two data sources:
         1. PRIMARY: Structured cited_urls from API responses (Perplexity, Gemini, Google AI Overviews)
         2. SECONDARY: Text-extracted source mentions from source_analysis
+
+        Competitor-owned domains are filtered out of the cited domains panels —
+        clients shouldn't see "your top citation source is FedEx.com" because
+        chasing coverage on a competitor's own site isn't an actionable lever.
         """
         scored_results = scored_results or []
+
+        # Build competitor domain matchers from competitive_analysis. We treat
+        # the lowercased competitor name (spaces stripped) as a substring against
+        # the cited domain hostname — e.g. "Canada Post" matches both
+        # "canadapost.ca" and "canadapost-postescanada.ca".
+        competitor_domain_patterns = set()
+        if competitive_analysis:
+            for comp in competitive_analysis.get('top_competitors', []) or []:
+                name = (comp.get('name') or '').strip().lower()
+                if not name:
+                    continue
+                # Strip spaces and common suffixes for substring match
+                slug = name.replace(' ', '').replace('-', '').replace('.', '')
+                if slug and len(slug) >= 4:  # skip too-short slugs that'd cause false matches
+                    competitor_domain_patterns.add(slug)
+                # Also add bare brand-name word for multi-word competitors
+                first_word = name.split()[0] if name.split() else ''
+                if first_word and len(first_word) >= 5:
+                    competitor_domain_patterns.add(first_word)
+
+        def _is_competitor_domain(domain: str) -> bool:
+            if not domain or not competitor_domain_patterns:
+                return False
+            host = domain.lower()
+            for pattern in competitor_domain_patterns:
+                if pattern in host:
+                    return True
+            return False
 
         # Aggregate cited_urls from all scored results (the real API citation data)
         from collections import Counter, defaultdict
@@ -826,6 +859,7 @@ class HTMLReportGenerator:
         cited_by_platform = defaultdict(lambda: Counter())  # platform -> domain -> count
         citations_with_brand = Counter()  # domain -> count where brand was co-mentioned
         per_prompt_citations = []         # list of {prompt, platform, cited_urls}
+        competitor_domains_filtered = 0   # count of competitor-owned domains hidden
 
         for result in scored_results:
             platform = result.get('platform', '')
@@ -839,6 +873,14 @@ class HTMLReportGenerator:
                 domain = source.get('domain', '')
                 full_url = source.get('full_url', '')
                 if not domain:
+                    continue
+
+                # Skip competitor-owned domains entirely. Showing fedex.com or
+                # canadapost.ca as a "top cited domain" misleads clients into
+                # thinking those are outreach targets — but they're competitor
+                # properties, not citation opportunities for the brand.
+                if _is_competitor_domain(domain):
+                    competitor_domains_filtered += 1
                     continue
 
                 cited_domains[domain] += 1
@@ -930,6 +972,15 @@ class HTMLReportGenerator:
             'anthropic': 'Claude'
         }
 
+        competitor_filter_note = ""
+        if competitor_domains_filtered > 0:
+            competitor_filter_note = f"""
+            <p style="font-size: 13px; line-height: 1.6; color: #6B5660; margin: -16px 0 24px 0; font-style: italic;">
+                Note: {competitor_domains_filtered} citation{'s' if competitor_domains_filtered != 1 else ''} to competitor-owned domains
+                (e.g. fedex.com, canadapost.ca) were excluded — chasing coverage on a competitor's own site isn't an actionable lever.
+            </p>
+            """
+
         html = f"""
         <h2>Sources & Citations</h2>
         <p style="font-size: 16px; line-height: 1.8; color: #4D2E3A; margin-bottom: 32px;">
@@ -937,6 +988,7 @@ class HTMLReportGenerator:
             linking to specific URLs that inform their responses. This section shows <strong>exactly which
             domains and pages</strong> AI is citing, and whether {brand_name} appears alongside those citations.
         </p>
+        {competitor_filter_note}
 
         <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr);">
             <div class="metric-card">
@@ -2785,7 +2837,7 @@ class HTMLReportGenerator:
         <div id="sources" class="tab-content">
             {self._build_citation_analysis(citation_stats) if citation_stats else ''}
 
-            {self._build_sources_tab(brand_name, source_analysis, scored_results) if source_analysis else '<p>No source analysis available.</p>'}
+            {self._build_sources_tab(brand_name, source_analysis, scored_results, competitive_analysis) if source_analysis else '<p>No source analysis available.</p>'}
         </div>
 
         <div class="footer">
