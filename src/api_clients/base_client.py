@@ -12,6 +12,10 @@ import signal
 class BaseAPIClient(ABC):
     """Abstract base class for AI platform API clients."""
 
+    # Clients that search the web need longer than the default timeout.
+    # A client sets this to the minimum number of seconds it needs.
+    min_timeout_seconds = 0
+
     def __init__(self, api_key: str, model: str, config: Dict[str, Any]):
         """
         Initialize the API client.
@@ -69,7 +73,7 @@ class BaseAPIClient(ABC):
 
         temperature = self.config.get('testing', {}).get('default_temperature', 0.7)
         max_tokens = self.config.get('testing', {}).get('max_tokens', 1000)
-        hard_timeout = self.config.get('testing', {}).get('timeout_seconds', 30) + 15  # extra buffer
+        hard_timeout = max(self.config.get('testing', {}).get('timeout_seconds', 30), self.min_timeout_seconds) + 15  # extra buffer
 
         # Safety timeout — if any API call hangs, kill it after hard_timeout seconds
         try:
