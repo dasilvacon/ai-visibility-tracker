@@ -24,8 +24,10 @@ from collections import defaultdict
 from typing import Any, Dict, List, Tuple
 
 PLATFORM_LABELS = {
-    'openai': 'ChatGPT (OpenAI API, web search on)',
-    'anthropic': 'Claude (Anthropic API, web search on)',
+    'openai': 'ChatGPT paid plans (OpenAI API, web search on)',
+    'openai_free': 'ChatGPT free plan (OpenAI API, web search on)',
+    'anthropic': 'Claude paid plans (Anthropic API, web search on)',
+    'anthropic_free': 'Claude free plan (Anthropic API, web search on)',
     'perplexity': 'Perplexity',
     'gemini': 'Gemini (Google Search grounding on)',
     'google_ai_overview': 'Google AI Overviews',

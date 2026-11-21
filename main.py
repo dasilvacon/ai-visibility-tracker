@@ -21,6 +21,8 @@ from api_clients.perplexity_client import PerplexityClient
 from api_clients.gemini_client import GeminiClient
 from api_clients.serpapi_client import SerpAPIClient
 from api_clients.copilot_client import CopilotClient
+from api_clients.openai_client import OpenAIFreeClient
+from api_clients.anthropic_client import AnthropicFreeClient
 from database.prompts_db import PromptsDatabase
 from tracking.results_tracker import ResultsTracker
 from reporting.report_generator import ReportGenerator
@@ -44,9 +46,14 @@ from reporting.pdf_exporter import PDFExporter
 # Measurement Standard check 2: each must be the model the consumer product
 # currently uses. Change only with Tiffany's approval, and write the model
 # name and date in docs/DECISIONS.md.
+# Paid and free plans use different models, so each is tracked as its own
+# platform: 'openai' / 'anthropic' are the paid-plan defaults, and
+# 'openai_free' / 'anthropic_free' are the free-plan models.
 DEFAULT_MODELS = {
     'openai': 'gpt-6-sol',
+    'openai_free': 'gpt-6-luna',
     'anthropic': 'claude-opus-5-5',
+    'anthropic_free': 'claude-sonnet-5-5',
     'perplexity': 'sonar',
     'gemini': 'gemini-2.5-flash',
     'serpapi': 'google_ai_overview',
@@ -235,6 +242,12 @@ class VisibilityTracker:
                     config=self.config
                 )
                 print("✓ OpenAI client initialized")
+                self.clients['openai_free'] = OpenAIFreeClient(
+                    api_key=api_keys['openai'],
+                    model=models.get('openai_free', DEFAULT_MODELS['openai_free']),
+                    config=self.config
+                )
+                print("✓ OpenAI free-plan client initialized")
             except Exception as e:
                 print(f"✗ Failed to initialize OpenAI client: {e}")
 
@@ -247,6 +260,12 @@ class VisibilityTracker:
                     config=self.config
                 )
                 print("✓ Anthropic client initialized")
+                self.clients['anthropic_free'] = AnthropicFreeClient(
+                    api_key=api_keys['anthropic'],
+                    model=models.get('anthropic_free', DEFAULT_MODELS['anthropic_free']),
+                    config=self.config
+                )
+                print("✓ Anthropic free-plan client initialized")
             except Exception as e:
                 print(f"✗ Failed to initialize Anthropic client: {e}")
 
@@ -1665,7 +1684,7 @@ def main():
     parser.add_argument(
         '--platforms',
         nargs='+',
-        choices=['openai', 'anthropic', 'perplexity', 'gemini', 'google_ai_overview'],
+        choices=['openai', 'openai_free', 'anthropic', 'anthropic_free', 'perplexity', 'gemini', 'google_ai_overview'],
         help='Platforms to test (default: all available)'
     )
     parser.add_argument(

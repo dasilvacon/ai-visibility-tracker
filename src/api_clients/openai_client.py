@@ -149,3 +149,10 @@ class OpenAIClient(BaseAPIClient):
             return urlparse(url).netloc.replace('www.', '')
         except Exception:
             return ''
+
+
+class OpenAIFreeClient(OpenAIClient):
+    """Same call as OpenAIClient, run on the model ChatGPT's Free and Go plans use."""
+
+    def _get_platform_name(self) -> str:
+        return 'openai_free'

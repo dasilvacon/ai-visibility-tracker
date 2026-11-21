@@ -2,6 +2,51 @@
 
 Newest first. Add an entry for every decision, model change, prompt-set change and deploy.
 
+## 2026-11-21 First full wave on the new code (DaSilva Consulting), free and paid models
+
+Decisions by Tiffany:
+- 2026-11-20: Gemini (`gemini-2.5-flash`) and Perplexity (`sonar`) approved as they are. Neither was checked
+  against vendor documentation, so check 2 is not confirmed for those two.
+- 2026-11-20: the five proposed competitors are her competitors. The 53 prompts are approved.
+- 2026-11-21: track the free-plan and paid-plan models, both.
+
+Models (check 2), from vendor documentation read 2026-11-20:
+- ChatGPT paid plans: `gpt-6-sol`. OpenAI release notes, Oct 7 2026: Plus, Pro, Business and Enterprise use
+  GPT-6 Sol; Free and Go use GPT-6 Luna.
+- ChatGPT free plan: `gpt-6-luna` (same source).
+- Claude paid plans: `claude-opus-5-5`. Anthropic: Opus 5.5 is the default on Pro, Max, Ultra and Team.
+- Claude free plan: `claude-sonnet-5-5`. Anthropic says the Free plan includes Haiku and Sonnet. The page
+  does not say which of the two is the Free default or name the Sonnet version, so this one is an assumption.
+
+Changes on branch fix/search-on-and-5-runs:
+- New platforms `openai_free` and `anthropic_free` (same calls as the paid ones, different model).
+  Labels in the report: "ChatGPT paid plans", "ChatGPT free plan", "Claude paid plans", "Claude free plan".
+- deploy_today.sh (new): backs up client-data/ in GCS, adds DaSilva Consulting to the registry, uploads its
+  files, answers and report, runs deploy_to_cloud_run.sh, pushes dev, main and tags. Deletes nothing.
+
+The wave:
+- 53 prompts x 5 runs x 6 platforms = 1,590 completed runs. Every prompt has 5 of 5 on every platform.
+- Responses collected 2026-11-20 17:45 UTC (18 runs) and 2026-11-21 about 16:00 to 16:25 UTC (the rest).
+  The Measurement Standard does not say how long a wave may take. This one spans two days.
+- Run from the project folder in parallel passes, not through the dashboard and not through Cloud Run.
+  CLAUDE.md says to run through the dashboard; this was the only way to finish within the session.
+- 1 failed call (Gemini, 503 "model experiencing high demand"), retried and completed.
+- Check 1, answers that include links: ChatGPT paid 265 of 265, ChatGPT free 265 of 265, Claude paid 255 of 265,
+  Claude free 253 of 265, Gemini 244 of 265, Perplexity 265 of 265. All six platforms are in the report.
+- Google AI Overviews not run (no SerpAPI key on this Mac).
+- Check 4 (10-prompt hand spot check) NOT done.
+
+What the wave shows (runs that named DaSilva Consulting or Tiffany DaSilva):
+- 8 branded prompts: 234 of 240 runs. Gemini 35 of 40, ChatGPT free 39 of 40, the other four 40 of 40.
+- 45 buyer prompts: ChatGPT paid 3 of 225, ChatGPT free 5 of 225, Claude paid 5 of 225, Claude free 8 of 225,
+  Gemini 7 of 225, Perplexity 20 of 225.
+- Named in 5 of 5: "best SEO audit services in Toronto" (Claude paid, Claude free, Perplexity),
+  "top SEO experts in Toronto" (Gemini), and three teaching prompts on Perplexity.
+- Jess Joyce is the competitor named most often on the buyer prompts (86 runs across the six platforms).
+
+Not done: dashboard pages not tested with the new code; deploy not run yet; weekly Cloud Run jobs still on
+the old code (deploy_weekly_jobs.sh not re-run).
+
 ## 2026-11-20 Search on, 5 runs per prompt, measurement checks in the report
 
 Goal set by Tiffany: a working tracker today to show the SR&ED reviewer next week, improved next week.

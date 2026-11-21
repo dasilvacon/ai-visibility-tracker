@@ -167,3 +167,10 @@ class AnthropicClient(BaseAPIClient):
             return urlparse(url).netloc.replace('www.', '')
         except Exception:
             return ''
+
+
+class AnthropicFreeClient(AnthropicClient):
+    """Same call as AnthropicClient, run on the model Claude's Free plan uses."""
+
+    def _get_platform_name(self) -> str:
+        return 'anthropic_free'

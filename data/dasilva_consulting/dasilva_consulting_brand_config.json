@@ -17,83 +17,233 @@
       "freeform_notes": "Competitor list and prompt list approved by Tiffany 2026-11-20."
     }
   },
-  "competitors": [
-    {
-      "name": "Romain Marketing",
-      "domain": "romainmarketing.com",
-      "aliases": [
-        "Andy Romain"
-      ],
-      "category": "approved by Tiffany 2026-11-20"
-    },
-    {
-      "name": "Marc Nashaat",
-      "domain": "marcnashaat.com",
-      "category": "approved by Tiffany 2026-11-20"
-    },
-    {
-      "name": "Jason Faber",
-      "domain": "jasonfaber.ca",
-      "category": "approved by Tiffany 2026-11-20"
-    },
-    {
-      "name": "Jess Joyce",
-      "domain": "jessjoyce.com",
-      "category": "approved by Tiffany 2026-11-20"
-    },
-    {
-      "name": "Kingmaker Search",
-      "domain": "kingmakersearch.com",
-      "aliases": [
-        "Tameem Rahman"
-      ],
-      "category": "approved by Tiffany 2026-11-20"
-    }
-  ],
-  "key_topics": [
-    "SEO",
-    "AI optimization (GEO)",
-    "SEO audits",
-    "link building",
-    "paid search",
-    "AI adoption and training"
-  ],
-  "known_sources": [
-    "clutch",
-    "reddit",
-    "linkedin",
-    "semrush",
-    "search engine land",
-    "search engine journal"
-  ],
-  "source_categories": {
-    "agency_directories": [
-      "clutch.co",
-      "designrush.com",
-      "semrush.com",
-      "sortlist.com"
+  "competitors": {
+    "expected": [
+      {
+        "name": "Romain Marketing",
+        "website": "",
+        "category": "direct",
+        "added_date": "2026-11-21",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Marc Nashaat",
+        "website": "",
+        "category": "direct",
+        "added_date": "2026-11-21",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Jason Faber",
+        "website": "",
+        "category": "adjacent",
+        "added_date": "2026-11-21",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Jess Joyce",
+        "website": "",
+        "category": "adjacent",
+        "added_date": "2026-11-21",
+        "notes": "Auto-migrated from v1.0"
+      },
+      {
+        "name": "Kingmaker Search",
+        "website": "",
+        "category": "aspirational",
+        "added_date": "2026-11-21",
+        "notes": "Auto-migrated from v1.0"
+      }
     ],
-    "search_industry_media": [
-      "searchengineland.com",
-      "searchenginejournal.com",
-      "seroundtable.com"
-    ],
-    "social": [
-      "reddit",
-      "linkedin",
-      "youtube"
+    "discovered": [
+      {
+        "name": "Google Ads",
+        "first_seen": "2026-11-21",
+        "mention_count": 306,
+        "mention_rate": 19.2,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "Google",
+        "first_seen": "2026-11-21",
+        "mention_count": 267,
+        "mention_rate": 16.8,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "Search Engine People",
+        "first_seen": "2026-11-21",
+        "mention_count": 233,
+        "mention_rate": 14.7,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "Kevin Indig",
+        "first_seen": "2026-11-21",
+        "mention_count": 178,
+        "mention_rate": 11.2,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "Omniscient Digital",
+        "first_seen": "2026-11-21",
+        "mention_count": 176,
+        "mention_rate": 11.1,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "Dasilvaconsulting",
+        "first_seen": "2026-11-21",
+        "mention_count": 156,
+        "mention_rate": 9.8,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "She",
+        "first_seen": "2026-11-21",
+        "mention_count": 153,
+        "mention_rate": 9.6,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "Konstruct Digital",
+        "first_seen": "2026-11-21",
+        "mention_count": 143,
+        "mention_rate": 9.0,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "Shopify",
+        "first_seen": "2026-11-21",
+        "mention_count": 135,
+        "mention_rate": 8.5,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "Generative Engine Optimization",
+        "first_seen": "2026-11-21",
+        "mention_count": 127,
+        "mention_rate": 8.0,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "Steve Toth",
+        "first_seen": "2026-11-21",
+        "mention_count": 125,
+        "mention_rate": 7.9,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "Google Ad Grants",
+        "first_seen": "2026-11-21",
+        "mention_count": 118,
+        "mention_rate": 7.4,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "Lily Ray",
+        "first_seen": "2026-11-21",
+        "mention_count": 116,
+        "mention_rate": 7.3,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "ChatGPT",
+        "first_seen": "2026-11-21",
+        "mention_count": 115,
+        "mention_rate": 7.2,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      },
+      {
+        "name": "Siege Media",
+        "first_seen": "2026-11-21",
+        "mention_count": 115,
+        "mention_rate": 7.2,
+        "status": "emerging_threat",
+        "promoted_to_expected": false,
+        "last_updated": "2026-11-21"
+      }
     ]
   },
-  "irrelevant_sources": [],
-  "analysis_settings": {
-    "minimum_prominence_threshold": 4.0,
-    "gap_visibility_threshold": 60.0,
-    "competitor_dominance_threshold": 50.0
+  "metadata": {
+    "created_at": "2026-11-21T16:12:48.478792Z",
+    "last_modified": "2026-11-21T16:12:48.478863Z",
+    "schema_version": "2.0"
   },
-  "output_preferences": {
-    "generate_html_dashboard": true,
-    "generate_pdf_report": false,
-    "generate_excel_workbook": false,
-    "reports_directory": "data/reports"
+  "legacy_settings": {
+    "key_topics": [
+      "SEO",
+      "AI optimization (GEO)",
+      "SEO audits",
+      "link building",
+      "paid search",
+      "AI adoption and training"
+    ],
+    "known_sources": [
+      "clutch",
+      "reddit",
+      "linkedin",
+      "semrush",
+      "search engine land",
+      "search engine journal"
+    ],
+    "source_categories": {
+      "agency_directories": [
+        "clutch.co",
+        "designrush.com",
+        "semrush.com",
+        "sortlist.com"
+      ],
+      "search_industry_media": [
+        "searchengineland.com",
+        "searchenginejournal.com",
+        "seroundtable.com"
+      ],
+      "social": [
+        "reddit",
+        "linkedin",
+        "youtube"
+      ]
+    },
+    "irrelevant_sources": [],
+    "analysis_settings": {
+      "minimum_prominence_threshold": 4.0,
+      "gap_visibility_threshold": 60.0,
+      "competitor_dominance_threshold": 50.0
+    },
+    "output_preferences": {
+      "generate_html_dashboard": true,
+      "generate_pdf_report": false,
+      "generate_excel_workbook": false,
+      "reports_directory": "data/reports"
+    }
   }
 }

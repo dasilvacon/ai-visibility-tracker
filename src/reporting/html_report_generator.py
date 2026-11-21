@@ -968,8 +968,10 @@ class HTMLReportGenerator:
             'perplexity': 'Perplexity',
             'gemini': 'Gemini',
             'google_ai_overview': 'Google AI Overview',
-            'openai': 'ChatGPT',
-            'anthropic': 'Claude'
+            'openai': 'ChatGPT paid plans',
+            'openai_free': 'ChatGPT free plan',
+            'anthropic': 'Claude paid plans',
+            'anthropic_free': 'Claude free plan'
         }
 
         competitor_filter_note = ""
@@ -3051,8 +3053,10 @@ class HTMLReportGenerator:
 
         # Map platform names to friendly names with 2026 context
         platform_mapping = {
-            'openai': ('ChatGPT (OpenAI)', 'Largest discovery platform of the AI tools tracked'),
-            'anthropic': ('Claude (Anthropic)', '15% of AI users — growing in professional use'),
+            'openai': ('ChatGPT paid plans', 'Model used on Plus, Pro, Business and Enterprise plans'),
+            'openai_free': ('ChatGPT free plan', 'Model used on Free and Go plans'),
+            'anthropic': ('Claude paid plans', 'Model used on Pro, Max and Team plans'),
+            'anthropic_free': ('Claude free plan', 'Model used on the Free plan'),
             'perplexity': ('Perplexity', '~5% — research-focused with direct citations'),
             'gemini': ('Gemini (Google)', '~7% — integrated into Google Search'),
             'google_ai_overview': ('Google AI Overviews', 'Massive passive reach — shown to all Google searchers automatically'),
@@ -4449,7 +4453,7 @@ class HTMLReportGenerator:
             ) if brand_name else prompt_text
 
             sample = {
-                'platform': result.get('platform', 'Unknown').replace('openai', 'ChatGPT').replace('anthropic', 'Claude').replace('perplexity', 'Perplexity').replace('gemini', 'Gemini'),
+                'platform': {'openai': 'ChatGPT paid plans', 'openai_free': 'ChatGPT free plan', 'anthropic': 'Claude paid plans', 'anthropic_free': 'Claude free plan', 'perplexity': 'Perplexity', 'gemini': 'Gemini', 'google_ai_overview': 'Google AI Overviews'}.get(result.get('platform', 'Unknown'), result.get('platform', 'Unknown')),
                 'quote': context,
                 'prompt': prompt_highlighted
             }
@@ -4942,9 +4946,12 @@ class HTMLReportGenerator:
 
             # Map platform names to friendly names (Fix #5)
             platform_mapping = {
-                'openai': 'ChatGPT (OpenAI)',
-                'anthropic': 'Claude (Anthropic)',
+                'openai': 'ChatGPT paid plans',
+                'openai_free': 'ChatGPT free plan',
+                'anthropic': 'Claude paid plans',
+                'anthropic_free': 'Claude free plan',
                 'perplexity': 'Perplexity',
+                'gemini': 'Gemini',
                 'google_ai_overview': 'Google AI Overviews',
                 'copilot': 'Microsoft Copilot'
             }
