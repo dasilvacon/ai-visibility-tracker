@@ -263,11 +263,64 @@ class HTMLReportGenerator:
         prominence = visibility_summary.get('average_prominence_score', 0)
         competitor_rate = visibility_summary.get('competitor_mention_rate', 0)
 
-        # Find ChatGPT/OpenAI data
+        # Headline rates are reported separately for two kinds of prompt,
+        # because a blended rate changes with the mix of prompts:
+        #   branded = the prompt names the brand, or its category is 'navigational'
+        #   buyer   = every other prompt (the asker has not named the brand)
         from collections import defaultdict
+        split = {'buyer': {'total': 0, 'named': 0}, 'branded': {'total': 0, 'named': 0}}
+        buyer_competitors = defaultdict(int)
+        brand_lower = (brand_name or '').lower()
+        combined_rate = visibility_rate
+
+        def _prompt_kind(result):
+            category = ((result.get('metadata', {}) or {}).get('category', '') or '').lower()
+            prompt_lower = (result.get('prompt_text', '') or '').lower()
+            return 'branded' if (category == 'navigational' or (brand_lower and brand_lower in prompt_lower)) else 'buyer'
+
+        for result in scored_results:
+            vis = result.get('visibility', {}) or {}
+            kind = _prompt_kind(result)
+            split[kind]['total'] += 1
+            if vis.get('brand_mentioned'):
+                split[kind]['named'] += 1
+            if kind == 'buyer':
+                for comp in vis.get('competitors_mentioned', []) or []:
+                    buyer_competitors[comp] += 1
+        buyer_total, buyer_named = split['buyer']['total'], split['buyer']['named']
+        branded_total, branded_named = split['branded']['total'], split['branded']['named']
+        buyer_rate = (buyer_named / buyer_total * 100) if buyer_total else 0
+        branded_rate = (branded_named / branded_total * 100) if branded_total else 0
+        if buyer_competitors and buyer_total:
+            _top_name, _top_count = max(buyer_competitors.items(), key=lambda kv: kv[1])
+            buyer_comp_sentence = (
+                f" On buyer prompts the tracked competitor named most often was {_top_name}, "
+                f"in <strong>{_top_count} of {buyer_total}</strong> answers ({_top_count / buyer_total * 100:.1f}%)."
+            )
+        else:
+            buyer_comp_sentence = ""
+        if branded_total:
+            branded_sentence = (
+                f" On branded prompts, where the asker names {brand_name}, it was named in "
+                f"<strong>{branded_named} of {branded_total}</strong> answers ({branded_rate:.1f}%)."
+            )
+            branded_card = f"""
+            <div class="metric-card">
+                <div class="metric-label">Branded prompts</div>
+                <div class="metric-value">{branded_rate:.1f}%</div>
+                <div class="metric-status">Named in {branded_named} of {branded_total} answers</div>
+            </div>"""
+        else:
+            branded_sentence = " This prompt set has no branded prompts."
+            branded_card = ""
+
+        # Find ChatGPT/OpenAI data
         platform_stats = defaultdict(lambda: {'total': 0, 'mentions': 0, 'competitor_mentions': 0})
 
         for result in scored_results:
+            # The summary compares on buyer prompts only (when there are any).
+            if buyer_total and _prompt_kind(result) == 'branded':
+                continue
             platform = result.get('platform', 'Unknown')
             visibility = result.get('visibility', {})
 
@@ -290,6 +343,17 @@ class HTMLReportGenerator:
         # Calculate AI Share of Voice (ASoV) - your mentions / all brand mentions
         your_mentions = visibility_summary.get('brand_mentions', 0)
         total_competitor_mentions = sum(c.get('mentions', 0) for c in competitors)
+        if buyer_total:
+            # Everything in this summary is on buyer prompts only, so the
+            # comparison is not lifted by prompts that name the brand.
+            visibility_rate = buyer_rate
+            your_mentions = buyer_named
+            total_competitor_mentions = sum(buyer_competitors.values())
+            if buyer_competitors:
+                top_comp = {'name': _top_name, 'mentions': _top_count,
+                            'mention_rate': _top_count / buyer_total * 100}
+            else:
+                top_comp = {'name': 'Competitors', 'mentions': 0, 'mention_rate': 0}
         total_all_mentions = your_mentions + total_competitor_mentions
         asov = (your_mentions / total_all_mentions * 100) if total_all_mentions > 0 else 0
 
@@ -464,7 +528,7 @@ class HTMLReportGenerator:
         <!-- The Business Impact -->
         <div class="insight" style="background: linear-gradient(135deg, #4D2E3A15 0%, #4D2E3A25 100%); border-left: 4px solid #4D2E3A; padding: 32px; border-radius: 8px; margin: 32px 0;">
             <p style="font-size: 18px; line-height: 1.7; margin: 0; color: #4D2E3A; font-weight: 500;">
-                {brand_name} is at <strong>{visibility_rate:.1f}%</strong> AI visibility while your top competitor ({top_comp['name']}) appears in <strong>{top_comp['mention_rate']:.1f}%</strong> of queries. {headline_copy}
+                On buyer prompts, where the asker does not name a company, {brand_name} was named in <strong>{buyer_named} of {buyer_total}</strong> AI answers ({buyer_rate:.1f}%).{branded_sentence}{buyer_comp_sentence}
             </p>
             <p style="font-size: 16px; line-height: 1.7; margin: 24px 0 0 0; color: #6B5660;">
                 <strong>Primary recommendation:</strong> {primary_rec}
@@ -473,11 +537,11 @@ class HTMLReportGenerator:
 
         <!-- Core Metrics Grid -->
         <div class="metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin: 40px 0;">
-            <div class="metric-card {'strong' if visibility_rate >= 60 else 'needs-work' if visibility_rate >= 30 else 'weak'}">
-                <div class="metric-label">Visibility Rate <span style="background: #E8E4EC; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 4px;">{momentum_icon} {momentum_label}</span></div>
-                <div class="metric-value">{visibility_rate:.1f}%</div>
-                <div class="metric-status">{'Strong presence' if visibility_rate >= 60 else 'Room for growth' if visibility_rate >= 30 else ('Category leader' if (top_comp.get('mention_rate', 0) or 0) < visibility_rate else 'Challenger position')}</div>
-            </div>
+            <div class="metric-card">
+                <div class="metric-label">Buyer prompts <span style="background: #E8E4EC; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 4px;">{momentum_icon} {momentum_label}</span></div>
+                <div class="metric-value">{buyer_rate:.1f}%</div>
+                <div class="metric-status">Named in {buyer_named} of {buyer_total} answers</div>
+            </div>{branded_card}
             <div class="metric-card {'strong' if asov >= 40 else 'needs-work' if asov >= 20 else 'weak'}">
                 <div class="metric-label">AI Share of Voice</div>
                 <div class="metric-value">{asov:.1f}%</div>
@@ -507,7 +571,7 @@ class HTMLReportGenerator:
                 <span class="accordion-icon">▼</span>
             </button>
             <div class="accordion-content">
-                <p><strong>Visibility Rate:</strong> Percentage of {total_results} queries where {brand_name} appeared in AI responses across ChatGPT, Claude, Perplexity, and Gemini.</p>
+                <p><strong>Buyer prompts and branded prompts:</strong> A branded prompt names {brand_name} in the question (for example "What is {brand_name}?"). A buyer prompt does not name any company. The two rates are shown separately because a single combined rate changes with the mix of prompts. Each rate is the share of saved AI answers that named {brand_name}: {buyer_total} answers to buyer prompts and {branded_total} answers to branded prompts. The share of voice, the competitor comparison and the ChatGPT figure in this summary use buyer prompts only. Other sections of this report use the combined rate across all {buyer_total + branded_total} answers ({combined_rate:.1f}%).</p>
                 <p style="margin-top: 12px;"><strong>AI Share of Voice (ASoV):</strong> Your brand's share of all brand mentions across tested prompts. If AI mentions 5 brands total and yours appears in 2 of those mentions, your ASoV is 40%. This is the <a href="https://www.similarweb.com/blog/marketing/geo/what-is-geo/" target="_blank" style="color: #4A4458;">industry-standard metric</a> for measuring competitive position in AI responses. (<a href="https://www.airops.com/blog/ai-visibility-metrics" target="_blank" style="color: #4A4458;">AirOps 2026</a>)</p>
                 <p style="margin-top: 12px;"><strong>Prominence Score (0-10):</strong> How featured you are when mentioned. 8-10 = top recommendation with detail, 5-7 = listed as option, 1-4 = brief reference, 0 = not mentioned.</p>
                 <p style="margin-top: 12px;"><strong>Citation Presence Rate:</strong> How often AI links to your actual website when it mentions you. Citation is the new ranking. (<a href="https://searchengineland.com/what-is-generative-engine-optimization-geo-444418" target="_blank" style="color: #4A4458;">Search Engine Land GEO Guide</a>)</p>

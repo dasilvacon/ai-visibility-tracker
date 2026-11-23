@@ -98,7 +98,18 @@
       },
       "created_at": "2026-04-19T22:00:00.000000",
       "updated_at": "2026-04-19T22:00:00.000000"
+    },
+    {
+      "name": "DaSilva Consulting",
+      "slug": "dasilva_consulting",
+      "files": {
+        "keywords": "data/dasilva_consulting/dasilva_consulting_keywords.csv",
+        "personas": "data/dasilva_consulting/dasilva_consulting_personas.json",
+        "brand_config": "data/dasilva_consulting/dasilva_consulting_brand_config.json"
+      },
+      "created_at": "2026-11-21T11:44:59.256278",
+      "updated_at": "2026-11-21T11:44:59.256278"
     }
   ],
-  "last_updated": "2026-04-19T22:00:00.000000"
+  "last_updated": "2026-11-21T11:44:59.256278"
 }

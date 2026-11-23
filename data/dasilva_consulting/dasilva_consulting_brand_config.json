@@ -63,7 +63,7 @@
         "mention_rate": 19.2,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "Google",
@@ -72,7 +72,7 @@
         "mention_rate": 16.8,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "Search Engine People",
@@ -81,7 +81,7 @@
         "mention_rate": 14.7,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "Kevin Indig",
@@ -90,7 +90,7 @@
         "mention_rate": 11.2,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "Omniscient Digital",
@@ -99,7 +99,7 @@
         "mention_rate": 11.1,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "Dasilvaconsulting",
@@ -108,7 +108,7 @@
         "mention_rate": 9.8,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "She",
@@ -117,7 +117,7 @@
         "mention_rate": 9.6,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "Konstruct Digital",
@@ -126,7 +126,7 @@
         "mention_rate": 9.0,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "Shopify",
@@ -135,7 +135,7 @@
         "mention_rate": 8.5,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "Generative Engine Optimization",
@@ -144,7 +144,7 @@
         "mention_rate": 8.0,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "Steve Toth",
@@ -153,7 +153,7 @@
         "mention_rate": 7.9,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "Google Ad Grants",
@@ -162,7 +162,7 @@
         "mention_rate": 7.4,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "Lily Ray",
@@ -171,7 +171,7 @@
         "mention_rate": 7.3,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "ChatGPT",
@@ -180,7 +180,7 @@
         "mention_rate": 7.2,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       },
       {
         "name": "Siege Media",
@@ -189,13 +189,13 @@
         "mention_rate": 7.2,
         "status": "emerging_threat",
         "promoted_to_expected": false,
-        "last_updated": "2026-11-21"
+        "last_updated": "2026-11-23"
       }
     ]
   },
   "metadata": {
     "created_at": "2026-11-21T16:12:48.478792Z",
-    "last_modified": "2026-11-21T16:12:48.478863Z",
+    "last_modified": "2026-11-23T15:52:30.518837Z",
     "schema_version": "2.0"
   },
   "legacy_settings": {

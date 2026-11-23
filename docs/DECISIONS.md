@@ -2,6 +2,34 @@
 
 Newest first. Add an entry for every decision, model change, prompt-set change and deploy.
 
+## 2026-11-23 Report headline split into buyer prompts and branded prompts
+
+Decision by Tiffany: the report headline shows the two rates separately.
+
+Why: the single rate (17.7% for DaSilva Consulting, 282 of 1,590 answers) mixed 8 branded prompts
+(234 of 240, 97.5%) with 45 buyer prompts (48 of 1,350, 3.6%). A combined rate changes with the prompt mix.
+
+Changes (branch dev, src/reporting/html_report_generator.py, Executive Summary only):
+- Headline sentence and metric cards show "Buyer prompts" and "Branded prompts" as two rates with counts.
+- A prompt is branded when its category is `navigational` or its text contains the brand name.
+- The share of voice, the competitor comparison, the gap card and the ChatGPT figure in the Executive Summary
+  now use buyer prompts only. Before: "You lead the category, 17.7% vs Jess Joyce 5.4%", share of voice 64.8%.
+  After: "Jess Joyce leads at 6.4% vs your 3.6%", share of voice 23.9%.
+- Every other section of the report still uses the combined rate. The summary says so.
+- data/clients.json (DaSilva Consulting registry entry) committed.
+
+Found 2026-11-23, NOT fixed:
+- Branded mentions can be a different company. In the 30 runs of "What is DaSilva Consulting?", 15 cite
+  dasilvaconsulting.com; others cite dasilvaconsult.com (17), dsbusinessconsulting.com (15), bbb.org (17).
+  The tracker counts any answer containing the brand's name. The 97.5% branded rate is therefore an upper
+  limit. Not yet counted how many of the 240 branded answers describe the right company.
+- Executive Summary copy still contains timing claims with no data behind them
+  ("Infrastructure fixes take 2-4 weeks", "close in 60-90 days") and a "90-Day Target".
+- The "Anchor" label shows on a first run with no earlier run to compare against.
+- Dashboard login: 13 passwords in plain text, four retired clients still have logins.
+
+Tested: report regenerated from the saved answers; Executive Summary read back. Not deployed yet.
+
 ## 2026-11-21 First full wave on the new code (DaSilva Consulting), free and paid models
 
 Decisions by Tiffany:
